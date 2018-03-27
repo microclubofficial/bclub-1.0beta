@@ -18,6 +18,7 @@ from forums.api.topic.models import Topic, Reply
 from forums.api.collect.models import Collect
 from forums.common.utils import gen_filter_dict, gen_order_by
 from forums.common.views import BaseMethodView as MethodView
+from forums.func import get_json, object_as_dict 
 
 from .models import User
 
@@ -39,26 +40,27 @@ class UserView(MethodView):
     def get(self, username):
         query_dict = request.data
         user = User.query.filter_by(username=username).first_or_404()
-        page, number = self.page_info
+        #page, number = self.page_info
         keys = ['title']
         order_by = gen_order_by(query_dict, keys)
         filter_dict = gen_filter_dict(query_dict, keys)
         filter_dict.update(author_id=user.id)
         topics = Topic.query.filter_by(
-            **filter_dict).order_by(*order_by).paginate(page, number, True)
+            **filter_dict).order_by(*order_by).all()#.paginate(page, number, True)
         setting = user.setting
-        topic_is_allowed = False
-        if setting.topic_list == 1 or (setting.topic_list == 2 and
-                                       current_user.is_authenticated):
-            topic_is_allowed = True
-        if current_user.is_authenticated and current_user.id == user.id:
-            topic_is_allowed = True
+        #topic_is_allowed = False
+        #if setting.topic_list == 1 or (setting.topic_list == 2 and
+        #                               current_user.is_authenticated):
+        #    topic_is_allowed = True
+        #if current_user.is_authenticated and current_user.id == user.id:
+        #    topic_is_allowed = True
+        print(topics,1111111111111111111111,user)
         data = {
-            'topics': topics,
-            'user': user,
-            'topic_is_allowed': topic_is_allowed
+            'topics': [object_as_dict(i) for i in topics],
+            'user': object_as_dict(user)
+        #    'topic_is_allowed': topic_is_allowed
         }
-        return render_template('user/user.html', **data)
+        return get_json(1, '个人中心', data)
 
 
 class UserReplyListView(MethodView):

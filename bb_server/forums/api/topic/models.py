@@ -137,6 +137,9 @@ class Reply(db.Model, ModelMixin):
         db.DateTime, default=datetime.utcnow(), nullable=False)
     updated_at = db.Column(
         db.DateTime, default=datetime.utcnow(), onupdate=datetime.utcnow())
+    is_good = db.Column(db.Integer, default=0, nullable=False)
+    is_bad = db.Column(db.Integer, default=0, nullable=False)
+    is_reply = db.Column(db.SmallInteger , default=0, nullable=False)
     topic_id = db.Column(
         db.Integer, db.ForeignKey(
             'topics.id', ondelete="CASCADE"))
@@ -178,3 +181,10 @@ class Reply(db.Model, ModelMixin):
 
     def __repr__(self):
         return "<Topic %r>" % self.content[:10]
+
+class Counter(db.Model, ModelMixin):
+    __tablename__ = 'counter'
+    id = db.Column(db.Integer, primary_key=True)
+    topic_id = db.Column(db.Integer, nullable=False)
+    read_count = db.Column(db.Integer, default=0)
+    

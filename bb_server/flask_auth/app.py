@@ -11,7 +11,7 @@
 # Description:
 # **************************************************************************
 from flask import send_from_directory, request
-from werkzeug import import_string
+from werkzeug.utils import import_string
 
 
 class App(object):

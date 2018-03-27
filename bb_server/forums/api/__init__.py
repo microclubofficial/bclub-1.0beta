@@ -21,6 +21,7 @@ from forums.api.upload import urls as upload_url
 from forums.api.follow import urls as follow_url
 from forums.api.search import urls as search_url
 from forums.api.block_data import urls as data_url
+from forums.api.bar import urls as bar_url
 
 def init_app(app):
     forums_url.init_app(app)
@@ -34,6 +35,7 @@ def init_app(app):
     upload_url.init_app(app)
     search_url.init_app(app)
     data_url.init_app(app)
+    bar_url.init_app(app)
     # blueprints = [
     #     'forums.api.forums.urls'
     #     # 'forums.api.auth.urls',

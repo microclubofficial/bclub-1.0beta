@@ -127,7 +127,7 @@ locale = UserSetting.LOCALE
 class AvatarForm(Form):
     avatar = FileField(
         _('Upload Avatar:'),
-        validators=[FileRequired(), FileAllowed(['jpg', 'png'],
+        validators=[FileRequired(), FileAllowed(['jpg', 'png', 'gif'],
                                                 '上传文件只能为图片且图片格式为jpg,png')])
 
 

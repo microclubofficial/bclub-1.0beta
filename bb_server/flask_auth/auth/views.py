@@ -10,20 +10,18 @@
 #          By:
 # Description:
 # **************************************************************************
+from flask import flash, redirect, render_template, request, url_for, session
+from flask_auth.response import HTTPResponse
+from forums.func import get_json, object_as_dict
 from functools import wraps
-from random import sample
+from random import sample, randint
 from string import ascii_letters, digits
-
-from flask import (flash, redirect, render_template, request, url_for, session)
 from flask.views import MethodView
 from flask_login import current_user, login_required
 from flask_auth.serializer import Serializer
 from flask_auth.babel import domain
 from flask_auth.babel import gettext as _
 from flask_auth.models import db
-from flask_auth.response import HTTPResponse
-from forums.func import get_json, object_as_dict
-import random
 
 User = db.Model._decl_class_registry['User']
 
@@ -37,7 +35,6 @@ def guest_required(func):
             #return redirect('/')
             return get_json(1, msg, {})
         return func(*args, **kwargs)
-
     return decorator
 
 
@@ -53,10 +50,10 @@ def check_params(keys):
                 'username': _("Username"),
                 'password': _("Password"),
                 'email': _("Email"),
-                'captcha': _("Captcha")
+                #'captcha': _("Captcha")
             }
-            keys.append('captcha')
-            post_data = request.json
+            #keys.append('captcha')
+            post_data = request.data
             for key in keys:
                 if not post_data.get(key):
                     msg = _('The %(key)s is required', key=babel[key])
@@ -69,13 +66,13 @@ def check_params(keys):
                     #return HTTPResponse(HTTPResponse.HTTP_PARA_ERROR,message=msg).to_response()
                     return get_json(0, msg, {})
             captcha = post_data['captcha']
-            #if captcha.lower() == '':
-            #if captcha.lower() != session.pop('captcha', '00000').lower():
-            if captcha.lower() == session.pop('captcha', '00000').lower():
-                #print(captcha, session.pop('captcha', '00000'), 111111111111111111111111111111111111)
+            session_captcha = session.pop('captcha', '00000')
+            #if captcha.lower() != session_captcha.lower():
+            print(captcha, session_captcha, 111111111111111111111111111111111111)
+            if captcha.lower() != session_captcha.lower():
                 msg = _('The captcha is error')
                 #return HTTPResponse(HTTPResponse.HTTP_PARA_ERROR,message=msg).to_response()
-                return get_json(0, msg, {})
+                return get_json(0, msg, {})  
             return func(*args, **kwargs)
 
         return decorator
@@ -88,12 +85,13 @@ class LoginView(MethodView):
 
     def get(self):
         domain.as_default()
+        print(request.cookies)
         #return render_template('auth/login.html')
         return get_json(1, '登录', {})
 
     @check_params(['username', 'password'])
     def post(self):
-        post_data = request.json
+        post_data = request.data
         username = post_data['username']
         password = post_data['password']
         remember = post_data.pop('remember', True)
@@ -170,7 +168,7 @@ class RegisterView(MethodView):
         return get_json(1, msg, {})
 
     def user_code(self):
-        user_code = random.randint(10000, 99999)
+        user_code = randint(10000, 99999)
         if User.query.filter_by(user_code=user_code).exists():
             return self.user_code()
         return user_code
@@ -188,6 +186,7 @@ class ForgetView(MethodView):
     decorators = [guest_required]
 
     def get(self):
+        print()
         domain.as_default()
         #return render_template('auth/forget.html')
         return get_json(1, '忘记密码', {})
@@ -237,7 +236,6 @@ class ConfirmView(MethodView):
         html = render_template('templet/email.html', confirm_url=confirm_url)
         subject = _("Please confirm  your email")
         user.send_email(html=html, subject=subject)
-
 
 class ConfirmTokenView(MethodView):
     def get(self, token):

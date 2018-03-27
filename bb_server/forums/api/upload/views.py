@@ -30,7 +30,6 @@ class AvatarView(MethodView):
     @form_validate(
         AvatarForm, error=lambda: redirect(url_for('setting.setting')), f='')
     def post(self):
-        print(11111111111111111111111111)
         form = AvatarForm()
         user = request.user
         file = request.files[form.avatar.name]
@@ -67,28 +66,30 @@ class AvatarFileView(MethodView):
         avatar_path = current_app.config['AVATAR_FOLDER']
         if not os.path.exists(os.path.join(avatar_path, filename)):
             filename = filename.split('-')[0]
-            print(filename)
             return redirect(url_for('avatar', text=filename))
         return send_from_directory(avatar_path, filename)
 
 class GetPhotoView(MethodView):
-    def post(self, title_id):
-        import pdb
-        pdb.set_trace()
-        form = AvatarForm()
-        file = request.files[form.avatar.name]
-        filename = title_id + '-' + str(int(time())) + str(
-                randint(1000, 9999))
-        img = Image.open(file)
-        current_app.config.setdefault('AVATAR_FOLDER', os.path.join(
-                current_app.static_folder, 'avatars'))
-        photo_path = current_app.config['AVATAR_FOLDER']
-        photo = os.path.join(photo_path, filename + '.png')
-        if not os.path.exists(photo_path):
-            os.makedirs(photo_path)
-        photos = Photo(
-            front_photo = file,
-            photo_path = 'http://' + photo_path + filename + '.png')
-        photos.save()
-        img.save(photo)
+    def post(self):
+        file_dict = request.files.to_dict()
+        for filename in file_dict:
+            file = file_dict[filename]
+            filename = secure_filename(file.filename)
+            n_filename = filename.rsplit('.', 1)[0]
+            fix = filename.rsplit('.', 1)[1]
+            newfilename = "%s%s%s%s%s%s"%(n_filename, '_', str(int(time())), str(
+                    randint(1000, 9999)), '.', fix)
+            #current_app.config.setdefault('PICTURE_FOLDER', os.path.join(
+            #        current_app.static_folder, 'avatars'))
+            photo_path = current_app.config['PICTURE_FOLDER']
+            photo = os.path.join(photo_path, newfilename)
+            if not os.path.exists(photo_path):
+                os.makedirs(photo_path)
+            photos = Photo(
+                front_photo = filename,
+                photo_path = photo_path + '/' + newfilename)
+            photos.save()
+            photos.photo_path = 'http://'+current_app.config['SERVER_URL'] + '/' + photo_path + '/' + newfilename
+            file.save(photo)
         return get_json(1, '上传成功', object_as_dict(photos))
+

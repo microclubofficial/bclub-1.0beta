@@ -23,6 +23,8 @@ AVATAR_FOLDER = path.join(path.abspath(path.dirname(__file__)), 'static/avatars'
 # avatar generate range
 AVATAR_RANGE = [122, 512]
 
+PICTURE_FOLDER = path.join('static/avatars')
+
 # for development use localhost:5000
 # for production use xxx.com
 # SERVER_NAME = 'localhost:5000'
@@ -61,7 +63,8 @@ MAIL_PASSWORD = "zxy940530"
 MAIL_DEFAULT_SENDER = '609313700@qq.com'
 # MAIL_SUPPRESS_SEND = True
 
-SERVER_NAME = '172.16.5.67:8000'
+#SERVER_NAME = ' https://nxqwazndlk.localtunnel.me:8000'
+SERVER_URL = '172.16.5.67:8000'
 SUBDOMAIN = {'forums': False, 'docs': False}
 
 # logging setting
