@@ -71,8 +71,8 @@
                 <a href="#">最早</a>
                 <a href="#">赞</a>
               </div>
-              <div class="comment-list">
-                <pull-to @infinite-scroll='loadDetailPage'>
+                <div class="comment-list">
+                  <pull-to  @infinite-scroll="loadDetailPage">
                   <div class="comment-item" data-index='' data-id=''  :key ='now' v-for="(item,now) in nowData">
                   <div>
                     <a href="#" data-tooltip='' class="avatar">
@@ -101,11 +101,12 @@
                   </div>
                 </div>
                 <div class="loading-bar">
-                  <svg class="icon icon-loading" aria-hidden="true">
+                  <!-- <svg class="icon icon-loading" aria-hidden="true">
                       <use xlink:href="#icon-loading"  style="fill:blue" ></use>
-                  </svg>加载中...
+                  </svg>加载中... -->
+                  <img src="../../assets/img/listLogin.png" alt="" class="icon-loading">加载中...
                 </div>
-                </pull-to>
+              </pull-to>
               </div>
             </div>
           </div>
@@ -136,6 +137,7 @@ export default {
         'content': ''
       },
       articleDetail: [],
+      nowObj: [],
       toId: 0,
       pageCount: 0,
       pno: 1
@@ -145,32 +147,22 @@ export default {
   },
   mounted () {
     this.did = this.$route.params.id
-    this.loadDetailPage(this.pno)
-    // window.addEventListener('scroll', function () {
-    //   console.log('begin scroll')
-    //   let scrollTop = document.body.scrollTop
-    //   let innerHeight = window.innerHeight
-    //   var offsetHeight = document.body.offsetHeight
-    //   console.log(scrollTop)
-    //   console.log(innerHeight)
-    //   console.log(offsetHeight)
-    //   if (scrollTop + innerHeight >= offsetHeight) {
-    //     this.pno++
-    //     this.loadDetailPage(this.pno)
-    //   }
-    // })
+    get(`api/topic/${this.did}/${this.pno}`).then(data => {
+      this.articleDetail = data.data.topic
+      this.nowData = data.data.replies
+    })
+    this.loadDetailPage()
     $('.editor').css({'padding-bottom': '35px'})
   },
   methods: {
-    loadDetailPage (pno) {
+    loadDetailPage () {
+      var that = this
       setTimeout(() => {
-        this.pno++
-        console.log(this.pno)
-        get(`api/topic/${this.did}/${pno}`).then(data => {
-          this.articleDetail = data.data.topic
-          this.nowData = data.data.replies
-          console.log(data)
-        // console.log(pno)
+        get(`api/topic/${that.did}/${that.pno}`).then(data => {
+          for (var i = 0; i < data.data.replies.length; i++) {
+            that.nowData.push(data.data.replies[i])
+          }
+          that.pno++
         })
       }, 1000)
     },
@@ -189,6 +181,17 @@ export default {
     showDetailContent (data) {
       this.backDetail.content = data
       this.nowData.unshift(this.backDetail)
+    }
+  },
+  directives: {
+    scroll: {
+      bind: function (el, binding) {
+        window.addEventListener('scroll', () => {
+          if (document.body.scrollTop + window.innerHeight >= el.clientHeight) {
+            binding.value.call(this)
+          }
+        })
+      }
     }
   }
 }
@@ -455,18 +458,16 @@ a.avatar img {
 .bibar-indexNewsItem-infro>li i {
     margin-right: 3px;
 }
-
-.loading-bar {
-    height: 40px;
-    text-align: center;
-    line-height: 40px;
-  }
-  .icon-loading {
+.loading-bar{text-align: center;}
+.icon-loading {
     transform: rotate(0deg);
     animation-name: loading;
     animation-duration: 3s;
     animation-iteration-count: infinite;
     animation-direction: alternate;
+    width: 28px;
+    height: 28px;
+    margin-right: 20px;
   }
   @keyframes loading
   {
