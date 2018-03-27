@@ -26,8 +26,11 @@ import 'src/icons'
 // import VueHighcharts from 'vue-highcharts';
 // Vue.use(VueHighcharts)
 
+import VueAwesomeSwiper from 'vue-awesome-swiper'
+
 // css  js
 import './assets/css/bootstrap.css'
+import './assets/css/bootstrap.min.css'
 import './assets/iconfont/iconfont.css'
 import './assets/css/reset.pack.css'
 import './assets/css/web.css'
@@ -36,12 +39,16 @@ import './assets/js/jquery.min.js'
 import './assets/js/bootstrap.min.js'
 import './assets/plus/scrollfix/js/scrollfix.min.js'
 
+import './assets/js/jquery.cookie.js'
+
 // import $ from 'jquery'
 
 // 表单验证
 // import Validator from 'vue-validator'
 
 import * as filters from './filters' // global filters
+
+Vue.use(VueAwesomeSwiper)
 
 // Vue.use(VueAxios, axios, Validator)
 // register global utility filters.

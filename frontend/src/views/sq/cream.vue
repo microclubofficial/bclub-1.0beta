@@ -1,15 +1,20 @@
 <template>
-  <div class="main-list-news">
-   这是2月chart数据
+  <div class="cream">
+    <MainHeader></MainHeader>
+   这是精华区
   </div>
 </template>
 
 <script>
+import MainHeader from '../common/header.vue'
 export default{
   data: function () {
     return {
 
     }
+  },
+  components: {
+    MainHeader
   },
   mounted: function () {
 
@@ -19,7 +24,3 @@ export default{
   }
 }
 </script>
-
-<style>
-
-</style>

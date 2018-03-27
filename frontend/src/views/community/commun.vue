@@ -62,7 +62,9 @@ export default{
     changeActive: function (index) {
       if (index !== this.state) {
         this.state = index
-        this.$router.push(`/community/${this.newRouter[this.state]}`)
+        this.$router.push(`${this.newRouter[this.state]}`)
+      } else {
+        this.$router.push(`${this.newRouter[this.state]}`)
       }
     },
     FtContentFun (data) {

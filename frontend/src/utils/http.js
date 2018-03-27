@@ -11,6 +11,7 @@ const defaultHeaders = {
   'Accept': 'application/json',
   'Content-Type': 'application/json' // application/x-www-form-urlencoded
 }
+axios.defaults.withCredentials = true
 
 /**
  * 检查response状态

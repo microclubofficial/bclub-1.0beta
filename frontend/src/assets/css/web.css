@@ -26,6 +26,10 @@ i{transition: all .2s ease-in-out;-webkit-transition: all .2s ease-in-out;-moz-t
 .h40{height: 40px !important;}
 .mousehand{cursor: pointer;}
 .m0{margin: 0px !important;}
+
+/* 阴影样式 */
+.shadow-box{box-shadow:2px 2px 5px #9c9999;}
+
 /*按钮*/
 .label-radius, .btn-radius{border-radius: 4px;}
 .btn-icon{border: 1px solid #fff;padding-top: 12px;position: relative;display: inline-block;font-family: 'socicon';font-style: normal;font-weight: normal;line-height: 1;-webkit-font-smoothing: antialiased;text-align: center;width: 26px;height: 26px;padding-top: 2px;color: #3f444a;transition: background, color 0.3s;}

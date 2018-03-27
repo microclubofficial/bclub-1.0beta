@@ -10,12 +10,12 @@
           </div>
           <div class="tit" @click="goDetail(tmp.id)"><a href="#">{{tmp.title}}</a></div>
           <div class="txt indexNewslimitHeight" @click="goDetail(tmp.id)">
-            <p>{{tmp.content}}</p>
+            <p v-html="tmp.content"></p>
           </div>
           <div class="set">
             <ul class="bibar-indexNewsItem-infro">
               <li class="set-choseOne"> <a href="javascript:void(0);" class="icon-quan mr15 active"  @click="changeNum(0)"><i class="iconfont icon-handgood"></i><span>{{isGood}}</span></a> <a href="javascript:void(0);" class="icon-quan set-choseOne" @click="changeNum(1)"><i class="iconfont icon-handbad"></i><span>{{ishandbad}}</span></a> </li>
-              <li class="set-discuss" @click="showDiscuss(index)">
+              <li class="set-discuss" @click="showDiscuss(index,tmp.id)">
                 <a href="javascript:void(0);">
                   <i class="iconfont icon-pinglun"></i> 评论
                   <span>75</span>
@@ -55,7 +55,18 @@ export default{
       isClick: 0,
       lid: '',
       i: 0,
-      showReport: false
+      showReport: false,
+      backBibar: {
+        'author': '',
+        'avatar': '',	
+        'created_at': '',
+        'updated_at': '',
+        'title': '',
+        'content': '',
+        'is_good': 0,
+        'is_bad': 0,
+        replt_count: 0
+      }
     }
   },
   components: {
@@ -89,6 +100,10 @@ export default{
         this.i = index
       }
       this.showReport = true
+    },
+    showBibarContentFun (bibarData) {
+      this.backBibar.content = bibarData
+      this.articles.unshift(this.backBibar)
     }
   }
 }

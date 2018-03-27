@@ -4,7 +4,7 @@
         <div ref="editor" style="text-align:left" class='editor'></div>
         <button @click="getContent" class="report btn">发布</button>
         <button class="cancel" @click="isHideFun">取消</button>
-        <div>{{backData}}</div>
+        <!-- <div>{{backData}}</div> -->
     </div>
 </template>
 
@@ -13,7 +13,7 @@ import E from 'wangeditor'
 import {post} from '../../utils/http'
 
 export default {
-  props: ['contentId'],
+  props: ['contentId', 'toApi', 'talkId'],
   name: 'editor',
   data () {
     return {
@@ -21,14 +21,21 @@ export default {
       topicData: {
         'content': ''
       },
-      backData: '',
+      backData: {
+        'content': '',
+        'url': ''
+      },
+      nowShowApi: ['topic', 'bar', 'bar'],
       isHide: false
     }
   },
   methods: {
+    showApi (api) {
+      this.nowApi = api
+    },
     getContent: function () {
       this.topicData.content = this.editorContent
-      post(`api/topic/replies/${this.contentId}`, this.topicData).then(data => {
+      post(`api/${this.nowShowApi[this.toApi]}${this.toApi === 1 ? '/question' : this.toApi === 2 ? '/answer' : ''}/replies/${this.toApi === 2 ? this.talkId : this.contentId}`, this.topicData).then(data => {
         //   评论发送完毕
         this.backData = data.data.content
         this.$emit('backList', this.backData)
@@ -43,6 +50,7 @@ export default {
     }
   },
   mounted () {
+    let that = this
     var editor = new E(this.$refs.editor)
     editor.customConfig.onchange = (html) => {
       this.editorContent = html
@@ -54,11 +62,17 @@ export default {
       'link'
     ]
     // 上传图片
-    editor.customConfig.uploadImgShowBase64 = true
-    // editor.customConfig.uploadImgServer = '/api/avatar'
-    // get('/api/avatar').then(data => {
-    //   this.articles = data.data.topics
-    // })
+    // editor.customConfig.uploadImgShowBase64 = true
+    editor.customConfig.uploadImgServer = '/api/picture'
+    editor.customConfig.uploadImgHooks = {
+      // success: function (xhr, editor, result) {
+      //   // console.log(result)
+      // },
+      customInsert: function (insertImg, result, editor) {
+        that.backData.url = result.data.photo_path
+        insertImg(that.backData.url)
+      }
+    }
     editor.create()
     var div = $('.avatar').parent('div')
     div.addClass('wangeditor')

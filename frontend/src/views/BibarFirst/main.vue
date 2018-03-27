@@ -8,8 +8,12 @@
         <!--主体左侧-->
         <section class="bibar-Mainleft">
             <!--BTB信息框-->
-            <Bibar></Bibar>
+            <btb></btb>
             <div class="pt20"></div>
+            <!-- 富文本区 -->
+            <div class="mainBibar-editor" style="width:860px; margin:auto; background:#fff;">
+              <BibarPostContent @backFtContent = 'BibarContentFun'></BibarPostContent>
+            </div>
             <!--新闻-->
             <article class="bibar-box bibar-boxindex2">
                 <div class="bibar-indexNews">
@@ -19,7 +23,7 @@
                         </ul>
                     </div>
                     <!--新闻列表-->
-                    <router-view></router-view>
+                    <router-view ref="showBibarContent"></router-view>
                 </div>
             </article>
         </section>
@@ -35,8 +39,11 @@
 
 <script>
 import MainHeader from '../common/header.vue'
-import Bibar from './bibar.vue'
+import btb from './BibarChart/BTB.vue'
+import eth from './BibarChart/ETH.vue'
+import xrp from './BibarChart/XRP.vue'
 import BibarRight from './BibarRight/bivarRight.vue'
+import BibarPostContent from '../community/bibarPostContent.vue'
 
 export default{
   data: function () {
@@ -46,20 +53,27 @@ export default{
       state: 0
     }
   },
-  created: function () {
-  },
   components: {
     MainHeader,
-    Bibar,
-    BibarRight
+    btb,
+    eth,
+    xrp,
+    BibarRight,
+    BibarPostContent
+  },
+  mounted () {
+    $('.mainBibar-editor').find('.wangeditor').css({'width': '860px'})
   },
   methods: {
     // 文章列表切换事件
     changeActive: function (index) {
       if (index !== this.state) {
         this.state = index
-        this.$router.push(`/${this.newRouter[this.state]}`)
+        this.$router.push(`/bibarLayout/${this.newRouter[this.state]}`)
       }
+    },
+    BibarContentFun (data) {
+      this.$refs.showBibarContent.showBibarContentFun(data)
     }
   }
 }

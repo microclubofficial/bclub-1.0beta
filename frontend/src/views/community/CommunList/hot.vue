@@ -14,7 +14,7 @@
           </div>
           <div class="set">
             <ul class="bibar-indexNewsItem-infro">
-              <li class="set-choseOne"> <a href="javascript:void(0);" class="icon-quan mr15 active"  @click="changeNum(0)"><i class="iconfont icon-handgood"></i><span>{{isGood}}</span></a> <a href="javascript:void(0);" class="icon-quan set-choseOne" @click="changeNum(1)"><i class="iconfont icon-handbad"></i><span>{{ishandbad}}</span></a> </li>
+              <li class="set-choseOne"> <a href="javascript:void(0);" class="icon-quan mr15 active"  @click="changeNum(0,tmp.id)"><i class="iconfont icon-handgood"></i><span>{{isGood}}</span></a> <a href="javascript:void(0);" class="icon-quan set-choseOne" @click="changeNum(1,tmp.id)"><i class="iconfont icon-handbad"></i><span>{{ishandbad}}</span></a> </li>
               <li class="set-discuss" @click="showDiscuss(index,tmp.id)">
                 <a href="javascript:void(0);">
                   <i class="iconfont icon-pinglun"></i> 评论
@@ -37,7 +37,7 @@
           </div>
         </div>
       </div>
-     <div class="bibar-comment"  v-show="showComment==true&&index==i">
+     <div class="bibar-comment"  v-show="showComment&&index==i">
        <!-- 评论框 -->
        <div class="editor-comment">
          <img :src="tmp.avatar" alt="" class="avatar"  v-show="commentShow">
@@ -50,7 +50,7 @@
              <div class="editor-placeholder">评论...</div>
            </div>
            <div class="editor-toolbar">
-              <BibarReport :contentId='lid' v-show="showReport" @backList = 'showContent' ></BibarReport>
+              <BibarReport :toApi='toId' :contentId='lid' v-show="showReport" @backList = 'showContent' ></BibarReport>
           </div>
          <span class="img-upload-delete">
              <img src="../../../assets/img/del.png" alt="">
@@ -128,7 +128,7 @@ export default{
       commentShow: false,
       backFt: {
         'author': '',
-        'avatar': '',	
+        'avatar': '',
         'created_at': '',
         'updated_at': '',
         'title': '',
@@ -136,7 +136,8 @@ export default{
         'is_good': 0,
         'is_bad': 0,
         replt_count: 0
-      }
+      },
+      toId: 0
     }
   },
   components: {
@@ -155,12 +156,16 @@ export default{
   mounted () {
   },
   methods: {
-    changeNum (isNum) {
+    changeNum (isNum, id) {
       $('.set-choseOne>a:eq(' + isNum + ')').addClass('active').siblings().removeClass('active')
       if (isNum === 0) {
-        this.isGood++
+        get(`/api/topic/${id}/up`).then(data => {
+          this.isGood = data.data
+        })
       } else {
-        this.ishandbad++
+        get(`/api/topic/${id}/down`).then(data => {
+          this.ishandbad = data.data
+        })
       }
     },
     goDetail (id) {
@@ -172,11 +177,13 @@ export default{
         this.nowData = data.data.replies
         // console.log(data.data.replies)
       })
-      if (index !== this.i) {
-        this.i = index
-        this.lid = id
-      }
-      this.showComment = true
+      // if (index !== this.i) {
+      //   this.i = index
+      //   this.lid = id
+      // }
+      this.toId = 0
+      this.lid = id
+      this.showComment = !this.showComment
       this.commentShow = true
       $('.editor-toolbar').find('.wangeditor').css({'width': '832px', 'margin': '0 0 0 -39px', 'padding': '0'})
       $('.editor-toolbar').find('.wangeditor>.report').css('bottom', '0')
@@ -194,7 +201,6 @@ export default{
     showFtContentFun (ftData) {
       this.backFt.content = ftData
       this.articles.unshift(this.backFt)
-      console.log(this.articles)
     }
   }
 }

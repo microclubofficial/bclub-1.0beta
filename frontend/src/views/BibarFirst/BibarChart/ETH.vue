@@ -1,6 +1,6 @@
 <template>
-  <div class="main-list-news">
-   这是3月chart数据
+  <div class="eth">
+   这是以太坊页面
   </div>
 </template>
 

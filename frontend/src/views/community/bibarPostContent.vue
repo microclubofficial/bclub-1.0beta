@@ -21,26 +21,29 @@ export default {
       topicData: {
         'content': ''
       },
-      backFt: '',
+      backFt: {
+        'content': '',
+        'url': ''
+      },
       isHide: false
     }
   },
   methods: {
-    getContent: function () {  
+    getContent: function () {
       this.topicData.content = this.editorContent
       post('api/topic', this.topicData).then(data => {
+        this.backFt.content = data.data.content
         this.$emit('backFtContent', data.data.content)
+        $('.w-e-text-container').find('p').html('')
+        // this.$emit('backBibarContent', data.data.content)
       })
-      // this.$store.dispatch('POST_ARTICLE', this.topicData)
-    //   get('api/topic').then(data => {
-    //     console.log('这是传回来' + data)
-    //   })
     },
     isHideFun () {
       this.isHide = !this.isHide
     }
   },
   mounted () {
+    let that = this
     var editor = new E(this.$refs.editor)
     editor.customConfig.onchange = (html) => {
       this.editorContent = html
@@ -52,14 +55,24 @@ export default {
       'link'
     ]
     // 上传图片
-    editor.customConfig.uploadImgShowBase64 = true
-    // editor.customConfig.uploadImgServer = '/api/avatar'
+    // editor.customConfig.uploadImgShowBase64 = true
+    editor.customConfig.uploadImgServer = '/api/picture'
+    editor.customConfig.uploadImgHooks = {
+      // success: function (xhr, editor, result) {
+      //   // console.log(result)
+      // },
+      customInsert: function (insertImg, result, editor) {
+        that.backFt.url = result.data.photo_path
+        insertImg(that.backFt.url)
+      }
+    }
+    editor.create()
     // get('/api/avatar').then(data => {
     //   this.articles = data.data.topics
     // })
-    editor.create()
     var div = $('.avatar').parent('div')
     div.addClass('wangeditor')
+    $('.editor').css({'height': 'auto', 'padding-bottom': '30px'})
     $('.w-e-text-container').css({'min-height': '87px', 'height': 'auto', 'border': '1px solid rgb(204, 204, 204)'})
     $('.w-e-text-container').find('div').css('min-height', '87px')
     $('.w-e-toolbar').css({'position': 'absolute', 'bottom': '0', 'border': '0', 'background-color': '#fff'})

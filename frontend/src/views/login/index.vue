@@ -63,6 +63,10 @@ export default {
       isLogin: true
     }
   },
+  mounted () {
+    // var token = this.getCookie('session')
+    // console.log(token)
+  },
   methods: {
     handleLogin () {
       // 验证

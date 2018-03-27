@@ -11,7 +11,14 @@ import bibarLayout from 'src/views/BibarFirst/main'
 import homeLayout from 'src/views/community/commun'
 import maintalk from 'src/views/maintalk/maintalk'
 import cream from 'src/views/cream/cream'
-import detail from 'src/views/details/details'; const _import = require('./_import_' + process.env.NODE_ENV)
+import detail from 'src/views/details/details'
+// 各种币详情
+import mainDetail from 'src/views/details/mainDetails'
+
+// 讨论详情
+import talkDetail from 'src/views/community/talkDetail'
+import talkBibar from 'src/views/community/talkdetail/talkBibar'
+const _import = require('./_import_' + process.env.NODE_ENV)
 
 Vue.use(Router)
 
@@ -33,7 +40,7 @@ export const constantRouterMap = [
   // { path: '/authredirect', component: _import('login/authredirect'), hidden: true },
   { path: '/404', component: _import('404'), hidden: true },
   // { path: '/401', component: _import('errorPage/401'), hidden: true },
-  { path: '',
+  { path: '/bibarLayout',
     // name: 'main',
     component: bibarLayout,
     children: [
@@ -48,6 +55,27 @@ export const constantRouterMap = [
     ]
   },
   {
+    path: '/mainDetail/:pageId', component: mainDetail
+  },
+  {
+    path: '/talkDetail/:talkId',
+    component: talkDetail,
+    children: [
+      {path: '', component: _import('community/talkdetail/recommend')},
+      {
+        path: 'tech',
+        component: _import('community/talkdetail/recommend')
+      },
+      {
+        path: 'future',
+        component: _import('community/talkdetail/newSubject')
+      }
+    ]
+  },
+  {
+    path: '/talkBibar/:tbId', component: talkBibar
+  },
+  {
     path: '/details/:id', component: detail
   },
   {
@@ -56,7 +84,7 @@ export const constantRouterMap = [
   {
     path: '/cream', component: cream
   },
-  { path: '/community',
+  { path: '',
     // name: 'community',
     component: homeLayout,
     children: [

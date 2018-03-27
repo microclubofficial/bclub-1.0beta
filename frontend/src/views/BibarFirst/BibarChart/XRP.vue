@@ -1,6 +1,6 @@
 <template>
-  <div class="main-list-news">
-   这是1月chart数据
+  <div class="xrp">
+   这是瑞波币页面
   </div>
 </template>
 

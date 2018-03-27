@@ -3,7 +3,7 @@
    <article class="bibar-box bibar-boxindex1">
                 <div class="bibar-indexDisplay">
                     <div class="bibar-indexDisplay-header">
-                        <div class="logopic"><img src="../../assets/img/logo-coin-BTC.png"></div>
+                        <div class="logopic"><img src="../../../assets/img/logo-coin-BTC.png"></div>
                         <div class="logonameEnglish">BTC</div>
                         <div class="logonameChinese">比特币</div>
                     </div>
@@ -72,7 +72,6 @@
                     <div class="clear hline"></div>
                     <!--chart-->
                     <div id="mainChart" :style="{width:'780px',height:'450px'}"></div>
-                    <!-- <iframe width="100%" height="450" src="https://code.hcharts.cn/highstock/hhhhib/share/result,js,html,css" allowfullscreen="allowfullscreen" frameborder="0"></iframe> -->
                 </article>
             </article>
 </div>
@@ -102,6 +101,7 @@ export default{
   },
   methods: {
     getChartData () {
+      // https://data.jianshukeji.com/stock/history/000001
       var that = this
       $.getJSON('https://data.jianshukeji.com/stock/history/000001', function (data) {
         if (data.code !== 1) {
@@ -206,3 +206,5 @@ export default{
   }
 }
 </script>
+<style>
+</style>
