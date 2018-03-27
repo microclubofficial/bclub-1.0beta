@@ -2,6 +2,7 @@ from flask import jsonify
 from sqlalchemy import inspect
 import datetime
 
+
 def get_json(errorcode,msg,data):
     data_json={
         'resultcode':errorcode,
@@ -17,13 +18,18 @@ def object_as_dict(obj):
 
 def time_diff(update_time):
     now = datetime.datetime.now()
-    time_diff = now - update_time
-    if int(time_diff.seconds)<=60:
-        return str(time_diff.seconds)+'s'
-    elif int(time_diff.seconds)<=3600:
-        return str(int(time_diff.seconds//60))+'min'
-    elif int(time_diff.days)==0:
-        return str(int(time_diff.seconds//3600))+'hour'
-    elif int(time_diff.days)<=7:
-        return str(int(time_diff.days))+'day'
-    return update_time
+    diff = now - update_time
+    if int(diff.seconds)<=60:
+        return str(diff.seconds)+'s'
+    elif int(diff.seconds)<=3600:
+        return str(int(diff.seconds//60))+'min'
+    elif int(diff.days)==0:
+        return str(int(diff.seconds//3600))+'hour'
+    elif int(diff.days)<=7:
+        return str(int(diff.days))+'day'
+    return str(update_time)
+
+def FindAndCount(Sql,**kwargs):
+    print(kwargs,111111111111111111)
+    count = Sql.query.filter_by(**kwargs).count()
+    return count

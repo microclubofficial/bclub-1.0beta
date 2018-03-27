@@ -12,7 +12,7 @@
 # **************************************************************************
 from random import sample, randint
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
-from flask import session
+from flask import session, make_response
 from io import BytesIO
 
 class Captcha(object):
@@ -129,5 +129,4 @@ class GenCaptcha(object):
         buf = BytesIO()
         code_img[0].save(buf, 'JPEG', quality=70)
         session['captcha'] = code_img[1]
-        print(session.pop('captcha', '00000'),222222222222222222222222)
         return buf

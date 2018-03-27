@@ -23,8 +23,10 @@ from forums.api.user.models import User
 import click
 import os
 import sys
+from flask_cors import CORS
 
 app = create_app('config')
+
 app.wsgi_app = ProxyFix(app.wsgi_app)
 
 cli = FlaskGroup(add_default_commands=False, create_app=lambda r: app)
@@ -170,6 +172,6 @@ def create_user(username, email, password):
 
 if __name__ == '__main__':
     if len(sys.argv) == 1:
-        app.run(host='172.16.5.67',port=8000)
+        app.run(host='0.0.0.0', port=8000)
     else:
         cli.main()

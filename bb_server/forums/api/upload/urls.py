@@ -19,7 +19,7 @@ avatar_view = AvatarView.as_view('avatar')
 avatar_view = GetPhotoView.as_view('photo')
 
 site.add_url_rule('/avatar', view_func=avatar_view)
-site.add_url_rule('/picture/title_id', view_func=avatar_view)
+site.add_url_rule('/picture', view_func=avatar_view)
 site.add_url_rule('/avatars/<filename>', view_func=avatar_file_view)
 
 

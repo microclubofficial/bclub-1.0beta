@@ -6,4 +6,4 @@ class Photo(db.Model, ModelMixin):
 
     id = db.Column(db.Integer, primary_key=True)
     front_photo = db.Column(db.String(512), nullable=False)
-    photo_url = db.Column(db.String(512), nullable=False)
+    photo_path = db.Column(db.String(512), nullable=False)

@@ -16,7 +16,7 @@ from .views import (UserCollectListView, UserFollowingListView,
                     UserFollowerListView, UserListView, UserReplyListView,
                     UserView)
 
-site = Blueprint('user', __name__, url_prefix='/u')
+site = Blueprint('user', __name__, url_prefix='/api/u')
 
 user_list = UserListView.as_view('list')
 user = UserView.as_view('user')
@@ -28,11 +28,11 @@ followings = UserFollowingListView.as_view('following')
 
 site.add_url_rule('', view_func=user_list)
 site.add_url_rule('/<username>', view_func=user)
-site.add_url_rule('/<username>/topics', view_func=topics)
-site.add_url_rule('/<username>/replies', view_func=replies)
-site.add_url_rule('/<username>/collects', view_func=collects)
-site.add_url_rule('/<username>/followers', view_func=followers)
-site.add_url_rule('/<username>/followings', view_func=followings)
+site.add_url_rule('/topics/<username>', view_func=topics)
+site.add_url_rule('/replies/<username>', view_func=replies)
+site.add_url_rule('/collects/<username>', view_func=collects)
+site.add_url_rule('/followers/<username>', view_func=followers)
+site.add_url_rule('/followings/<username>', view_func=followings)
 
 
 def init_app(app):
