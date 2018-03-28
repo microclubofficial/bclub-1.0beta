@@ -30,6 +30,5 @@ def time_diff(update_time):
     return str(update_time)
 
 def FindAndCount(Sql,**kwargs):
-    print(kwargs,111111111111111111)
     count = Sql.query.filter_by(**kwargs).count()
     return count

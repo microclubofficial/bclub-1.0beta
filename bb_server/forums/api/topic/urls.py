@@ -18,6 +18,7 @@ from .views import (LikeView, ReplyListView, ReplyView, TopicAskView,ThumbView,
 site = Blueprint('topic', __name__, url_prefix='/api' )
 
 topic_list = TopicListView.as_view('list')
+pull_topic = TopicListView.as_view('pull_list')
 topic_good_list = TopicListView.as_view('good')
 topic_top_list = TopicListView.as_view('top')
 topic = TopicView.as_view('topic')
@@ -33,7 +34,8 @@ thumb = ThumbView.as_view('thumb')
 
 site.add_url_rule('/topic/ask', view_func=ask_view)
 site.add_url_rule('/topic/preview', view_func=preview_view)
-site.add_url_rule('/topic', view_func=topic_list)
+site.add_url_rule('/topic/<int:page>', view_func=topic_list)
+site.add_url_rule('/topic', view_func=pull_topic)
 site.add_url_rule('/topic/top', view_func=topic_top_list)
 site.add_url_rule('/topic/good', view_func=topic_good_list)
 site.add_url_rule('/topic/<int:topicId>/<int:page>', view_func=topic)

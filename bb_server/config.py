@@ -24,6 +24,8 @@ AVATAR_FOLDER = path.join(path.abspath(path.dirname(__file__)), 'static/avatars'
 AVATAR_RANGE = [122, 512]
 
 PICTURE_FOLDER = path.join('static/avatars')
+FILES_FOLDER = path.join('static/upload_files')
+ALLOWED_EXTENSIONS = set([ 'png', 'jpg', 'jpeg', 'gif', 'txt', 'pdf', 'doc', 'docx'])
 
 # for development use localhost:5000
 # for production use xxx.com
