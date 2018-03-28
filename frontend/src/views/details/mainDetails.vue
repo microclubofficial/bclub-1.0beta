@@ -6,6 +6,7 @@
       <btb v-show="isShow==0"></btb>
       <eth v-show="isShow==1"></eth>
       <xrp v-show="isShow==2"></xrp>
+      <subDetail v-show="isShow==3"></subDetail>
     </div>
   </div>
 </template>
@@ -17,12 +18,14 @@ import MainHeader from '../common/header'
 import btb from '../BibarFirst/BibarChart/BTB.vue'
 import eth from '../BibarFirst/BibarChart/ETH.vue'
 import xrp from '../BibarFirst/BibarChart/XRP.vue'
+import subDetail from '../homePage/subDetail.vue'
 export default {
   components: {
     MainHeader,
     btb,
     eth,
-    xrp
+    xrp,
+    subDetail
   },
   data: function () {
     return {

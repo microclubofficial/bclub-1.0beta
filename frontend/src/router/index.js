@@ -7,8 +7,12 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 /* Layout */
+// 币讯
 import bibarLayout from 'src/views/BibarFirst/main'
-import homeLayout from 'src/views/community/commun'
+// 首页
+import homePage from 'src/views/homePage/main'
+// 社区
+import community from 'src/views/community/commun'
 import maintalk from 'src/views/maintalk/maintalk'
 import cream from 'src/views/cream/cream'
 import detail from 'src/views/details/details'
@@ -16,8 +20,8 @@ import detail from 'src/views/details/details'
 import mainDetail from 'src/views/details/mainDetails'
 
 // 讨论详情
-import talkDetail from 'src/views/community/talkDetail'
-import talkBibar from 'src/views/community/talkdetail/talkBibar'
+import talkDetail from 'src/views/homePage/talkDetail'
+import talkBibar from 'src/views/homePage/talkdetail/talkBibar'
 const _import = require('./_import_' + process.env.NODE_ENV)
 
 Vue.use(Router)
@@ -39,6 +43,25 @@ export const constantRouterMap = [
   { path: '/register', component: _import('login/register'), hidden: true },
   // { path: '/authredirect', component: _import('login/authredirect'), hidden: true },
   { path: '/404', component: _import('404'), hidden: true },
+  // 首页
+  { path: '',
+    // name: 'homePage',
+    component: homePage,
+    children: [
+      {path: '', component: _import('homePage/HomePageList/hot')},
+      {path: 'hot', component: _import('homePage/HomePageList/hot')},
+      {path: 'market', component: _import('homePage/HomePageList/market')},
+      {path: 'analyst', component: _import('homePage/HomePageList/analyst')},
+      {path: 'depth', component: _import('homePage/HomePageList/depth')},
+      {path: 'baike', component: _import('homePage/HomePageList/baike')}
+    ]
+  },
+  // 社区
+  {
+    path: '/community',
+    component: community
+  },
+  // 币讯
   // { path: '/401', component: _import('errorPage/401'), hidden: true },
   { path: '/bibarLayout',
     // name: 'main',
@@ -61,14 +84,14 @@ export const constantRouterMap = [
     path: '/talkDetail/:talkId',
     component: talkDetail,
     children: [
-      {path: '', component: _import('community/talkdetail/recommend')},
+      {path: '', component: _import('homePage/talkdetail/recommend')},
       {
         path: 'tech',
-        component: _import('community/talkdetail/recommend')
+        component: _import('homePage/talkdetail/recommend')
       },
       {
         path: 'future',
-        component: _import('community/talkdetail/newSubject')
+        component: _import('homePage/talkdetail/newSubject')
       }
     ]
   },
@@ -83,18 +106,6 @@ export const constantRouterMap = [
   },
   {
     path: '/cream', component: cream
-  },
-  { path: '',
-    // name: 'community',
-    component: homeLayout,
-    children: [
-      {path: '', component: _import('community/CommunList/hot')},
-      {path: 'hot', component: _import('community/CommunList/hot')},
-      {path: 'market', component: _import('community/CommunList/market')},
-      {path: 'analyst', component: _import('community/CommunList/analyst')},
-      {path: 'depth', component: _import('community/CommunList/depth')},
-      {path: 'baike', component: _import('community/CommunList/baike')}
-    ]
   },
   { path: '*', redirect: '/404', hidden: true }
 ]

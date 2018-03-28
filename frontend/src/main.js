@@ -65,5 +65,13 @@ new Vue({
   store,
   i18n,
   components: { App },
-  template: '<App/>'
+  template: '<App/>',
+  data: {
+    currentRoute: window.location.pathname
+  },
+  created () {
+    window.addEventListener('popstate', () => {
+      this.currentRoute = window.location.pathname
+    })
+  }
 })

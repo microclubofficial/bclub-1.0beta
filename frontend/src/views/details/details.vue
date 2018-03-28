@@ -72,7 +72,7 @@
                 <a href="#">赞</a>
               </div>
                 <div class="comment-list">
-                  <pull-to  @infinite-scroll="loadDetailPage">
+                  <!-- <pull-to> -->
                   <div class="comment-item" data-index='' data-id=''  :key ='now' v-for="(item,now) in nowData">
                   <div>
                     <a href="#" data-tooltip='' class="avatar">
@@ -104,9 +104,10 @@
                   <!-- <svg class="icon icon-loading" aria-hidden="true">
                       <use xlink:href="#icon-loading"  style="fill:blue" ></use>
                   </svg>加载中... -->
-                  <img src="../../assets/img/listLogin.png" alt="" class="icon-loading">加载中...
+                  <img v-show="listLoding" src="../../assets/img/listLoding.png" alt="" class="icon-loading">
+                  <img v-show="noLoading" src="../../assets/img/noLoading.png" alt="" class="icon-loading">{{bottomText}}
                 </div>
-              </pull-to>
+              <!-- </pull-to> -->
               </div>
             </div>
           </div>
@@ -118,14 +119,14 @@
 <script>
 import { get } from '../../utils/http'
 import MainHeader from '../common/header'
-import BibarReport from '../community/bibarReport.vue'
-import PullTo from 'vue-pull-to'
+import BibarReport from '../homePage/bibarReport.vue'
+// import PullTo from 'vue-pull-to'
 
 export default {
   components: {
     MainHeader,
-    BibarReport,
-    PullTo
+    BibarReport
+    // PullTo
   },
   data: function () {
     return {
@@ -140,31 +141,48 @@ export default {
       nowObj: [],
       toId: 0,
       pageCount: 0,
-      pno: 1
+      pno: 1,
+      bottomText: '加载中...',
+      listLoding: true,
+      noLoading: false
     }
-  },
-  created: function () {
   },
   mounted () {
     this.did = this.$route.params.id
+    // console.log(this.pageCount)
     get(`api/topic/${this.did}/${this.pno}`).then(data => {
       this.articleDetail = data.data.topic
       this.nowData = data.data.replies
+      this.pageCount = data.data.page_count
+      var that = this
+      document.querySelector('#app').addEventListener('scroll', function () {
+        if (this.scrollHeight - this.scrollTop === this.clientHeight) {
+          that.loadDetailPage()
+        }
+      })
     })
-    this.loadDetailPage()
     $('.editor').css({'padding-bottom': '35px'})
   },
   methods: {
     loadDetailPage () {
-      var that = this
-      setTimeout(() => {
-        get(`api/topic/${that.did}/${that.pno}`).then(data => {
-          for (var i = 0; i < data.data.replies.length; i++) {
-            that.nowData.push(data.data.replies[i])
-          }
-          that.pno++
-        })
-      }, 1000)
+      // console.log(this.pno < this.pageCount)
+      if (this.pno < this.pageCount) {
+        setTimeout(() => {
+          get(`api/topic/${this.did}/${this.pno}`).then(data => {
+            this.nowData = this.nowData.concat(data.data.replies)
+            this.pno++
+            this.bottomText = '加载中...'
+            // this.loadingImg = '../../assets/img/listLoding.png'
+          })
+        }, 1000)
+      } else {
+        console.log(this.pageCount)
+        this.bottomText = '没有啦'
+        this.listLoding = false
+        this.noLoading = true
+        // this.loadingImg = '../../assets/img/noLoading.png'
+        return false
+      }
     },
     changeNum (isNum, id) {
       $('.set-choseOne>a:eq(' + isNum + ')').addClass('active').siblings().removeClass('active')
@@ -198,7 +216,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-svg { fill: #369; }
 .reward-btn{
     display: block;
     width: 56px;

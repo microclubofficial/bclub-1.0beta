@@ -83,7 +83,7 @@
                         <span class="time">评论时间</span>
                       </div>
                       <!-- <p>{{item}}</p> -->
-                      <p v-html="item"></p>
+                      <p v-html="item.content">{{item.content}}</p>
                     </div>
                     <div class="set">
                       <ul class="bibar-indexNewsItem-infro">
@@ -125,6 +125,17 @@ export default{
       showComment: false,
       showReport: false,
       nowData: [],
+      nowDataPl: {
+        'author': '',
+        'avatar': '',
+        'created_at': '',
+        'updated_at': '',
+        'title': '',
+        'content': '',
+        'is_good': 0,
+        'is_bad': 0,
+        replt_count: 0
+      },
       commentShow: false,
       backFt: {
         'author': '',
@@ -149,7 +160,7 @@ export default{
   //   }
   // },
   created: function () {
-    get('/api/topic').then(data => {
+    get('/api/topic/1').then(data => {
       this.articles = data.data.topics
     })
   },
@@ -173,7 +184,8 @@ export default{
       this.$router.push(`/details/${this.lid}`)
     },
     showDiscuss (index, id) {
-      get(`api/topic/${id}`).then(data => {
+      get(`api/topic/${id}/1`).then(data => {
+        console.log(data)
         this.nowData = data.data.replies
         // console.log(data.data.replies)
       })
@@ -185,6 +197,9 @@ export default{
       this.lid = id
       this.showComment = !this.showComment
       this.commentShow = true
+      if (this.commentShow) {
+        this.showReport = false
+      }
       $('.editor-toolbar').find('.wangeditor').css({'width': '832px', 'margin': '0 0 0 -39px', 'padding': '0'})
       $('.editor-toolbar').find('.wangeditor>.report').css('bottom', '0')
       $('.editor-toolbar').find('.wangeditor>.cancel').css('bottom', '4px')
@@ -196,7 +211,9 @@ export default{
       this.commentShow = false
     },
     showContent (data) {
-      this.nowData.unshift(data)
+      this.nowDataPl.content = data
+      console.log(this.nowDataPl)
+      this.nowData.unshift(this.nowDataPl)
     },
     showFtContentFun (ftData) {
       this.backFt.content = ftData

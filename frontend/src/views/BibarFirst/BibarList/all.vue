@@ -45,7 +45,7 @@
 
 <script>
 import {get} from '../../../utils/http'
-import BibarReport from '../../community/bibarReport.vue'
+import BibarReport from '../../homePage/bibarReport.vue'
 export default{
   data: function () {
     return {
@@ -78,7 +78,7 @@ export default{
   //   }
   // },
   created: function () {
-    get('/api/topic').then(data => {
+    get('/api/topic/1').then(data => {
       this.articles = data.data.topics
     })
   },

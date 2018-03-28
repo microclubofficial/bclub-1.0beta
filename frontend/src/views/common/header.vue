@@ -9,9 +9,9 @@
         <nav class="bibar-headernav">
             <ul class="bibar-headernavlist">
                 <li class="bibar-headernavitem"> <a href="#"><router-link :to="{path:'/'}">首页</router-link></a> </li>
-                <li class="bibar-headernavitem"> <a href="#"><router-link :to="{path:'/maintalk'}">讨论</router-link></a> </li>
-                <li class="bibar-headernavitem"> <a href="#">社区</a> </li>
+                <li class="bibar-headernavitem"> <a href="#"><router-link :to="{path:'/community'}">社区</router-link></a> </li>
                 <li class="bibar-headernavitem"> <a href="#"><router-link :to="{path:'/bibarLayout'}">币讯</router-link></a> </li>
+                <li class="bibar-headernavitem"> <a href="#"><router-link :to="{path:'/maintalk'}">讨论</router-link></a> </li>
                 <li class="bibar-headernavitem"> <a href="#"><router-link :to="{path:'/cream'}">精华</router-link></a> </li>
             </ul>
         </nav>

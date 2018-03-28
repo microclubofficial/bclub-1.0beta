@@ -521,6 +521,7 @@ export default{
     border-right: none !important;
     border-bottom: 1px solid rgb(216, 216, 216) !important;
     border-left: none !important;
+    position: inherit !important;
 }
 .talkBibar-editor>.editor>.w-e-toolbar .w-e-menu{padding: 7px 10px;}
 .talkBibar-editor>.set{right: 135px;}
@@ -531,6 +532,10 @@ export default{
 .w-e-text-container .w-e-panel-container{
   margin-left: 0 !important;
   left: 10% !important;
+}
+.talkBibar-editor .w-e-text-container{
+  min-height: 150px !important;
+  border:none !important;
 }
 .talkLeft{
     margin-top: 20px;

@@ -43,7 +43,7 @@ import btb from './BibarChart/BTB.vue'
 import eth from './BibarChart/ETH.vue'
 import xrp from './BibarChart/XRP.vue'
 import BibarRight from './BibarRight/bivarRight.vue'
-import BibarPostContent from '../community/bibarPostContent.vue'
+import BibarPostContent from '../homePage/bibarPostContent.vue'
 
 export default{
   data: function () {

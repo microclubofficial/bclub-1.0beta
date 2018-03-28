@@ -63,13 +63,13 @@ export default {
     ]
     // 上传图片
     // editor.customConfig.uploadImgShowBase64 = true
-    editor.customConfig.uploadImgServer = '/api/picture'
+    editor.customConfig.uploadImgServer = '/api/file'
     editor.customConfig.uploadImgHooks = {
       // success: function (xhr, editor, result) {
       //   // console.log(result)
       // },
       customInsert: function (insertImg, result, editor) {
-        that.backData.url = result.data.photo_path
+        that.backData.url = result.data.file_path
         insertImg(that.backData.url)
       }
     }
