@@ -90,13 +90,16 @@
                       <ul class="bibar-indexNewsItem-infro">
                         <li class="set-choseOne"> <a href="javascript:void(0);" class="icon-quan mr15 active"  @click="changeNum(0)"><i class="iconfont icon-handgood"></i><span>{{isGood}}</span></a></li>
                         <li class="set-choseShang"> <a href="javascript:void(0);"><i class="iconfont icon-dashang"></i> 打赏<span>438</span></a> </li>
-                        <li class="set-discuss" @click="showDiscuss(index,tmp.id)">
+                        <li class="set-discuss" @click="showDiscuss(now,item.id)">
                           <a href="javascript:void(0);">
-                            <i class="iconfont icon-pinglun"></i> 评论
+                            <i class="iconfont icon-pinglun"></i> 回复
                             <span>75</span>
                           </a>
                         </li>
                       </ul>
+                    </div>
+                    <div class="editor-toolbar">
+                      <!-- <BibarReport ref='childShowApi' :toApi='toId' :contentId='item.author_id' v-show="showReport" @backReplies = 'showReplyContent'></BibarReport> -->
                     </div>
                   </div>
                 </div>
@@ -201,16 +204,8 @@ export default {
       this.nowData.unshift(this.backDetail)
     }
   },
-  directives: {
-    scroll: {
-      bind: function (el, binding) {
-        window.addEventListener('scroll', () => {
-          if (document.body.scrollTop + window.innerHeight >= el.clientHeight) {
-            binding.value.call(this)
-          }
-        })
-      }
-    }
+  showDiscuss (now, id) {
+
   }
 }
 </script>

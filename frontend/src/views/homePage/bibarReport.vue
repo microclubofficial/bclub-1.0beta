@@ -2,7 +2,8 @@
     <div v-show="!isHide">
         <div class="avatar"><img src="../../assets/img/pic-user1.png" alt=""></div>
         <div ref="editor" style="text-align:left" class='editor'></div>
-        <button @click="getContent" class="report btn">发布</button>
+        <button @click="getContent" v-show="toApi!==3" class="report btn">发布</button>
+        <button @click="getContent" v-show="toApi===3" class="report btn">回复</button>
         <button class="cancel" @click="isHideFun">取消</button>
         <!-- <div>{{backData}}</div> -->
     </div>
@@ -25,8 +26,9 @@ export default {
         'content': '',
         'url': ''
       },
-      nowShowApi: ['topic', 'bar', 'bar'],
-      isHide: false
+      nowShowApi: ['topic', 'bar', 'bar', 'bar'],
+      isHide: false,
+      replies: []
     }
   },
   methods: {
@@ -35,11 +37,18 @@ export default {
     },
     getContent: function () {
       this.topicData.content = this.editorContent
-      post(`api/${this.nowShowApi[this.toApi]}${this.toApi === 1 ? '/question' : this.toApi === 2 ? '/answer' : ''}/replies/${this.toApi === 2 ? this.talkId : this.contentId}`, this.topicData).then(data => {
+      post(`api/${this.nowShowApi[this.toApi]}${this.toApi === 1 ? '/question' : this.toApi === 2 ? '/answer' : this.toApi === 3 ? '/comment' : ''}/replies/${this.toApi === 2 ? this.talkId : this.contentId}`, this.topicData).then(data => {
         //   评论发送完毕
-        this.backData = data.data.content
-        this.$emit('backList', this.backData)
-        $('.w-e-text-container').find('p').html('')
+        if (data.message === '未登录') {
+          alert('先去登录')
+          this.$router.push('/login')
+        } else {
+          this.backData = data.data.content
+          this.replies = data.data.replies
+          this.$emit('backReplies', this.replies)
+          this.$emit('backList', this.backData)
+          $('.w-e-text-container').find('p').html('')
+        }
       })
     //   get('api/topic').then(data => {
     //     console.log('这是传回来' + data)
@@ -84,6 +93,18 @@ export default {
 </script>
 
 <style scoped>
+.comment-reply .wangeditor{
+  padding-left: 0 !important;
+}
+.comment-reply .wangeditor .editor{
+  padding-bottom: 33px;
+}
+.comment-reply .wangeditor .report{
+  right: 438px;
+}
+.comment-reply .wangeditor .cancel{
+  right: 495px;
+}
 .bibar-commun {
     margin: -20px auto 0 auto;
 }

@@ -32,10 +32,15 @@ export default {
     getContent: function () {
       this.topicData.content = this.editorContent
       post('api/topic', this.topicData).then(data => {
-        this.backFt.content = data.data.content
-        this.$emit('backFtContent', data.data.content)
-        $('.w-e-text-container').find('p').html('')
-        // this.$emit('backBibarContent', data.data.content)
+        if (data.message === '未登录') {
+          alert('先去登录')
+          this.$router.push('/login')
+        } else {
+          this.backFt.content = data.data.content
+          this.$emit('backFtContent', data.data.content)
+          $('.w-e-text-container').find('p').html('')
+          // this.$emit('backBibarContent', data.data.content)
+        }
       })
     },
     isHideFun () {

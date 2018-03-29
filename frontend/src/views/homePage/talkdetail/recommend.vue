@@ -40,6 +40,9 @@ export default{
 </script>
 
 <style>
+.talk-recommend{
+  cursor: pointer;
+}
 .recommend-list{overflow: hidden;position: relative;margin: 20px 0;}
 .recommend-list>img{
     width: 50px;

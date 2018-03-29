@@ -104,7 +104,7 @@
                       <ul class="bibar-indexNewsItem-infro">
                         <li class="set-choseOne"> <a href="javascript:void(0);" class="icon-quan mr15 active"  @click="changeNum(0,item.author_id)"><i class="iconfont icon-handgood"></i><span>{{isGood}}</span></a><a href="javascript:void(0);" class="icon-quan set-choseOne" @click="changeNum(1,item.author_id)"><i class="iconfont icon-handbad"></i><span>{{ishandbad}}</span></a> </li>
                         <li class="set-choseShang"> <a href="javascript:void(0);"><i class="iconfont icon-dashang"></i> 打赏<span>438</span></a> </li>
-                        <li class="set-discuss" @click="replyComment">
+                        <li class="set-discuss">
                           <a href="javascript:void(0);">
                             <i class="iconfont icon-pinglun"></i> 回复
                             <span>75</span>
@@ -160,7 +160,7 @@
                     <div class="set">
                       <ul class="bibar-indexNewsItem-infro">
                         <li class="set-choseOne"> <a href="javascript:void(0);" class="icon-quan mr15 active"  @click="changeNum(0,item.author_id)"><i class="iconfont icon-handgood"></i><span>{{isGood}}</span></a><a href="javascript:void(0);" class="icon-quan set-choseOne" @click="changeNum(1,item.author_id)"><i class="iconfont icon-handbad"></i><span>{{ishandbad}}</span></a> </li>
-                        <li class="set-discuss" @click="talkToComment(item.id)">
+                        <li class="set-discuss" @click="talkToComment(item.id,now)">
                           <a href="javascript:void(0);">
                             <i class="iconfont icon-pinglun"></i> 评论
                             <span>75</span>
@@ -180,7 +180,7 @@
                       </ul>
                     </div>
                     <!-- 讨论评论 -->
-                    <div class="talk-comment" v-show="talkCommentShow">
+                    <div class="talk-comment" v-show="talkCommentShow && talkBackI === now">
                       <div class="bibar-comment">
        <!-- 评论内容 -->
        <div class="comment-wrap">
@@ -200,8 +200,26 @@
               <div class="talkCommentEditor">
                 <BibarReport :toApi='toId' :talkId='item.id' @backList = 'showTalkContent' ></BibarReport>
               </div>
+              <!-- 回复内容 -->
+                  <div class="comment-item" data-index='' data-id='' v-for="(tmp,rIndex) in replyContent" :key='rIndex'>
+                  <div>
+                    <a href="#" data-tooltip='' class="avatar">
+                      <img :src="tmp.avatar" alt="">
+                    </a>
+                    <div class="comment-item-main">
+                      <div class="comment-item-hd">
+                        <a href="#" class="user-name">{{tmp.author}}</a>
+                        <span class="time allTalk-time">{{tmp.created_at}}</span>
+                      </div>
+                      <p class="replyAuthor">@<span>{{item.author}}:</span><span style="display:inline-block" v-html='talkComment[replayId].content'></span></p>
+                      <p v-html="tmp.content">{{tmp.content}}</p>
+                      <p></p>
+                    </div>
+                  </div>
+                </div>
+                <!-- 回复人 -->
               <div class="comment-list">
-                <div class="comment-item" data-index='' data-id=''  :key ='now' v-for="(item,now) in talkBackContent">
+                <div class="comment-item" data-index='' data-id=''  :key ='now' v-for="(item,now) in talkComment">
                   <div>
                     <a href="#" data-tooltip='' class="avatar">
                       <img :src='item.avatar' alt="">
@@ -217,7 +235,7 @@
                     <div class="set">
                       <ul class="bibar-indexNewsItem-infro">
                         <li class="set-choseOne"> <a href="javascript:void(0);" class="icon-quan mr15 active"  @click="changeNum(0,item.author_id)"><i class="iconfont icon-handgood"></i><span>{{isGood}}</span></a><a href="javascript:void(0);" class="icon-quan set-choseOne" @click="changeNum(1,item.author_id)"><i class="iconfont icon-handbad"></i><span>{{ishandbad}}</span></a> </li>
-                        <li class="set-discuss" @click="replyComment">
+                        <li class="set-discuss" @click="replyComment(item.author_id,now)">
                           <a href="javascript:void(0);">
                             <i class="iconfont icon-pinglun"></i> 回复
                             <span>75</span>
@@ -234,6 +252,28 @@
                         </li>
                       </ul>
                     </div>
+                <!-- 回复 -->
+                <div class="comment-reply"  v-show="talkReplayBox && now === replayId">
+                <!-- 回复文本框 -->
+                <div class="editor-comment">
+         <img :src="articles.avatar" alt="" class="avatar" v-show="talkReplyTxt">
+         <div class="editor-bd">
+           <span class="comment-img-delete"></span>
+           <svg version='1.1' xmlns='http://www.w3.org/2000/svg' class="editor-triangle">
+            <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
+           </svg>
+           <div class="editor-textarea"  v-show="talkReplyTxt" @click="talkReplyEditor">
+             <div class="editor-placeholder">回复...</div>
+           </div>
+           <div class="editor-toolbar">
+              <BibarReport ref='childShowApi' :toApi='toId' :contentId='item.author_id' v-show="showReport" @backReplies = 'showReplyContent'></BibarReport>
+          </div>
+         <span class="img-upload-delete">
+             <img src="../../../assets/img/del.png" alt="">
+        </span>
+       </div>
+       </div>
+                </div>
                   </div>
                 </div>
               </div>
@@ -319,6 +359,7 @@ export default{
       talkComment: [],
       talkCommentShow: false,
       toId: null,
+      replayEditor: null,
       talkContent: {
         'author': '',
         'avatar': '',
@@ -330,7 +371,13 @@ export default{
         'is_bad': 0,
         'replt_count': 0
       },
-      talkBackContent: []
+      talkBackContent: [],
+      talkBackI: 0,
+      talkReplayBox: false,
+      replyContent: [],
+      talkReplyTxt: false,
+      replayId: 0,
+      isReply: false
     }
   },
   components: {
@@ -404,26 +451,64 @@ export default{
       this.answers.unshift(data)
     },
     // 讨论评论
-    talkToComment (id) {
+    talkToComment (id, index) {
+      if (index !== this.talkBackI) {
+        this.talkBackI = index
+      }
       this.talkCommentShow = !this.talkCommentShow
       get(`api/bar/answer/replies/${id}`).then(data => {
         this.talkComment = data.data
+        // this.replyContent = data
       })
       this.toId = 2
     },
     // 讨论评论返回数据
     showTalkContent (data) {
       this.talkContent.content = data
-      this.talkBackContent.unshift(this.talkContent)
+      this.talkComment.unshift(this.talkContent)
     },
     // 回复
-    replyComment () {
+    replyComment (id, now) {
+      if (now !== this.replayId) {
+        this.replayId = now
+      }
+      this.talkReplayBox = !this.talkReplayBox
+      this.talkReplyTxt = !this.talkReplyTxt
+      this.toId = 3
+    },
+    // 显示回复富文本框
+    talkReplyEditor () {
+      this.talkReplyTxt = !this.talkReplyTxt
+      this.showReport = !this.showReport
+    },
+    // 回复返回数据
+    showReplyContent (data) {
+      this.replyContent.unshift(data)
     }
   }
 }
 </script>
 
 <style>
+.replyAuthor{
+    height: 50px;
+    background: #F2F2F2;
+    line-height: 50px !important;
+    padding-left: 20px !important;
+}
+.set {
+    overflow: hidden;
+}
+.comment-reply{
+  border-top: 1px solid #edf0f5;
+  margin-top: 20px;
+}
+.comment-reply>.comment-item{
+  margin: 15px 0;
+}
+.comment-reply>.editor-comment{
+  margin-top: 15px;
+}
 .talkCommentEditor>.wangeditor>.editor{
   padding-bottom: 30px;
 }
@@ -699,7 +784,7 @@ svg:not(:root) {
 }
 .comment-item{
     padding: 15px 0 22px;
-    margin: 15px 0;
+    /* margin: 15px 0; */
     border-bottom: 1px solid #edf0f5;
     border-top: 0 !important;
     overflow: hidden;

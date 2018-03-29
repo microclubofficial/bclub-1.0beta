@@ -185,14 +185,13 @@ export default{
     },
     showDiscuss (index, id) {
       get(`api/topic/${id}/1`).then(data => {
-        console.log(data)
         this.nowData = data.data.replies
         // console.log(data.data.replies)
       })
-      // if (index !== this.i) {
-      //   this.i = index
-      //   this.lid = id
-      // }
+      if (index !== this.i) {
+        this.i = index
+        this.lid = id
+      }
       this.toId = 0
       this.lid = id
       this.showComment = !this.showComment

@@ -1,12 +1,18 @@
 <template>
-  <div id="app">
+  <div id="app" @click="hideSelect">
     <router-view/>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'App'
+  name: 'App',
+  methods: {
+    hideSelect () {
+      $('.user_info_dropdown').css('display', 'none')
+      $('.nav_msg_dropdown').css('display', 'none')
+    }
+  }
 }
 </script>
 

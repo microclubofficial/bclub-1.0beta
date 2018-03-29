@@ -25,11 +25,12 @@
             <div class="col-sm-9">
               <div class="input-group">
                 <span class="input-group-addon" style="padding:0;border-right:none;">
-                  <img ref="captcha" src="http://172.16.5.67:8000/api/captcha" alt="验证码" width="90" height="20">
+                  <img ref="captcha" :src="controlImg" alt="验证码" width="90" height="20" @click="changeControl()">
                 </span>
                 <input class="form-control" name="captcha" placeholder="Captcha" type="text" style="border-left:none;" v-model="userForm.captcha">
               </div>
             </div>
+            <p class="prompt">{{controlPrompt}}</p>
           </div>
           <div class="form-group">
             <div class="col-sm-offset-2 col-sm-9">
@@ -60,7 +61,9 @@ export default {
       formUrl: 'api/login',
       unamePrompt: '',
       upwdPrompt: '',
-      isLogin: true
+      controlPrompt: '',
+      isLogin: true,
+      controlImg: 'http://sinitek.ymhui999.com:1234/api/captcha'
     }
   },
   mounted () {
@@ -90,13 +93,32 @@ export default {
       } else {
         this.upwdPrompt = ''
       }
+      console.log(this.userForm)
       post(this.formUrl, this.userForm).then(data => {
+        if (data.message === '验证码错误') {
+          this.controlPrompt = data.message
+          this.changeControl()
+        } else if (this.userForm.captcha === '' || this.userForm.captcha === undefined) {
+          this.controlPrompt = '验证码不能为空'
+          return
+        } else {
+          this.controlPrompt = ''
+        }
         if (data.resultcode === 1) {
-          this.$router.push('/community')
+          this.$store.commit('USER_INFO', {
+            'username': data.data.username,
+            'avatar': data.data.avatar,
+            'isLogin': true
+          })
+          // this.$store.state.isLogin = true
+          this.$router.push('/')
         }
       }).catch(error => {
         console.log(error)
       })
+    },
+    changeControl () {
+      this.controlImg = this.controlImg + '?d=' + Date.now()
     }
   }
 }
