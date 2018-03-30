@@ -21,8 +21,11 @@ from time import time
 from random import randint
 from PIL import Image
 import os
-from .models import Photo
+from .models import File
 from forums.func import get_json, object_as_dict
+
+def check_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in current_app.config['ALLOWED_EXTENSIONS']
 
 class AvatarView(MethodView):
     decorators = [login_required]
@@ -51,12 +54,10 @@ class AvatarView(MethodView):
             ef = os.path.join(avatar_path, info.avatar)
             if os.path.exists(ef):
                 os.remove(ef)
-        # file.save(os.path.join(app.static_folder, filename + '.png'))
         info.avatar = filename + '.png'
         info.save()
         resp = Response(img, mimetype="image/jpeg")
         return resp
-        #return redirect(url_for('setting.setting'))
 
 
 class AvatarFileView(MethodView):
@@ -69,27 +70,27 @@ class AvatarFileView(MethodView):
             return redirect(url_for('avatar', text=filename))
         return send_from_directory(avatar_path, filename)
 
-class GetPhotoView(MethodView):
+class GetFileView(MethodView):
     def post(self):
         file_dict = request.files.to_dict()
         for filename in file_dict:
-            file = file_dict[filename]
-            filename = secure_filename(file.filename)
-            n_filename = filename.rsplit('.', 1)[0]
-            fix = filename.rsplit('.', 1)[1]
-            newfilename = "%s%s%s%s%s%s"%(n_filename, '_', str(int(time())), str(
-                    randint(1000, 9999)), '.', fix)
-            #current_app.config.setdefault('PICTURE_FOLDER', os.path.join(
-            #        current_app.static_folder, 'avatars'))
-            photo_path = current_app.config['PICTURE_FOLDER']
-            photo = os.path.join(photo_path, newfilename)
-            if not os.path.exists(photo_path):
-                os.makedirs(photo_path)
-            photos = Photo(
-                front_photo = filename,
-                photo_path = photo_path + '/' + newfilename)
-            photos.save()
-            photos.photo_path = 'http://'+current_app.config['SERVER_URL'] + '/' + photo_path + '/' + newfilename
-            file.save(photo)
-        return get_json(1, '上传成功', object_as_dict(photos))
-
+            Files = file_dict[filename]
+            if Files and check_file(Files.filename):
+                filename = secure_filename(Files.filename)
+                n_filename = filename.rsplit('.', 1)[0]
+                fix = filename.rsplit('.', 1)[1]
+                newfilename = "%s%s%s%s%s%s"%(n_filename, '_', str(int(time())), str(
+                        randint(1000, 9999)), '.', fix)
+                file_path = current_app.config['PICTURE_FOLDER']
+                file = os.path.join(file_path, newfilename)
+                if not os.path.exists(file_path):
+                    os.makedirs(file_path)
+                files = File(
+                    front_file = filename,
+                    file_path = file_path + '/' + newfilename)
+                files.save()
+                files.file_path = 'http://'+current_app.config['SERVER_URL'] + '/' + file_path + '/' + newfilename
+                Files.save(file)
+            else:
+                return get_json(0, '格式错误', {})
+        return get_json(1, '上传成功', object_as_dict(files))
