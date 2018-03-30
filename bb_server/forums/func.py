@@ -1,4 +1,4 @@
-from flask import jsonify
+from flask import jsonify, current_app
 from sqlalchemy import inspect
 import datetime
 
@@ -32,3 +32,10 @@ def time_diff(update_time):
 def FindAndCount(Sql,**kwargs):
     count = Sql.query.filter_by(**kwargs).count()
     return count
+
+def Avatar(avatar,user):
+    if user.avatar:
+        avatar['avatar'] = user.avatar
+    else:
+        avatar['avatar'] = current_app.config['SERVER_URL']+'/{}/avatar'.format(user.username)
+    return 

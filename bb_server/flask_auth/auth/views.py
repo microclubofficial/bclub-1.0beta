@@ -12,7 +12,7 @@
 # **************************************************************************
 from flask import flash, redirect, render_template, request, url_for, session
 from flask_auth.response import HTTPResponse
-from forums.func import get_json, object_as_dict
+from forums.func import get_json, object_as_dict, Avatar
 from functools import wraps
 from random import sample, randint
 from string import ascii_letters, digits
@@ -43,8 +43,8 @@ def check_params(keys):
         @wraps(func)
         def decorator(*args, **kwargs):
             length = {
-                'username': lambda value: 4 <= len(value) <= 20,
-                'password': lambda value: 4 <= len(value) <= 20,
+                'username': lambda value: 3 <= len(value) <= 20,
+                'password': lambda value: 3 <= len(value) <= 20,
             }
             babel = {
                 'username': _("Username"),
@@ -53,7 +53,7 @@ def check_params(keys):
                 #'captcha': _("Captcha")
             }
             #keys.append('captcha')
-            post_data = request.data
+            post_data = request.json
             for key in keys:
                 if not post_data.get(key):
                     msg = _('The %(key)s is required', key=babel[key])
@@ -67,8 +67,6 @@ def check_params(keys):
                     return get_json(0, msg, {})
             captcha = post_data['captcha']
             session_captcha = session.pop('captcha', '00000')
-            #if captcha.lower() != session_captcha.lower():
-            print(captcha, session_captcha, 111111111111111111111111111111111111)
             if captcha.lower() != session_captcha.lower():
                 msg = _('The captcha is error')
                 #return HTTPResponse(HTTPResponse.HTTP_PARA_ERROR,message=msg).to_response()
@@ -85,13 +83,12 @@ class LoginView(MethodView):
 
     def get(self):
         domain.as_default()
-        print(request.cookies)
         #return render_template('auth/login.html')
         return get_json(1, '登录', {})
 
     @check_params(['username', 'password'])
     def post(self):
-        post_data = request.data
+        post_data = request.json
         username = post_data['username']
         password = post_data['password']
         remember = post_data.pop('remember', True)
@@ -101,10 +98,12 @@ class LoginView(MethodView):
             #return HTTPResponse(HTTPResponse.HTTP_PARA_ERROR, message=msg).to_response()
             return get_json(0, msg, {})
         user.login(remember)
+        data = {"username":user.username}
+        Avatar(data, user)
         #serializer = user.serializer if hasattr(
         #    user, 'serializer') else Serializer(user, depth=1)
         #return HTTPResponse(HTTPResponse.NORMAL_STATUS, data=serializer.data).to_response()
-        return get_json(1, '登录成功', {})
+        return get_json(1, '登录成功', data)
 
 
 class LogoutView(MethodView):
@@ -162,10 +161,12 @@ class RegisterView(MethodView):
         #flash(_('An email has been sent to your.Please receive'))
         #msg = _('An email has been sent to your.Please receive')
         msg = _('注册成功')
+        data = {"username":user.username}
+        Avatar(data, user)
         #serializer = user.serializer if hasattr(
         #    user, 'serializer') else Serializer(user, depth=1)
         #return HTTPResponse(HTTPResponse.NORMAL_STATUS, data=serializer.data).to_response()
-        return get_json(1, msg, {})
+        return get_json(1, msg, data)
 
     def user_code(self):
         user_code = randint(10000, 99999)

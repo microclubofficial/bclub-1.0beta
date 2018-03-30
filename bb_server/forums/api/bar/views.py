@@ -2,22 +2,31 @@ from flask import current_app, request
 from flask.views import MethodView
 from forums.func import get_json
 from forums.api.user.models import User
-from forums.func import get_json, object_as_dict, time_diff
+from forums.func import get_json, object_as_dict, time_diff, Avatar
 from .models import Bar, Questions, Answers, Comments, Replys
+from .permissions import reply_list_permission
 
 
 class BarListView(MethodView):
     def get(self):
         barlists = Bar.query.all()
+        bar_questions = Questions.query.filter_by(bar_id = 1, is_bar=1).first()
+        user = User.query.filter_by(id = bar_questions.author_id).first()
+        bar = Bar.query.filter_by(id = bar_questions.bar_id).first()
+        question = object_as_dict(bar_questions)
+        Avatar(question, user)
+        question['author'] = user.username
+        question['bar'] = bar.title
         barlist = []
         for i in barlists:
             user = User.query.filter_by(id = i.author_id).first()
-            picture = 'http://' + current_app.config['SERVER_URL'] + '/' + i.picture
+            picture = current_app.config['SERVER_URL'] + '/' + i.picture
             bar_data = object_as_dict(i)
-            bar_data['author'] = user.username
+            bar_data['author'] = user.username  
             bar_data['picture'] = picture
             barlist.append(bar_data)
-        return get_json(1, 'bar列表', barlist)
+        data = {'barlist': barlist, 'barquestion': question}
+        return get_json(1, 'bar列表', data)
 
 class BarView(MethodView):
     def get(self, id):
@@ -36,14 +45,13 @@ class BarView(MethodView):
             questions_data['author'] = user.username
             questions_data['diff_time'] = diff_time
             questions_data['replies_count'] = bar_reply
-            if user.avatar:
-                questions_data['avatar'] = user.avatar
-            else:
-                questions_data['avatar'] = 'http://' + current_app.config['SERVER_URL'] + '/{}/avatar'.format(user.username)
+            Avatar(questions_data, user)
             question_list.append(questions_data)
         return get_json(1, 'bar问题列表', question_list)
 
 class BarQuestionView(MethodView):
+    decorators = (reply_list_permission, )
+
     def get(self, id):
         bar_question = Questions.query.filter_by(id = id).first()
         bar_answers = Answers.query.filter_by(questions_id = id, is_reply = 0).order_by('-id').all()
@@ -54,10 +62,7 @@ class BarQuestionView(MethodView):
         questions_data = object_as_dict(bar_question)
         questions_data['diff_time'] = diff_time
         questions_data['author'] = question_user.username
-        if question_user.avatar:
-            questions_data['avatar'] = question_user.avatar
-        else:
-            questions_data['avatar'] = 'http://' + current_app.config['SERVER_URL'] + '/{}/avatar'.format(question_user.username)
+        Avatar(questions_data, question_user)
         answers_list = []
         for i in bar_answers:
             answer_user = User.query.filter_by(id = i.author_id).first()
@@ -79,10 +84,7 @@ class BarQuestionView(MethodView):
             #    comment_data['diff_time'] = diff_time
             #    comment_list.append(comment_data)
             #answers_data['comments'] = comment_list
-            if answer_user.avatar:
-                answers_data['avatar'] = answer_user.avatar
-            else:
-                answers_data['avatar'] = 'http://' + current_app.config['SERVER_URL'] + '/{}/avatar'.format(answer_user.username)
+            Avatar(answers_data, answer_user)
             answers_list.append(answers_data)
         data = {'question':questions_data, 'answers':answers_list}
         return get_json(1, 'bar问题详情页', data)
@@ -102,13 +104,12 @@ class BarQuestionView(MethodView):
         answers_data = object_as_dict(bar_answer)
         answers_data['author'] = answer_user.username
         answers_data['diff_time'] = diff_time
-        if answer_user.avatar:
-            answers_data['avatar'] = answer_user.avatar
-        else:
-            answers_data['avatar'] = 'http://' + current_app.config['SERVER_URL'] + '/{}/avatar'.format(answer_user.username)
+        Avatar(answers_data, answer_user)
         return get_json(1, '回答成功', answers_data)
 
 class BarAnswerView(MethodView):
+    decorators = (reply_list_permission, )
+
     def get(self, id):
         comment = Comments.query.filter_by(answers_id = id).order_by('-id').all()
         comments_list = []
@@ -121,10 +122,7 @@ class BarAnswerView(MethodView):
             comments_data = object_as_dict(i)
             comments_data['diff_time'] = diff_time
             comments_data['author'] = comment_user.username
-            if comment_user.avatar:
-                comments_data['avatar'] = comment_user.avatar
-            else:
-                comments_data['avatar'] = 'http://' + current_app.config['SERVER_URL'] + '/{}/avatar'.format(comment_user.username)
+            Avatar(comments_data, comment_user)
             comments_list.append(comments_data)
             replies_list = []
             for j in replies:
@@ -136,6 +134,7 @@ class BarAnswerView(MethodView):
                 reply_data['author'] = reply_user.username
                 reply_data['diff_time'] = diff_time
                 replies_list.append(reply_data)
+                Avatar(reply_data, reply_user)
             comments_data['replies'] = replies_list
         return get_json(1, '回答的评论列表', comments_list)
     
@@ -154,13 +153,12 @@ class BarAnswerView(MethodView):
         comments_data = object_as_dict(answer_comment)
         comments_data['author'] = answer_user.username
         comments_data['diff_time'] = diff_time
-        if answer_user.avatar:
-            comments_data['avatar'] = answer_user.avatar
-        else:
-            comments_data['avatar'] = 'http://' + current_app.config['SERVER_URL'] + '/{}/avatar'.format(answer_user.username)
+        Avatar(comments_data, answer_user)
         return get_json(1, '评论成功', comments_data)
 
 class BarQuestionreplyView(MethodView):
+    decorators = (reply_list_permission, )
+
     def get(self, id):
         bar_replies = Answers.query.filter_by(questions_id = id, is_reply = 1).order_by('-id').all()
         replies = []
@@ -172,10 +170,7 @@ class BarQuestionreplyView(MethodView):
             replies_data = object_as_dict(i)
             replies_data['author'] = user.username
             replies_data['diff_time'] = diff_time
-            if user.avatar:
-                replies_data['avatar']=user.avatar
-            else:
-                replies_data['avatar']='http://'+current_app.config['SERVER_URL']+'/{}/avatar'.format(user.username)
+            Avatar(replies_data, user)
             replies.append(replies_data)
         return get_json(1, '评论信息', replies)
 
@@ -194,13 +189,12 @@ class BarQuestionreplyView(MethodView):
         replies_data = object_as_dict(bar_reply)
         replies_data['author'] = reply_user.username
         replies_data['diff_time'] = diff_time
-        if reply_user.avatar:
-            replies_data['avatar'] = reply_user.avatar
-        else:
-            replies_data['avatar'] = 'http://' + current_app.config['SERVER_URL'] + '/{}/avatar'.format(reply_user.username)
+        Avatar(replies_data, reply_user)
         return get_json(1, '评论成功', object_as_dict(bar_reply))
 
 class BarCommentreplyView(MethodView):
+    decorators = (reply_list_permission, )
+
     def post(self, id):
         comment = Comments.query.filter_by(id=id).first_or_404()
         post_data = request.data
@@ -216,10 +210,6 @@ class BarCommentreplyView(MethodView):
         replies_data = object_as_dict(comment_reply)
         replies_data['author'] = reply_user.username
         replies_data['diff_time'] = diff_time
-        comment_content = comment.content
-        if reply_user.avatar:
-            replies_data['avatar'] = reply_user.avatar
-        else:
-            replies_data['avatar'] = 'http://' + current_app.config['SERVER_URL'] + '/{}/avatar'.format(reply_user.username)
-        data = {'comment_content':comment.content,'replies':object_as_dict(comment_reply)}
+        Avatar(replies_data, reply_user)
+        data = {'comment_content':comment.content,'replies':replies_data}
         return get_json(1, '评论成功', data)

@@ -23,7 +23,6 @@ from forums.api.user.models import User
 import click
 import os
 import sys
-from flask_cors import CORS
 
 app = create_app('config')
 
