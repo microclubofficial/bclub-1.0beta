@@ -89,7 +89,7 @@ class GetFileView(MethodView):
                     front_file = filename,
                     file_path = file_path + '/' + newfilename)
                 files.save()
-                files.file_path = 'http://'+current_app.config['SERVER_URL'] + '/' + file_path + '/' + newfilename
+                files.file_path = current_app.config['SERVER_URL'] + '/' + file_path + '/' + newfilename
                 Files.save(file)
             else:
                 return get_json(0, '格式错误', {})

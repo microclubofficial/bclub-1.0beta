@@ -33,7 +33,7 @@ from .permissions import (like_permission, reply_list_permission,
                           reply_permission, topic_list_permission,
                           topic_permission, edit_permission)
 from forums.api.message.models import MessageClient
-from forums.func import get_json, object_as_dict, time_diff, FindAndCount
+from forums.func import get_json, object_as_dict, time_diff, FindAndCount, Avatar
 from forums.api.user.models import User
 from sqlalchemy import func
 import math
@@ -74,15 +74,12 @@ class TopicPreviewView(IsConfirmedMethodView):
 
 
 class TopicListView(MethodView):
-    #decorators = (topic_list_permission, )
+    decorators = (topic_list_permission, )
 
     def get(self, page):
         start = (page-1)*5
         query_dict = request.data
-        #page, number = self.page_info
         keys = ['title']
-        # order_by = gen_order_by(query_dict, keys)
-        # filter_dict = gen_filter_dict(query_dict, keys)
         order_by = gen_topic_orderby(query_dict, keys)
         filter_dict = gen_topic_filter(query_dict, keys)
         title = _('All Topics')
@@ -93,7 +90,7 @@ class TopicListView(MethodView):
             filter_dict.update(is_bad=True)
             title = _('bad Topics')
         topics = Topic.query.filter_by(
-            **filter_dict).order_by(*order_by).limit(5).offset(start)#.paginate(page, number, True)
+            **filter_dict).order_by(*order_by).limit(5).offset(start)
         topic_count = FindAndCount(Topic)
         page_count = int(math.ceil(topic_count/5))
         topic = []
@@ -103,25 +100,21 @@ class TopicListView(MethodView):
             diff_time = time_diff(i.updated_at)
             i.created_at = str(i.created_at)
             i.updated_at = str(i.updated_at)
-            topics_data=object_as_dict(i)
-            topics_data['author']=user.username
-            topics_data['diff_time']=diff_time
-            topics_data['replies_count']=reply_count
-            if user.avatar:
-                topics_data['avatar']=user.avatar
-            else:
-                topics_data['avatar']='http://'+current_app.config['SERVER_URL']+'/{}/avatar'.format(user.username)
+            topics_data = object_as_dict(i)
+            topics_data['author'] = user.username
+            topics_data['diff_time'] = diff_time
+            topics_data['replies_count'] = reply_count
+            Avatar(topics_data, user)
             topic.append(topics_data)
         data = {'classification': title, 'topics': topic, 'topic_count':topic_count, 'page_count':page_count}
         return get_json(1, '文章列表', data)
 
     #@form_validate(form_board, error=error_callback, f='')
     def post(self):
-        #user = request.user
-        #print(1111111111111111)
+        user = request.user
+        print(user,88888888888888888888888888888888888888888888888888888)
         form = TopicForm()
         post_data = form.data
-        #print(post_data)
         title = post_data.pop('title', None)
         content = post_data.pop('content', None)
         #tags = post_data.pop('tags', None)
@@ -144,18 +137,12 @@ class TopicListView(MethodView):
         #        topic_tag.save()
         #    topic_tags.append(topic_tag)
         #topic.tags = topic_tags
-        #user = User.query.filter_by(id=5).first()
-        #topic.author = user
-        user = User.query.filter_by(id=1).first()
+        #user = User.query.filter_by(id=1).first()
         topic.author = user
         topic.save()
         topic = object_as_dict(topic)
-        if user.avatar:
-            topic['avatar']=user.avatar
-        else:
-            topic['avatar']='http://'+current_app.config['SERVER_URL']+'/{}/avatar'.format(user.username)
+        Avatar(topic, user)
         topic['author'] = user.username
-        # count
         #topic.board.topic_count = 1
         #topic.board.post_count = 1
         #topic.author.topic_count = 1
@@ -190,20 +177,14 @@ class TopicView(MethodView):
             replies_data = object_as_dict(i)
             replies_data['author'] = user.username
             replies_data['diff_time'] = diff_time
-            if user.avatar:
-                replies_data['avatar']=user.avatar
-            else:
-                replies_data['avatar']='http://'+current_app.config['SERVER_URL']+'/{}/avatar'.format(user.username)
+            Avatar(replies_data, user)
             replies.append(replies_data)
         #topic.read_count = 1
         topic_data = object_as_dict(topic)
-        user = User.query.filter_by(id=topic_data['author_id']).first()
-        topic_data['author'] = user.username
+        topic_user = User.query.filter_by(id=topic_data['author_id']).first()
+        topic_data['author'] = topic_user.username
         topic_data['diff_time'] = diff_time
-        if user.avatar:
-            topic_data['avatar']=user.avatar
-        else:
-            topic_data['avatar'] = 'http://'+current_app.config['SERVER_URL'] + '/{}/avatar'.format(user.username)
+        Avatar(topic_data, topic_user)
         data = {
             #'title': topic['title'],
             #'form': object_as_dict(form),
@@ -250,24 +231,21 @@ class ReplyListView(MethodView):
             replies_data = object_as_dict(i)
             replies_data['author'] = user.username
             replies_data['diff_time'] = diff_time
-            if user.avatar:
-                replies_data['avatar']=user.avatar
-            else:
-                replies_data['avatar']='http://'+current_app.config['SERVER_URL']+'/{}/avatar'.format(user.username)
+            Avatar(replies_data, user)
             replies.append(replies_data)
         return get_json(1, '评论信息', replies)
 
-    #decorators = (reply_list_permission, )
+    decorators = (reply_list_permission, )
     #@form_validate(ReplyForm, error=error_callback, f='')
     def post(self, topicId):
         topic = Topic.query.filter_by(id=topicId).first_or_404()
         post_data = request.data
-        #user = request.user
+        user = request.user
+        print(user,88888888888888888888888888888888888888888888888888888)
         content = post_data.pop('content', None)
-        reply = Reply(content=content, topic_id=topic.id, is_reply = 1)
-        user = User.query.filter_by(id=1).first()
+        reply = Reply(content=content, topic_id = topic.id, is_reply = 1)
+        #user = User.query.filter_by(id=1).first()
         reply.author_id = user.id
-        #print(reply)
         reply.save()
         replies_data = object_as_dict(reply)
         replies_data['author'] = user.username
@@ -305,6 +283,7 @@ class LikeView(MethodView):
 
     def post(self, replyId):
         user = request.user
+        print(user,88888888888888888888888888888888888888888888888888888)
         reply = Reply.query.filter_by(id=replyId).first_or_404()
         reply.likers.append(user)
         reply.save()
@@ -315,6 +294,7 @@ class LikeView(MethodView):
 
     def delete(self, replyId):
         user = request.user
+        print(user,88888888888888888888888888888888888888888888888888888)
         reply = Reply.query.filter_by(id=replyId).first_or_404()
         reply.likers.remove(user)
         reply.save()

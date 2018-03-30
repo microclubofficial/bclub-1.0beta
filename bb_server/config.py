@@ -15,6 +15,7 @@ from os import path, pardir
 
 DEBUG = True
 SECRET_KEY = 'sinitek'
+SESSION_COOKIE_DOMAIN = 'ymhui999.com:1234'
 SECURITY_PASSWORD_SALT = '123!@#'
 SECRET_KEY_SALT = '123^&*'
 
@@ -22,7 +23,6 @@ SECRET_KEY_SALT = '123^&*'
 AVATAR_FOLDER = path.join(path.abspath(path.dirname(__file__)), 'static/avatars')
 # avatar generate range
 AVATAR_RANGE = [122, 512]
-
 PICTURE_FOLDER = path.join('static/avatars')
 FILES_FOLDER = path.join('static/upload_files')
 ALLOWED_EXTENSIONS = set([ 'png', 'jpg', 'jpeg', 'gif', 'txt', 'pdf', 'doc', 'docx'])
@@ -66,7 +66,7 @@ MAIL_DEFAULT_SENDER = '609313700@qq.com'
 # MAIL_SUPPRESS_SEND = True
 
 #SERVER_NAME = ' https://nxqwazndlk.localtunnel.me:8000'
-SERVER_URL = '172.16.5.67:8000'
+SERVER_URL = 'http://sinitek.ymhui999.com:1234'
 SUBDOMAIN = {'forums': False, 'docs': False}
 
 # logging setting

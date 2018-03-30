@@ -17,6 +17,7 @@ from flask import abort, current_app, flash, redirect, request, url_for
 from flask_login import current_user, login_required
 from flask_principal import (Need, Permission, RoleNeed, UserNeed,
                              identity_loaded)
+from forums.func import get_json
 
 super_permission = Permission(RoleNeed('super'))
 confirm_permission = Permission(RoleNeed('confirmed')).union(super_permission)
@@ -55,12 +56,12 @@ def is_confirmed(func):
     @wraps(func)
     def _is_confirmed(*args, **kwargs):
         if not current_user.is_authenticated:
-            return redirect(url_for('auth.login', next=request.path))
+            #return redirect(url_for('auth.login', next=request.path))
+            return get_json(0, '未登录', {})
         if confirm_permission.can():
             return func(*args, **kwargs)
         flash('请验证你的帐号', 'warning')
-        return redirect(url_for('user.user', username=current_user.username))
-
+        return 
     return _is_confirmed
 
 
@@ -84,7 +85,7 @@ class RestfulView(object):
             for dec in reversed(self.decorators):
                 f = dec(f)
         return f
-
+    
     def method(self, func):
         @wraps(func)
         def decorator(*args, **kwargs):

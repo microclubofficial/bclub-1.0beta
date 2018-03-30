@@ -10,9 +10,6 @@
 #          By:
 # Description:
 # **************************************************************************
-from flask import request
-from flask_login import login_required
-
 from forums.permission import (ReplyPermission, RestfulView, TopicPermission,
                                is_confirmed)
 
