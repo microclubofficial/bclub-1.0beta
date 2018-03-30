@@ -9,9 +9,9 @@
         <nav class="bibar-headernav">
             <ul class="bibar-headernavlist">
                 <li class="bibar-headernavitem"> <a href="#"><router-link :to="{path:'/'}">首页</router-link></a> </li>
-                <li class="bibar-headernavitem"> <a href="#"><router-link :to="{path:'/maintalk'}">讨论</router-link></a> </li>
-                <li class="bibar-headernavitem"> <a href="#">社区</a> </li>
+                <li class="bibar-headernavitem"> <a href="#"><router-link :to="{path:'/community'}">社区</router-link></a> </li>
                 <li class="bibar-headernavitem"> <a href="#"><router-link :to="{path:'/bibarLayout'}">币讯</router-link></a> </li>
+                <li class="bibar-headernavitem"> <a href="#"><router-link :to="{path:'/maintalk'}">讨论</router-link></a> </li>
                 <li class="bibar-headernavitem"> <a href="#"><router-link :to="{path:'/cream'}">精华</router-link></a> </li>
             </ul>
         </nav>
@@ -24,8 +24,10 @@
                         <i class="iconfont icon-search"></i> </div>
                 </li>
                 <li class="bibar-headerSearchitem">
-                    <NavLogin></NavLogin>
-                     <!-- <a href="#" class="bibar-headeruserpic"><img src="../../assets/img/pic-user1.png"></a> -->
+                    <!-- 未登录 -->
+                    <NavLogin v-show="noLogin"></NavLogin>
+                    <!-- 已登录 -->
+                    <isLogin v-show="islogin"></isLogin>
                 </li>
             </ul>
         </div>
@@ -39,17 +41,34 @@
 
 <script>
 import NavLogin from './navlogin.vue'
+import isLogin from './isLogin.vue'
 export default{
   props: {
     message: Boolean
   },
   data: function () {
-    return {}
+    return {
+      noLogin: false,
+      islogin: true
+    }
   },
   components: {
-    NavLogin
+    NavLogin,
+    isLogin
+  },
+  computed: {
+    userInfo () {
+      return this.$store.state.userInfo.userInfo
+    }
   },
   mounted: function () {
+    if (!this.userInfo.isLogin) {
+      this.noLogin = true
+      this.islogin = false
+    } else {
+      this.noLogin = false
+      this.islogin = true
+    }
   },
   methods: {
 

@@ -71,8 +71,8 @@
                 <a href="#">最早</a>
                 <a href="#">赞</a>
               </div>
-              <div class="comment-list">
-                <pull-to @infinite-scroll='loadDetailPage'>
+                <div class="comment-list">
+                  <!-- <pull-to> -->
                   <div class="comment-item" data-index='' data-id=''  :key ='now' v-for="(item,now) in nowData">
                   <div>
                     <a href="#" data-tooltip='' class="avatar">
@@ -90,22 +90,27 @@
                       <ul class="bibar-indexNewsItem-infro">
                         <li class="set-choseOne"> <a href="javascript:void(0);" class="icon-quan mr15 active"  @click="changeNum(0)"><i class="iconfont icon-handgood"></i><span>{{isGood}}</span></a></li>
                         <li class="set-choseShang"> <a href="javascript:void(0);"><i class="iconfont icon-dashang"></i> 打赏<span>438</span></a> </li>
-                        <li class="set-discuss" @click="showDiscuss(index,tmp.id)">
+                        <li class="set-discuss" @click="showDiscuss(now,item.id)">
                           <a href="javascript:void(0);">
-                            <i class="iconfont icon-pinglun"></i> 评论
+                            <i class="iconfont icon-pinglun"></i> 回复
                             <span>75</span>
                           </a>
                         </li>
                       </ul>
                     </div>
+                    <div class="editor-toolbar">
+                      <!-- <BibarReport ref='childShowApi' :toApi='toId' :contentId='item.author_id' v-show="showReport" @backReplies = 'showReplyContent'></BibarReport> -->
+                    </div>
                   </div>
                 </div>
                 <div class="loading-bar">
-                  <svg class="icon icon-loading" aria-hidden="true">
+                  <!-- <svg class="icon icon-loading" aria-hidden="true">
                       <use xlink:href="#icon-loading"  style="fill:blue" ></use>
-                  </svg>加载中...
+                  </svg>加载中... -->
+                  <img v-show="listLoding" src="../../assets/img/listLoding.png" alt="" class="icon-loading">
+                  <img v-show="noLoading" src="../../assets/img/noLoading.png" alt="" class="icon-loading">{{bottomText}}
                 </div>
-                </pull-to>
+              <!-- </pull-to> -->
               </div>
             </div>
           </div>
@@ -117,14 +122,14 @@
 <script>
 import { get } from '../../utils/http'
 import MainHeader from '../common/header'
-import BibarReport from '../community/bibarReport.vue'
-import PullTo from 'vue-pull-to'
+import BibarReport from '../homePage/bibarReport.vue'
+// import PullTo from 'vue-pull-to'
 
 export default {
   components: {
     MainHeader,
-    BibarReport,
-    PullTo
+    BibarReport
+    // PullTo
   },
   data: function () {
     return {
@@ -136,43 +141,51 @@ export default {
         'content': ''
       },
       articleDetail: [],
+      nowObj: [],
       toId: 0,
       pageCount: 0,
-      pno: 1
+      pno: 1,
+      bottomText: '加载中...',
+      listLoding: true,
+      noLoading: false
     }
-  },
-  created: function () {
   },
   mounted () {
     this.did = this.$route.params.id
-    this.loadDetailPage(this.pno)
-    // window.addEventListener('scroll', function () {
-    //   console.log('begin scroll')
-    //   let scrollTop = document.body.scrollTop
-    //   let innerHeight = window.innerHeight
-    //   var offsetHeight = document.body.offsetHeight
-    //   console.log(scrollTop)
-    //   console.log(innerHeight)
-    //   console.log(offsetHeight)
-    //   if (scrollTop + innerHeight >= offsetHeight) {
-    //     this.pno++
-    //     this.loadDetailPage(this.pno)
-    //   }
-    // })
+    // console.log(this.pageCount)
+    get(`api/topic/${this.did}/${this.pno}`).then(data => {
+      this.articleDetail = data.data.topic
+      this.nowData = data.data.replies
+      this.pageCount = data.data.page_count
+      var that = this
+      document.querySelector('#app').addEventListener('scroll', function () {
+        if (this.scrollHeight - this.scrollTop === this.clientHeight) {
+          that.loadDetailPage()
+        }
+      })
+    })
     $('.editor').css({'padding-bottom': '35px'})
   },
   methods: {
-    loadDetailPage (pno) {
-      setTimeout(() => {
-        this.pno++
-        console.log(this.pno)
-        get(`api/topic/${this.did}/${pno}`).then(data => {
-          this.articleDetail = data.data.topic
-          this.nowData = data.data.replies
-          console.log(data)
-        // console.log(pno)
-        })
-      }, 1000)
+    loadDetailPage () {
+      // console.log(this.pno < this.pageCount)
+      if (this.pno < this.pageCount) {
+        setTimeout(() => {
+          get(`api/topic/${this.did}/${this.pno}`).then(data => {
+            this.nowData = this.nowData.concat(data.data.replies)
+            this.pno++
+            this.bottomText = '加载中...'
+            // this.loadingImg = '../../assets/img/listLoding.png'
+          })
+        }, 1000)
+      } else {
+        console.log(this.pageCount)
+        this.bottomText = '没有啦'
+        this.listLoding = false
+        this.noLoading = true
+        // this.loadingImg = '../../assets/img/noLoading.png'
+        return false
+      }
     },
     changeNum (isNum, id) {
       $('.set-choseOne>a:eq(' + isNum + ')').addClass('active').siblings().removeClass('active')
@@ -190,12 +203,14 @@ export default {
       this.backDetail.content = data
       this.nowData.unshift(this.backDetail)
     }
+  },
+  showDiscuss (now, id) {
+
   }
 }
 </script>
 
 <style lang="scss" scoped>
-svg { fill: #369; }
 .reward-btn{
     display: block;
     width: 56px;
@@ -455,18 +470,16 @@ a.avatar img {
 .bibar-indexNewsItem-infro>li i {
     margin-right: 3px;
 }
-
-.loading-bar {
-    height: 40px;
-    text-align: center;
-    line-height: 40px;
-  }
-  .icon-loading {
+.loading-bar{text-align: center;}
+.icon-loading {
     transform: rotate(0deg);
     animation-name: loading;
     animation-duration: 3s;
     animation-iteration-count: infinite;
     animation-direction: alternate;
+    width: 28px;
+    height: 28px;
+    margin-right: 20px;
   }
   @keyframes loading
   {
