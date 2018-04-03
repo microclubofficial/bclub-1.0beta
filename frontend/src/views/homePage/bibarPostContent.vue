@@ -32,7 +32,7 @@ export default {
   methods: {
     getContent: function () {
       this.topicData.content = this.editorContent
-      post('api/topic', this.topicData).then(data => {
+      post('/api/topic', this.topicData).then(data => {
         if (data.message === '未登录') {
           alert('先去登录')
           this.$router.push('/login')

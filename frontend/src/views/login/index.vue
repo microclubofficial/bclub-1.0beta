@@ -58,12 +58,11 @@ export default {
   data () {
     return {
       userForm: {},
-      formUrl: 'api/login',
+      formUrl: '/api/login',
       unamePrompt: '',
       upwdPrompt: '',
       controlPrompt: '',
-      isLogin: true,
-      controlImg: 'http://sinitek.ymhui999.com:1234/api/captcha'
+      controlImg: '/api/captcha'
     }
   },
   mounted () {

@@ -37,7 +37,7 @@ export default {
     },
     getContent: function () {
       this.topicData.content = this.editorContent
-      post(`api/${this.nowShowApi[this.toApi]}${this.toApi === 1 ? '/question' : this.toApi === 2 ? '/answer' : this.toApi === 3 ? '/comment' : ''}/replies/${this.toApi === 2 ? this.talkId : this.contentId}`, this.topicData).then(data => {
+      post(`/api/${this.nowShowApi[this.toApi]}${this.toApi === 1 ? '/question' : this.toApi === 2 ? '/answer' : this.toApi === 3 ? '/comment' : ''}/replies/${this.toApi === 2 ? this.talkId : this.contentId}`, this.topicData).then(data => {
         //   评论发送完毕
         if (data.message === '未登录') {
           alert('先去登录')

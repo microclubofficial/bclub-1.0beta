@@ -8,7 +8,7 @@ import Router from 'vue-router'
 
 /* Layout */
 // 币讯
-import bibarLayout from 'src/views/BibarFirst/main'
+import bibarLayout from 'src/views/BibarMsg/bibarMsg'
 // 首页
 import homePage from 'src/views/homePage/main'
 // 社区
@@ -67,14 +67,14 @@ export const constantRouterMap = [
     // name: 'main',
     component: bibarLayout,
     children: [
-      {path: '', component: _import('BibarFirst/BibarList/all')},
+      {path: '', component: _import('BibarMsg/BibarList/all')},
       {
-        path: 'all', component: _import('BibarFirst/BibarList/all')
+        path: 'all', component: _import('BibarMsg/BibarList/all')
       },
-      {path: 'talk', component: _import('BibarFirst/BibarList/talk')},
-      {path: 'works', component: _import('BibarFirst/BibarList/works')},
-      {path: 'news', component: _import('BibarFirst/BibarList/news')},
-      {path: 'trade', component: _import('BibarFirst/BibarList/trade')}
+      {path: 'talk', component: _import('BibarMsg/BibarList/talk')},
+      {path: 'works', component: _import('BibarMsg/BibarList/works')},
+      {path: 'news', component: _import('BibarMsg/BibarList/news')},
+      {path: 'trade', component: _import('BibarMsg/BibarList/trade')}
     ]
   },
   {

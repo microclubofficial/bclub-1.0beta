@@ -15,9 +15,9 @@
 import MainHeader from '../common/header'
 
 // 比特币
-import btb from '../BibarFirst/BibarChart/BTB.vue'
-import eth from '../BibarFirst/BibarChart/ETH.vue'
-import xrp from '../BibarFirst/BibarChart/XRP.vue'
+import btb from '../BibarMsg/BibarChart/BTB.vue'
+import eth from '../BibarMsg/BibarChart/ETH.vue'
+import xrp from '../BibarMsg/BibarChart/XRP.vue'
 import subDetail from '../homePage/subDetail.vue'
 export default {
   components: {

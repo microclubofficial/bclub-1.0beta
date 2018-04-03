@@ -2,7 +2,7 @@
 // Template version: 1.3.1
 // see http://vuejs-templates.github.io/webpack for documentation.
 
-const SERVERURL = 'http://sinitek.ymhui999.com:1234'
+const SERVERURL = 'http://zxypetre.ymhui999.com:1234'
 const path = require('path')
 
 module.exports = {

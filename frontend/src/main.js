@@ -32,12 +32,14 @@ import VueAwesomeSwiper from 'vue-awesome-swiper'
 import './assets/css/bootstrap.css'
 import './assets/css/bootstrap.min.css'
 import './assets/iconfont/iconfont.css'
+import './assets/fonts/iconfont.css'
 import './assets/css/reset.pack.css'
 import './assets/css/web.css'
 
 import './assets/js/jquery.min.js'
 import './assets/js/bootstrap.min.js'
 import './assets/plus/scrollfix/js/scrollfix.min.js'
+import './assets/js/highcharts.js'
 
 import './assets/js/jquery.cookie.js'
 
