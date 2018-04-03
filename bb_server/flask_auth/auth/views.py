@@ -94,9 +94,9 @@ class LoginView(MethodView):
         remember = post_data.pop('remember', True)
         user = User.query.filter_by(username=username).first()
         if not user or not user.check_password(password):
-            msg = _('Username or Password Error')
+            #msg = _('用户名或密码错误')
             #return HTTPResponse(HTTPResponse.HTTP_PARA_ERROR, message=msg).to_response()
-            return get_json(0, msg, {})
+            return get_json(0, '用户名或密码错误', {})
         user.login(remember)
         data = {"username":user.username}
         Avatar(data, user)

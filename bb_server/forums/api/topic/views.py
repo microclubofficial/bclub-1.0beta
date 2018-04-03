@@ -112,7 +112,6 @@ class TopicListView(MethodView):
     #@form_validate(form_board, error=error_callback, f='')
     def post(self):
         user = request.user
-        print(user,88888888888888888888888888888888888888888888888888888)
         form = TopicForm()
         post_data = form.data
         title = post_data.pop('title', None)
@@ -241,13 +240,13 @@ class ReplyListView(MethodView):
         topic = Topic.query.filter_by(id=topicId).first_or_404()
         post_data = request.data
         user = request.user
-        print(user,88888888888888888888888888888888888888888888888888888)
         content = post_data.pop('content', None)
         reply = Reply(content=content, topic_id = topic.id, is_reply = 1)
         #user = User.query.filter_by(id=1).first()
         reply.author_id = user.id
         reply.save()
         replies_data = object_as_dict(reply)
+        Avatar(replies_data, user)
         replies_data['author'] = user.username
         # notice
         #MessageClient.topic(reply)
@@ -283,7 +282,6 @@ class LikeView(MethodView):
 
     def post(self, replyId):
         user = request.user
-        print(user,88888888888888888888888888888888888888888888888888888)
         reply = Reply.query.filter_by(id=replyId).first_or_404()
         reply.likers.append(user)
         reply.save()
@@ -294,7 +292,6 @@ class LikeView(MethodView):
 
     def delete(self, replyId):
         user = request.user
-        print(user,88888888888888888888888888888888888888888888888888888)
         reply = Reply.query.filter_by(id=replyId).first_or_404()
         reply.likers.remove(user)
         reply.save()
@@ -308,7 +305,7 @@ class ThumbView(MethodView):
         if thumb == 'up':
             topic.is_good = int(topic.is_good) + 1
             thumb = topic.is_good
-        if thumb == 'down':
+        elif thumb == 'down':
             topic.is_bad = int(topic.is_bad) + 1
             thumb = topic.is_bad
         topic.save()
