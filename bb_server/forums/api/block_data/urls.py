@@ -1,13 +1,12 @@
 from flask import Blueprint
-from .views import B_Price, B_Histery
+from .views import Currency_News
 
-site = Blueprint('blockcc', __name__, url_prefix='/api/price')
+site = Blueprint('blockcc', __name__, url_prefix='/api')
 
-price_view = B_Price.as_view('blockcc_data')
-history_view = B_Histery.as_view('blockcc_history')
+currency_news = Currency_News.as_view('currency_news')
 
-site.add_url_rule('/<token>', view_func=price_view)
-site.add_url_rule('/history/<token>/<limit>', view_func=history_view)
+site.add_url_rule('/currency_news/<token>', view_func=currency_news)
+
 
 def init_app(app):
     app.register_blueprint(site)

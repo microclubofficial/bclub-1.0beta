@@ -37,5 +37,5 @@ def Avatar(avatar,user):
     if user.avatar:
         avatar['avatar'] = user.avatar
     else:
-        avatar['avatar'] = current_app.config['SERVER_URL']+'/api/{}/avatar'.format(user.username)
+        avatar['avatar'] = '/api/{}/avatar'.format(user.username)
     return 
