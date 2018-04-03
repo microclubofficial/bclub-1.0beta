@@ -6,12 +6,12 @@ const articles = {
   mutations: {
     POST_ARTICLE (state, payload) {
       state.articleList = payload.data
-      console.log(state.articleList)
+      console.log(state.articleLblcub.sinitek.comist)
     }
   },
   actions: {
     POST_ARTICLE ({commit}, payload) {
-      post('api/topic', payload).then(data => {
+      post('/api/topic', payload).then(data => {
         // console.log(data)
         commit('POST_ARTICLE', data)
       })

@@ -4,12 +4,12 @@
                 <div class="bibar-indexDisplay">
                     <div class="bibar-indexDisplay-header">
                         <div class="logopic"><img src="../../../assets/img/logo-coin-BTC.png"></div>
-                        <div class="logonameEnglish">BTC</div>
+                        <div class="logonameEnglish">BTB</div>
                         <div class="logonameChinese">比特币</div>
                     </div>
                     <a href="#" class="btn btn-default"><i class="iconfont icon-add-sm"></i> 关注</a> </div>
                 <!--数-->
-                <div class="bibar-indexDisplay-data"> <i class="iconfont icon-USD"></i> <span class="bibar-indexDisplay-dollar">11,122.44</span> <span class="bibar-indexDisplay-rmb"><i class="iconfont icon-yueden"></i> <i class="iconfont icon-CNY"></i> 70,728.18</span> <span class="bibar-indexDisplay-den"><i class="iconfont icon-denyu"></i> <i class="iconfont icon-BTC"></i> 1</span> </div>
+                <div class="bibar-indexDisplay-data"> <i class="iconfont icon-USD"></i> <span class="bibar-indexDisplay-dollar">123456789</span> <span class="bibar-indexDisplay-rmb"><i class="iconfont icon-yueden"></i>7895313<i class="iconfont icon-CNY"></i></span> <span class="bibar-indexDisplay-den"><i class="iconfont icon-denyu"></i> <i class="iconfont icon-BTC"></i> 1</span> </div>
                 <!--涨跌-->
                 <div class="bibar-indexDisplay-trend">
                     <div class="bibar-indextrend green"> <span class="num">+6.65%</span> <i class="iconfont icon-angleup-bold"></i> </div>
@@ -71,11 +71,12 @@
                     </div>
                     <div class="clear hline"></div>
                     <!--chart-->
-                    <div id="mainChart" :style="{width:'780px',height:'450px'}"></div>
+                    <div :id='chartBox' :style="{width:'780px',height:'450px'}"></div>
                 </article>
             </article>
 </div>
 </template>
+
 <script>
 import Highcharts from 'highcharts/highstock'
 import HighchartsMore from 'highcharts/highcharts-more'
@@ -93,46 +94,83 @@ export default{
     return {
       id: 'chart',
       ohlc: [],
-      volumeData: []
+      volumeData: [],
+      chartBox: 'chartBox' + Math.floor(Math.random() * 100),
+      bibarData: {},
+      price: null
     }
   },
   mounted () {
     this.getChartData()
   },
+  filters: {
+    toFixFun (value) {
+      return value.toFixed(2)
+    },
+    toLower (value) {
+      return value.toLowerCase()
+    }
+  },
   methods: {
     getChartData () {
       // https://data.jianshukeji.com/stock/history/000001
       var that = this
-      $.getJSON('https://data.jianshukeji.com/stock/history/000001', function (data) {
-        if (data.code !== 1) {
-          alert('读取股票数据失败！')
-          return false
-        }
-        var dealingData = data.data
-        for (var i = 0; i < dealingData.length; i++) {
-          that.ohlc.push([
-            dealingData[i][0], // the date
-            dealingData[i][1], // open
-            dealingData[i][2], // high
-            dealingData[i][3], // low
-            dealingData[i][4] // close
-          ])
-          that.volumeData.push([
-            dealingData[i][0], // the date
-            dealingData[i][5] // the volume
-          ])
-        }
-        that.drawChart()
+      $.getJSON('/api/price/bitcoin', function (data) {
+        that.bibarData = data.data
+        console.log(data)
+        // if (data.message !== 'success') {
+        //   alert('读取股票数据失败！')
+        //   return false
+        // }
+        // var dealingData = data.data
+        // for (var i = 0; i < dealingData.length; i++) {
+        //   that.ohlc.push([
+        //     dealingData[i][0], // the date
+        //     dealingData[i][1] // 价格
+        //   ])
+        //   that.volumeData.push([
+        //     dealingData[i][0], // the date
+        //     dealingData[i][2] // the volume
+        //   ])
+        // }
+        // that.drawChart()
       })
     },
     drawChart () {
-      Highcharts.stockChart('mainChart', {
+      Highcharts.stockChart(this.chartBox, {
         rangeSelector: {
           selected: 1,
-          inputDateFormat: '%Y-%m-%d'
+          inputDateFormat: '%Y-%m-%d',
+          inputEnabled: false,
+          buttons: [{
+            type: 'all',
+            text: '所有'
+          }, {
+            type: 'month',
+            count: 1,
+            text: '1月'
+          }, {
+            type: 'month',
+            count: 3,
+            text: '3月'
+          }, {
+            type: 'month',
+            count: 6,
+            text: '6月'
+          }, {
+            type: 'ytd',
+            text: 'YTD'
+          }, {
+            type: 'year',
+            count: 1,
+            text: '1年'
+          }]
         },
         title: {
           text: ''
+        },
+        credits: {
+          enabled: false
         },
         xAxis: {
           dateTimeLabelFormats: {
@@ -156,16 +194,10 @@ export default{
           // layout: 'vertical',
           verticalAlign: 'top'
         },
-        rangeSelector: {
-          inputEnabled: false
-        },
         yAxis: [{
           labels: {
             align: 'right',
             x: -3
-          },
-          title: {
-            text: '股价'
           },
           height: '65%',
           resize: {
@@ -176,9 +208,6 @@ export default{
           labels: {
             align: 'right',
             x: -3
-          },
-          title: {
-            text: '成交量'
           },
           top: '65%',
           height: '35%',

@@ -35,7 +35,7 @@
           </ul>
         </div>
       </div>
-      <a href="#" class="nav_btn_longtext" @click="postModel">发帖</a>
+      <a href="#" v-show="isShowft" class="nav_btn_longtext" @click="postModel">发帖</a>
     </div>
     <vdialog v-show="Showdialog" :toDialog='postEditor' @backnavFt = 'toHeader'></vdialog>
   </div>
@@ -55,7 +55,8 @@ export default{
       Showdialog: false,
       postEditor: {
         'title': '有什么消息告诉大家'
-      }
+      },
+      isShowft: false
     }
   },
   components: {
@@ -67,14 +68,7 @@ export default{
     }
   },
   mounted () {
-    console.log(this.userInfo)
-    if (!this.userInfo.isLogin) {
-      this.userName = ''
-      this.useravatar = '../../assets/img/login.png'
-    } else {
-      this.userName = this.userInfo.username
-      this.useravatar = this.userInfo.avatar
-    }
+    this.outloginSty()
   },
   methods: {
     toRegister () {
@@ -93,14 +87,15 @@ export default{
     },
     // 退出登录
     outlogin () {
-      get('api/logout').then((data) => {
-        console.log(data)
+      get('/api/logout').then((data) => {
         if (data.message === '登出成功') {
           this.$store.commit('USER_INFO', {
             'username': '',
             'avatar': '',
             'isLogin': false
           })
+          this.outloginSty()
+          this.$emit('backLoadContent')
         }
       })
     },
@@ -111,9 +106,21 @@ export default{
         keyboard: true
       })
     },
-    // 传值
+    // // 传值
     toHeader (data) {
       this.$emit('backnavHeader', data)
+    },
+    // 退登效果
+    outloginSty () {
+      if (!this.userInfo.isLogin) {
+      this.userName = ''
+      this.useravatar = '../../assets/img/login.png'
+      this.isShowft = false
+    } else {
+      this.userName = this.userInfo.username
+      this.useravatar = this.userInfo.avatar
+      this.isShowft = true
+    }
     }
   }
 }

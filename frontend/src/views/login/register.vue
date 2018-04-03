@@ -80,13 +80,13 @@ export default {
   data () {
     return {
       userForm: {},
-      formUrl: 'api/register',
+      formUrl: '/api/register',
       unamePrompt: '',
       upwdPrompt: '',
       confirm_upwdPrompt: '',
       phonePrompt: '',
       emailPrompt: '',
-      controlImg: 'http://sinitek.ymhui999.com:1234/api/captcha'
+      controlImg: '/api/captcha'
     }
   },
   methods: {
@@ -134,7 +134,7 @@ export default {
       } else {
         this.phonePrompt = ''
       }
-      var emailreg = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
+      var emailreg = /^[A-Za-z0-9.\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
       if (!emailreg.test(this.userForm.email) && this.userForm.email !== undefined) {
         this.emailPrompt = '邮箱格式不正确'
         return

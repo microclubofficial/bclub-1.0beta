@@ -1,6 +1,7 @@
 <template>
   <div>
   <div class="bibar-tabAll">
+    <!-- {{[articles]}} -->
     <div class="bibar-tabitem fade in active" :key="index" id="bibar-newstab1" v-for="(tmp,index) in [...getNavaVal, ...articles]">
       <div class="bibar-indexNewsList">
         <div class="bibar-indexNewsItem">
@@ -167,6 +168,7 @@ export default{
   },
   mounted () {
     // this.getNavaVal = this.getNavData
+    console.log(this.articles)
   },
   // watch: {
   //   getNavaVal (val) {
@@ -191,7 +193,7 @@ export default{
       this.$router.push(`/details/${this.lid}`)
     },
     showDiscuss (index, id) {
-      get(`api/topic/${id}/1`).then(data => {
+      get(`/api/topic/${id}/1`).then(data => {
         this.nowData = data.data.replies
         // console.log(data.data.replies)
       })

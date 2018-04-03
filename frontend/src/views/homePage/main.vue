@@ -1,6 +1,6 @@
 <template>
   <div id="commun">
-      <MainHeader @backnavMain='toHotList'></MainHeader>
+      <MainHeader @backnavMain='toHotList' @backLoadMain='toMainLoadFun'></MainHeader>
       <!--社区币吧数据-->
       <BibarData v-show="initShow"></BibarData>
       <!--社区各币种-->
@@ -64,12 +64,7 @@ export default{
     }
   },
   mounted () {
-    if (!this.userInfo.isLogin) {
-      this.initShow = true
-    } else {
-      this.initHide = true
-      $('.Maineditor').css({'margin-top': '80px'})
-    }
+    this.loadShow()
   },
   methods: {
     // 社区文章列表切换事件
@@ -83,12 +78,23 @@ export default{
     },
     FtContentFun (data) {
       this.$store.dispatch('set_backForNav', data)
-      // this.$refs.showFtContent.showFtContentFun(data)
+      this.$refs.showFtContent.showFtContentFun(data)
     },
     toHotList (data) {
-      console.log(this.$store, data)
       this.$store.dispatch('set_backForNav', data)
-      this.backForNav = data
+    },
+    toMainLoadFun () {
+      this.loadShow()
+    },
+    loadShow () {
+      if (!this.userInfo.isLogin) {
+        this.initShow = true
+        this.initHide = false
+      } else {
+        this.initShow = false
+        this.initHide = true
+        $('.Maineditor').css({'margin-top': '80px'})
+      }
     }
   }
 }

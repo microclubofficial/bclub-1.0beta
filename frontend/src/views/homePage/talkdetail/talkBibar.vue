@@ -416,7 +416,7 @@ export default{
     },
     // 评论
     showDiscuss (id) {
-      get(`api/bar/question/replies/${id}`).then(data => {
+      get(`/api/bar/question/replies/${id}`).then(data => {
         this.nowData = data.data
       })
       // if (index !== this.i) {
@@ -456,7 +456,7 @@ export default{
         this.talkBackI = index
       }
       this.talkCommentShow = !this.talkCommentShow
-      get(`api/bar/answer/replies/${id}`).then(data => {
+      get(`/api/bar/answer/replies/${id}`).then(data => {
         this.talkComment = data.data
         // this.replyContent = data
       })
