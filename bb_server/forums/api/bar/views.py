@@ -20,7 +20,7 @@ class BarListView(MethodView):
         barlist = []
         for i in barlists:
             user = User.query.filter_by(id = i.author_id).first()
-            picture = current_app.config['SERVER_URL'] + '/' + i.picture
+            picture = i.picture
             bar_data = object_as_dict(i)
             bar_data['author'] = user.username  
             bar_data['picture'] = picture

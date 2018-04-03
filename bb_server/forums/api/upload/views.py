@@ -56,7 +56,7 @@ class AvatarView(MethodView):
                 os.remove(ef)
         info.avatar = filename + '.png'
         info.save()
-        resp = Response(img, mimetype="image/png")
+        resp = Response(img, mimetype="image/jpeg")
         return resp
 
 
@@ -87,9 +87,9 @@ class GetFileView(MethodView):
                     os.makedirs(file_path)
                 files = File(
                     front_file = filename,
-                    file_path = file_path + '/' + newfilename)
+                    file_path = '/' + file_path + '/' + newfilename)
                 files.save()
-                files.file_path = current_app.config['SERVER_URL'] + '/' + file_path + '/' + newfilename
+                files.file_path = '/' + file_path + '/' + newfilename
                 Files.save(file)
             else:
                 return get_json(0, '格式错误', {})
