@@ -80,7 +80,7 @@ def file_is_allowed(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in e
 
 
-def gen_thumb_image(path, width=0, height=0, filetype='JPEG'):
+def gen_thumb_image(path, width=0, height=0, filetype='PNG'):
     '''
     生成缩略图
     '''

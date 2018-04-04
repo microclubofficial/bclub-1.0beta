@@ -14,7 +14,7 @@ import os
 from flask import Flask
 from forums import app as ap, extension
 from forums import jinja, subdomain
-from forums import api, docs, admin
+from forums import api, admin
 from flask_auth import auth
 
 
@@ -35,5 +35,4 @@ def create_app(config):
     # router
     auth.init_app(app)
     api.init_app(app)
-    docs.init_app(app)
     return app
