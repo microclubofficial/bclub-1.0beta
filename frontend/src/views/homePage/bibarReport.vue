@@ -23,8 +23,15 @@ export default {
         'content': ''
       },
       backData: {
+        'author': '',
+        'avatar': '',
+        'created_at': '',
+        'updated_at': '',
+        'title': '',
         'content': '',
-        'url': ''
+        'is_good': 0,
+        'is_bad': 0,
+        replt_count: 0
       },
       nowShowApi: ['topic', 'bar', 'bar', 'bar'],
       isHide: false,
@@ -43,7 +50,9 @@ export default {
           alert('先去登录')
           this.$router.push('/login')
         } else {
-          this.backData = data.data.content
+          this.backData.content = data.data.content
+          this.backData.avatar = data.data.avatar
+          this.backData.author = data.data.author
           this.replies = data.data.replies
           this.$emit('backReplies', this.replies)
           this.$emit('backList', this.backData)

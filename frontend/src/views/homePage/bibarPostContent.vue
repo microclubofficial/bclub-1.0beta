@@ -22,9 +22,15 @@ export default {
         'content': ''
       },
       backFt: {
-        'content': '',
         'author': '',
-        'id': null
+        'avatar': '',
+        'created_at': '',
+        'updated_at': '',
+        'title': '',
+        'content': '',
+        'is_good': 0,
+        'is_bad': 0,
+        replt_count: 0
       },
       isHide: false
     }
@@ -33,12 +39,14 @@ export default {
     getContent: function () {
       this.topicData.content = this.editorContent
       post('/api/topic', this.topicData).then(data => {
+        console.log(data)
         if (data.message === '未登录') {
           alert('先去登录')
           this.$router.push('/login')
         } else {
           this.backFt.content = data.data.content
           this.backFt.author = data.data.author
+          this.backFt.avatar = data.data.avatar
           this.backFt.id = data.data.id
           this.$emit('backFtContent', this.backFt)
           $('.w-e-text-container').find('p').html('')
@@ -71,6 +79,7 @@ export default {
       // },
       customInsert: function (insertImg, result, editor) {
         that.backFt.url = result.data.file_path
+        console.log(that.backFt)
         insertImg(that.backFt.url)
       }
     }

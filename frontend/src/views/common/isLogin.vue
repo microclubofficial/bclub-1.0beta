@@ -106,21 +106,21 @@ export default{
         keyboard: true
       })
     },
-    // // 传值
+    // 传值
     toHeader (data) {
       this.$emit('backnavHeader', data)
     },
-    // 退登效果
+    // 退登样式
     outloginSty () {
       if (!this.userInfo.isLogin) {
-      this.userName = ''
-      this.useravatar = '../../assets/img/login.png'
-      this.isShowft = false
-    } else {
-      this.userName = this.userInfo.username
-      this.useravatar = this.userInfo.avatar
-      this.isShowft = true
-    }
+        this.userName = ''
+        this.useravatar = '../../assets/img/login.png'
+        this.isShowft = false
+      } else {
+        this.userName = this.userInfo.username
+        this.useravatar = this.userInfo.avatar
+        this.isShowft = true
+      }
     }
   }
 }
