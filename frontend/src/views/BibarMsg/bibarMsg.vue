@@ -3,7 +3,7 @@
     <MainHeader></MainHeader>
     <!--主体-->
     <section class="bibar-Main">
-    <div class="pt40">hgfthf</div>
+    <div class="pt40"></div>
     <section class="bibar-w1100">
         <!--主体左侧-->
         <section class="bibar-Mainleft">
@@ -12,18 +12,18 @@
                 <div id='collapseOne' class="panel-collapse collapse">
                   <div class="panel-body">
                     <!--BTB信息框-->
-                    <btb></btb>
+                    <btb v-show="index == chartShow && chartState" ref='toNowChild'></btb>
                   </div>
                 </div>
                  <!-- 币种列表 -->
                  <a data-toggle="collapse" class="panel-tb-hd" data-parent="#accordion" href='#collapseOne'>
-                  <div class="bibar-list-item">
+                  <div class="bibar-list-item" @click="chartShowFun(index, item.id)">
                   <ul>
                     <li><a href="#"><span><img :src="item.picture" alt=""></span> {{item.name_ch}} - {{item.symbol}}</a></li>
                     <li><a href="#"><i class="iconfont icon-CNY"></i>{{item.price | cnyFun(CNY,2)}}</a></li>
                     <li><a href="#">{{item.change_1h}}</a></li>
-                    <li><a href="#"><i class="iconfont icon-CNY"></i>{{item.volume | cnyFun(CNY,2)}}</a></li>
-                    <li><a href="#"><i class="iconfont icon-CNY"></i>{{item.marketcap | cnyFun(CNY,2)}}</a></li>
+                    <li><a href="#"><i class="iconfont icon-CNY"></i>{{item.volume | cnyFunStr(CNY,2)}}</a></li>
+                    <li><a href="#" :title="item.marketcap"><i class="iconfont icon-CNY"></i>{{item.marketcap | cnyFunStr(CNY,2)}}</a></li>
                     <li><a href="#"><i style="font-size:16px; color:#909499;" class="iconfont">&#xe604;</i>···</a></li>
                   </ul>
                 </div>
@@ -77,10 +77,12 @@ export default{
       hrefCollapse: '',
       cpno: 1,
       cpageSize: 10,
-      BTC: 0,
-      CNY: 0,
+      BTC: null,
+      CNY: null,
       summaryList: [],
-      upSty: false
+      upSty: false,
+      chartShow: 0,
+      chartState: false
     }
   },
   components: {
@@ -95,15 +97,17 @@ export default{
     this.collapseId = `collapse${this.i++}`
     this.hrefCollapse = `#${this.collapseId}`
     get(`/api/blist/${this.cpno}/${this.cpageSize}`).then((data) => {
+      console.log(data)
       this.BTC = data.data.exrateData.BTC
       this.CNY = data.data.exrateData.CNY
       this.summaryList = data.data.summaryList
     })
-    $('.mainBibar-editor').find('.wangeditor').css({'width': '860px'})
-    $('.panel-default:eq(0)').find('.panel-collapse').addClass('in')
-    console.log(document.querySelector('.panel-default'))
+    if (this.chartShow === 0) {
+      this.chartState = true
+    }
   },
   mounted () {
+    $('.mainBibar-editor').find('.wangeditor').css({'width': '860px'})
   },
   methods: {
     // 文章列表切换事件
@@ -115,6 +119,15 @@ export default{
     },
     BibarContentFun (data) {
       this.$refs.showBibarContent.showBibarContentFun(data)
+    },
+    // 显示chart
+    chartShowFun (index, id) {
+      if (index !== this.chartShow) {
+        this.chartShow = index
+      }
+      this.chartState = !this.chartState
+      this.$refs.toNowChild[index].showNowChild(id)
+      console.log($('html,body').scrollTop)
     }
   }
 }
@@ -129,8 +142,10 @@ export default{
 }
 .bibar-box{box-shadow: none;}
 .bibar-list-item ul li{
-  float: left;
-  margin: 10px 25px;
+    float: left;
+    margin: 10px 0;
+    width: 16%;
+    text-align: center;
 }
 .bibar-list-item ul li a{
     font-size: 16px;
@@ -156,5 +171,12 @@ export default{
   border:none !important;
 }
 .panel-body, .bibar-boxindex1{padding-bottom: 0 !important;}
-
+.panel-collapse{display: block;}
+.bibar-list-item ul li a{
+    width: 16%;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    overflow: hidden;
+}
 </style>

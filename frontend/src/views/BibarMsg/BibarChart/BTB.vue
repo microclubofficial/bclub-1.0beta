@@ -100,18 +100,19 @@ export default{
       change1h: null,
       isDown: false,
       msgId: '',
-      chartList: []
+      chartList: [],
+      bId: 'bitcoin'
     }
   },
   mounted () {
-    this.getChartData()
+    this.getChartData(this.bId)
   },
   methods: {
     // 获取chart数据
-    getChartData () {
+    getChartData (bId) {
       // https://data.jianshukeji.com/stock/history/000001
       var that = this
-      $.getJSON('/api/currency_news/bitcoin', function (data) {
+      $.getJSON(`/api/currency_news/${bId}`, function (data) {
         // main数据
         that.bibarData = data.data
         // 人民币汇率
@@ -128,7 +129,6 @@ export default{
         } else {
           that.isDown = true
         }
-        console.log(that.bibarData)
         // k线图
         that.kline = that.bibarData.kline
         if (data.message !== 'success') {
@@ -251,6 +251,10 @@ export default{
     toMsgDetail (id) {
       this.msgId = id
       this.$router.push(`/msgDetail/${this.msgId}`)
+    },
+    // 显示当前chart
+    showNowChild (id) {
+      this.getChartData(id)
     }
   }
 }

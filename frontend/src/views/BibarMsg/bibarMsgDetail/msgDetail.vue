@@ -107,7 +107,7 @@ export default{
     font-weight: bold;
 }
 .bibar-list-item ul li:first-child a span{
-  display: block;
+  /* display: block; */
   color: #909499;
   font-size: 14px;
 }

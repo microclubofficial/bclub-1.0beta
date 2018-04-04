@@ -127,16 +127,22 @@ export function formatNum (value, num) {
 
 // 人民币转换
 export function cnyFun (value, rate, num) {
-  let rateNum = (parseInt(value) * rate).toFixed(num).toString()
-  let len = rateNum.length
-  if (len <= 3) {
-    return rateNum
+  // debugger
+  let rateNum = (parseFloat(value) * rate).toFixed(num).toString()
+  // let lenCny = rateNum.split('.')[0].length
+  let len = rateNum.split('.')[0]
+  console.log(len, rate)
+  let lenCny = len.length
+  console.log(lenCny)
+  if (lenCny <= 3) {
+    return rateNum + '分'
   } else {
-    let r = len % 3
-    if (rateNum.slice(r, len).match(/\d{3}/g) === null) {
+    let r = lenCny % 3
+    if (rateNum.slice(r, lenCny).match(/\d{3}/g) === null) {
       return
     }
-    return r > 0 ? rateNum.slice(0, r) + ',' + rateNum.slice(r, len).match(/\d{3}/g).join(',') : rateNum.slice(r, len).match(/\d{3}/g).join(',')
+    return rateNum
+    // return r > 0 ? rateNum.slice(0, r) + ',' + rateNum.slice(r, len).match(/\d{3}/g).join(',') : rateNum.slice(r, len).match(/\d{3}/g).join(',')
   }
 }
 
@@ -158,5 +164,67 @@ export function lengthFun (value, num) {
     return value
   } else {
     return value
+  }
+}
+
+// 省略字符串
+
+// 人民币转换
+export function cnyFunStr (value, rate, num) {
+  let rateW = null
+  let rateNum = null
+  let len = null
+  let r = null
+  if ((value * rate + '').length >= 9) {
+    rateW = parseInt(value) / 100000000
+    rateNum = rateW.toFixed(num).toString()
+    len = rateNum.split('.')[0].length
+    if (len <= 3) {
+      return rateNum + '亿'
+    } else {
+      r = len % 3
+      if (rateNum.slice(r, len).match(/\d{3}/g) === null) {
+        return
+      }
+      return r > 0 ? rateNum.slice(0, r) + ',' + rateNum.slice(r, len).match(/\d{3}/g).join(',') + '亿' : rateNum + '亿'
+    }
+  } else if ((value * rate + '').length >= 7 && (value + '').length < 9) {
+    rateW = parseInt(value) / 1000000
+    rateNum = rateW.toFixed(num).toString()
+    len = rateNum.length
+    if (len <= 3) {
+      return rateNum
+    } else {
+      r = len % 3
+      if (rateNum.slice(r, len).match(/\d{3}/g) === null) {
+        return
+      }
+      return r > 0 ? rateNum.slice(0, r) + ',' + rateNum + '百万' : rateNum + '百万'
+    }
+  } else if ((value + '').length >= 5 && (value + '').length < 7) {
+    rateW = (parseInt(value) * rate) / 10000
+    rateNum = rateW.toFixed(num).toString()
+    len = rateNum.length
+    if (len <= 3) {
+      return rateNum
+    } else {
+      r = len % 3
+      if (rateNum.slice(r, len).match(/\d{3}/g) === null) {
+        return
+      }
+      return r > 0 ? rateNum.slice(0, r) + ',' + rateNum.slice(r, len).match(/\d{3}/g).join(',') + '万' : rateNum + '万'
+    }
+  } else {
+    rateNum = (parseInt(value) * rate).toFixed(num).toString()
+    len = rateNum.length
+    if (len <= 3) {
+      return rateNum
+    } else {
+      r = len % 3
+      if (rateNum.slice(r, len).match(/\d{3}/g) === null) {
+        return
+      }
+      return r > 0 ? rateNum.slice(0, r) + ',' + rateNum.slice(r, len).match(/\d{3}/g).join(',') : rateNum.slice(r, len).match(/\d{3}/g).join(',')
+    }
   }
 }
