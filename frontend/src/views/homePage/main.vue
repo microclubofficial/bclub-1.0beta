@@ -76,16 +76,20 @@ export default{
         this.$router.push(`${this.newRouter[this.state]}`)
       }
     },
+    // 正文发帖
     FtContentFun (data) {
-      this.$store.dispatch('set_backForNav', data)
+      // this.$store.dispatch('set_backForNav', data)
       this.$refs.showFtContent.showFtContentFun(data)
     },
+    // 导航栏发帖----来自isLogin
     toHotList (data) {
       this.$store.dispatch('set_backForNav', data)
     },
+    // 退登状态----重新加载页面
     toMainLoadFun () {
       this.loadShow()
     },
+    // 退登状态
     loadShow () {
       if (!this.userInfo.isLogin) {
         this.initShow = true

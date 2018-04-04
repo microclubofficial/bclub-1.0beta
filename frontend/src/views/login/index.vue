@@ -96,7 +96,13 @@ export default {
         if (data.message === '验证码错误') {
           this.controlPrompt = data.message
           this.changeControl()
+          return
+        } else if (data.message === '用户名或密码错误') {
+          this.changeControl()
+          alert(data.message)
+          return
         } else if (this.userForm.captcha === '' || this.userForm.captcha === undefined) {
+          this.changeControl()
           this.controlPrompt = '验证码不能为空'
           return
         } else {

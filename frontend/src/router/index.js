@@ -16,6 +16,8 @@ import community from 'src/views/community/commun'
 import maintalk from 'src/views/maintalk/maintalk'
 import cream from 'src/views/cream/cream'
 import detail from 'src/views/details/details'
+// 币讯详情
+import msgDetail from 'src/views/BibarMsg/bibarMsgDetail/msgDetail'
 // 各种币详情
 import mainDetail from 'src/views/details/mainDetails'
 
@@ -75,6 +77,21 @@ export const constantRouterMap = [
       {path: 'works', component: _import('BibarMsg/BibarList/works')},
       {path: 'news', component: _import('BibarMsg/BibarList/news')},
       {path: 'trade', component: _import('BibarMsg/BibarList/trade')}
+    ]
+  },
+  // 币讯详情
+  {
+    path: '/msgDetail/:currency',
+    component: msgDetail,
+    children: [
+      {path: '', component: _import('BibarMsg/bibarMsgDetail/BibarMsgList/all')},
+      {
+        path: 'all', component: _import('BibarMsg/bibarMsgDetail/BibarMsgList/all')
+      },
+      {path: 'talk', component: _import('BibarMsg/bibarMsgDetail/BibarMsgList/talk')},
+      {path: 'works', component: _import('BibarMsg/bibarMsgDetail/BibarMsgList/works')},
+      {path: 'news', component: _import('BibarMsg/bibarMsgDetail/BibarMsgList/news')},
+      {path: 'trade', component: _import('BibarMsg/bibarMsgDetail/BibarMsgList/trade')}
     ]
   },
   {

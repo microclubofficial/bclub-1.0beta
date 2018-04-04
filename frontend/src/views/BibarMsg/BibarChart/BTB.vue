@@ -2,66 +2,61 @@
 <div>
    <article class="bibar-box bibar-boxindex1">
                 <div class="bibar-indexDisplay">
-                    <div class="bibar-indexDisplay-header">
-                        <div class="logopic"><img src="../../../assets/img/logo-coin-BTC.png"></div>
-                        <div class="logonameEnglish">BTB</div>
-                        <div class="logonameChinese">比特币</div>
+                    <div class="bibar-indexDisplay-header" @click="toMsgDetail(bibarData.id)">
+                        <div class="logopic"><img :src="bibarData.picture"></div>
+                        <div class="logonameEnglish">{{bibarData.zhName}}</div>
+                        <div class="logonameChinese">{{bibarData.symbol}}</div>
                     </div>
                     <a href="#" class="btn btn-default"><i class="iconfont icon-add-sm"></i> 关注</a> </div>
                 <!--数-->
-                <div class="bibar-indexDisplay-data"> <i class="iconfont icon-USD"></i> <span class="bibar-indexDisplay-dollar">123456789</span> <span class="bibar-indexDisplay-rmb"><i class="iconfont icon-yueden"></i>7895313<i class="iconfont icon-CNY"></i></span> <span class="bibar-indexDisplay-den"><i class="iconfont icon-denyu"></i> <i class="iconfont icon-BTC"></i> 1</span> </div>
+                <div class="bibar-indexDisplay-data"> <i class="iconfont icon-CNY" style="font-size:30px;"></i> <span class="bibar-indexDisplay-dollar">{{cny_price | formatNum(2)}}</span><span class="bibar-indexDisplay-rmb"><i class="iconfont icon-yueden"></i><i class="iconfont icon-USD"></i>{{bibarData.price | formatNum(2)}}</span> <span class="bibar-indexDisplay-den"><i class="iconfont icon-denyu"></i> <i class="iconfont icon-BTC"></i> {{bibarData.price | bitcoinFun(BTC_RATE,0)}}</span> </div>
                 <!--涨跌-->
                 <div class="bibar-indexDisplay-trend">
-                    <div class="bibar-indextrend green"> <span class="num">+6.65%</span> <i class="iconfont icon-angleup-bold"></i> </div>
-                    <div class="bibar-indextrend red"> <span class="num">-6.65%</span> <i class="iconfont icon-angledown-bold"></i> </div>
+                    <div v-show="!isDown" class="bibar-indextrend green"> <span class="num">{{change1h}}</span> <i class="iconfont icon-angleup-bold"></i> </div>
+                    <div v-show="isDown" class="bibar-indextrend red"> <span class="num">{{change1h}}</span> <i class="iconfont icon-angledown-bold"></i> </div>
                 </div>
                 <div class="clear hline"></div>
                 <!--比值-->
                 <div class="bibar-indexDisplay-datamore">
                     <div class="col-sm-6">
                         <dl>
-                            <dt>币值</dt>
-                            <dd> <i class="iconfont icon-dollar"></i> 187,908,833,387
-                                <div class="sprit-12 bg-green ml10">第一名</div>
+                            <dt>市值</dt>
+                            <dd> <i class="iconfont icon-CNY"></i>{{bibarData.marketCap
+ | cnyFun(CNY_RATE,2)}}
+                                <div class="sprit-12 bg-green ml10">第{{bibarData.level}}名</div>
                             </dd>
-                            <dd> <i class="iconfont icon-yueden"></i> <i class="iconfont icon-rmb"></i> 1,194,921,666,949.60 </dd>
-                            <dd> <i class="iconfont icon-yueden"></i> <i class="iconfont icon-btb"></i> 16,889,245.94 </dd>
+                            <dd> <i class="iconfont icon-yueden"></i> <i class="iconfont icon-rmb icon-USD"></i>{{bibarData.marketCap | formatNum(2)}} </dd>
+                            <dd> <i class="iconfont icon-yueden"></i> <i class="iconfont icon-btb icon-BTC"></i> {{bibarData.marketCap | bitcoinFun(BTC_RATE)}} </dd>
                         </dl>
                         <dl>
                             <dt>占全球总市值</dt>
-                            <dd> 40.18
+                            <dd> {{bibarData.global_market_rate}}
                                 <div class="bibar-uipress"><span class="w40p"></span></div>
                             </dd>
                         </dl>
                         <dl>
-                            <dt>流通数量</dt>
-                            <dd> <i class="iconfont icon-btb"></i> 116,894,562 </dd>
-                        </dl>
-                        <dl>
-                            <dt>流通率</dt>
-                            <dd> 80.45%
-                                <div class="bibar-uipress"><span class="w90p"></span></div>
-                            </dd>
+                            <dt>总发行量</dt>
+                            <dd> <i class="iconfont icon-btb icon-BTC"></i> {{bibarData.supple | formatNum(2)}} </dd>
                         </dl>
                     </div>
                     <div class="col-sm-6">
                         <dl>
                             <dt>交易量(24h)</dt>
-                            <dd> <i class="iconfont icon-dollar"></i> 7,595.055,762.96
-                                <div class="sprit-12 bg-green ml10">第一名</div>
+                            <dd> <i class="iconfont icon-CNY"></i>{{bibarData.volume_ex | cnyFun(CNY_RATE,2)}}
+                                <div class="sprit-12 bg-green ml10">第{{bibarData.volume_level}}名</div>
                             </dd>
-                            <dd> <i class="iconfont icon-yueden"></i> 48,297,339,349.47 </dd>
-                            <dd> <i class="iconfont icon-btb"></i> 682,643,61 </dd>
+                            <dd> <i class="iconfont icon-yueden"></i><i class="iconfont icon-USD"></i> {{bibarData.volume_ex | formatNum(2)}}</dd>
+                            <dd> <i class="iconfont icon-yueden"></i><i class="iconfont icon-btb icon-BTC"></i>{{bibarData.volume_ex | bitcoinFun(BTC_RATE)}} </dd>
                         </dl>
                         <dl>
-                            <dt>换手率</dt>
-                            <dd> 4.04%
-                                <div class="bibar-uipress"><span class="w10p"></span></div>
-                            </dd>
+                            <dt>流通数量</dt>
+                            <dd> <i class="iconfont icon-btb icon-BTC"></i> {{bibarData.available_supply | formatNum(2)}} </dd>
                         </dl>
                         <dl>
-                            <dt>总发行量</dt>
-                            <dd> <i class="iconfont icon-btb"></i> 21,000.000 </dd>
+                            <dt>流通率</dt>
+                            <dd> {{bibarData.Circulation_rate}}
+                                <div class="bibar-uipress"><span class="w90p"></span></div>
+                            </dd>
                         </dl>
                     </div>
                 </div>
@@ -95,47 +90,67 @@ export default{
       id: 'chart',
       ohlc: [],
       volumeData: [],
-      chartBox: 'chartBox' + Math.floor(Math.random() * 100),
+      chartBox: 'chartBox' + Math.floor(Math.random() * 1000),
       bibarData: {},
-      price: null
+      kline: {},
+      price: null,
+      CNY_RATE: 0,
+      BTC_RATE: 0,
+      cny_price: 0,
+      change1h: null,
+      isDown: false,
+      msgId: '',
+      chartList: []
     }
   },
   mounted () {
     this.getChartData()
   },
-  filters: {
-    toFixFun (value) {
-      return value.toFixed(2)
-    },
-    toLower (value) {
-      return value.toLowerCase()
-    }
-  },
   methods: {
+    // 获取chart数据
     getChartData () {
       // https://data.jianshukeji.com/stock/history/000001
       var that = this
-      $.getJSON('/api/price/bitcoin', function (data) {
+      $.getJSON('/api/currency_news/bitcoin', function (data) {
+        // main数据
         that.bibarData = data.data
-        console.log(data)
-        // if (data.message !== 'success') {
-        //   alert('读取股票数据失败！')
-        //   return false
-        // }
-        // var dealingData = data.data
-        // for (var i = 0; i < dealingData.length; i++) {
-        //   that.ohlc.push([
-        //     dealingData[i][0], // the date
-        //     dealingData[i][1] // 价格
-        //   ])
-        //   that.volumeData.push([
-        //     dealingData[i][0], // the date
-        //     dealingData[i][2] // the volume
-        //   ])
-        // }
-        // that.drawChart()
+        // 人民币汇率
+        that.CNY_RATE = parseFloat(that.bibarData.CNY_RATE)
+        // 比特币汇率
+        that.BTC_RATE = parseFloat(that.bibarData.BTC_RATE)
+        // 人民币转换
+        that.cny_price = that.bibarData.price * that.CNY_RATE
+        // 涨幅
+        that.change1h = that.bibarData.change1h
+        var change1hStr = that.change1h.toString()
+        if (change1hStr.indexOf('-') === -1) {
+          that.isDown = false
+        } else {
+          that.isDown = true
+        }
+        console.log(that.bibarData)
+        // k线图
+        that.kline = that.bibarData.kline
+        if (data.message !== 'success') {
+          alert('读取股票数据失败！')
+          return false
+        }
+        for (var i = 0; i < that.kline.price_usd.length; i++) {
+          that.ohlc.push([
+            that.kline.price_usd[i][0], // the date
+            (that.kline.price_usd[i][1] * that.CNY_RATE) // 价格
+          ])
+        }
+        for (var j = 0; j < that.kline.volume_usd.length; j++) {
+          that.volumeData.push([
+            that.kline.volume_usd[j][0], // the date
+            (that.kline.volume_usd[j][1] * that.CNY_RATE) // the volume
+          ])
+        }
+        that.drawChart()
       })
     },
+    // 绘制chart
     drawChart () {
       Highcharts.stockChart(this.chartBox, {
         rangeSelector: {
@@ -231,9 +246,16 @@ export default{
           yAxis: 1
         }]
       })
+    },
+    // 去chart详情
+    toMsgDetail (id) {
+      this.msgId = id
+      this.$router.push(`/msgDetail/${this.msgId}`)
     }
   }
 }
 </script>
 <style>
+.bibar-indexDisplay-data i.icon-USD{font-size: 14px !important;}
+.bibar-box{cursor: pointer;}
 </style>

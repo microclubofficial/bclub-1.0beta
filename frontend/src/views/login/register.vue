@@ -30,14 +30,14 @@
           <div class="form-group">
             <label class="col-sm-2 control-label">手机号:</label>
             <div class="col-sm-9">
-              <input class="form-control" name="username" type="text" placeholder="Username" v-model="userForm.phone">
+              <input class="form-control" name="phone" type="text" placeholder="phone" v-model="userForm.phone">
             </div>
              <p class="prompt">{{phonePrompt}}</p>
           </div>
           <div class="form-group">
             <label class="col-sm-2 control-label">邮箱:</label>
             <div class="col-sm-9">
-              <input class="form-control" name="username" type="mail" placeholder="Username" v-model="userForm.email">
+              <input class="form-control" name="emai" type="mail" placeholder="emai" v-model="userForm.email">
             </div>
             <p class="prompt">{{emailPrompt}}</p>
           </div>
@@ -167,4 +167,5 @@ export default {
     margin-top: 10px;
     color: red;
   }
+  .form-group>label{padding: 0 10px;}
 </style>
