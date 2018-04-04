@@ -3,7 +3,7 @@
     <MainHeader></MainHeader>
     <!--主体-->
     <section class="bibar-Main">
-    <div class="pt40"></div>
+    <div class="pt40">hgfthf</div>
     <section class="bibar-w1100">
         <!--主体左侧-->
         <section class="bibar-Mainleft">
@@ -94,22 +94,16 @@ export default{
   created () {
     this.collapseId = `collapse${this.i++}`
     this.hrefCollapse = `#${this.collapseId}`
-  },
-  mounted () {
     get(`/api/blist/${this.cpno}/${this.cpageSize}`).then((data) => {
       this.BTC = data.data.exrateData.BTC
       this.CNY = data.data.exrateData.CNY
       this.summaryList = data.data.summaryList
-      // console.log(this.summaryList[0].indexOf('-'))
-      // for (var i = 0; i < this.summaryList.length; i++) {
-      //   if (this.summaryList[i].indexOf('-')) {
-      //     this.upSty = false
-      //   } else {
-      //     this.upSty = true
-      //   }
-      // }
-      $('.mainBibar-editor').find('.wangeditor').css({'width': '860px'})
     })
+    $('.mainBibar-editor').find('.wangeditor').css({'width': '860px'})
+    $('.panel-default:eq(0)').find('.panel-collapse').addClass('in')
+    console.log(document.querySelector('.panel-default'))
+  },
+  mounted () {
   },
   methods: {
     // 文章列表切换事件
