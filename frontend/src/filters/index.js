@@ -151,3 +151,12 @@ export function bitcoinFun (value, rate, num) {
     return r > 0 ? rateNum.slice(0, r) + ',' + rateNum.slice(r, len).match(/\d{3}/g).join(',') : rateNum.slice(r, len).match(/\d{3}/g).join(',')
   }
 }
+
+export function lengthFun (value, num) {
+  if (value.length > num) {
+    value = value.substring(0, num) + '...'
+    return value
+  } else {
+    return value
+  }
+}
