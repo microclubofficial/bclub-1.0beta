@@ -11,5 +11,4 @@ fabfile.py
 *.pyc
 **/.webassets-cache/
 *config.example
-*forums/docs
-static/
+
