@@ -54,7 +54,6 @@ class UserView(MethodView):
         #    topic_is_allowed = True
         #if current_user.is_authenticated and current_user.id == user.id:
         #    topic_is_allowed = True
-        print(topics,1111111111111111111111,user)
         data = {
             'topics': [object_as_dict(i) for i in topics],
             'user': object_as_dict(user)

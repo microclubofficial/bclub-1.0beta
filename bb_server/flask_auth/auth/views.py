@@ -157,7 +157,7 @@ class RegisterView(MethodView):
         user.set_password(password)
         user.save()
         user.login(True)
-        #self.send_email(user)
+        self.send_email(user)
         #flash(_('An email has been sent to your.Please receive'))
         #msg = _('An email has been sent to your.Please receive')
         msg = _('注册成功')
@@ -178,7 +178,8 @@ class RegisterView(MethodView):
         token = user.email_token
         confirm_url = url_for(
             'auth.confirm_token', token=token, _external=True)
-        html = render_template('templet/email.html', confirm_url=confirm_url)
+        #html = render_template('templet/email.html', confirm_url=confirm_url)
+        html = 'hello'
         subject = _("Please confirm  your email")
         user.send_email(html=html, subject=subject)
 
