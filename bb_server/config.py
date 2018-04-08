@@ -15,7 +15,7 @@ from os import path, pardir
 
 DEBUG = True
 SECRET_KEY = 'sinitek'
-SESSION_COOKIE_DOMAIN = 'ymhui999.com:1234'
+SESSION_COOKIE_DOMAIN = 'sinitek'
 SECURITY_PASSWORD_SALT = '123!@#'
 SECRET_KEY_SALT = '123^&*'
 
@@ -25,7 +25,7 @@ AVATAR_FOLDER = path.join(path.abspath(path.dirname(__file__)), 'static/avatars'
 AVATAR_RANGE = [122, 512]
 PICTURE_FOLDER = path.join('static/avatars')
 FILES_FOLDER = path.join('static/upload_files')
-ALLOWED_EXTENSIONS = set([ 'png', 'jpg', 'jpeg', 'gif', 'txt', 'pdf', 'doc', 'docx'])
+ALLOWED_EXTENSIONS = set([ 'png', 'jpg', 'gif', 'txt', 'pdf', 'doc', 'docx'])
 
 # for development use localhost:5000
 # for production use xxx.com
@@ -45,11 +45,11 @@ CACHE_DEFAULT_TIMEOUT = 60
 CACHE_KEY_PREFIX = 'cache:'
 CACHE_REDIS_HOST = '127.0.0.1'
 CACHE_REDIS_PORT = '6379'
-CACHE_REDIS_PASSWORD = '940530'
+CACHE_REDIS_PASSWORD = 'sinitek'
 CACHE_REDIS_DB = 2
 
 # Redis setting
-REDIS = {'db': 0, 'password': '940530', 'decode_responses': True}
+REDIS = {'db': 1, 'password': 'sinitek', 'decode_responses': True}
 
 # some middleware
 MIDDLEWARE = ['forums.common.middleware.GlobalMiddleware',
@@ -60,13 +60,12 @@ MAIL_SERVER = 'localhost'
 MAIL_PORT = 25
 MAIL_USE_TLS = True
 MAIL_USE_SSL = False
-MAIL_USERNAME = "609313700"
-MAIL_PASSWORD = "zxy940530"
-MAIL_DEFAULT_SENDER = '609313700@qq.com'
+MAIL_USERNAME = "sinitek"
+MAIL_PASSWORD = "@qwe321"
+MAIL_DEFAULT_SENDER = 'sinitek@194.sinitek.com'
 # MAIL_SUPPRESS_SEND = True
 
-#SERVER_NAME = ' https://nxqwazndlk.localtunnel.me:8000'
-SERVER_URL = 'http://zxypetre.ymhui999.com:1234'
+#SERVER_NAME = 'bclub.sinitek.com:8000'
 SUBDOMAIN = {'forums': False, 'docs': False}
 
 # logging setting
@@ -97,8 +96,7 @@ MSEARCH_INDEX_NAME = 'whoosh_index'
 MSEARCH_BACKEND = 'whoosh'
 SQLALCHEMY_ECHO = True
 #SQLALCHEMY_DATABASE_URI = 'sqlite:///test.db'
-#SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://maple:Maple_sinitek1@192.168.3.194/maple_db'
-SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:940530@127.0.0.1/maple_db?charset=utf8'
+SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://sinitek:Bclub_sinitek1@192.168.3.194/bclub_db?charset=utf8'
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 # Locale

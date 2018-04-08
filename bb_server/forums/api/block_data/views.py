@@ -16,7 +16,8 @@ class Currency_News(MethodView):
         data = {}
         for i in keys:
             data[i] = details[i]
-        data['global_market _rate'] = data['marketCap']/total_market_cap_usd
+        data['global_market _rate'] = ('%.2f%%' % (data['marketCap']/total_market_cap_usd * 100))
+        print(data['global_market _rate'],99999999999999999999999999)
         data['Circulation_rate'] = data['available_supply']/data['supple']
         data['kline'] = kline.json()['data']
         data['picture'] = 'https://blockchains.oss-cn-shanghai.aliyuncs.com/static/coinInfo/%s.png'%(token)

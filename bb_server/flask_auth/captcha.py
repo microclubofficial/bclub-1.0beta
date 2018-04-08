@@ -40,7 +40,7 @@ class Captcha(object):
         buf = t.start(font_type=self.font)
         buf_value = buf.getvalue()
         response = self.app.make_response(buf_value)
-        response.headers['Content-Type'] = 'image/jpeg'
+        response.headers['Content-Type'] = 'image/png'
         return response
 
 
@@ -127,6 +127,6 @@ class GenCaptcha(object):
         else:
             code_img = self.create_validate_code()
         buf = BytesIO()
-        code_img[0].save(buf, 'JPEG', quality=70)
+        code_img[0].save(buf, 'PNG', quality=70)
         session['captcha'] = code_img[1]
         return buf

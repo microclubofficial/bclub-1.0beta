@@ -56,7 +56,7 @@ class AvatarView(MethodView):
                 os.remove(ef)
         info.avatar = filename + '.png'
         info.save()
-        resp = Response(img, mimetype="image/jpeg")
+        resp = Response(img, mimetype="image/png")
         return resp
 
 
