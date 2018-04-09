@@ -100,14 +100,14 @@ export default{
 .bibar-box{box-shadow: none;}
 .bibar-list-item ul li{
   float: left;
-  margin: 10px 30px;
+  margin: 10px 2px;
 }
 .bibar-list-item ul li a{
     font-size: 16px;
     font-weight: bold;
 }
 .bibar-list-item ul li:first-child a span{
-  display: block;
+  /* display: block; */
   color: #909499;
   font-size: 14px;
 }
