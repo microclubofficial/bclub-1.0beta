@@ -56,13 +56,13 @@ MIDDLEWARE = ['forums.common.middleware.GlobalMiddleware',
               'forums.common.middleware.OnlineMiddleware',]
 
 # Mail such as qq
-MAIL_SERVER = 'localhost'
+MAIL_SERVER = '114.80.100.33'
 MAIL_PORT = 25
 MAIL_USE_TLS = False 
 MAIL_USE_SSL = False
-MAIL_USERNAME = "sinitek"
-MAIL_PASSWORD = "@qwe321"
-MAIL_DEFAULT_SENDER = 'sinitek@194.sinitek.com'
+MAIL_USERNAME = "kanzhiqiu"
+MAIL_PASSWORD = "jK$9Sn1"
+MAIL_DEFAULT_SENDER = 'kanzhiqiu@kanzhiqiu.com'
 # MAIL_SUPPRESS_SEND = True
 
 #SERVER_NAME = ' https://nxqwazndlk.localtunnel.me:8000'
