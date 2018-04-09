@@ -52,7 +52,7 @@ export default{
     }
   },
   mounted: function () {
-
+    
   },
   methods: {
     toBibarData (router) {

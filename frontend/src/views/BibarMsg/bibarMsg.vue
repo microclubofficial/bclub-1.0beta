@@ -1,3 +1,4 @@
+
 <template>
   <div class="main">
     <MainHeader></MainHeader>
@@ -9,22 +10,23 @@
         <section class="bibar-Mainleft">
             <div class="panel-group" id="accordion">
               <div class="panel panel-default" v-for="(item,index) in summaryList" :key='index'>
-                <div id='collapseOne' class="panel-collapse collapse">
+                <!-- <div id='collapseOne' class="panel-collapse collapse" :class="{in:chartShow === index}"> -->
+                <div id='collapseOne' class="panel-collapse collapse in" v-if="chartShow === index">
                   <div class="panel-body">
                     <!--BTB信息框-->
-                    <btb v-show="index == chartShow && chartState" ref='toNowChild'></btb>
+                    <btb ref='toNowChild'></btb>
                   </div>
                 </div>
                  <!-- 币种列表 -->
                  <a data-toggle="collapse" class="panel-tb-hd" data-parent="#accordion" href='#collapseOne'>
                   <div class="bibar-list-item" @click="chartShowFun(index, item.id)">
                   <ul>
-                    <li><a href="#"><span><img :src="item.picture" alt=""></span> {{item.name_ch}} - {{item.symbol}}</a></li>
-                    <li><a href="#"><i class="iconfont icon-CNY"></i>{{item.price | cnyFun(CNY,2)}}</a></li>
-                    <li><a href="#">{{item.change_1h}}</a></li>
-                    <li><a href="#"><i class="iconfont icon-CNY"></i>{{item.volume | cnyFunStr(CNY,2)}}</a></li>
-                    <li><a href="#" :title="item.marketcap"><i class="iconfont icon-CNY"></i>{{item.marketcap | cnyFunStr(CNY,2)}}</a></li>
-                    <li><a href="#"><i style="font-size:16px; color:#909499;" class="iconfont">&#xe604;</i>···</a></li>
+                    <li><a href="javascript:void(0)"><span><img :src="item.picture" alt=""></span> {{item.name_ch}} - {{item.symbol}}</a></li>
+                    <li><a href="javascript:void(0)"><i class="iconfont icon-CNY"></i>{{item.price | cnyFun(CNY,2)}}</a></li>
+                    <li><a href="javascript:void(0)">{{item.change_1h}}</a></li>
+                    <li><a href="javascript:void(0)"><i class="iconfont icon-CNY"></i>{{item.volume | cnyFunStr(CNY,2)}}</a></li>
+                    <li><a href="javascript:void(0)" :title="item.marketcap"><i class="iconfont icon-CNY"></i>{{item.marketcap | cnyFunStr(CNY,2)}}</a></li>
+                    <li><a href="javascript:void(0)"><i style="font-size:16px; color:#909499;" class="iconfont">&#xe604;</i>···</a></li>
                   </ul>
                 </div>
                  </a>
@@ -57,6 +59,7 @@
     </section>
   </div>
 </template>
+
 <script>
 import MainHeader from '../common/header.vue'
 import btb from './BibarChart/BTB.vue'
@@ -97,6 +100,7 @@ export default{
     this.collapseId = `collapse${this.i++}`
     this.hrefCollapse = `#${this.collapseId}`
     get(`/api/blist/${this.cpno}/${this.cpageSize}`).then((data) => {
+      // debugger
       console.log(data)
       this.BTC = data.data.exrateData.BTC
       this.CNY = data.data.exrateData.CNY
@@ -122,12 +126,15 @@ export default{
     },
     // 显示chart
     chartShowFun (index, id) {
+      // debugger
+      console.log(arguments)
       if (index !== this.chartShow) {
         this.chartShow = index
       }
-      this.chartState = !this.chartState
-      this.$refs.toNowChild[index].showNowChild(id)
-      console.log($('html,body').scrollTop)
+      console.log(this)
+      console.log(this.$refs.toNowChild[0])
+      this.$refs.toNowChild[0].showNowChild(id)
+      // console.log(document.body.scrollTop)
     }
   }
 }
@@ -171,7 +178,7 @@ export default{
   border:none !important;
 }
 .panel-body, .bibar-boxindex1{padding-bottom: 0 !important;}
-.panel-collapse{display: block;}
+.panel-collapse{height: auto !important;}
 .bibar-list-item ul li a{
     width: 16%;
     white-space: nowrap;

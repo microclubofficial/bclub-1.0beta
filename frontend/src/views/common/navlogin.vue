@@ -21,6 +21,7 @@ export default{
       this.$router.push('/register')
     },
     toLogin () {
+      // alert(1)
       this.$router.push('/login')
     }
   }
@@ -28,6 +29,7 @@ export default{
 </script>
 
 <style>
+.form-horizontal .control-label{padding: 7px 0 0 7px;}
 .nav_login{
     display: table-cell;
     height: 60px;

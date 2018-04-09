@@ -113,6 +113,10 @@ export function toFixFun (value, num) {
 
 // 逗号分隔数字
 export function formatNum (value, num) {
+  // debugger
+  if (value === undefined) {
+    return
+  }
   num = num > 0 && num <= 20 ? num : 0
   value = parseFloat((value + '').replace(/[^\d.-]/g, '')).toFixed(num) + ''
   let l = value.split('.')[0].split('').reverse()
@@ -127,15 +131,17 @@ export function formatNum (value, num) {
 
 // 人民币转换
 export function cnyFun (value, rate, num) {
-  // debugger
+  if (isNaN(value)) {
+    return
+  }
   let rateNum = (parseFloat(value) * rate).toFixed(num).toString()
   // let lenCny = rateNum.split('.')[0].length
   let len = rateNum.split('.')[0]
-  console.log(len, rate)
+  // console.log(len, rate)
   let lenCny = len.length
-  console.log(lenCny)
+  // console.log(lenCny)
   if (lenCny <= 3) {
-    return rateNum + '分'
+    return rateNum
   } else {
     let r = lenCny % 3
     if (rateNum.slice(r, lenCny).match(/\d{3}/g) === null) {
@@ -148,6 +154,9 @@ export function cnyFun (value, rate, num) {
 
 // 比特币转换
 export function bitcoinFun (value, rate, num) {
+  if (value === undefined) {
+    return
+  }
   let rateNum = (parseInt(value) * rate).toFixed(num).toString()
   let len = rateNum.length
   if (len <= 3) {
@@ -171,6 +180,9 @@ export function lengthFun (value, num) {
 
 // 人民币转换
 export function cnyFunStr (value, rate, num) {
+  if (value === undefined) {
+    return
+  }
   let rateW = null
   let rateNum = null
   let len = null

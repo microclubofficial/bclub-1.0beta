@@ -90,7 +90,7 @@ export default{
       id: 'chart',
       ohlc: [],
       volumeData: [],
-      chartBox: 'chartBox' + Math.floor(Math.random() * 1000),
+      chartBox: 'chartBox',
       bibarData: {},
       kline: {},
       price: null,
@@ -254,6 +254,8 @@ export default{
     },
     // 显示当前chart
     showNowChild (id) {
+      // console.log(this)
+      this.chartBox = this.chartBox + Math.floor(Math.random() * 1000)
       this.getChartData(id)
     }
   }

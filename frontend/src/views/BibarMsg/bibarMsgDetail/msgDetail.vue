@@ -100,7 +100,7 @@ export default{
 .bibar-box{box-shadow: none;}
 .bibar-list-item ul li{
   float: left;
-  margin: 10px 30px;
+  margin: 10px 2px;
 }
 .bibar-list-item ul li a{
     font-size: 16px;
