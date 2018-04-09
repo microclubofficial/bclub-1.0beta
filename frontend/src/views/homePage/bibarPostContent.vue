@@ -39,18 +39,19 @@ export default {
     getContent: function () {
       this.topicData.content = this.editorContent
       post('/api/topic', this.topicData).then(data => {
-        console.log(data)
         if (data.message === '未登录') {
           alert('先去登录')
           this.$router.push('/login')
         } else {
-          this.backFt.content = data.data.content
-          this.backFt.author = data.data.author
-          this.backFt.avatar = data.data.avatar
-          this.backFt.id = data.data.id
-          this.$emit('backFtContent', this.backFt)
-          $('.w-e-text-container').find('p').html('')
-          // this.$emit('backBibarContent', data.data.content)
+          if (data.data.content !== '') {
+              this.backFt.content = data.data.content
+              this.backFt.author = data.data.author
+              this.backFt.avatar = data.data.avatar
+              this.backFt.id = data.data.id
+              this.$emit('backFtContent', this.backFt)
+              $('.w-e-text-container').find('p').html('')
+              // this.$emit('backBibarContent', data.data.content)
+          }
         }
       })
     },
@@ -68,7 +69,13 @@ export default {
     editor.customConfig.menus = [
       'emoticon',
       'image',
-      'link'
+      'link',
+      'bold',
+      'italic',
+      '|',
+      'list',
+      'quote',
+      'code'
     ]
     // 上传图片
     // editor.customConfig.uploadImgShowBase64 = true
@@ -79,7 +86,7 @@ export default {
       // },
       customInsert: function (insertImg, result, editor) {
         that.backFt.url = result.data.file_path
-        console.log(that.backFt)
+        console.log(that.backFt.url)
         insertImg(that.backFt.url)
       }
     }

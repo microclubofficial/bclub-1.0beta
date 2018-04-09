@@ -15,7 +15,7 @@
           </div>
           <div class="set">
             <ul class="bibar-indexNewsItem-infro">
-              <li class="set-choseOne"> <a href="javascript:void(0);" class="icon-quan mr15"  @click="changeNum(0,tmp.id)"><i class="iconfont icon-handgood"></i><span>{{tmp.is_good}}</span></a> <a href="javascript:void(0);" class="icon-quan set-choseOne" @click="changeNum(1,tmp.id)"><i class="iconfont icon-handbad"></i><span>{{tmp.is_bad}}</span></a> </li>
+              <li class="set-choseOne"> <a href="javascript:void(0);" class="icon-quan mr15" :class='{active:tmp.is_good_bool}'  @click="changeNum(0,index,tmp.id)" ><i class="iconfont icon-handgood"></i><span class="is-good">{{tmp.is_good}}</span></a> <a href="javascript:void(0);"  :class='{active:tmp.is_bad_bool}' class="icon-quan set-choseOne" @click="changeNum(1,index,tmp.id)"><i class="iconfont icon-handbad"></i><span class="is-bad">{{tmp.is_bad}}</span></a> </li>
               <li class="set-discuss" @click="showDiscuss(index,tmp.id)">
                 <a href="javascript:void(0);">
                   <i class="iconfont icon-pinglun"></i> 评论
@@ -107,6 +107,13 @@
        </div>
      <!-- <div class='backContent' :key ='now' v-for="(item,now) in nowData">{{item}}</div> -->
     </div>
+    <div class="loading-bar">
+                  <!-- <svg class="icon icon-loading" aria-hidden="true">
+                      <use xlink:href="#icon-loading"  style="fill:blue" ></use>
+                  </svg>加载中... -->
+                  <img v-show="listLoding" src="../../../assets/img/listLoding.png" alt="" class="icon-loading">
+                  <img v-show="noLoading" src="../../../assets/img/noLoading.png" alt="" class="icon-loading">{{bottomText}}
+                </div>
   </div>
   </div>
 </template>
@@ -140,7 +147,14 @@ export default{
         replt_count: 0
       },
       toId: 0,
-      upId: 0
+      upId: 0,
+      tpno: 1,
+      pageCount: 0,
+      bottomText: '加载中...',
+      listLoding: true,
+      noLoading: false,
+      up: 0,
+      loadShow: false
     }
   },
   components: {
@@ -152,8 +166,16 @@ export default{
     }
   },
   created: function () {
-    get('/api/topic/1').then(data => {
+    // 文章分页
+    get(`/api/topic/${this.tpno}`).then(data => {
       this.articles = data.data.topics
+      this.pageCount = data.data.page_count
+      var that = this
+      document.querySelector('#app').addEventListener('scroll', function () {
+        if (this.clientHeight + this.scrollTop === this.scrollHeight) {
+          that.loadTopicPage()
+        }
+      })
     })
   },
   mounted () {
@@ -164,17 +186,50 @@ export default{
   //   }
   // },
   methods: {
-    // 点赞吐槽
-    changeNum (isNum, id) {
-      $('.set-choseOne>a:eq(' + isNum + ')').addClass('active').siblings().removeClass('active')
-      if (isNum === 0) {
-        get(`/api/topic/${id}/up`).then(data => {
-          // $('')
-        })
+    // 分页
+    loadTopicPage () {
+      if (this.tpno < this.pageCount) {
+        setTimeout(() => {
+          get(`/api/topic/${this.tpno}`).then(data => {
+            this.articles = this.articles.concat(data.data.topics)
+            this.bottomText = '加载中...'
+            this.tpno++
+            // this.loadingImg = '../../assets/img/listLoding.png'
+          })
+        }, 1000)
       } else {
-        get(`/api/topic/${id}/down`).then(data => {
-          this.ishandbad = data.data
-        })
+        this.bottomText = '没有啦'
+        this.listLoding = false
+        this.noLoading = true
+        // this.loadingImg = '../../assets/img/noLoading.png'
+        return false
+      }
+    },
+    // 点赞吐槽
+    changeNum (isNum, index, id) {
+      $('.bibar-tabitem:eq(' + index + ')').find('.set-choseOne>a:eq(' + isNum + ')').addClass('active')
+      if (isNum === 0) {
+        if (index !== this.up) {
+          this.up = index
+        }
+        get(`/api/topic/up/${id}`).then(data => {
+          if (data.message === '成功') {
+            $('.bibar-tabitem:eq(' + index + ')').find('.is-good').html(data.data)
+          } else {
+            alert(data.message)
+          }
+          })
+      } else {
+        if (index !== this.up) {
+          this.up = index
+        }
+        get(`/api/topic/down/${id}`).then(data => {
+          if (data.message === '成功') {
+            $('.bibar-tabitem:eq(' + index + ')').find('.is-bad').html(data.data)
+          } else {
+            alert(data.message)
+          }
+          })
       }
     },
     // 去详情页
@@ -408,4 +463,20 @@ a.avatar img {
 .bibar-indexNewsItem-infro>li i {
     margin-right: 3px;
 }
+.loading-bar{text-align: center;}
+.icon-loading {
+    transform: rotate(0deg);
+    animation-name: loading;
+    animation-duration: 3s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+    width: 28px;
+    height: 28px;
+    margin-right: 20px;
+  }
+  @keyframes loading
+  {
+    from {transform: rotate(0deg);}
+    to {transform: rotate(360deg);}
+  }
 </style>

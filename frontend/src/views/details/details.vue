@@ -12,7 +12,7 @@
           </div>
           <div class="avatar_subtitle">
             <span class="source">来自币吧</span>
-            <a href="" target="_blank" class="time">&ensp;发布于{{articleDetail.diff_time}}分钟前</a>
+            <a href="" target="_blank" class="time">&ensp;发布于{{articleDetail.diff_time}}</a>
           </div>
         </div>
       </div>
@@ -21,7 +21,7 @@
         <div class="article_bd_from">来自
           <a href="">金氪投行之家的雪球原创专栏</a>
         </div>
-        <p>
+        <p v-html="articleDetail.content">
           <strong>{{articleDetail.diff_time}}:</strong>{{articleDetail.content}}
         </p>
         <div class="image">
@@ -103,7 +103,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="loading-bar">
+                <div class="loading-bar" v-if='loadingShow'>
                   <!-- <svg class="icon icon-loading" aria-hidden="true">
                       <use xlink:href="#icon-loading"  style="fill:blue" ></use>
                   </svg>加载中... -->
@@ -147,7 +147,8 @@ export default {
       pno: 1,
       bottomText: '加载中...',
       listLoding: true,
-      noLoading: false
+      noLoading: false,
+      loadingShow: true
     }
   },
   mounted () {
@@ -156,6 +157,9 @@ export default {
     get(`api/topic/${this.did}/${this.pno}`).then(data => {
       this.articleDetail = data.data.topic
       this.nowData = data.data.replies
+      if (this.nowData.length === 0) {
+        this.loadingShow = false
+      }
       this.pageCount = data.data.page_count
       var that = this
       document.querySelector('#app').addEventListener('scroll', function () {
@@ -179,7 +183,6 @@ export default {
           })
         }, 1000)
       } else {
-        console.log(this.pageCount)
         this.bottomText = '没有啦'
         this.listLoding = false
         this.noLoading = true

@@ -87,6 +87,7 @@ export default{
     },
     // 退出登录
     outlogin () {
+      console.log(this.userInfo)
       get('/api/logout').then((data) => {
         if (data.message === '登出成功') {
           this.$store.commit('USER_INFO', {
