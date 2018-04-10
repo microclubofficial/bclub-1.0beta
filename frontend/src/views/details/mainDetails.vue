@@ -7,6 +7,7 @@
       <eth v-show="isShow==1"></eth>
       <xrp v-show="isShow==2"></xrp>
       <subDetail v-show="isShow==3"></subDetail>
+      <longTxt v-show='isShow==4'></longTxt>
     </div>
   </div>
 </template>
@@ -19,13 +20,15 @@ import btb from '../BibarMsg/BibarChart/BTB.vue'
 import eth from '../BibarMsg/BibarChart/ETH.vue'
 import xrp from '../BibarMsg/BibarChart/XRP.vue'
 import subDetail from '../homePage/subDetail.vue'
+import longTxt from '../homePage/longTxt.vue'
 export default {
   components: {
     MainHeader,
     btb,
     eth,
     xrp,
-    subDetail
+    subDetail,
+    longTxt
   },
   data: function () {
     return {
@@ -34,7 +37,6 @@ export default {
   },
   mounted () {
     this.isShow = this.$route.params.pageId
-    console.log(this.isShow)
   },
   methods: {
 

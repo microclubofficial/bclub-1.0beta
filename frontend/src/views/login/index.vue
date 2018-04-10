@@ -27,7 +27,7 @@
                 <span class="input-group-addon" style="padding:0;border-right:none;">
                   <img ref="captcha" :src="controlImg" alt="验证码" width="90" height="20" @click="changeControl()">
                 </span>
-                <input class="form-control" name="captcha" placeholder="Captcha" type="text" style="border-left:none;" v-model="userForm.captcha">
+                <input class="form-control" name="captcha" placeholder="Captcha" type="text" style="border-left:none;" v-model="userForm.captcha"  @keyup.enter="handleLogin">
               </div>
             </div>
             <p class="prompt">{{controlPrompt}}</p>
@@ -36,7 +36,7 @@
             <div class="col-sm-offset-2 col-sm-9">
               <input id="remember" name="remember" type="checkbox" value="y">
               <label for="remember">记住我</label>
-              <a class="pull-right" href="/forget">忘记密码?</a>
+              <a class="pull-right" @click="toForgetPwd">忘记密码?</a>
             </div>
           </div>
           <div class="form-group">
@@ -123,6 +123,9 @@ export default {
     },
     changeControl () {
       this.controlImg = this.controlImg + '?d=' + Date.now()
+    },
+    toForgetPwd () {
+      this.$router.push('/forgetPwd')
     }
   }
 }

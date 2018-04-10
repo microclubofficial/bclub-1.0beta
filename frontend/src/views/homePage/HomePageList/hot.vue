@@ -19,7 +19,7 @@
               <li class="set-discuss" @click="showDiscuss(index,tmp.id)">
                 <a href="javascript:void(0);">
                   <i class="iconfont icon-pinglun"></i> 评论
-                  <span>75</span>
+                  <span>{{tmp.replies_count}}</span>
                 </a>
               </li>
               <li class="set-choseStar"> <a href="javascript:void(0);"><i class="iconfont icon-star"></i> 收藏</a> </li>
@@ -66,12 +66,12 @@
               <img src="../../../assets/img/loading.png" alt="">
             </div>
             <div class="comment-all">
-              <h3>全部评论(4)</h3>
-              <div class="comment-sort">
+              <h3>全部评论({{tmp.replies_count}})</h3>
+              <!-- <div class="comment-sort">
                 <a href="#" class="active">最近</a>
                 <a href="#">最早</a>
                 <a href="#">赞</a>
-              </div>
+              </div> -->
               <div class="comment-list">
                 <div class="comment-item" data-index='' data-id=''  :key ='now' v-for="(item,now) in nowData">
                   <div>
@@ -88,7 +88,7 @@
                     </div>
                     <div class="set">
                       <ul class="bibar-indexNewsItem-infro">
-                        <li class="set-choseOne"> <a href="javascript:void(0);" class="icon-quan mr15 active"  @click="changeNum(0)"><i class="iconfont icon-handgood"></i><span>{{isGood}}</span></a></li>
+                        <li class="set-choseOne"> <a href="javascript:void(0);" class="icon-quan mr15 active"  @click="changeNum(0)"><i class="iconfont icon-handgood"></i><span>{{item.is_bad}}</span></a><a href="javascript:void(0);"  :class='{active:tmp.is_bad_bool}' class="icon-quan set-choseOne" @click="changeNum(1)"><i class="iconfont icon-handbad"></i><span class="is-bad">{{item.is_good}}</span></a></li>
                         <li class="set-choseShang"> <a href="javascript:void(0);"><i class="iconfont icon-dashang"></i> 打赏<span>438</span></a> </li>
                         <li class="set-discuss" @click="showDiscuss(index,tmp.id)">
                           <a href="javascript:void(0);">
@@ -107,7 +107,7 @@
        </div>
      <!-- <div class='backContent' :key ='now' v-for="(item,now) in nowData">{{item}}</div> -->
     </div>
-    <div class="loading-bar">
+    <div class="loading-bar" v-if='loadingShow'>
                   <!-- <svg class="icon icon-loading" aria-hidden="true">
                       <use xlink:href="#icon-loading"  style="fill:blue" ></use>
                   </svg>加载中... -->
@@ -154,7 +154,7 @@ export default{
       listLoding: true,
       noLoading: false,
       up: 0,
-      loadShow: false
+      loadingShow: false
     }
   },
   components: {
@@ -170,6 +170,9 @@ export default{
     get(`/api/topic/${this.tpno}`).then(data => {
       this.articles = data.data.topics
       this.pageCount = data.data.page_count
+      if (this.articles.length > 0) {
+        this.loadingShow = true
+      }
       var that = this
       document.querySelector('#app').addEventListener('scroll', function () {
         if (this.clientHeight + this.scrollTop === this.scrollHeight) {
@@ -190,10 +193,10 @@ export default{
     loadTopicPage () {
       if (this.tpno < this.pageCount) {
         setTimeout(() => {
+          this.tpno++
           get(`/api/topic/${this.tpno}`).then(data => {
             this.articles = this.articles.concat(data.data.topics)
             this.bottomText = '加载中...'
-            this.tpno++
             // this.loadingImg = '../../assets/img/listLoding.png'
           })
         }, 1000)
@@ -207,29 +210,35 @@ export default{
     },
     // 点赞吐槽
     changeNum (isNum, index, id) {
-      $('.bibar-tabitem:eq(' + index + ')').find('.set-choseOne>a:eq(' + isNum + ')').addClass('active')
       if (isNum === 0) {
         if (index !== this.up) {
           this.up = index
         }
         get(`/api/topic/up/${id}`).then(data => {
           if (data.message === '成功') {
+            $('.bibar-tabitem:eq(' + index + ')').find('.set-choseOne>a:eq(' + isNum + ')').addClass('active')
             $('.bibar-tabitem:eq(' + index + ')').find('.is-good').html(data.data)
+          } else if (data.message === '未登录') {
+            this.$router.push('/login')
           } else {
             alert(data.message)
           }
-          })
+        })
       } else {
         if (index !== this.up) {
           this.up = index
         }
         get(`/api/topic/down/${id}`).then(data => {
           if (data.message === '成功') {
+            $('.bibar-tabitem:eq(' + index + ')').find('.set-choseOne>a:eq(' + isNum + ')').addClass('active')
             $('.bibar-tabitem:eq(' + index + ')').find('.is-bad').html(data.data)
+          } else if (data.message === '未登录') {
+            alert(data.message)
+            this.$router.push('/login')
           } else {
             alert(data.message)
           }
-          })
+        })
       }
     },
     // 去详情页
@@ -241,7 +250,6 @@ export default{
     showDiscuss (index, id) {
       get(`/api/topic/${id}/1`).then(data => {
         this.nowData = data.data.replies
-        // console.log(data.data.replies)
       })
       if (index !== this.i) {
         this.i = index
@@ -268,7 +276,14 @@ export default{
     // 评论富文本框
     showContent (data) {
       this.nowData.unshift(data)
-      console.log(this.nowData)
+      get(`/api/topic/${this.tpno}`).then(data => {
+        if (this.tpno === 1) {
+          this.articles = data.data.topics
+        } else {
+          let oldArr = this.articles.slice(0, -5)
+          this.articles = oldArr.concat(data.data.topics)
+        }
+      })
     },
     showFtContentFun (ftData) {
       this.getNavaVal.unshift(ftData)

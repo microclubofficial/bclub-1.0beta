@@ -50,13 +50,15 @@ export default {
           alert('先去登录')
           this.$router.push('/login')
         } else {
-          this.backData.content = data.data.content
-          this.backData.avatar = data.data.avatar
-          this.backData.author = data.data.author
-          this.replies = data.data.replies
-          this.$emit('backReplies', this.replies)
-          this.$emit('backList', this.backData)
-          $('.w-e-text-container').find('p').html('')
+          if (data.data.content !== '') {
+            this.backData.content = data.data.content
+            this.backData.avatar = data.data.avatar
+            this.backData.author = data.data.author
+            this.replies = data.data.replies
+            this.$emit('backReplies', this.replies)
+            this.$emit('backList', this.backData)
+            $('.w-e-text-container').find('p').html('')
+          }
         }
       })
     //   get('api/topic').then(data => {

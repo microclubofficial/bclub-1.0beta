@@ -1,24 +1,25 @@
 <template>
   <div>
   <div class="bibar-tabAll">
-    <div class="bibar-tabitem fade in active" :key="index" id="bibar-newstab1" v-for="(tmp,index) in articles">
+    <!-- {{[articles]}} -->
+    <div class="bibar-tabitem fade in active" :key="index" id="bibar-newstab1" v-for="(tmp,index) in [...getNavaVal, ...articles]">
       <div class="bibar-indexNewsList">
         <div class="bibar-indexNewsItem">
           <div class="speech"> <span>周文君评论了讨论</span><i class="iconfont icon-dot"></i><span class="time">{{tmp.created_at}}</span> </div>
-          <div class="user" @click="goDetail(tmp.id)">
+          <div class="user">
             <div class="bibar-author"> <a href="#"> <span class="photo"><img :src="tmp.avatar"></span> <span class="name">{{tmp.author}}</span> <span class="time">7小时前发布</span> </a> </div>
           </div>
-          <div class="tit" @click="goDetail(tmp.id)"><a href="#">{{tmp.title}}</a></div>
+          <div class="tit"><a href="#" @click="goDetail(tmp.id)">{{tmp.title}}</a></div>
           <div class="txt indexNewslimitHeight" @click="goDetail(tmp.id)">
-            <p v-html="tmp.content"></p>
+            <p v-html='tmp.content'></p>
           </div>
           <div class="set">
             <ul class="bibar-indexNewsItem-infro">
-              <li class="set-choseOne"> <a href="javascript:void(0);" class="icon-quan mr15 active"  @click="changeNum(0)"><i class="iconfont icon-handgood"></i><span>{{isGood}}</span></a> <a href="javascript:void(0);" class="icon-quan set-choseOne" @click="changeNum(1)"><i class="iconfont icon-handbad"></i><span>{{ishandbad}}</span></a> </li>
+              <li class="set-choseOne"> <a href="javascript:void(0);" class="icon-quan mr15" :class='{active:tmp.is_good_bool}'  @click="changeNum(0,index,tmp.id)" ><i class="iconfont icon-handgood"></i><span class="is-good">{{tmp.is_good}}</span></a> <a href="javascript:void(0);"  :class='{active:tmp.is_bad_bool}' class="icon-quan set-choseOne" @click="changeNum(1,index,tmp.id)"><i class="iconfont icon-handbad"></i><span class="is-bad">{{tmp.is_bad}}</span></a> </li>
               <li class="set-discuss" @click="showDiscuss(index,tmp.id)">
                 <a href="javascript:void(0);">
                   <i class="iconfont icon-pinglun"></i> 评论
-                  <span>75</span>
+                  <span>{{tmp.replies_count}}</span>
                 </a>
               </li>
               <li class="set-choseStar"> <a href="javascript:void(0);"><i class="iconfont icon-star"></i> 收藏</a> </li>
@@ -37,8 +38,82 @@
           </div>
         </div>
       </div>
+     <div class="bibar-comment"  v-show="showComment&&index==i">
+       <!-- 评论框 -->
+       <div class="editor-comment">
+         <img :src="tmp.avatar" alt="" class="avatar"  v-show="commentShow">
+         <div class="editor-bd">
+           <span class="comment-img-delete"></span>
+           <svg version='1.1' xmlns='http://www.w3.org/2000/svg' class="editor-triangle">
+            <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
+           </svg>
+           <div class="editor-textarea" v-show="commentShow" @click="commentShowFun">
+             <div class="editor-placeholder">评论...</div>
+           </div>
+           <div class="editor-toolbar">
+              <BibarReport :toApi='toId' :contentId='lid' v-show="showReport" @backList = 'showContent' ></BibarReport>
+          </div>
+         <span class="img-upload-delete">
+             <img src="../../../assets/img/del.png" alt="">
+        </span>
+       </div>
+       </div>
+       <!-- 评论内容 -->
+       <div class="comment-wrap">
+          <div class="hook-comment"></div>
+          <div class="comment-container">
+            <div class="loading">
+              <img src="../../../assets/img/loading.png" alt="">
+            </div>
+            <div class="comment-all">
+              <h3>全部评论({{tmp.replies_count}})</h3>
+              <!-- <div class="comment-sort">
+                <a href="#" class="active">最近</a>
+                <a href="#">最早</a>
+                <a href="#">赞</a>
+              </div> -->
+              <div class="comment-list">
+                <div class="comment-item" data-index='' data-id=''  :key ='now' v-for="(item,now) in nowData">
+                  <div>
+                    <a href="#" data-tooltip='' class="avatar">
+                      <img src="../../../assets/img/pic-user1.png" alt="">
+                    </a>
+                    <div class="comment-item-main">
+                      <div class="comment-item-hd">
+                        <a href="#" class="user-name">评论标题</a>
+                        <span class="time">评论时间</span>
+                      </div>
+                      <!-- <p>{{item}}</p> -->
+                      <p v-html="item.content">{{item.content}}</p>
+                    </div>
+                    <div class="set">
+                      <ul class="bibar-indexNewsItem-infro">
+                        <li class="set-choseOne"> <a href="javascript:void(0);" class="icon-quan mr15 active"  @click="changeNum(0)"><i class="iconfont icon-handgood"></i><span>{{item.is_bad}}</span></a><a href="javascript:void(0);"  :class='{active:tmp.is_bad_bool}' class="icon-quan set-choseOne" @click="changeNum(1)"><i class="iconfont icon-handbad"></i><span class="is-bad">{{item.is_good}}</span></a></li>
+                        <li class="set-choseShang"> <a href="javascript:void(0);"><i class="iconfont icon-dashang"></i> 打赏<span>438</span></a> </li>
+                        <li class="set-discuss" @click="showDiscuss(index,tmp.id)">
+                          <a href="javascript:void(0);">
+                            <i class="iconfont icon-pinglun"></i> 回复
+                            <span>75</span>
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+       </div>
+       </div>
+     <!-- <div class='backContent' :key ='now' v-for="(item,now) in nowData">{{item}}</div> -->
     </div>
-    <BibarReport v-show="showReport==true&&index==i"></BibarReport>
+    <div class="loading-bar" v-if='loadingShow'>
+                  <!-- <svg class="icon icon-loading" aria-hidden="true">
+                      <use xlink:href="#icon-loading"  style="fill:blue" ></use>
+                  </svg>加载中... -->
+                  <img v-show="listLoding" src='../../../assets/img/listLoding.png' alt="" class="icon-loading">
+                  <img v-show="noLoading" src="../../../assets/img/noLoading.png" alt="" class="icon-loading">{{bottomText}}
+                </div>
   </div>
   </div>
 </template>
@@ -55,7 +130,10 @@ export default{
       isClick: 0,
       lid: '',
       i: 0,
+      showComment: false,
       showReport: false,
+      nowData: [],
+      commentShow: false,
       backBibar: {
         'author': '',
         'avatar': '',
@@ -66,49 +144,354 @@ export default{
         'is_good': 0,
         'is_bad': 0,
         replt_count: 0
-      }
+      },
+      toId: 0,
+      upId: 0,
+      tpno: 1,
+      pageCount: 0,
+      bottomText: '加载中...',
+      listLoding: true,
+      noLoading: false,
+      up: 0,
+      loadingShow: false
     }
   },
   components: {
     BibarReport
   },
-  // computed: {
-  //   articleList(){
-  //     return this.$store.state.articles.articleList
-  //   }
-  // },
+  computed: {
+    getNavaVal () {
+      return this.$store.state.homePageList.backForNav
+    }
+  },
   created: function () {
-    get('/api/topic/1').then(data => {
+    // 文章分页
+    get(`/api/topic/${this.tpno}`).then(data => {
       this.articles = data.data.topics
+      this.pageCount = data.data.page_count
+      if (this.articles.length > 0) {
+        this.loadingShow = true
+      }
+      var that = this
+      document.querySelector('#app').addEventListener('scroll', function () {
+        if (this.clientHeight + this.scrollTop === this.scrollHeight) {
+          that.loadTopicPage()
+        }
+      })
     })
   },
   methods: {
-    changeNum (isNum) {
-      $('.set-choseOne>a:eq(' + isNum + ')').addClass('active').siblings().removeClass('active')
-      if (isNum === 0) {
-        this.isGood++
+    // 分页
+    loadTopicPage () {
+      if (this.tpno < this.pageCount) {
+        setTimeout(() => {
+          this.tpno++
+          get(`/api/topic/${this.tpno}`).then(data => {
+            this.articles = this.articles.concat(data.data.topics)
+            console.log(this.articles)
+            this.bottomText = '加载中...'
+            // this.loadingImg = '../../assets/img/listLoding.png'
+          })
+        }, 1000)
       } else {
-        this.ishandbad++
+        this.bottomText = '没有啦'
+        this.listLoding = false
+        this.noLoading = true
+        // this.loadingImg = '../../assets/img/noLoading.png'
+        return false
       }
     },
+    // 点赞吐槽
+    changeNum (isNum, index, id) {
+      if (isNum === 0) {
+        if (index !== this.up) {
+          this.up = index
+        }
+        get(`/api/topic/up/${id}`).then(data => {
+          if (data.message === '成功') {
+            $('.bibar-tabitem:eq(' + index + ')').find('.set-choseOne>a:eq(' + isNum + ')').addClass('active')
+            $('.bibar-tabitem:eq(' + index + ')').find('.is-good').html(data.data)
+          } else if (data.message === '未登录') {
+            this.$router.push('/login')
+          } else {
+            alert(data.message)
+          }
+        })
+      } else {
+        if (index !== this.up) {
+          this.up = index
+        }
+        get(`/api/topic/down/${id}`).then(data => {
+          if (data.message === '成功') {
+            $('.bibar-tabitem:eq(' + index + ')').find('.set-choseOne>a:eq(' + isNum + ')').addClass('active')
+            $('.bibar-tabitem:eq(' + index + ')').find('.is-bad').html(data.data)
+          } else if (data.message === '未登录') {
+            alert(data.message)
+            this.$router.push('/login')
+          } else {
+            alert(data.message)
+          }
+        })
+      }
+    },
+    // 去详情页
     goDetail (id) {
       this.lid = id
       this.$router.push(`/details/${this.lid}`)
     },
-    showDiscuss (index) {
+    // 评论
+    showDiscuss (index, id) {
+      get(`/api/topic/${id}/1`).then(data => {
+        this.nowData = data.data.replies
+      })
       if (index !== this.i) {
         this.i = index
+        this.lid = id
       }
-      this.showReport = true
+      this.toId = 0
+      this.lid = id
+      this.showComment = !this.showComment
+      this.commentShow = true
+      if (this.commentShow) {
+        this.showReport = false
+      }
+      $('.editor-toolbar').find('.wangeditor').css({'width': '832px', 'margin': '0 0 0 -39px', 'padding': '0'})
+      $('.editor-toolbar').find('.wangeditor>.report').css('bottom', '0')
+      $('.editor-toolbar').find('.wangeditor>.cancel').css('bottom', '4px')
+      $('.editor-toolbar').find('.wangeditor>.editor').css({'min-height': '130px', 'padding-bottom': '37px'})
+      $('.editor-toolbar').find('.wangeditor>div:eq(2)').css('display', 'none')
     },
-    showBibarContentFun (bibarData) {
-      this.backBibar.content = bibarData
-      this.articles.unshift(this.backBibar)
+    // 是否显示评论默认框
+    commentShowFun () {
+      this.showReport = true
+      this.commentShow = false
+    },
+    // 评论富文本框
+    showContent (data) {
+      this.nowData.unshift(data)
+      get(`/api/topic/${this.tpno}`).then(data => {
+        if (this.tpno === 1) {
+          this.articles = data.data.topics
+        } else {
+          let oldArr = this.articles.slice(0, -5)
+          this.articles = oldArr.concat(data.data.topics)
+        }
+      })
+      // console.log(this.nowData)
+    },
+    showFtContentFun (ftData) {
+      this.getNavaVal.unshift(ftData)
     }
   }
 }
 </script>
 
 <style>
-
+.mainBibar-editor > .wangeditor > .cancel{
+    right: 196px;
+}
+.mainBibar-editor > .wangeditor > .report{
+    right: 142px;
+}
+.indexNewslimitHeight{
+  cursor: pointer;
+}
+.bibar-tabitem{overflow: hidden;}
+.bibar-comment{
+    position: relative;
+    margin-left: 58px;
+}
+.editor-comment{
+    margin-top: 5px;
+    background-color: #f9f9f9;
+    /* padding: 20px; */
+    padding-left: 10px;
+}
+.editor-comment>.avatar{
+    width: 32px;
+    height: 32px;
+    float: left;
+}
+img.avatar{
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    vertical-align: middle;
+}
+.editor-bd{
+    margin-left: 42px;
+    position: relative;
+    z-index: 1;
+}
+svg:not(:root) {
+    overflow: hidden;
+}
+.editor-triangle{
+    position: absolute;
+    top: 10px;
+    left: -4px;
+    width: 5px;
+    height: 10px;
+    z-index: 11;
+}
+.editor-triangle>.arrow{
+    stroke: #edf0f5;
+    fill: #f9fcfe;
+}
+.editor-textarea{
+    position: relative;
+    z-index: 10;
+    min-height: 32px;
+    border: 1px solid #edf0f5;
+    font-size: 13px;
+    line-height: 1.6;
+    background-color: #fff;
+}
+.editor-textarea .comment-placeholder {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    padding: 5px 10px;
+    color: #d4d7dc;
+}
+.img-upload-delete{
+    display: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 24px;
+    height: 24px;
+    text-align: center;
+    color: #fff;
+    line-height: 24px;
+    /* background-color: rgba(0,0,0,.7); */
+    cursor: pointer;
+    z-index: 10;
+}
+.img-upload-delete>img{
+    width: 24px;
+    height: 24px;
+}
+.comment-wrap{
+    margin-bottom: 5px;
+}
+.comment-container{
+    padding: 0 8px;
+}
+.loading{
+    margin-top: 60px;
+    display: none;
+}
+.comment-all{
+  position: relative;
+}
+.comment-all>h3 {
+    margin: 15px 0 10px;
+    font-size: 15px;
+}
+.comment-sort {
+    position: absolute;
+    top: 0;
+    right: 0;
+    text-align: right;
+    /* margin-right: 5px; */
+}
+.comment-sort a.active {
+    color: #06c;
+}
+.comment-sort a {
+    position: relative;
+    display: inline-block;
+    margin-right: 26px;
+    color: #909499;
+    line-height: 1;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    font-size: 13px;
+}
+.comment-sort a:after {
+    content: '';
+    position: absolute;
+    right: -13px;
+    top: 2px;
+    width: 1px;
+    height: 14px;
+    background-color: #edf0f5;
+}
+.comment-list{
+    border-bottom: 0;
+}
+.comment-item{
+    padding: 15px 0 10px;
+    border-top: 1px solid #edf0f5;
+    margin: 15px 0;
+}
+.comment-item .avatar {
+    float: left;
+    width: 32px;
+    height: 32px;
+}
+a.avatar {
+    display: inline-block;
+    overflow: hidden;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    line-height: 1;
+}
+a.avatar img {
+    width: 100%;
+    height: 100%;
+    vertical-align: middle;
+}
+.comment-item-main{
+    margin-left: 42px;
+}
+.comment-item-hd{
+    margin-bottom: 4px;
+}
+.comment-item-hd .user-name {
+    font-size: 15px;
+    font-weight: 700;
+    margin-right: 0;
+}
+.comment-item-hd .time {
+    float: right;
+    font-size: 12px;
+    color: #909499;
+}
+.comment-item-main>p {
+    font-size: 15px;
+    line-height: 1.6;
+    word-break: break-all;
+    overflow: hidden;
+    margin: 10px 0;
+}
+.bibar-indexNewsItem-infro>li{
+    float: left;
+    margin-right: 25px;
+}
+.bibar-indexNewsItem-infro>li i {
+    margin-right: 3px;
+}
+.loading-bar{text-align: center;}
+.icon-loading {
+    transform: rotate(0deg);
+    animation-name: loading;
+    animation-duration: 3s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+    width: 28px;
+    height: 28px;
+    margin-right: 20px;
+  }
+  @keyframes loading
+  {
+    from {transform: rotate(0deg);}
+    to {transform: rotate(360deg);}
+  }
 </style>

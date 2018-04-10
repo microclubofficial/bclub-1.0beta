@@ -8,7 +8,7 @@
 export default {
   name: 'App',
   methods: {
-    hideSelect () {
+    hideSelect (e) {
       $('.user_info_dropdown').css('display', 'none')
       $('.nav_msg_dropdown').css('display', 'none')
     }
