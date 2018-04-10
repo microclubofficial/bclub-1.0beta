@@ -48,16 +48,16 @@ class MailMixin(object):
         return token
 
     @classmethod
-    def check_email_token(cls, token, max_age=259200):
+    def check_email_token(cls, token, max_age=86400):
         config = current_app.config
         secret_key = config.setdefault('SECRET_KEY', gen_secret_key(24))
         salt = config.setdefault('SECRET_KEY_SALT', gen_secret_key(24))
         serializer = URLSafeTimedSerializer(secret_key, salt=salt)
         try:
             email = serializer.loads(token, max_age=max_age)
-        except BadSignature:
-            return False
         except SignatureExpired:
+            return False
+        except BadSignature:
             return False
         user = cls.query.filter_by(email=email).first()
         if user is None:

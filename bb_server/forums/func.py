@@ -1,5 +1,6 @@
-from flask import jsonify, current_app
+from flask import jsonify, current_app, request
 from sqlalchemy import inspect
+from flask_login import current_user
 import datetime
 
 
@@ -39,3 +40,9 @@ def Avatar(avatar,user):
     else:
         avatar['avatar'] = '/api/{}/avatar'.format(user.username)
     return 
+
+def Count(Sql, data=False):
+    if current_user.is_authenticated:
+        if request.user.id in list(eval(Sql)):
+            data = True
+    return len(list(eval(Sql))), data

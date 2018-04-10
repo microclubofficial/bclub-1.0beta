@@ -69,6 +69,12 @@ class Like(RestfulView):
     def delete(self, replyId):
         return True
 
+class Thumd(RestfulView):
+    @is_confirmed
+    def get(self):
+        return True
+
+
 
 topic_list_permission = TopicList()
 topic_permission = Topic()
@@ -76,3 +82,4 @@ reply_list_permission = ReplyList()
 reply_permission = Reply()
 like_permission = Like()
 edit_permission = Edit()
+thumd_permission = Thumd()

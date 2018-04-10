@@ -31,9 +31,9 @@ from forums.jinja import safe_markdown
 from .models import Reply, Topic
 from .permissions import (like_permission, reply_list_permission,
                           reply_permission, topic_list_permission,
-                          topic_permission, edit_permission)
+                          topic_permission, edit_permission, thumd_permission)
 from forums.api.message.models import MessageClient
-from forums.func import get_json, object_as_dict, time_diff, FindAndCount, Avatar
+from forums.func import get_json, object_as_dict, time_diff, FindAndCount, Avatar, FindAndCount, Count
 from forums.api.user.models import User
 from sqlalchemy import func
 import math
@@ -76,19 +76,19 @@ class TopicPreviewView(IsConfirmedMethodView):
 class TopicListView(MethodView):
     decorators = (topic_list_permission, )
 
-    def get(self, page):
+    def get(self, page, token=None):
         start = (page-1)*5
         query_dict = request.data
         keys = ['title']
         order_by = gen_topic_orderby(query_dict, keys)
         filter_dict = gen_topic_filter(query_dict, keys)
         title = _('All Topics')
-        if request.path.endswith('good'):
-            filter_dict.update(is_good=True)
-            title = _('Good Topics')
-        elif request.path.endswith('top'):
-            filter_dict.update(is_bad=True)
-            title = _('bad Topics')
+        if 'token' in request.path:
+            filter_dict.update(token=token)
+            title = _(token+'Topics')
+        #elif request.path.endswith('top'):
+        #    filter_dict.update(is_bad=True)
+        #    title = _('bad Topics')
         topics = Topic.query.filter_by(
             **filter_dict).order_by(*order_by).limit(5).offset(start)
         topic_count = FindAndCount(Topic)
@@ -104,6 +104,8 @@ class TopicListView(MethodView):
             topics_data['author'] = user.username
             topics_data['diff_time'] = diff_time
             topics_data['replies_count'] = reply_count
+            topics_data['is_good'], topics_data['is_good_bool'] = Count(i.is_good)
+            topics_data['is_bad'], topics_data['is_bad_bool'] = Count(i.is_bad)
             Avatar(topics_data, user)
             topic.append(topics_data)
         data = {'classification': title, 'topics': topic, 'topic_count':topic_count, 'page_count':page_count}
@@ -142,6 +144,8 @@ class TopicListView(MethodView):
         topic = object_as_dict(topic)
         Avatar(topic, user)
         topic['author'] = user.username
+        topic['is_good'] = 0
+        topic['is_bad'] = 0
         #topic.board.topic_count = 1
         #topic.board.post_count = 1
         #topic.author.topic_count = 1
@@ -176,6 +180,8 @@ class TopicView(MethodView):
             replies_data = object_as_dict(i)
             replies_data['author'] = user.username
             replies_data['diff_time'] = diff_time
+            replies_data['is_good'], replies_data['is_good_bool'] = Count(i.is_good)
+            replies_data['is_bad'], replies_data['is_bad_bool'] = Count(i.is_bad)
             Avatar(replies_data, user)
             replies.append(replies_data)
         #topic.read_count = 1
@@ -183,6 +189,8 @@ class TopicView(MethodView):
         topic_user = User.query.filter_by(id=topic_data['author_id']).first()
         topic_data['author'] = topic_user.username
         topic_data['diff_time'] = diff_time
+        topic_data['is_good'], topic_data['is_good_bool'] = Count(topic.is_good)
+        topic_data['is_bad'], topic_data['is_bad_bool'] = Count(topic.is_bad)
         Avatar(topic_data, topic_user)
         data = {
             #'title': topic['title'],
@@ -230,6 +238,8 @@ class ReplyListView(MethodView):
             replies_data = object_as_dict(i)
             replies_data['author'] = user.username
             replies_data['diff_time'] = diff_time
+            replies_data['is_good'], replies_data['is_good_bool'] = Count(i.is_good)
+            replies_data['is_bad'], replies_data['is_bad_bool'] = Count(i.is_bad)
             Avatar(replies_data, user)
             replies.append(replies_data)
         return get_json(1, '评论信息', replies)
@@ -248,6 +258,8 @@ class ReplyListView(MethodView):
         replies_data = object_as_dict(reply)
         Avatar(replies_data, user)
         replies_data['author'] = user.username
+        replies_data['is_good'] = 0
+        replies_data['is_bad'] = 0
         # notice
         #MessageClient.topic(reply)
         # count
@@ -300,14 +312,31 @@ class LikeView(MethodView):
             HTTPResponse.NORMAL_STATUS, data=serializer.data).to_response()
 
 class ThumbView(MethodView):
-    def get(self, topicId, thumb):
-        topic = Topic.query.filter_by(id = topicId).first()
+
+    decorators = (thumd_permission, )
+
+    def get(self, id, thumb):
+        user = request.user
+        if 'topic' in request.path:
+            session = Topic.query.filter_by(id = id).first()
+        elif 'reply' in request.path:
+            session = Reply.query.filter_by(id = id).first()
         if thumb == 'up':
-            topic.is_good = int(topic.is_good) + 1
-            thumb = topic.is_good
+            userlist = list(eval(session.is_good))
+            if user.id in userlist:
+                return get_json(0, '不能重复点赞', len(userlist))
+            else:
+                userlist.append(user.id)
+                count = len(userlist)
+                session.is_good = str(userlist)
         elif thumb == 'down':
-            topic.is_bad = int(topic.is_bad) + 1
-            thumb = topic.is_bad
-        topic.save()
-        return get_json(1, '成功', thumb)
+            userlist = list(eval(session.is_bad))
+            if user.id in userlist:
+                return get_json(0, '不能重复吐槽', len(userlist))
+            else:
+                userlist.append(user.id)
+                count = len(userlist)
+                session.is_bad = str(userlist)
+        session.save()
+        return get_json(1, '成功', count)
 

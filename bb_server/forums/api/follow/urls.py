@@ -14,7 +14,7 @@ from flask import Blueprint
 from .views import (FollowingTagsView, FollowingUsersView, FollowingTopicsView,
                     FollowingCollectsView)
 
-site = Blueprint('follow', __name__, url_prefix='/following')
+site = Blueprint('follow', __name__, url_prefix='/api/following')
 
 topic_view = FollowingTopicsView.as_view('topic')
 tag_view = FollowingTagsView.as_view('tag')

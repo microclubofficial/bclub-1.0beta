@@ -16,9 +16,18 @@ class Currency_News(MethodView):
         data = {}
         for i in keys:
             data[i] = details[i]
-        data['global_market _rate'] = ('%.2f%%' % (data['marketCap']/total_market_cap_usd * 100))
-        print(data['global_market _rate'],99999999999999999999999999)
-        data['Circulation_rate'] = data['available_supply']/data['supple']
+        data['global_market_rate'] = ('%.2f%%' % (data['marketCap']/total_market_cap_usd * 100))
+        data['Circulation_rate'] = ('%.2f%%' % (data['available_supply']/data['supple'] * 100))
         data['kline'] = kline.json()['data']
         data['picture'] = 'https://blockchains.oss-cn-shanghai.aliyuncs.com/static/coinInfo/%s.png'%(token)
         return get_json(1, 'success', data)
+
+class B_List(MethodView):
+    def get(self, page, limit):
+        offset = (int(page)-1)*int(limit)
+        blist = requests.get('https://api.tokenclub.com/v2/ticker/summary?type=0&offset=%s&limit=%s'%(offset, limit))
+        blist = blist.json()['data']
+        for i in blist['summaryList']:
+            i['picture'] = 'https://blockchains.oss-cn-shanghai.aliyuncs.com/static/coinInfo/%s.png'%(i['id'])
+        print(blist,999999999999999999999999999999999999999999999999999)
+        return get_json(1, 'success', blist)

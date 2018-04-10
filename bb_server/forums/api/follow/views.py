@@ -19,6 +19,7 @@ from forums.api.user.models import User
 from forums.common.response import HTTPResponse
 from forums.common.views import IsAuthMethodView as MethodView
 from forums.api.message.models import MessageClient
+from forums.func import object_as_dict, get_json
 
 
 class FollowingTagsView(MethodView):
@@ -123,24 +124,24 @@ class FollowingUsersView(MethodView):
 class FollowingCollectsView(MethodView):
     def get(self):
         user = request.user
-        page, number = self.page_info
-        filter_dict = {'followers__username': user.username}
-        collects = Collect.query.filter_by(**filter_dict).paginate(
-            page, number, True)
-
-        data = {'collects': collects}
-        return render_template('follow/following_collects.html', **data)
+        #user = User.query.filter_by(id=1).first()
+        #page, number = self.page_info
+        collects = Collect.query.filter_by(author_id=user.id).all()#.paginate(page, number, True)
+        topics = []
+        for i in collects:
+            topic = Topic.query.filter_by(id = i.topic_id).first()
+            topics.append(object_as_dict(topic))
+        data = {'topic':topics}
+        return get_json(1, '收藏信息', data)
 
     def post(self):
         user = request.user
+        #user = User.query.filter_by(id=1).first()
         post_data = request.data
-        collect_id = post_data.pop('collectId', None)
-        if collect_id is not None and not User.query.filter_by(
-                following_collects__id=collect_id).exists():
-            collect = Collect.query.filter_by(id=collect_id).first_or_404()
-            user.following_collects.append(collect)
-            user.save()
-        return HTTPResponse(HTTPResponse.NORMAL_STATUS).to_response()
+        topic_id = post_data.pop('topic_id', None)
+        collect = Collect(author_id = user.id, topic_id = topic_id)
+        collect.save()
+        return get_json(1, 'success', {})
 
     def delete(self):
         user = request.user
