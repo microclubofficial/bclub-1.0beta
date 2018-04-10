@@ -41,7 +41,15 @@ Vue.use(Router)
   }
  **/
 export const constantRouterMap = [
+  // 登录
   { path: '/login', component: _import('login/index'), hidden: true },
+  // 忘记密码
+  {path: '/forgetPwd', component: _import('forgetpwd/ForgetPassword')},
+  // 通过手机找回
+  {path: '/confirmPhone', component: _import('forgetpwd/ConfirmPhone')},
+  // 通过邮箱找回
+  {path: '/confirmEmail', component: _import('forgetpwd/ConfirmEmail')},
+  // 注册
   { path: '/register', component: _import('login/register'), hidden: true },
   // { path: '/authredirect', component: _import('login/authredirect'), hidden: true },
   { path: '/404', component: _import('404'), hidden: true },

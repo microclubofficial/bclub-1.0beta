@@ -2,9 +2,9 @@
   <div>
     <div class="nav_login">
       <a href="#" class="nav_login_regis" @click="toRegister">没有账号？立即注册</a>
-      <div class="nav_login_btn">
+      <div class="nav_login_btn" @click.stop="toLogin()">
         <img src="../../assets/img/login.png" alt="">
-        <span @click="toLogin">登录</span>
+        <span>登录</span>
       </div>
     </div>
   </div>
@@ -21,7 +21,6 @@ export default{
       this.$router.push('/register')
     },
     toLogin () {
-      // alert(1)
       this.$router.push('/login')
     }
   }

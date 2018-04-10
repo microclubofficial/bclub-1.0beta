@@ -2,6 +2,7 @@
     <div v-show="!isHide">
         <div class="avatar"><img src="../../assets/img/pic-user1.png" alt=""></div>
         <div ref="editor" style="text-align:left" class='editor'></div>
+        <span class="toLongText"  @click="toBibarData(4)"><img src="../../assets/img/longText.png">长文</span>
         <button @click="getContent" class="report btn">发布</button>
         <button class="cancel" @click="isHideFun">取消</button>
         <!-- <div>{{backData}}</div> -->
@@ -44,19 +45,22 @@ export default {
           this.$router.push('/login')
         } else {
           if (data.data.content !== '') {
-              this.backFt.content = data.data.content
-              this.backFt.author = data.data.author
-              this.backFt.avatar = data.data.avatar
-              this.backFt.id = data.data.id
-              this.$emit('backFtContent', this.backFt)
-              $('.w-e-text-container').find('p').html('')
-              // this.$emit('backBibarContent', data.data.content)
+            this.backFt.content = data.data.content
+            this.backFt.author = data.data.author
+            this.backFt.avatar = data.data.avatar
+            this.backFt.id = data.data.id
+            this.$emit('backFtContent', this.backFt)
+            $('.w-e-text-container').find('p').html('')
+            // this.$emit('backBibarContent', data.data.content)
           }
         }
       })
     },
     isHideFun () {
       this.isHide = !this.isHide
+    },
+    toBibarData (router) {
+      this.$router.push(`/mainDetail/${router}`)
     }
   },
   mounted () {
@@ -74,8 +78,7 @@ export default {
       'italic',
       '|',
       'list',
-      'quote',
-      'code'
+      'quote'
     ]
     // 上传图片
     // editor.customConfig.uploadImgShowBase64 = true
@@ -105,6 +108,15 @@ export default {
 </script>
 
 <style scoped>
+.toLongText{
+    cursor: pointer;
+    position: absolute;
+    bottom: 26px;
+    right: 400px;
+}
+.toLongText img{
+  margin-right: 5px;
+}
 .bibar-commun {
     margin: -20px auto 0 auto;
 }

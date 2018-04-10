@@ -101,7 +101,6 @@ export default{
     this.hrefCollapse = `#${this.collapseId}`
     get(`/api/blist/${this.cpno}/${this.cpageSize}`).then((data) => {
       // debugger
-      console.log(data)
       this.BTC = data.data.exrateData.BTC
       this.CNY = data.data.exrateData.CNY
       this.summaryList = data.data.summaryList
@@ -127,12 +126,9 @@ export default{
     // 显示chart
     chartShowFun (index, id) {
       // debugger
-      console.log(arguments)
       if (index !== this.chartShow) {
         this.chartShow = index
       }
-      console.log(this)
-      console.log(this.$refs.toNowChild[0])
       this.$refs.toNowChild[0].showNowChild(id)
       // console.log(document.body.scrollTop)
     }
