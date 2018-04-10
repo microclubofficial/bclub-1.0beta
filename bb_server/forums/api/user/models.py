@@ -46,6 +46,7 @@ class User(db.Model, UserMixin):
     user_code = db.Column(db.Integer, nullable=False)
     integral = db.Column(db.Integer, nullable=False)
     recommender_code = db.Column(db.Integer)
+    email = db.Column(db.String(512))
     phone = db.Column(db.String(64), nullable=False)
     avatar = db.Column(db.String(512), nullable=False)
 

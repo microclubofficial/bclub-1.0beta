@@ -47,7 +47,7 @@ def check_params(keys):
             babel = {
                 'username': _("Username"),
                 'password': _("Password"),
-                'email': _("Email"),
+                #'email': _("Email"),
             }
             post_data = request.json
             for key in keys:
@@ -70,7 +70,8 @@ def check_phone(phone, captcha):
     if not redis_captcha:
         msg = _('The captcha is expired')
         return get_json(0, msg, {})
-    if redis_captcha.lower() != captcha.lower():
+    if redis_captcha != captcha:
+        print(redis_captcha, captcha)
         msg = _('The captcha is error')
         return get_json(0, msg, {})
 
@@ -111,8 +112,9 @@ class PhoneLoginView(MethodView):
 
     def post(self):
         post_data = request.json
+        print(post_data)
         phone = post_data['phone']
-        captcha = post_data['captcha']
+        captcha = post_data['phonecaptcha']
         remember = post_data.pop('remember', True)
         user = User.query.filter_by(phone=phone).first()
         if not user:
@@ -138,13 +140,11 @@ class RegisterView(MethodView):
         #return render_template('auth/register.html')
         return get_json(1, '注册', {})
 
-    @check_params(['username', 'password'])
     def post(self):
         post_data = request.json
         username = post_data['username']
         password = post_data['password']
         confirm_password = post_data['confirm_password']
-        email = post_data['email']
         phone = post_data['phone']
         captcha = post_data['captcha']
         try:
@@ -153,10 +153,6 @@ class RegisterView(MethodView):
             recommender_code = None
         if User.query.filter_by(phone=phone).exists():
             msg = _('The phone has been registered')
-            #return HTTPResponse(HTTPResponse.HTTP_PARA_ERROR, message=msg).to_response()
-            return get_json(0, msg, {})
-        if User.query.filter_by(email=email).exists():
-            msg = _('The email has been registered')
             #return HTTPResponse(HTTPResponse.HTTP_PARA_ERROR, message=msg).to_response()
             return get_json(0, msg, {})
         if User.query.filter_by(username=username).exists():
@@ -168,7 +164,7 @@ class RegisterView(MethodView):
             return get_json(0, msg, {})
         check_phone(phone, captcha)
         user_code = self.user_code()
-        user = User(username=username, email=email, phone=phone, user_code=user_code,
+        user = User(username=username, phone=phone, user_code=user_code,
                     recommender_code=recommender_code, integral=100)
         recommender_user = User.query.filter_by(user_code=recommender_code).first()
         user.integral = user.integral+1
@@ -178,7 +174,7 @@ class RegisterView(MethodView):
         user.set_password(password)
         user.save()
         user.login(True)
-        self.send_email(user)
+        #self.send_email(user)
         #flash(_('An email has been sent to your.Please receive'))
         #msg = _('An email has been sent to your.Please receive')
         msg = _('注册成功')
@@ -195,14 +191,14 @@ class RegisterView(MethodView):
             return self.user_code()
         return user_code
 
-    def send_email(self, user):
-        token = user.email_token
-        confirm_url = url_for(
-            'auth.confirm_token', token=token, _external=True)
-        html = render_template('templet/email.html', confirm_url=confirm_url)
+    #def send_email(self, user):
+    #    token = user.email_token
+    #    confirm_url = url_for(
+    #        'auth.confirm_token', token=token, _external=True)
+    #    html = render_template('templet/email.html', confirm_url=confirm_url)
         #html = 'hello'
-        subject = _("Please confirm  your email")
-        user.send_email(html=html, subject=subject)
+    #    subject = _("Please confirm  your email")
+    #    user.send_email(html=html, subject=subject)
 
 
 class ForgetView(MethodView):
@@ -223,10 +219,10 @@ class ForgetView(MethodView):
             msg = 'The email is error'
             #return HTTPResponse(HTTPResponse.HTTP_PARA_ERROR, message=msg).to_response()
             return get_json(0, msg, {})
-        password = ''.join(sample(ascii_letters + digits, 8))
-        user.set_password(password)
-        user.save()
-        self.send_email(user, password)
+        #password = ''.join(sample(ascii_letters + digits, 8))
+        #user.set_password(password)
+        #user.save()
+        self.send_email(user)
         #flash(
         #   _('An email has been sent to you.'
         #    'Please receive and update your password in time'))
@@ -234,10 +230,44 @@ class ForgetView(MethodView):
         #return HTTPResponse(HTTPResponse.NORMAL_STATUS).to_response()
         return get_json(1, msg, {})
 
-    def send_email(self, user, password):
-        html = render_template('templet/forget.html', confirm_url=password)
-        subject = "Please update your password in time"
+    def send_email(self, user):
+        token = user.email_token
+        confirm_url = url_for(
+            'auth.forget_token', token=token, _external=True)
+        html = render_template('templet/forget.html', confirm_url=confirm_url)
+        subject = _('Please set a new password')
         user.send_email(html=html, subject=subject)
+
+class ForgetTokenView(MethodView):
+    def get(self, token):
+        user = User.check_email_token(token)
+        if not user:
+            msg = _('The confirm link has been out of time.'
+                    'Please confirm your email again')
+            flash(msg)
+            return redirect('/')
+        flash('You have confirmed your account. Thanks!')
+        return redirect('/')
+
+class SetPasswordView(MethodView):
+    def get(self):
+        domain.as_default()
+        return get_json(1, '修改密码', {})
+    
+    def post(self, token):
+        user = User.check_email_token(token)
+        post_data = request.json
+        password = post_data['password']
+        confirm_password = post_data['confirm_password']
+        if password != confirm_password:
+            msg = _('Two passwords are different')
+            return get_json(0, msg, {})
+        user.set_password(password)
+        user.save()
+        user.login(True)
+        data = {"username":user.username}
+        Avatar(data, user)
+        return get_json(1, '修改成功', data)
 
 class PhoneForgetView(MethodView):
     decorators = [guest_required]
@@ -299,7 +329,7 @@ class ConfirmTokenView(MethodView):
 class ConfirmPhoneView(MethodView):
     def post(self):
         phone = request.json['phone']
-        captcha = ''.join(sample(ascii_letters + digits, 6))
+        captcha = ''.join(sample(digits, 6))
         url = "http://www.kanyanbao.com/websocket/aip/send_sms_template.json"
         data = {"phone":phone, "templateId": "1001", "content":captcha}
         headers = {'Content-Type':'application/json'}
@@ -320,15 +350,20 @@ class Auth(object):
         forget_view = ForgetView.as_view('auth.forget')
         confirm_view = ConfirmView.as_view('auth.confirm')
         confirm_token_view = ConfirmTokenView.as_view('auth.confirm_token')
+        forget_token_view = ForgetTokenView.as_view('auth.forget_token')
         phone_view = ConfirmPhoneView.as_view('phone')
         phonelogin_view = PhoneLoginView.as_view('phonelogin')
         phoneforget_view = PhoneForgetView.as_view('phoneforget')
+        setpassword_view = SetPasswordView.as_view('setpassword')
+
         app.add_url_rule('/api/login', view_func=login_view)
         app.add_url_rule('/api/logout', view_func=logout_view)
         app.add_url_rule('/api/register', view_func=register_view)
         app.add_url_rule('/api/forget', view_func=forget_view)
         app.add_url_rule('/api/confirm', view_func=confirm_view)
         app.add_url_rule('/api/confirm/<token>', view_func=confirm_token_view)
-        app.add_url_rule('/api/phone_confirm', view_func=phone_view)
-        app.add_url_rule('/api/phone_login', view_func=phonelogin_view)
-        app.add_url_rule('/api/phone_forget', view_func=phoneforget_view)
+        app.add_url_rule('/api/forget/<token>', view_func=forget_token_view)
+        app.add_url_rule('/api/phoneCaptcha', view_func=phone_view)
+        app.add_url_rule('/api/phoneLogin', view_func=phonelogin_view)
+        app.add_url_rule('/api/phoneForget', view_func=phoneforget_view)
+        app.add_url_rule('/api/setpassword', view_func=setpassword_view)

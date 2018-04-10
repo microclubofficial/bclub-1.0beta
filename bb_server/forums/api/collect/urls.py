@@ -13,15 +13,14 @@
 from flask import Blueprint
 from .views import CollectListView, CollectView, AddToCollectView
 
-site = Blueprint('collect', __name__)
+site = Blueprint('collect', __name__, url_prefix='/api')
 
 site.add_url_rule('/collect', view_func=CollectListView.as_view('list'))
 site.add_url_rule(
-    '/collect/<int:pk>', view_func=CollectView.as_view('collect'))
+    '/collect/<int:topicId>', view_func=CollectView.as_view('collect'))
 site.add_url_rule(
     '/topic/<int:topicId>/collect',
     view_func=AddToCollectView.as_view('add_to_collect'))
-
 
 def init_app(app):
     app.register_blueprint(site)
