@@ -44,21 +44,11 @@ def check_params(keys):
     def _check_params(func):
         @wraps(func)
         def decorator(*args, **kwargs):
-            babel = {
-                'username': _("Username"),
-                'password': _("Password"),
-                #'email': _("Email"),
-            }
             post_data = request.json
             for key in keys:
                 if not post_data.get(key):
-                    msg = _('The %(key)s is required', key=babel[key])
-                    return get_json(0, msg, {})
-            captcha = post_data['captcha']
-            session_captcha = session.pop('captcha', '00000')
-            if captcha.lower() != session_captcha.lower():
-                msg = _('The captcha is error')
-                return get_json(0, msg, {})  
+                    msg = _('The %s is required'%key)
+                    return get_json(0, msg, {}) 
             return func(*args, **kwargs)
 
         return decorator
@@ -68,13 +58,10 @@ def check_params(keys):
 def check_phone(phone, captcha):
     redis_captcha = redis_data.get(phone)
     if not redis_captcha:
-        msg = _('The captcha is expired')
-        return get_json(0, msg, {})
+        return False
     if redis_captcha != captcha:
-        print(redis_captcha, captcha)
-        msg = _('The captcha is error')
-        return get_json(0, msg, {})
-
+        return False
+    return True
 
 class LoginView(MethodView):
     decorators = [guest_required]
@@ -95,6 +82,11 @@ class LoginView(MethodView):
             #msg = _('用户名或密码错误')
             #return HTTPResponse(HTTPResponse.HTTP_PARA_ERROR, message=msg).to_response()
             return get_json(0, '用户名或密码错误', {})
+        captcha = post_data['captcha']
+        session_captcha = session.pop('captcha', '00000')
+        if captcha.lower() != session_captcha.lower():
+            msg = _('The captcha is error')
+            return get_json(0, msg, {})  
         user.login(remember)
         data = {"username":user.username}
         Avatar(data, user)
@@ -110,6 +102,7 @@ class PhoneLoginView(MethodView):
         domain.as_default()
         return get_json(1, '登录', {})
 
+    @check_params(['phone', 'captcha'])
     def post(self):
         post_data = request.json
         print(post_data)
@@ -119,11 +112,13 @@ class PhoneLoginView(MethodView):
         user = User.query.filter_by(phone=phone).first()
         if not user:
             return get_json(0, '手机号未注册', {})
-        check_phone(phone, captcha)
+        if not check_phone(phone, captcha):
+            return get_json(0, '验证码错误', {})
         user.login(remember)
         data = {"username":user.username}
         Avatar(data, user)
         return get_json(1, '登录成功', data)
+        
 
 class LogoutView(MethodView):
     decorators = [login_required]
@@ -140,16 +135,17 @@ class RegisterView(MethodView):
         #return render_template('auth/register.html')
         return get_json(1, '注册', {})
 
+    @check_params(['username', 'password', 'confirm_password', 'phone', 'captcha'])
     def post(self):
         post_data = request.json
-        username = post_data['username']
+        username = post_data['username'] 
         password = post_data['password']
-        confirm_password = post_data['confirm_password']
-        phone = post_data['phone']
+        confirm_password = post_data['confirm_password']    
+        phone = post_data['phone']   
         captcha = post_data['captcha']
-        try:
+        if 'recommender_code' in post_data:
             recommender_code = post_data['recommender_code']
-        except:
+        else:
             recommender_code = None
         if User.query.filter_by(phone=phone).exists():
             msg = _('The phone has been registered')
@@ -162,7 +158,8 @@ class RegisterView(MethodView):
         if password != confirm_password:
             msg = _('Two passwords are different')
             return get_json(0, msg, {})
-        check_phone(phone, captcha)
+        if not check_phone(phone, captcha):
+            return get_json(0, '验证码错误', {})
         user_code = self.user_code()
         user = User(username=username, phone=phone, user_code=user_code,
                     recommender_code=recommender_code, integral=100)
@@ -210,7 +207,6 @@ class ForgetView(MethodView):
         #return render_template('auth/forget.html')
         return get_json(1, '忘记密码', {})
 
-    @check_params(['email'])
     def post(self):
         post_data = request.json
         email = post_data['email']
@@ -247,18 +243,22 @@ class ForgetTokenView(MethodView):
             flash(msg)
             return redirect('/')
         flash('You have confirmed your account. Thanks!')
-        return redirect('/')
+        return redirect('/#/findPwd/%s'%token)
 
 class SetPasswordView(MethodView):
     def get(self):
         domain.as_default()
         return get_json(1, '修改密码', {})
     
-    def post(self, token):
-        user = User.check_email_token(token)
+    def post(self, token=None):
         post_data = request.json
         password = post_data['password']
         confirm_password = post_data['confirm_password']
+        if 'phone' in post_data:
+            phone = post_data['phone']
+            user = User.query.filter_by(phone = phone).first()
+        else:
+            user = User.check_email_token(token)
         if password != confirm_password:
             msg = _('Two passwords are different')
             return get_json(0, msg, {})
@@ -277,7 +277,6 @@ class PhoneForgetView(MethodView):
         domain.as_default()
         return get_json(1, '忘记密码', {})
 
-    @check_params(['phone'])
     def post(self):
         post_data = request.json
         phone = post_data['phone']
@@ -286,7 +285,8 @@ class PhoneForgetView(MethodView):
         if not user:
             msg = 'The phone is error'
             return get_json(0, msg, {})
-        check_phone(phone, captcha)
+        if not check_phone(phone, captcha):
+            return get_json(0, '验证码错误', {})
         return get_json(1, '验证成功', {})
 
 
@@ -354,7 +354,8 @@ class Auth(object):
         phone_view = ConfirmPhoneView.as_view('phone')
         phonelogin_view = PhoneLoginView.as_view('phonelogin')
         phoneforget_view = PhoneForgetView.as_view('phoneforget')
-        setpassword_view = SetPasswordView.as_view('setpassword')
+        mailsetpassword_view = SetPasswordView.as_view('mailsetpassword')
+        phonesetpassword_view = SetPasswordView.as_view('phonesetpassword')
 
         app.add_url_rule('/api/login', view_func=login_view)
         app.add_url_rule('/api/logout', view_func=logout_view)
@@ -366,4 +367,5 @@ class Auth(object):
         app.add_url_rule('/api/phoneCaptcha', view_func=phone_view)
         app.add_url_rule('/api/phoneLogin', view_func=phonelogin_view)
         app.add_url_rule('/api/phoneForget', view_func=phoneforget_view)
-        app.add_url_rule('/api/setpassword', view_func=setpassword_view)
+        app.add_url_rule('/api/setpassword/<token>', view_func=mailsetpassword_view)
+        app.add_url_rule('/api/setpassword', view_func=phonesetpassword_view)
