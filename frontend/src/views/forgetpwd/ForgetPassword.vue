@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="box">
         <div class="container">
             <div class="page-header">
                 <h4>忘记密码</h4>

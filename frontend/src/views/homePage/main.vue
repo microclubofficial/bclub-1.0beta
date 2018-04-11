@@ -109,4 +109,5 @@ export default{
     width: 1100px;
     margin: 0 auto
   }
+  .Maineditor>.wangeditor>.toLongText{right: 526px !important;}
 </style>

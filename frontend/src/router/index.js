@@ -47,6 +47,8 @@ export const constantRouterMap = [
   {path: '/forgetPwd', component: _import('forgetpwd/ForgetPassword')},
   // 通过手机找回
   {path: '/confirmPhone', component: _import('forgetpwd/ConfirmPhone')},
+  // 填新密码
+  {path: '/findPwd', component: _import('forgetpwd/findPwd')},
   // 通过邮箱找回
   {path: '/confirmEmail', component: _import('forgetpwd/ConfirmEmail')},
   // 注册
