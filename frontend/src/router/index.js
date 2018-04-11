@@ -48,7 +48,7 @@ export const constantRouterMap = [
   // 通过手机找回
   {path: '/confirmPhone', component: _import('forgetpwd/ConfirmPhone')},
   // 填新密码
-  {path: '/findPwd', component: _import('forgetpwd/findPwd')},
+  {path: '/findPwd/:token', component: _import('forgetpwd/findPwd')},
   // 通过邮箱找回
   {path: '/confirmEmail', component: _import('forgetpwd/ConfirmEmail')},
   // 注册
@@ -105,7 +105,18 @@ export const constantRouterMap = [
     ]
   },
   {
-    path: '/mainDetail/:pageId', component: mainDetail
+    path: '/mainDetail/:pageId',
+    component: mainDetail,
+    children: [
+      {path: '', component: _import('BibarMsg/bibarMsgDetail/BibarMsgList/all')},
+      {
+        path: 'all', component: _import('BibarMsg/bibarMsgDetail/BibarMsgList/all')
+      },
+      {path: 'talk', component: _import('BibarMsg/bibarMsgDetail/BibarMsgList/talk')},
+      {path: 'works', component: _import('BibarMsg/bibarMsgDetail/BibarMsgList/works')},
+      {path: 'news', component: _import('BibarMsg/bibarMsgDetail/BibarMsgList/news')},
+      {path: 'trade', component: _import('BibarMsg/bibarMsgDetail/BibarMsgList/trade')}
+    ]
   },
   {
     path: '/talkDetail/:talkId',

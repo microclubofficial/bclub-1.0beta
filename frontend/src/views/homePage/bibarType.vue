@@ -1,37 +1,11 @@
 <template>
   <div class="commun-bibarType">
-    <h3>各种币</h3>
+    <h3>热门币种</h3>
    <div class="bibarType-main">
-     <div class="bibarType-main-box shadow-box" @click="toBibarData(0)">
-       <img src="../../assets/img/pic-news.png" alt="">
+     <div class="bibarType-main-box shadow-box" @click="toBibarData(index,tmp.id)" :key="index" v-for="(tmp,index) in bibarType">
+       <img :src="tmp.picture" alt="">
        <div class="bibarType-title">
-         <img src="../../assets/img/logo-coin-BTC.png" alt="">BTC比特币
-         <span class="bibarType-talk-btn">加入讨论</span>
-         </div>
-        <ul>
-          <li>关注<span>17825</span></li>
-          <li>文章<span>32216</span></li>
-          <li>热度<span>7343</span></li>
-          <li>创建管理员</li>
-        </ul>
-     </div>
-     <div class="bibarType-main-box shadow-box" @click="toBibarData(1)">
-       <img src="../../assets/img/pic-news02.png" alt="">
-       <div class="bibarType-title">
-         <img src="../../assets/img/logo-coin-BTC.png" alt="">ETH以太坊
-         <span class="bibarType-talk-btn">加入讨论</span>
-         </div>
-        <ul>
-          <li>关注<span>17825</span></li>
-          <li>文章<span>32216</span></li>
-          <li>热度<span>7343</span></li>
-          <li>创建管理员</li>
-        </ul>
-     </div>
-     <div class="bibarType-main-box shadow-box" @click="toBibarData(2)">
-       <img src="../../assets/img/pic-news03.png" alt="">
-       <div class="bibarType-title">
-         <img src="../../assets/img/logo-coin-BTC.png" alt="">XRP瑞波币
+         <img :src="tmp.bpicture" alt="">{{tmp.symbol}}{{tmp.name_ch}}
          <span class="bibarType-talk-btn">加入讨论</span>
          </div>
         <ul>
@@ -46,16 +20,23 @@
 </template>
 
 <script>
+import {get} from '../../utils/http'
 export default{
   data: function () {
     return {
+      bibarType: []
     }
   },
   mounted: function () {
-    
+    get('/api/bpicture').then(data => {
+      this.bibarType = data.data
+    })
   },
   methods: {
-    toBibarData (router) {
+    toBibarData (router, id) {
+      this.$store.commit('CHART_ID', {
+        'chartId': id
+      })
       this.$router.push(`/mainDetail/${router}`)
     }
   }
@@ -76,7 +57,7 @@ export default{
   margin: 20px auto;
   text-align: center;
 }
-.bibarType-main-box{background: #fff; padding-bottom: 20px;}
+.bibarType-main-box{background: #fff; padding-bottom: 20px; cursor: pointer;}
 .bibarType-main-box>img{width: 240px;}
 .bibarType-main-box>ul{overflow: hidden; padding: 0 10px;}
 .bibarType-main-box>ul>li{

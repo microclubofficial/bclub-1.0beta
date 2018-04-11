@@ -31,7 +31,7 @@
             <li><a href="#"><img :src="useravatar" alt=""><span class="user-name">{{userName}}</span></a></li>
             <li><a href="#"><img src="../../assets/img/set.png" alt=""><span>个人设置</span></a></li>
             <li><a href="#"><img src="../../assets/img/share.png" alt=""><span>股票设置</span></a></li>
-            <li><a href="#" @click="outlogin"><img src="../../assets/img/outlogin.png" alt=""><span>退出</span></a></li>
+            <li><a href="#" @click="outlogin"><i class="iconfont">&#xe629;</i><span>退出</span></a></li>
           </ul>
         </div>
       </div>
