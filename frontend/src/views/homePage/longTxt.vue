@@ -3,32 +3,31 @@
    <!-- 富文本 -->
      <form action="" class="long-text-container">
        <input type="hidden">
-       <textarea id="Logintitle" class="long-text-title" style="min-height:37px;" placeholder="请输入标题" oninput="autoHeight(this)"></textarea>
+       <textarea id="Longtitle" class="long-text-title" v-model="Longtitle" placeholder="请输入标题" @input='autoHeight()'></textarea>
        <div class="long-text-editor">
-         <TalkEditor></TalkEditor>
+         <LongEditor :title='Longtitle'></LongEditor>
        </div>
      </form>
   </div>
 </template>
 
 <script>
-import TalkEditor from '../homePage/longEditor/longTextEditor.vue'
+import LongEditor from '../homePage/longEditor/longTextEditor.vue'
 export default{
   data: function () {
     return {
-
+      Longtitle: ''
     }
   },
   components: {
-    TalkEditor
+    LongEditor
   },
   mounted: function () {
-    let ele = document.getElementById('Logintitle')
-    this.autoHeight(ele)
   },
   methods: {
-    autoHeight (o) {
-      o.style.height = o.scrollTop + o.scrollHeight + 'px'
+    autoHeight () {
+      let obj = document.getElementById('Longtitle')
+      obj.style.height = obj.scrollHeight + 'px'
     }
   }
 }
@@ -49,14 +48,15 @@ export default{
 .long-text-title {
     width: 100%;
     font-size: 28px;
-    margin: 21px 0;
+    margin-top: 20px;
     padding: 2px 0;
     border: 0;
     outline: 0;
     line-height: 1.2;
     resize: none;
     /* overflow: auto; */
-    overflow: visible;
+    overflow: hidden;
+    height: 50px;
 }
 .w-e-text::-webkit-scrollbar{
   background:snow;

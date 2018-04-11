@@ -10,18 +10,19 @@
                     <div class="col-md-4">
                         <input type="text" class="form-control" id="inputEmail3"  @blur='showRegisterMsg(phoneObj.phone, 0)' v-model="phoneObj.phone" placeholder="请输入手机号">
                     </div>
-                    <p class="prompt" style="margin-left: 0 !important;">{{phonePrompt}}</p>
                 </div>
+                <p class="prompt col-md-offset-1">{{phonePrompt}}</p>
+                <br>
                 <div class="form-group">
                     <label for="inputCaptcha3" class="col-md-1 control-label">验证码</label>
                     <div class="col-md-4">
-                        <input type="text" class="form-control" v-model="phoneObj.captcha" @blur='showRegisterMsg(phoneObj.phone, 1)' id="inputCaptcha3" placeholder="请输入验证码">
+                        <input type="text" class="form-control" v-model="phoneObj.captcha" @blur='showRegisterMsg(phoneObj.captcha, 1)' id="inputCaptcha3" placeholder="请输入验证码">
                     </div>
-                    <div class="col-md-1 btn getcontrol" style=" padding: 6px 12px !important;height: 100%;width: 10%;" @click="getPhoneControl" v-bind:disabled="hasphone" :class="{disable:hasphone}"><span v-show="hasControl">{{countdown}}</span>{{getcontroltxt}}</div>
-                    <p class="prompt" style="margin-left: 0 !important;">{{phoneControlPrompt}}</p>
+                    <div class="col-md-1 btnm getcontrol" style=" padding: 6px 12px !important;height: 100%;width: 10%;" @click="getPhoneControl" v-bind:disabled="hasphone" :class="{disable:hasphone}"><span v-show="hasControl">{{countdown}}</span>{{getcontroltxt}}</div>
                 </div>
+                <p class="prompt col-md-offset-1">{{phoneControlPrompt}}</p>
                 <div class="form-group">
-                    <div class="col-md-offset-2 col-md-1 btn confirm"  data-target="#myModal" data-toggle="modal">确认
+                    <div class="col-md-offset-2 col-md-1 btnm confirm"  data-target="#myModal" data-toggle="modal">确认
                     </div>
                 </div>
             </form>
@@ -52,8 +53,8 @@
             </form>
                         </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                        <button type="button" class="btn btn-primary" @click="setnewpwd">确定</button>
+                        <button type="button" class="btnm btnm-default" data-dismiss="modal">关闭</button>
+                        <button type="button" class="btnm btnm-primary" @click="setnewpwd">确定</button>
                     </div>
                 </div>
             </div>
@@ -198,14 +199,14 @@ export default{
     color: #797979 !important;
     border:none !important;
 }
-.disable:hover{
+/* .disable:hover{
     background: #BCBCBC;
     color: #797979;
-}
+} */
 .confirm{
-    color: #fff;
-    background-color: #337ab7;
-    border-color: #2e6da4;
+    color: #fff !important;
+    background-color: #337ab7 !important;
+    border-color: #2e6da4 !important;
 }
 .getcontrol{
     border-radius: 4px;
@@ -213,7 +214,7 @@ export default{
     background-color: #5cb85c;
     border-color: #4cae4c;
 }
-.btn{
+.btnm{
     display: inline-block;
     padding: 6px 12px;
     margin-bottom: 0;
@@ -232,5 +233,6 @@ export default{
     user-select: none;
     background-image: none;
     border: 1px solid transparent;
+    border-radius: 5px;
 }
 </style>

@@ -101,14 +101,14 @@ export default{
     color: #797979 !important;
     border:none !important;
 }
-.disable:hover{
+/* .disable:hover{
     background: #BCBCBC;
     color: #797979;
-}
+} */
 .findpwd{
-    color: #fff;
-    background-color: #337ab7;
-    border-color: #2e6da4;
+    color: #fff !important;
+    background-color: #337ab7 !important;
+    border-color: #2e6da4 !important;
 }
 .btn{
     display: inline-block;

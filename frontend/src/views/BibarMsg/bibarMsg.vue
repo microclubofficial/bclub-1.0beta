@@ -14,12 +14,12 @@
                 <div id='collapseOne' class="panel-collapse collapse in" v-if="chartShow === index">
                   <div class="panel-body">
                     <!--BTB信息框-->
-                    <btb ref='toNowChild'></btb>
+                    <btb ref="toNowChild" :bId="item.id"></btb>
                   </div>
                 </div>
                  <!-- 币种列表 -->
                  <a data-toggle="collapse" class="panel-tb-hd" data-parent="#accordion" href='#collapseOne'>
-                  <div class="bibar-list-item" @click="chartShowFun(index, item.id)">
+                  <div class="bibar-list-item" @click="chartShow = index">
                   <ul>
                     <li><a href="javascript:void(0)"><span><img :src="item.picture" alt=""></span> {{item.name_ch}} - {{item.symbol}}</a></li>
                     <li><a href="javascript:void(0)"><i class="iconfont icon-CNY"></i>{{item.price | cnyFun(CNY,2)}}</a></li>
@@ -122,15 +122,6 @@ export default{
     },
     BibarContentFun (data) {
       this.$refs.showBibarContent.showBibarContentFun(data)
-    },
-    // 显示chart
-    chartShowFun (index, id) {
-      // debugger
-      if (index !== this.chartShow) {
-        this.chartShow = index
-      }
-      this.$refs.toNowChild[0].showNowChild(id)
-      // console.log(document.body.scrollTop)
     }
   }
 }

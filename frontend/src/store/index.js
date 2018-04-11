@@ -8,6 +8,7 @@ import errorLog from './modules/errorLog'
 import homePageList from './modules/homePageList'
 import getters from './getters'
 import createPersist from 'vuex-localstorage'
+import chartId from './modules/chartId'
 
 Vue.use(Vuex)
 
@@ -18,7 +19,8 @@ const store = new Vuex.Store({
     user,
     articles,
     userInfo,
-    homePageList
+    homePageList,
+    chartId
   },
   getters,
   plugins: [createPersist({

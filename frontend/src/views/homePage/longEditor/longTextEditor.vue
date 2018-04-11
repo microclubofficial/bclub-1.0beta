@@ -9,24 +9,29 @@
 import E from 'wangeditor'
 import {post} from '../../../utils/http.js'
 export default{
-  props: ['contentId'],
+  props: ['title'],
   name: 'editor',
   data: function () {
     return {
       editorContent: '',
-      backData: {
-        'author': '',
-        'avatar': '',
-        'created_at': '',
-        'updated_at': '',
-        'title': '',
-        'content': '',
-        'is_good': 0,
-        'is_bad': 0,
-        replt_count: 0
+      backLong: {
+        author: '',
+        author_id: 0,
+        avatar: '',
+        content: '',
+        created_at: '',
+        diff_time: '',
+        id: '',
+        is_bad: 0,
+        is_bad_bool: false,
+        is_good: 0,
+        is_good_bool: false,
+        title: '',
+        updated_at: ''
       },
       topicData: {
-        'content': ''
+        'content': '',
+        'title': ''
       }
     }
   },
@@ -63,15 +68,25 @@ export default{
   methods: {
     getContent: function () {
       this.topicData.content = this.editorContent
-      post(`api/bar/question/${this.contentId}`, this.topicData).then(data => {
-        //   评论发送完毕
-        this.backData.content = data.data.content
-        this.$emit('backAnswer', this.backData)
-        $('.talkBibar-editor').find('.w-e-text-container').find('p').html('')
+      this.topicData.title = this.title
+      console.log(this.topicData)
+      post('/api/topic', this.topicData).then(data => {
+        console.log(data)
+        if (data.message === '未登录') {
+          alert('先去登录')
+          this.$router.push('/login')
+        } else {
+          if (data.data.content !== '') {
+            this.backLong.content = data.data.content
+            this.backLong.author = data.data.author
+            this.backLong.avatar = data.data.avatar
+            this.backLong.id = data.data.id
+            this.backLong.diff_time = data.data.diff_time
+            this.backLong.is_good = data.dta.is_good
+            $('.w-e-text-container').find('p').html('')
+          }
+        }
       })
-    //   get('api/topic').then(data => {
-    //     console.log('这是传回来' + data)
-    //   })
     }
   }
 }
@@ -95,5 +110,8 @@ export default{
   border-left: none !important;
   border-right: none !important;
   background: #fff !important;
+}
+.w-e-text-container .w-e-panel-container{
+    margin-left: -396px !important;
 }
 </style>

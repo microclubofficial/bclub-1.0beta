@@ -1,8 +1,8 @@
 <template>
 <div>
-   <article class="bibar-box bibar-boxindex1">
+   <article class="bibar-box bibar-boxindex1" @click="toMsgDetail(bibarData.id)">
                 <div class="bibar-indexDisplay">
-                    <div class="bibar-indexDisplay-header" @click="toMsgDetail(bibarData.id)">
+                    <div class="bibar-indexDisplay-header">
                         <div class="logopic"><img :src="bibarData.picture"></div>
                         <div class="logonameEnglish">{{bibarData.zhName}}</div>
                         <div class="logonameChinese">{{bibarData.symbol}}</div>
@@ -66,9 +66,10 @@
                     </div>
                     <div class="clear hline"></div>
                     <!--chart-->
-                    <div :id='chartBox' :style="{width:'780px',height:'450px'}"></div>
+                    <div ref="chat" :style="{width:'780px',height:'450px',margin: '0 auto'}"></div>
                 </article>
             </article>
+
 </div>
 </template>
 
@@ -85,12 +86,12 @@ Highcharts3D(Highcharts)
 
 export default{
   name: 'bibar',
+  props: ['bId'],
   data: function () {
     return {
       id: 'chart',
       ohlc: [],
       volumeData: [],
-      chartBox: 'chartBox',
       bibarData: {},
       kline: {},
       price: null,
@@ -100,8 +101,8 @@ export default{
       change1h: null,
       isDown: false,
       msgId: '',
-      chartList: [],
-      bId: 'bitcoin'
+      chartList: []
+      // bId: 'bitcoin'
     }
   },
   mounted () {
@@ -112,7 +113,8 @@ export default{
     getChartData (bId) {
       // https://data.jianshukeji.com/stock/history/000001
       var that = this
-      $.getJSON(`/api/currency_news/${bId}`, function (data) {
+      this.bId = bId
+      $.getJSON(`/api/currency_news/${that.bId}`, function (data) {
         // main数据
         that.bibarData = data.data
         // 人民币汇率
@@ -152,7 +154,7 @@ export default{
     },
     // 绘制chart
     drawChart () {
-      Highcharts.stockChart(this.chartBox, {
+      Highcharts.stockChart(this.$refs.chat, {
         rangeSelector: {
           selected: 1,
           inputDateFormat: '%Y-%m-%d',
@@ -254,8 +256,6 @@ export default{
     },
     // 显示当前chart
     showNowChild (id) {
-      // console.log(this)
-      this.chartBox = this.chartBox + Math.floor(Math.random() * 1000)
       this.getChartData(id)
     }
   }

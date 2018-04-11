@@ -15,14 +15,16 @@
             <div class="col-sm-9">
               <input class="form-control" @blur='showRegisterMsg(userForm.username, 0)' name="username" type="text" placeholder="Username" v-model="userForm.username">
             </div>
-            <p class="prompt">{{unamePrompt}}</p>
+            <label class="col-sm-2 control-label"></label>
+            <p class="prompt col-sm-9">{{unamePrompt}}</p>
           </div>
           <div class="form-group">
             <label class="col-sm-2 control-label">密码:</label>
             <div class="col-sm-9">
               <input class="form-control" @blur='showRegisterMsg(userForm.password, 1)' name="password" type="password" placeholder="Password" v-model="userForm.password">
             </div>
-            <p class="prompt">{{upwdPrompt}}</p>
+            <label class="col-sm-2 control-label"></label>
+            <p class="prompt col-sm-9">{{upwdPrompt}}</p>
           </div>
           <div class="form-group">
             <label class="col-sm-2 control-label">验证码:</label>
@@ -34,7 +36,8 @@
                 <input class="form-control" name="captcha"  @blur='showRegisterMsg(userForm.captcha, 2)' placeholder="Captcha" type="text" style="border-left:none;" v-model="userForm.captcha"  @keyup.enter="handleLogin">
               </div>
             </div>
-            <p class="prompt">{{captchaPrompt}}</p>
+            <label class="col-sm-2 control-label"></label>
+            <p class="prompt col-sm-9">{{captchaPrompt}}</p>
           </div>
           <div class="form-group">
             <div class="col-sm-offset-2 col-sm-9">
@@ -45,7 +48,7 @@
           </div>
           <div class="form-group">
             <div class="col-sm-offset-2 col-sm-9">
-              <button type="button" class="btn btn-primary btn-block" @click="handleLogin">登陆</button>
+              <button type="button" class="btnm btnm-primary btnm-block" style="width: 100%; border-radius: 5px;background: #286090; color:#fff;"  @click="handleLogin">登陆</button>
             </div>
           </div>
           </div>
@@ -56,19 +59,20 @@
             <div class="col-sm-9">
               <input class="form-control" name="phone" type="text" placeholder="phone" v-model="phoneForm.phone" @blur='showRegisterMsg(phoneForm.phone, 3)'>
             </div>
-             <p class="prompt">{{phonePrompt}}</p>
+            <label class="col-sm-2 control-label"></label>
+             <p class="prompt col-sm-9">{{phonePrompt}}</p>
           </div>
                 <div class="form-group">
                     <label for="inputCaptcha3" class="col-md-2 control-label">验证码</label>
                     <div class="col-md-7">
                         <input type="text" @blur='showRegisterMsg(phoneForm.phonecaptcha, 4)' class="form-control" v-model="phoneForm.phonecaptcha" id="inputCaptcha3" placeholder="请输入验证码">
                     </div>
-                    <div class="col-md-2 btn getcontrol" style=" padding: 6px 12px !important;height: 100%;" @click="getPhoneControl" v-bind:disabled="hasphone" :class="{disable:hasphone}"><span v-show="hasControl">{{countdown}}</span>获取</div>
-                    <p class="prompt">{{phoneControlPrompt}}</p>
+                    <div class="col-md-2 btnm getcontrol" style=" padding: 6px 12px !important;height: 100%;" @click="getPhoneControl" v-bind:disabled="hasphone" :class="{disable:hasphone}"><span v-show="hasControl">{{countdown}}</span>获取</div>
+                    <p class="prompt col-sm-offset-2 col-sm-9">{{phoneControlPrompt}}</p>
                 </div>
                 <div class="form-group">
             <div class="col-sm-offset-2 col-sm-9">
-              <button type="button" class="btn btn-primary btn-block" @click="handlePhoneLogin">登陆</button>
+              <button type="button" style="width: 100%; border-radius: 5px;background: #286090; color:#fff;" class="btnm btnm-primary btnm-block" @click="handlePhoneLogin">登陆</button>
             </div>
           </div>
           </div>
@@ -254,7 +258,8 @@ export default {
 <style rel="stylesheet/scss" lang="scss">
 .prompt{
     float: left;
-    margin-left: 20%;
+    // margin-left: 20%;
+    display: block;
     margin-top: 10px;
     color: red;
 }
@@ -275,7 +280,7 @@ export default {
     background-color: #5cb85c;
     border-color: #4cae4c;
 }
-.btn{
+.btnm{
     display: inline-block;
     padding: 6px 12px;
     margin-bottom: 0;
