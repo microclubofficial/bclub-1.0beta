@@ -5,54 +5,62 @@
         <a href="/login" style="color:#fff">Register</a>
       </div>
       <div class="panel-body">
-        <form class="form-horizontal" style="max-width:420px;margin:auto" name="vForm">
+        <form action="" class="form-horizontal" style="max-width:420px;margin:auto" name="vForm" method="post">
           <div class="form-group">
             <label class="col-sm-2 control-label">用户名:</label>
             <div class="col-sm-9">
-              <input  class="form-control" name="username" type="text" placeholder="Username" v-model="userForm.username">
+              <input  class="form-control" name="username" type="text" placeholder="Username" @blur='showRegisterMsg(userForm.username, 0)'  v-model="userForm.username">
             </div>
             <p class="prompt">{{unamePrompt}}</p>
           </div>
           <div class="form-group">
             <label class="col-sm-2 control-label">密码:</label>
             <div class="col-sm-9">
-              <input class="form-control" name="password" type="password" placeholder="Password" v-model="userForm.password">
+              <input class="form-control" name="password" type="password" placeholder="Password" @blur='showRegisterMsg(userForm.password, 1)' v-model="userForm.password">
             </div>
             <p class="prompt">{{upwdPrompt}}</p>
           </div>
           <div class="form-group">
             <label class="col-sm-2 control-label">确认密码:</label>
             <div class="col-sm-9">
-              <input class="form-control" name="repassword" type="password" placeholder="Repassword" v-model="userForm.confirm_password">
+              <input class="form-control" name="repassword" type="password" placeholder="Repassword" @blur='showRegisterMsg(userForm.confirm_password, 2)' v-model="userForm.confirm_password">
             </div>
             <p class="prompt">{{confirm_upwdPrompt}}</p>
           </div>
-          <div class="form-group">
-            <label class="col-sm-2 control-label">手机号:</label>
-            <div class="col-sm-9">
-              <input class="form-control" name="phone" type="text" placeholder="phone" v-model="userForm.phone">
-            </div>
-             <p class="prompt">{{phonePrompt}}</p>
-          </div>
-          <div class="form-group">
+          <!-- <div class="form-group">
             <label class="col-sm-2 control-label">邮箱:</label>
             <div class="col-sm-9">
-              <input class="form-control" name="emai" type="mail" placeholder="emai" v-model="userForm.email">
+              <input class="form-control" name="emai" type="mail" placeholder="emai" v-model="userForm.email" @blur='showRegisterMsg(userForm.email, 4)'>
             </div>
             <p class="prompt">{{emailPrompt}}</p>
-          </div>
+          </div> -->
 
-          <div class="form-group">
+          <!-- <div class="form-group">
             <label class="col-sm-2 control-label">验证码:</label>
             <div class="col-sm-9">
               <div class="input-group">
                 <span class="input-group-addon" style="padding:0;border-right:none;">
                   <img ref="captcha" :src="controlImg" alt="验证码" width="90" height="20" @click="changeControl()">
                 </span>
-                <input class="form-control" name="captcha" placeholder="Captcha" type="text" style="border-left:none;" v-model="userForm.captcha">
+                <input class="form-control" name="captcha" placeholder="Captcha" type="text" style="border-left:none;" v-model="userForm.captcha" @blur='showRegisterMsg(userForm.captcha, 5)'>
               </div>
+              <p class="prompt">{{captchaPrompt}}</p>
             </div>
+          </div> -->
+          <div class="form-group">
+            <label class="col-sm-2 control-label">手机号:</label>
+            <div class="col-sm-9">
+              <input class="form-control" name="phone" type="text" placeholder="phone" v-model="userForm.phone" @blur='showRegisterMsg(userForm.phone, 3)'>
+            </div>
+             <p class="prompt">{{phonePrompt}}</p>
           </div>
+                <div class="form-group">
+                    <label for="inputCaptcha3" class="col-md-2 control-label">验证码</label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control" v-model="userForm.captcha" @blur='showRegisterMsg(userForm.phone, 5)' id="inputCaptcha3" placeholder="请输入验证码">
+                    </div>
+                    <div class="col-md-3 btn getcontrol" style=" padding: 6px 12px !important;height: 100%;width: 22%;" @click="getPhoneControl" v-bind:disabled="hasphone" :class="{disable:hasphone}"><span v-show="hasControl">{{countdown}}</span>{{getcontroltxt}}</div>
+                </div>
 
           <div class="form-group">
             <label class="col-sm-2 control-label">邀请码:</label>
@@ -62,8 +70,7 @@
           </div>
 
           <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-9">
-              <button type="button" class="btn btn-primary btn-block" id="register" @click="submitForm">注册</button>
+            <div class="col-sm-offset-2 col-sm-9 btn submitForm" id="register" @click="submitForm">注册
             </div>
           </div>
         </form>
@@ -86,75 +93,132 @@ export default {
       confirm_upwdPrompt: '',
       phonePrompt: '',
       emailPrompt: '',
-      controlImg: '/api/captcha'
+      controlImg: '/api/captcha',
+      captchaPrompt: '',
+      hasphone: true,
+      countdown: 30,
+      hasControl: false,
+      getcontroltxt: '获取验证码',
+      timer: null
     }
   },
   methods: {
     changVcode () {
       // console.log(this.$refs.captcha);
     },
+    // 失去焦点验证
+    showRegisterMsg (input, id) {
+      if (id === 0) {
+        var unamereg = /^[a-zA-Z0-9_\u4e00-\u9fa5]{3,16}$/
+        if (!unamereg.test(input) && input !== undefined && input.length > 0) {
+          this.unamePrompt = '用户名长度在3-16位之间'
+          console.log(input.length)
+          return false
+        } else if (input === undefined || input.length === 0) {
+          this.unamePrompt = '用户名不能为空'
+          return false
+        } else {
+          this.unamePrompt = ''
+        }
+      } else if (id === 1) {
+        var upwdreg = /^[a-zA-Z0-9_]{6,}$/
+        if (!upwdreg.test(input) && input !== undefined && input.length > 0) {
+          this.upwdPrompt = '密码长度不能小于6位'
+          return false
+        } else if (input === undefined || input.length === 0) {
+          this.upwdPrompt = '密码不能为空'
+          return false
+        } else {
+          this.upwdPrompt = ''
+        }
+      } else if (id === 2) {
+        if (input !== this.userForm.password && input !== undefined && input.length > 0) {
+          this.confirm_upwdPrompt = '两次输入密码不一致'
+          return false
+        } else if (input === undefined || input.length === 0) {
+          this.confirm_upwdPrompt = '确认密码不能为空'
+          return false
+        } else {
+          this.confirm_upwdPrompt = ''
+        }
+      } else if (id === 3) {
+        var ponereg = /^((1[3|4|5|8][0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0,5-9]))\d{8}$/
+        if (!ponereg.test(input) && input !== undefined && input.length > 0) {
+          this.phonePrompt = '手机号码格式不正确'
+          this.hasphone = true
+          return false
+        } else if (input === undefined || input.length === 0) {
+          this.phonePrompt = '手机号码不能为空'
+          this.hasphone = true
+          return false
+        } else {
+          this.phonePrompt = ''
+          this.hasphone = false
+        }
+      } else if (id === 5) {
+        if (input === undefined || input.length === 0) {
+          this.captchaPrompt = '验证码不能为空'
+          return false
+        } else {
+          this.captchaPrompt = ''
+        }
+      }
+    },
     submitForm () {
-      // 验证
-      var unamereg = /^[a-zA-Z0-9_\u4e00-\u9fa5]{3,16}$/
-      if (!unamereg.test(this.userForm.username)) {
-        this.unamePrompt = '用户名长度在3-16位之间'
-        return
-      } else if (this.userForm.username === '' || this.userForm.username === undefined) {
-        this.unamePrompt = '用户名不能为空'
-        return
-      } else {
-        this.unamePrompt = ''
-      }
-      var upwdreg = /^[a-zA-Z0-9_]{6,}$/
-      if (!upwdreg.test(this.userForm.password)) {
-        this.upwdPrompt = '密码长度不能小于6位'
-        return
-      } else if (this.userForm.password === '' || this.userForm.password === undefined) {
-        this.upwdPrompt = '密码不能为空'
-        return
-      } else {
-        this.upwdPrompt = ''
-      }
-      if (this.userForm.confirm_password !== this.userForm.password && this.userForm.confirm_password !== undefined) {
-        this.confirm_upwdPrompt = '两次输入密码不一致'
-        return
-      } else if (this.userForm.confirm_password === '' || this.userForm.confirm_password === undefined) {
-        this.confirm_upwdPrompt = '确认密码不能为空'
-        return
-      } else {
-        this.confirm_upwdPrompt = ''
-      }
-      var ponereg = /^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0,5-9]))\d{8}$/
-      if (!ponereg.test(this.userForm.phone) && this.userForm.phone !== undefined) {
-        this.phonePrompt = '手机号码格式不正确'
-        return
-      } else if (this.userForm.phone === '' || this.userForm.phone === undefined) {
-        this.phonePrompt = '手机号码不能为空'
-        return
-      } else {
-        this.phonePrompt = ''
-      }
-      var emailreg = /^[A-Za-z0-9.\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
-      if (!emailreg.test(this.userForm.email) && this.userForm.email !== undefined) {
-        this.emailPrompt = '邮箱格式不正确'
-        return
-      } else if (this.userForm.email === '' || this.userForm.email === undefined) {
-        this.emailPrompt = '邮箱不能为空'
-        return
-      } else {
-        this.emailPrompt = ''
-      }
       post(this.formUrl, this.userForm).then(data => {
-        alert(data.message)
+        if (data.message === '验证码错误') {
+          this.controlPrompt = data.message
+          return
+        }
         if (data.resultcode === 1) {
-          this.$router.push('/login')
+          this.$router.push('/')
         }
       }).catch(error => {
         alert(error)
       })
     },
+    // 验证码切换
     changeControl () {
       this.controlImg = this.controlImg + '?d=' + Date.now()
+    },
+    // 获取手机验证码
+    getPhoneControl () {
+      let phone = parseFloat(this.userForm.phone)
+      post('/api/phoneCaptcha', {'phone': phone}).then((data) => {
+        console.log(data)
+        if (data.message === '短信发送成功') {
+          let that = this
+          if (that.countdown === 0) {
+            this.timer = setInterval(function () {
+              that.countdown--
+              that.hasControl = true
+              if (that.countdown <= 1) {
+                that.getcontroltxt = '获取验证码'
+                that.hasphone = false
+                that.countdown = 30
+                that.hasControl = false
+                clearInterval(that.timer)
+              }
+            }, 1000)
+          } else {
+            this.timer = setInterval(function () {
+              that.countdown--
+              that.hasControl = true
+              that.getcontroltxt = '重新获取'
+              that.hasphone = true
+              if (that.countdown < 1) {
+                that.getcontroltxt = '获取验证码'
+                that.countdown = 30
+                that.hasphone = false
+                that.hasControl = false
+                clearInterval(that.timer)
+              }
+            }, 1000)
+          }
+        }
+      }).catch(error => {
+        alert(error)
+      })
     }
   }
 }
@@ -163,9 +227,49 @@ export default {
 <style rel="stylesheet/scss" lang="scss">
   .prompt{
     float: left;
-    margin-left: 18%;
+    margin-left: 20%;
     margin-top: 10px;
     color: red;
   }
   .form-group>label{padding: 0 10px;}
+  .disable{
+    background: #BCBCBC !important;
+    color: #797979 !important;
+    border:none !important;
+}
+// .disable:hover{
+//     background: #BCBCBC;
+//     color: #797979;
+// }
+.getcontrol{
+    border-radius: 4px;
+    color: #fff;
+    background-color: #5cb85c;
+    border-color: #4cae4c;
+}
+.btn{
+    display: inline-block;
+    padding: 6px 12px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+}
+.submitForm{
+    color: #fff;
+    background-color: #337ab7;
+    border-color: #2e6da4;
+}
 </style>
