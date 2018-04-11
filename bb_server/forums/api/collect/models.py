@@ -20,7 +20,7 @@ from forums.extension import db
 class Collect(db.Model, ModelMixin):
     __tablename__ = 'collects'
     id = db.Column(db.Integer, primary_key=True)
-    topic_id = db.Column(db.Integer, nullable=False)
+    topic_id = db.Column(db.String(512), nullable='[]')
     author_id = db.Column(
         db.Integer, db.ForeignKey(
             'user.id', ondelete="CASCADE"))

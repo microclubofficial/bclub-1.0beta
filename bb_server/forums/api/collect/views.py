@@ -21,15 +21,18 @@ from forums.api.forms import (CollectForm, ReplyForm, TopicForm,
                               form_board)
 from forums.api.forums.models import Board
 from forums.api.tag.models import Tags
-from forums.api.topic.models import Topic
+from forums.api.topic.models import Topic, Reply
+from forums.api.user.models import User
 from forums.common.serializer import Serializer
 from forums.common.utils import gen_filter_dict, gen_order_by
 from forums.common.views import IsAuthMethodView as MethodView
 from forums.api.message.models import MessageClient
+from forums.func import get_json, FindAndCount, Count, object_as_dict, Avatar, time_diff
+import json
 
 from .models import Collect
 
-
+'''
 class CollectListView(MethodView):
     def get(self):
         query_dict = request.data
@@ -93,7 +96,7 @@ class CollectView(MethodView):
         collect = Collect.query.filter_by(id=pk).first_or_404
         collect.delete()
         return HTTPResponse(HTTPResponse.NORMAL_STATUS).to_response()
-
+        '''
 
 class AddToCollectView(MethodView):
     def post(self, topicId):
@@ -122,3 +125,37 @@ class AddToCollectView(MethodView):
     #             collect.topics.append(topic)
     #             collect.save()
     #     return redirect(url_for('topic.topic', topicId=topic.id))
+
+class CollectView(MethodView):
+    def get(self, topicId):
+        user = request.user
+        collect = Collect.query.filter_by(author_id = user.id).first_or_404()
+        topiclist = json.loads(collect.topic_id)
+        topiclist.append(topicId)
+        collect.topic_id = json.dumps(topiclist)
+        collect.save()
+        return get_json(1, '收藏成功', {})
+
+class CollectListView(MethodView):
+    def get(self):
+        user = request.user
+        collect = Collect.query.filter_by(author_id = user.id).first_or_404()
+        topiclist = json.loads(collect.topic_id)
+        topicslist = []
+        for i in topiclist:
+            topic = Topic.query.filter_by(id=i).order_by('-id').first()
+            user = User.query.filter_by(id = topic.author_id).first()
+            reply_count = FindAndCount(Reply, topic_id = i.id, is_reply = 1)
+            diff_time = time_diff(i.updated_at)
+            i.created_at = str(i.created_at)
+            i.updated_at = str(i.updated_at)
+            topics_data = object_as_dict(i)
+            topics_data['author'] = user.username
+            topics_data['diff_time'] = diff_time
+            topics_data['replies_count'] = reply_count
+            topics_data['is_good'], topics_data['is_good_bool'] = Count(i.is_good)
+            topics_data['is_bad'], topics_data['is_bad_bool'] = Count(i.is_bad)
+            Avatar(topics_data, user)
+            topicslist.append(topics_data)
+        data = {'topics': topicslist}
+        return get_json(1, '收藏成功', data)

@@ -75,9 +75,9 @@ class UserMixin(PermUserMixin, _UserMixin, MailMixin, ModelMixin):
     def username(cls):
         return db.Column(db.String(512), nullable=False, unique=True)
 
-    @declared_attr
-    def email(cls):
-        return db.Column(db.String(512), nullable=False, unique=True)
+    #@declared_attr
+    #def email(cls):
+    #    return db.Column(db.String(512), nullable=False, unique=True)
 
     @declared_attr
     def password(cls):

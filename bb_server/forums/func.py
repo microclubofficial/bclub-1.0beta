@@ -2,6 +2,7 @@ from flask import jsonify, current_app, request
 from sqlalchemy import inspect
 from flask_login import current_user
 import datetime
+import json
 
 
 def get_json(errorcode,msg,data):
@@ -43,6 +44,6 @@ def Avatar(avatar,user):
 
 def Count(Sql, data=False):
     if current_user.is_authenticated:
-        if request.user.id in list(eval(Sql)):
+        if request.user.id in json.loads(Sql):
             data = True
-    return len(list(eval(Sql))), data
+    return len(json.loads(Sql)), data

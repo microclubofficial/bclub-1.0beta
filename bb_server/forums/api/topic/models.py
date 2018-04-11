@@ -49,8 +49,8 @@ class Topic(db.Model, ModelMixin):
     token = db.Column(db.String(32), nullable=False)
     updated_at = db.Column(
         db.DateTime, default=datetime.utcnow(), onupdate=datetime.utcnow())
-    is_good = db.Column(db.String(512), default='[]', nullable=False)
-    is_bad = db.Column(db.String(512), default='[]', nullable=False)
+    is_good = db.Column(db.String(512), default='[]')
+    is_bad = db.Column(db.String(512), default='[]')
     author_id = db.Column(
         db.Integer, db.ForeignKey(
             'user.id', ondelete="CASCADE"))
@@ -137,8 +137,8 @@ class Reply(db.Model, ModelMixin):
         db.DateTime, default=datetime.utcnow(), nullable=False)
     updated_at = db.Column(
         db.DateTime, default=datetime.utcnow(), onupdate=datetime.utcnow())
-    is_good = db.Column(db.String(512), default='[]', nullable=False)
-    is_bad = db.Column(db.String(512), default='[]', nullable=False)
+    is_good = db.Column(db.String(512), default='[]')
+    is_bad = db.Column(db.String(512), default='[]')
     is_reply = db.Column(db.SmallInteger , default=0, nullable=False)
     topic_id = db.Column(
         db.Integer, db.ForeignKey(

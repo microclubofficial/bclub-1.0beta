@@ -33,10 +33,11 @@ from .permissions import (like_permission, reply_list_permission,
                           reply_permission, topic_list_permission,
                           topic_permission, edit_permission, thumd_permission)
 from forums.api.message.models import MessageClient
-from forums.func import get_json, object_as_dict, time_diff, FindAndCount, Avatar, FindAndCount, Count
+from forums.func import get_json, object_as_dict, time_diff, FindAndCount, Avatar, Count
 from forums.api.user.models import User
 from sqlalchemy import func
 import math
+import json
 
 class TopicAskView(IsConfirmedMethodView):
     def get(self):
@@ -163,8 +164,8 @@ class TopicView(MethodView):
         topic = Topic.query.filter_by(id=topicId).first_or_404()
         #page, number = self.page_info
         keys = ['title']
-        order_by = gen_order_by(query_dict, keys)
-        filter_dict = gen_filter_dict(query_dict, keys)
+        #order_by = gen_order_by(query_dict, keys)
+        #filter_dict = gen_filter_dict(query_dict, keys)
         reply = topic.replies.filter_by(topic_id = topicId, is_reply = 1).order_by(('-id')).limit(5).offset(start)
         reply_count = topic.replies.filter_by(topic_id = topicId, is_reply = 1).count()
         page_count = int(math.ceil(reply_count/5))
@@ -322,21 +323,20 @@ class ThumbView(MethodView):
         elif 'reply' in request.path:
             session = Reply.query.filter_by(id = id).first()
         if thumb == 'up':
-            userlist = list(eval(session.is_good))
+            userlist = json.loads(session.is_good)
             if user.id in userlist:
                 return get_json(0, '不能重复点赞', len(userlist))
             else:
                 userlist.append(user.id)
                 count = len(userlist)
-                session.is_good = str(userlist)
+                session.is_good = json.dumps(userlist)
         elif thumb == 'down':
-            userlist = list(eval(session.is_bad))
+            userlist = json.loads(session.is_bad)
             if user.id in userlist:
                 return get_json(0, '不能重复吐槽', len(userlist))
             else:
                 userlist.append(user.id)
                 count = len(userlist)
-                session.is_bad = str(userlist)
+                session.is_bad = json.dumps(userlist)
         session.save()
         return get_json(1, '成功', count)
-
