@@ -1,6 +1,6 @@
-# webapp
+# Bclub 1.0beta
 
-> spa
+> Bclub 1.0beta
 
 ## Build Setup
 
@@ -8,10 +8,12 @@
 # install dependencies
 npm install
 
+# taobao mirrors
+npm install -g cnpm --registry=https://registry.npm.taobao.org
+cnpm install
+
 # serve with hot reload at localhost:8080
 npm run dev
-
-lt -s bclub -h http://ymhui999.com:1234 -p 8080
 
 # build for production with minification
 npm run build
