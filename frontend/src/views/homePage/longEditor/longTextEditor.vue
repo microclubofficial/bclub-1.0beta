@@ -64,6 +64,7 @@ export default{
     }
     editor.create()
     $('.long-text-editor').find('.w-e-text-container').css({'border': 'none'})
+    // $('.long-text-editor').find('.w-e-toolbar').css({''})
   },
   methods: {
     getContent: function () {
@@ -105,8 +106,8 @@ export default{
   background: snow;
 }
 .long-text-editor>div>.editor> .w-e-toolbar{
-  border-top:1px solid #ccc;
-  border-bottom: 1px solid #ccc;
+  border-top:1px solid #ccc !important;
+  border-bottom: 1px solid #ccc !important;
   border-left: none !important;
   border-right: none !important;
   background: #fff !important;

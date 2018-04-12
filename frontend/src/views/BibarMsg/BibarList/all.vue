@@ -188,7 +188,6 @@ export default{
           this.tpno++
           get(`/api/topic/${this.tpno}`).then(data => {
             this.articles = this.articles.concat(data.data.topics)
-            console.log(this.articles)
             this.bottomText = '加载中...'
             // this.loadingImg = '../../assets/img/listLoding.png'
           })

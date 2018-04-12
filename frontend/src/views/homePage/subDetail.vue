@@ -380,6 +380,11 @@ export default{
       isReply: false
     }
   },
+  computed: {
+    subId () {
+      return this.$store.state.subId.subId
+    }
+  },
   components: {
     MainHeader,
     TalkEditor,
@@ -387,7 +392,8 @@ export default{
   },
   created () {
     this.tdId = this.$route.params.tbId
-    get(`/api/bar/question/${this.tdId}`).then(data => {
+    get(`/api/bar/question/${this.subId}`).then(data => {
+      console.log(data)
       this.answers = data.data.answers
       this.question = data.data.question
     })

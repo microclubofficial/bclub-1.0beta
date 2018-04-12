@@ -68,7 +68,7 @@
                         <input type="text" @blur='showRegisterMsg(phoneForm.phonecaptcha, 4)' class="form-control" v-model="phoneForm.phonecaptcha" id="inputCaptcha3" placeholder="请输入验证码">
                     </div>
                     <div class="col-md-2 btnm getcontrol" style=" padding: 6px 12px !important;height: 100%;" @click="getPhoneControl" v-bind:disabled="hasphone" :class="{disable:hasphone}"><span v-show="hasControl">{{countdown}}</span>获取</div>
-                    <p class="prompt col-sm-offset-2 col-sm-9">{{phoneControlPrompt}}</p>
+                    <p class="prompt col-sm-9"><label class="col-md-3 control-label"></label>{{phoneControlPrompt}}</p>
                 </div>
                 <div class="form-group">
             <div class="col-sm-offset-2 col-sm-9">

@@ -45,6 +45,7 @@ export default {
           this.$router.push('/login')
         } else {
           if (data.data.content !== '') {
+            console.log(data.data)
             this.backFt.content = data.data.content
             this.backFt.author = data.data.author
             this.backFt.avatar = data.data.avatar

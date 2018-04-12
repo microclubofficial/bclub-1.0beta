@@ -1,7 +1,8 @@
 <template>
 <div>
-   <article class="bibar-box bibar-boxindex1" @click="toMsgDetail(bibarData.id)">
-                <div class="bibar-indexDisplay">
+   <article class="bibar-box bibar-boxindex1">
+                <div class="bibarTop"  @click="toMsgDetail(bibarData.id)">
+                  <div class="bibar-indexDisplay">
                     <div class="bibar-indexDisplay-header">
                         <div class="logopic"><img :src="bibarData.picture"></div>
                         <div class="logonameEnglish">{{bibarData.zhName}}</div>
@@ -61,6 +62,7 @@
                     </div>
                 </div>
                 <div class="clear hline"></div>
+                </div>
                 <article class="bibar-indexDisplay-chart">
                     <div class="bibar-indexDisplay-chartTAB">
                     </div>
@@ -79,6 +81,7 @@ import HighchartsMore from 'highcharts/highcharts-more'
 import HighchartsDrilldown from 'highcharts/modules/drilldown'
 import Highcharts3D from 'highcharts/highcharts-3d'
 import $ from 'jquery'
+import {get} from '../../../utils/http'
 
 HighchartsMore(Highcharts)
 HighchartsDrilldown(Highcharts)
@@ -101,12 +104,18 @@ export default{
       change1h: null,
       isDown: false,
       msgId: '',
-      chartList: []
+      chartList: [],
+      nowId: ''
       // bId: 'bitcoin'
     }
   },
   mounted () {
     this.getChartData(this.bId)
+  },
+  computed: {
+    chartId () {
+      return this.$store.state.chartId.chartId
+    }
   },
   methods: {
     // 获取chart数据
@@ -114,6 +123,11 @@ export default{
       // https://data.jianshukeji.com/stock/history/000001
       var that = this
       this.bId = bId
+      if (this.bId === '') {
+        if (this.bId.length === 0) {
+          this.bId = this.chartId
+        }
+      }
       $.getJSON(`/api/currency_news/${that.bId}`, function (data) {
         // main数据
         that.bibarData = data.data
@@ -123,6 +137,7 @@ export default{
         that.BTC_RATE = parseFloat(that.bibarData.BTC_RATE)
         // 人民币转换
         that.cny_price = that.bibarData.price * that.CNY_RATE
+        console.log(that.bibarData)
         // 涨幅
         that.change1h = that.bibarData.change1h
         var change1hStr = that.change1h.toString()
@@ -131,22 +146,24 @@ export default{
         } else {
           that.isDown = true
         }
-        // k线图
-        that.kline = that.bibarData.kline
-        if (data.message !== 'success') {
-          alert('读取股票数据失败！')
-          return false
-        }
-        for (var i = 0; i < that.kline.price_usd.length; i++) {
-          that.ohlc.push([
-            that.kline.price_usd[i][0], // the date
-            (that.kline.price_usd[i][1] * that.CNY_RATE) // 价格
+      })
+      // k线图
+      that.klineChart(that.bId)
+    },
+    // k线图
+    klineChart (id) {
+      let that = this
+      get(`/api/kline/${id}`).then(data => {
+        for (var j = 0; j < data.data.volume_usd.length; j++) {
+          that.volumeData.push([
+            data.data.volume_usd[j][0], // the date
+            (data.data.volume_usd[j][1] * that.CNY_RATE) // the volume
           ])
         }
-        for (var j = 0; j < that.kline.volume_usd.length; j++) {
-          that.volumeData.push([
-            that.kline.volume_usd[j][0], // the date
-            (that.kline.volume_usd[j][1] * that.CNY_RATE) // the volume
+        for (var i = 0; i < data.data.price_usd.length; i++) {
+          that.ohlc.push([
+            data.data.price_usd[i][0], // the date
+            (data.data.price_usd[i][1] * that.CNY_RATE) // 价格
           ])
         }
         that.drawChart()
@@ -252,10 +269,14 @@ export default{
     // 去chart详情
     toMsgDetail (id) {
       this.msgId = id
+      this.$store.commit('CHART_ID', {
+        'chartId': this.msgId
+      })
       this.$router.push(`/msgDetail/${this.msgId}`)
     },
     // 显示当前chart
     showNowChild (id) {
+      this.nowId = id
       this.getChartData(id)
     }
   }

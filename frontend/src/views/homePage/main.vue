@@ -8,7 +8,7 @@
       <!--社区综合-->
       <BibarTogether v-show="initShow"></BibarTogether>
       <!-- 富文本区 -->
-      <div style="width:1100px; margin:auto; background:#fff;" class="Maineditor"  v-show="initHide">
+      <div style="width:1100px; margin:auto; background:#fff;" class="Maineditor" :class="{initHideEditor:initHide}"  v-if="initHide">
         <BibarPostContent @backFtContent = 'FtContentFun'></BibarPostContent>
       </div>
       <!--社区列表-->
@@ -97,7 +97,6 @@ export default{
       } else {
         this.initShow = false
         this.initHide = true
-        $('.Maineditor').css({'margin-top': '80px'})
       }
     }
   }
@@ -110,4 +109,5 @@ export default{
     margin: 0 auto
   }
   .Maineditor>.wangeditor>.toLongText{right: 526px !important;}
+  .initHideEditor{margin-top:80px !important;}
 </style>
