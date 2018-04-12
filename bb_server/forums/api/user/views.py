@@ -112,13 +112,3 @@ class UserFollowerListView(MethodView):
         followers = user.followers.paginate(page, number, True)
         data = {'followers': followers, 'user': user}
         return render_template('user/followers.html', **data)
-
-
-class UserFollowingListView(MethodView):
-    def get(self):
-        return redirect(url_for('follow.topic'))
-
-
-class UserCollectListView(MethodView):
-    def get(self, username):
-        return redirect(url_for('follow.collect'))

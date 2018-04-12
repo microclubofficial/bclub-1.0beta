@@ -1,6 +1,7 @@
 from flask import jsonify
 from flask.views import MethodView
-from forums.func import get_json
+from forums.func import get_json, object_as_dict
+from .models import B_Picture
 import requests
 
 
@@ -29,5 +30,23 @@ class B_List(MethodView):
         blist = blist.json()['data']
         for i in blist['summaryList']:
             i['picture'] = 'https://blockchains.oss-cn-shanghai.aliyuncs.com/static/coinInfo/%s.png'%(i['id'])
-        print(blist,999999999999999999999999999999999999999999999999999)
         return get_json(1, 'success', blist)
+
+class Picture(MethodView):
+    def get(self):
+        pictures = B_Picture.query.order_by('id').all()
+        blist = requests.get('https://api.tokenclub.com/v2/ticker/summary?type=0&offset=%s&limit=%s'%(0, 3))
+        blist = blist.json()['data']['summaryList']
+        picturelist = []
+        data = []
+        for i in pictures:
+            picturelist.append(object_as_dict(i)['picture'])
+        for j in blist:
+            Blist = {}
+            Blist['id'] = j['id']
+            Blist['symbol'] = j['symbol']
+            Blist['name_ch'] = j['name_ch']
+            data.append(Blist)
+        for p in range(3):
+            data[p]['picture'] = picturelist[p]
+        return get_json(1, '币讯图片', data)

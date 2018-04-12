@@ -47,10 +47,10 @@ class AvatarCache(object):
         width_range = current_app.config.get('AVATAR_RANGE', [0, 512])
         if width < width_range[0] or width > width_range[1]:
             abort(404)
-        stream = GenAvatar.generate(width, text)
+        stream = GenAvatar.generate(width, text, filetype="PNG")
         buf_value = stream.getvalue()
         response = make_response(buf_value)
-        response.headers['Content-Type'] = 'image/jpeg'
+        response.headers['Content-Type'] = 'image/png'
         return response
 
 
