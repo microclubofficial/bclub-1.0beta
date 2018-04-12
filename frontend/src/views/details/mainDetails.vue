@@ -4,14 +4,13 @@
     <div class="main-details-box">
       <!-- 比特币 -->
       <btb v-show="isShow==0" :bId="chartId"></btb>
-      <eth v-show="isShow==1" :bId="chartId"></eth>
       <!-- 富文本区 -->
-      <div class="mainBibar-editor bibarType-editor bibar-box" style="width:1100px; margin:20px auto 20px; padding:20px 0; background:#fff;" v-show="isShow==0 || isShow==1 || isShow==0">
+      <div class="mainBibar-editor bibarType-editor bibar-box" style="width:1100px; margin:20px auto 20px; padding:20px 0; background:#fff;" v-show="isShow==0 && initHide">
         <BibarPostContent></BibarPostContent>
       </div>
       <!-- 新闻列表 -->
       <!--新闻-->
-            <article class="bibar-box bibar-boxindex2" v-show="isShow==0 || isShow==1 || isShow==0">
+            <article class="bibar-box bibar-boxindex2" style="margin-top: 20px;" v-show="isShow==0">
                 <div class="bibar-indexNews">
                     <div class="bibar-indexNews-TAB">
                         <ul class="bibar-tabs-listSty2">
@@ -22,7 +21,6 @@
                     <router-view ref="showBibarContent"></router-view>
                 </div>
             </article>
-      <xrp v-show="isShow==2" :bId="chartId"></xrp>
       <subDetail v-show="isShow==3"></subDetail>
       <longTxt v-show='isShow==4'></longTxt>
     </div>
@@ -34,8 +32,6 @@ import MainHeader from '../common/header'
 
 // 比特币
 import btb from '../BibarMsg/BibarChart/BTB.vue'
-import eth from '../BibarMsg/BibarChart/ETH.vue'
-import xrp from '../BibarMsg/BibarChart/XRP.vue'
 import subDetail from '../homePage/subDetail.vue'
 import longTxt from '../homePage/longTxt.vue'
 import BibarPostContent from '../homePage/bibarPostContent.vue'
@@ -43,8 +39,6 @@ export default {
   components: {
     MainHeader,
     btb,
-    eth,
-    xrp,
     subDetail,
     longTxt,
     BibarPostContent
@@ -55,12 +49,16 @@ export default {
       newList: ['全部', '讨论', '文章', '新闻', '交易'],
       newRouter: ['all', 'talk', 'works', 'news', 'trade'],
       state: 0,
-      i: 1
+      i: 1,
+      initHide: false
     }
   },
   computed: {
     chartId () {
       return this.$store.state.chartId.chartId
+    },
+    userInfo () {
+      return this.$store.state.userInfo.userInfo
     }
   },
   mounted () {
@@ -72,6 +70,14 @@ export default {
       if (index !== this.state) {
         this.state = index
         this.$router.push(`/bibarLayout/${this.newRouter[this.state]}`)
+      }
+    },
+    // 退登状态
+    loadShow () {
+      if (!this.userInfo.isLogin) {
+        this.initHide = false
+      } else {
+        this.initHide = true
       }
     }
   }

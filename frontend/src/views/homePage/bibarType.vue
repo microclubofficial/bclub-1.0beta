@@ -2,10 +2,10 @@
   <div class="commun-bibarType">
     <h3>热门币种</h3>
    <div class="bibarType-main">
-     <div class="bibarType-main-box shadow-box" @click="toBibarData(index,tmp.id)" :key="index" v-for="(tmp,index) in bibarType">
-       <img :src="tmp.picture" alt="">
+     <div class="bibarType-main-box shadow-box" @click="toBibarData(0,type.id)" :key="index" v-for="(type,index) in bibarType">
+       <img :src="type.picture" alt="">
        <div class="bibarType-title">
-         <img :src="tmp.bpicture" alt="">{{tmp.symbol}}{{tmp.name_ch}}
+         <img :src="type.bpicture" alt="">{{type.symbol}}{{type.name_ch}}
          <span class="bibarType-talk-btn">加入讨论</span>
          </div>
         <ul>

@@ -6,7 +6,6 @@ const articles = {
   mutations: {
     POST_ARTICLE (state, payload) {
       state.articleList = payload.data
-      console.log(state.articleLblcub.sinitek.comist)
     }
   },
   actions: {

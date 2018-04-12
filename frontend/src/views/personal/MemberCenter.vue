@@ -1,0 +1,99 @@
+<style lang="scss" scoped>
+.personal-info {
+    background-color: #fefefe;
+    border: 1px solid #eee;
+    box-shadow: 1px 1px 1px #ccc;
+    padding: 20px;
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    .avatar {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        overflow: hidden;
+        margin-right: 20px;
+        img {
+            width: 100%;
+        }
+    }
+    .right-main {
+        flex: 9;
+        .nav-pills {
+            margin-top: 20px;
+        }
+    }
+    .right-btn {
+        flex: 1;
+    }
+}
+
+.main-list {
+    background-color: #fafafa;
+    box-shadow: 1px 1px 1px #ccc;
+    margin-top: 10px;
+    min-height: 300px;
+}
+</style>
+
+<template>
+    <div class="member-center">
+        <div class="container">
+            <h3 class="page-header">个人中心</h3>
+            <div class="personal-info">
+                <div class="avatar">
+                    <img :src="userInfo.avatar" alt="">
+                </div>
+                <div class="right-main">
+                    <h3>楚人长铗</h3>
+                    <p>
+                        关注：<a href="">1652</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                        主题：<a href="">152</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                        热度：<a href="">16515642</a>
+                    </p>
+                    <ul class="nav nav-pills">
+                        <li v-for="(item,index) in navList" :class="{active:item.name==$route.name}" @click="routerGo(index)" :key="index">
+                            <a href="#">{{item.name}}</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="right-btn">
+                    <button class="btn btn-primary" @click="personalInfo">编辑资料</button>
+                </div>
+            </div>
+            <section>
+                <div class="main-list">
+                    <router-view></router-view>
+                </div>
+            </section>
+        </div>
+
+    </div>
+</template>
+<script>
+// import {post} from '../utils/http'
+export default {
+  data () {
+    return {
+      navList: [
+        { 'name': '主题', 'path': 'topic' },
+        { 'name': '评论', 'path': 'comment' },
+        { 'name': '收藏', 'path': 'collection' }
+      ]
+    }
+  },
+  computed: {
+    userInfo () {
+      return this.$store.state.userInfo.userInfo
+    }
+  },
+  methods: {
+    routerGo (index) {
+      this.$router.push(`/memberCenter/${this.navList[index].path}`)
+    },
+    personalInfo () {
+      this.$router.push({ path: '/personalInfo' })
+    }
+  }
+}
+</script>

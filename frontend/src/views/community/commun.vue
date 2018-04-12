@@ -10,8 +10,8 @@
 
 <script>
 import MainHeader from '../common/header.vue'
-import BibarType from './bibarType.vue'
-import BibarTogether from './bibarTogether.vue'
+import BibarType from '../homePage/bibarType.vue'
+import BibarTogether from '../homePage/bibarTogether.vue'
 
 export default{
   name: 'common',

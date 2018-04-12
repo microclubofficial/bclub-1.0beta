@@ -9,6 +9,7 @@ import homePageList from './modules/homePageList'
 import getters from './getters'
 import createPersist from 'vuex-localstorage'
 import chartId from './modules/chartId'
+import subId from './modules/subId'
 
 Vue.use(Vuex)
 
@@ -20,7 +21,8 @@ const store = new Vuex.Store({
     articles,
     userInfo,
     homePageList,
-    chartId
+    chartId,
+    subId
   },
   getters,
   plugins: [createPersist({

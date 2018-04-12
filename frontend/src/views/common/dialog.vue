@@ -95,4 +95,8 @@ export default{
 .modal-body>.wangeditor>.editor>.w-e-text-container>.w-e-panel-container>.w-e-panel-tab-content{
   height: 143px !important;
 }
+.modal-body>.wangeditor .toLongText{
+    bottom: 8px;
+    right: 290px;
+}
 </style>

@@ -28,7 +28,7 @@
         </div>
         <div class="user_info_dropdown" v-show="showPersonal">
           <ul>
-            <li><a href="#"><img :src="useravatar" alt=""><span class="user-name">{{userName}}</span></a></li>
+            <li><a href="#"><img :src="useravatar" alt=""><span class="user-name"><router-link :to="{path:'/memberCenter'}">{{userName}}</router-link></span></a></li>
             <li><a href="#"><img src="../../assets/img/set.png" alt=""><span>个人设置</span></a></li>
             <li><a href="#"><img src="../../assets/img/share.png" alt=""><span>股票设置</span></a></li>
             <li><a href="#" @click="outlogin"><i class="iconfont">&#xe629;</i><span>退出</span></a></li>
@@ -87,7 +87,6 @@ export default{
     },
     // 退出登录
     outlogin () {
-      console.log(this.userInfo)
       get('/api/logout').then((data) => {
         if (data.message === '登出成功') {
           this.$store.commit('USER_INFO', {

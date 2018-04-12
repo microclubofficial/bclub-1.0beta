@@ -7,7 +7,7 @@
     <section class="bibar-w1100">
         <!--主体左侧-->
         <section class="bibar-Mainleft">
-            <btb></btb>
+            <btb :bId="bitId"></btb>
             <!-- 富文本区 -->
             <div class="mainBibar-editor" style="width:860px; margin:auto; background:#fff;">
               <BibarPostContent @backFtContent = 'BibarContentFun'></BibarPostContent>

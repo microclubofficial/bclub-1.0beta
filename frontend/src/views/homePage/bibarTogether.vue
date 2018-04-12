@@ -27,16 +27,16 @@
       <p class="talk-author">创建者{{tmp.author}}</p>
     </div>
    </div>
-   <div class="bibar-talk shadow-box bibar-sub">
+   <div class="bibar-talk shadow-box bibar-sub" @click="toSubDetail(3, subList.id)">
      <div class="bibar-talk-sub">
-       <img src="../../assets/img/pic-user1.png" alt="">
-       <h4>凡心_订阅号dfahfiughj</h4>
+       <img :src="subList.avatar" style="border-radius:50%;" alt="">
+       <h4>{{subList.author}}</h4>
        <p class="sub-hot"><span><img src="../../assets/img/hot.png" alt=""></span>1234564</p>
      </div>
     <div class="bibar-talk-num">
-      <p>区块链投资与发展</p>
-      <h3 @click="toSubDetail(3)">区块链发展与区块链未来</h3>
-      <p>腾讯股价能否再创新高？欢迎评论转发本帖，说出你认为的 $腾讯控股(00700)$ 明日收盘涨跌幅（比如：涨3%或跌2%，只回复数字无效），并且谈谈你今天打算如何操作：买入、卖出、还是持股不动、亦或是投机一把窝轮牛熊证？</p>
+      <p>{{subList.bar}}</p>
+      <h3>{{subList.title}}</h3>
+      <p>{{subList.content}}</p>
       <!-- <button class="join-talk-btn talk-bottom">加入讨论</button> -->
     </div>
    </div>
@@ -49,12 +49,14 @@ export default{
   data: function () {
     return {
       tid: null,
-      talkList: []
+      talkList: [],
+      subList: []
     }
   },
   created () {
     get('/api/bar').then((data) => {
       this.talkList = data.data.barlist
+      this.subList = data.data.barquestion
     })
   },
   mounted: function () {
@@ -64,9 +66,10 @@ export default{
       this.tid = tid
       this.$router.push(`/talkDetail/${this.tid}`)
     },
-    toSubDetail (id) {
-      this.tid = id
-      this.$router.push(`/mainDetail/${id}`)
+    toSubDetail (router, id) {
+      this.tid = router
+      this.$store.state.subId.subId = id
+      this.$router.push(`/mainDetail/${this.tid}`)
     }
   }
 }

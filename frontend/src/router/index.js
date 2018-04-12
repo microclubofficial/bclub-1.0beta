@@ -24,6 +24,7 @@ import mainDetail from 'src/views/details/mainDetails'
 // 讨论详情
 import talkDetail from 'src/views/homePage/talkDetail'
 import talkBibar from 'src/views/homePage/talkdetail/talkBibar'
+
 const _import = require('./_import_' + process.env.NODE_ENV)
 
 Vue.use(Router)
@@ -54,7 +55,6 @@ export const constantRouterMap = [
   // 注册
   { path: '/register', component: _import('login/register'), hidden: true },
   // { path: '/authredirect', component: _import('login/authredirect'), hidden: true },
-  { path: '/404', component: _import('404'), hidden: true },
   // 首页
   { path: '',
     // name: 'homePage',
@@ -66,6 +66,28 @@ export const constantRouterMap = [
       {path: 'analyst', component: _import('homePage/HomePageList/analyst')},
       {path: 'depth', component: _import('homePage/HomePageList/depth')},
       {path: 'baike', component: _import('homePage/HomePageList/baike')}
+    ]
+  },
+  // 个人中心
+  {
+    path: '/memberCenter',
+    component: _import('personal/MemberCenter'),
+    children: [
+      {path: '', name: '主题', component: _import('personal/MemberCenter/TopicList')},
+      {path: 'topic', name: '主题', component: _import('personal/MemberCenter/TopicList')},
+      {path: 'comment', name: '评论', component: _import('personal/MemberCenter/CommentList')},
+      {path: 'collection', name: '收藏', component: _import('personal/MemberCenter/CollectionList')}
+    ]
+  },
+  {
+    path: '/personalInfo',
+    component: _import('personal/PersonalInfo'),
+    children: [
+      {path: '', name: '个人资料', component: _import('personal/PersonalInfo/EditInfo')},
+      {path: 'editInfo', name: '个人资料', component: _import('personal/PersonalInfo/EditInfo')},
+      {path: 'editAvatar', name: '修改头像', component: _import('personal/PersonalInfo/EditAvatar')},
+      {path: 'editPassword', name: '修改密码', component: _import('personal/PersonalInfo/EditPassword')},
+      {path: 'bindEmail', name: '绑定邮箱', component: _import('personal/PersonalInfo/BindEmail')}
     ]
   },
   // 社区
