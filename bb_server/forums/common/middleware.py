@@ -32,7 +32,11 @@ class GlobalMiddleware(object):
         g.sort_form = SortForm()
         g.sort_form = set_form(g.sort_form)
         g.search_form = SearchForm()
+
         request.user = current_user._get_current_object()
+
+        if current_user.is_active:
+            current_user.ping()
         if request.method == 'GET':
             request.data = request.args.to_dict()
         else:

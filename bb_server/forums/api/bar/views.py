@@ -92,19 +92,18 @@ class BarQuestionView(MethodView):
     def post(self, id):
         qusetion = Questions.query.filter_by(id = id).first_or_404()
         post_data = request.data
-        #user = request.user
+        user = request.user
         content = post_data.pop('content', None)
         bar_answer = Answers(content = content, questions_id = id, is_reply = 0)
-        bar_answer.author_id = 6
+        bar_answer.author_id = user.id
         bar_answer.save()
         diff_time = time_diff(bar_answer.updated_at)
-        answer_user = User.query.filter_by(id = bar_answer.author_id).first()
         bar_answer.created_at = str(bar_answer.created_at)
         bar_answer.updated_at = str(bar_answer.updated_at)
         answers_data = object_as_dict(bar_answer)
-        answers_data['author'] = answer_user.username
+        answers_data['author'] = user.username
         answers_data['diff_time'] = diff_time
-        Avatar(answers_data, answer_user)
+        Avatar(answers_data, user)
         return get_json(1, '回答成功', answers_data)
 
 class BarAnswerView(MethodView):
@@ -141,19 +140,18 @@ class BarAnswerView(MethodView):
     def post(self, id):
         #Comment = Answers.query.filter_by(id = id).first_or_404()
         post_data = request.data
-        #user = request.user
+        user = request.user
         content = post_data.pop('content', None)
         answer_comment = Comments(content = content, answers_id = id)
-        answer_comment.author_id = 7
+        answer_comment.author_id = user.id
         answer_comment.save()
         diff_time = time_diff(answer_comment.updated_at)
-        answer_user = User.query.filter_by(id = answer_comment.author_id).first()
         answer_comment.created_at = str(answer_comment.created_at)
         answer_comment.updated_at = str(answer_comment.updated_at)
         comments_data = object_as_dict(answer_comment)
-        comments_data['author'] = answer_user.username
+        comments_data['author'] = user.username
         comments_data['diff_time'] = diff_time
-        Avatar(comments_data, answer_user)
+        Avatar(comments_data, user)
         return get_json(1, '评论成功', comments_data)
 
 class BarQuestionreplyView(MethodView):
@@ -177,19 +175,18 @@ class BarQuestionreplyView(MethodView):
     def post(self, id):
         qusetion = Questions.query.filter_by(id=id).first_or_404()
         post_data = request.data
-        #user = request.user
+        user = request.user
         content = post_data.pop('content', None)
         bar_reply = Answers(content = content, questions_id = qusetion.id, is_reply = 1)
-        bar_reply.author_id = 5
+        bar_reply.author_id = user.id
         bar_reply.save()
         diff_time = time_diff(bar_reply.updated_at)
-        reply_user = User.query.filter_by(id = bar_reply.author_id).first()
         bar_reply.created_at = str(bar_reply.created_at)
         bar_reply.updated_at = str(bar_reply.updated_at)
         replies_data = object_as_dict(bar_reply)
-        replies_data['author'] = reply_user.username
+        replies_data['author'] = user.username
         replies_data['diff_time'] = diff_time
-        Avatar(replies_data, reply_user)
+        Avatar(replies_data, user)
         return get_json(1, '评论成功', object_as_dict(bar_reply))
 
 class BarCommentreplyView(MethodView):
@@ -198,18 +195,20 @@ class BarCommentreplyView(MethodView):
     def post(self, id):
         comment = Comments.query.filter_by(id=id).first_or_404()
         post_data = request.data
-        #user = request.user
+        user = request.user
         content = post_data.pop('content', None)
         comment_reply = Replys(content = content, comments_id = id)
-        comment_reply.author_id = 5
+        comment_reply.author_id = user.id
         comment_reply.save()
         diff_time = time_diff(comment_reply.updated_at)
-        reply_user = User.query.filter_by(id = comment_reply.author_id).first()
         comment_reply.created_at = str(comment_reply.created_at)
         comment_reply.updated_at = str(comment_reply.updated_at)
         replies_data = object_as_dict(comment_reply)
-        replies_data['author'] = reply_user.username
+        replies_data['author'] = user.username
         replies_data['diff_time'] = diff_time
-        Avatar(replies_data, reply_user)
-        data = {'comment_content':comment.content,'replies':replies_data}
-        return get_json(1, '评论成功', data)
+        Avatar(replies_data, user)
+        comments = dict()
+        comments['comment_author'] = User.query.filter_by(id = comment.author_id).first().username
+        comments['content'] = comment.content
+        data = {'comment':comments, 'replies':replies_data}
+        return get_json(1, '回复成功', data)

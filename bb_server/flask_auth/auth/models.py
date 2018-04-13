@@ -129,3 +129,7 @@ class UserMixin(PermUserMixin, _UserMixin, MailMixin, ModelMixin):
 
     def __repr__(self):
         return '<User %r>' % self.username
+
+    def ping(self):
+        self.last_login = datetime.now()
+        self.save()

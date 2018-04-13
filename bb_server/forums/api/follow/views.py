@@ -20,6 +20,9 @@ from forums.common.response import HTTPResponse
 from forums.common.views import IsAuthMethodView as MethodView
 from forums.api.message.models import MessageClient
 from forums.func import object_as_dict, get_json
+from .models import Follower
+import json
+import requests
 
 
 class FollowingTagsView(MethodView):
@@ -55,27 +58,35 @@ class FollowingTagsView(MethodView):
 
 
 class FollowingTopicsView(MethodView):
-    def get(self):
+    def get(self, token):
         user = request.user
-        page, number = self.page_info
-        filter_dict = {'followers__username': user.username}
-        topics = Topic.query.filter_by(**filter_dict).paginate(page, number,
-                                                               True)
-        data = {'topics': topics}
-        return render_template('follow/following_topics.html', **data)
+        if Follower.query.filter_by(author_id = user.id).exists():
+            follwer = Follower.query.filter_by(author_id = user.id).first()
+            topiclist = json.loads(follwer.follower)
+            topiclist.append(token)
+            follwer.follower = json.dumps(topiclist)
+        else:
+            follwer = Follower(author_id=user.id)
+            follwer.follwer = json.dumps([token])
+        follwer.save()
+        return get_json(1, 'success', {})
 
     def post(self):
         user = request.user
-        post_data = request.data
-        topic_id = post_data.pop('topicId', None)
-        if topic_id is not None and not User.query.filter_by(
-                following_topics__id=topic_id).exists():
-            topic = Topic.query.filter_by(id=topic_id).first_or_404()
-            user.following_topics.append(topic)
-            user.save()
-            # notice
-            MessageClient.follow(topic)
-        return HTTPResponse(HTTPResponse.NORMAL_STATUS).to_response()
+        if not Follower.query.filter_by(author_id = user.id).exists():
+            return get_json(1, '关注列表', {})
+        follwer = Follower.query.filter_by(author_id = user.id).first_or_404()
+        tokenlist = json.loads(follwer.follwer)
+        tokenslist = []
+        for i in tokenlist:
+            headers = {'Content-Type':'application/json'}
+            details = requests.get('https://block.cc/api/v1/coin/get?coin=%s'%(i), headers = headers).json()['data']
+            keys = ['symbol', 'price', 'volume_ex', "available_supply", 'marketCap', 'change1h', 'zhName', 'CNY_RATE']
+            data = {}
+            for j in keys:
+                data[j] = details[j]
+            tokenslist.append(data)
+        return get_json(1, '关注列表', tokenslist)
 
     def delete(self):
         user = request.user
@@ -120,7 +131,7 @@ class FollowingUsersView(MethodView):
                 user.save()
         return HTTPResponse(HTTPResponse.NORMAL_STATUS).to_response()
 
-
+'''
 class FollowingCollectsView(MethodView):
     def get(self):
         user = request.user
@@ -153,3 +164,4 @@ class FollowingCollectsView(MethodView):
             user.following_collects.remove(collect)
             user.save()
         return HTTPResponse(HTTPResponse.NORMAL_STATUS).to_response()
+'''

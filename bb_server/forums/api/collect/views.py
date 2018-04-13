@@ -129,12 +129,16 @@ class AddToCollectView(MethodView):
 class CollectView(MethodView):
     def get(self, topicId):
         user = request.user
-        collect = Collect.query.filter_by(author_id = user.id).first_or_404()
-        topiclist = json.loads(collect.topic_id)
-        topiclist.append(topicId)
-        collect.topic_id = json.dumps(topiclist)
+        if Collect.query.filter_by(author_id = user.id).exists():
+            collect = Collect.query.filter_by(author_id = user.id).first()
+            topiclist = json.loads(collect.topic_id)
+            topiclist.append(topicId)
+            collect.topic_id = json.dumps(topiclist)
+        else:
+            collect = Collect(author_id=user.id)
+            collect.topic_id = json.dumps([topicId])
         collect.save()
-        return get_json(1, '收藏成功', {})
+        return get_json(1, 'success', {})
 
 class CollectListView(MethodView):
     def get(self):
@@ -158,4 +162,4 @@ class CollectListView(MethodView):
             Avatar(topics_data, user)
             topicslist.append(topics_data)
         data = {'topics': topicslist}
-        return get_json(1, '收藏成功', data)
+        return get_json(1, '收藏列表', data)

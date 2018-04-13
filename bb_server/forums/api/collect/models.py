@@ -10,9 +10,7 @@
 #          By:
 # Description:
 # **************************************************************************
-from datetime import datetime
 from flask_auth.models import ModelMixin
-from flask_login import current_user
 from forums.api.user.models import User
 from forums.extension import db
 

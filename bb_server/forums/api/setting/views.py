@@ -16,7 +16,9 @@ from forums.api.forms import (ProfileForm, PasswordForm, PrivacyForm,
                               AvatarForm, BabelForm)
 from forums.common.views import IsConfirmedMethodView as MethodView
 from flask_auth.form import form_validate
-
+from flask_auth.auth.views import check_phone
+from forums.func import get_json
+from forums.api.user.models import User
 
 def error_callback(url):
     return lambda: redirect(url_for(url))
@@ -45,7 +47,7 @@ class ProfileView(MethodView):
         return redirect(url_for('setting.setting'))
 
 
-class PasswordView(MethodView):
+class ChangePasswordView(MethodView):
     def get(self):
         form = PasswordForm()
         data = {'form': form}
@@ -60,10 +62,35 @@ class PasswordView(MethodView):
             user.set_password(form.new_password.data)
             user.save()
             logout_user()
-            return redirect(url_for('auth.login'))
-        flash('原密码错误', 'warning')
-        return redirect(url_for('setting.password'))
+            return get_json(1, '修改密码成功，请重新登录', {})
+        return get_json(0, '原密码错误', {})
 
+class ChangePhoneView(MethodView):
+    def post(self):
+        user = request.user
+        post_data = request.json
+        phone = post_data['phone']
+        captcha = post_data['captcha']
+        if User.query.filter_by(phone = phone).exists():
+            msg = '手机已被注册'
+            return get_json(0, msg, {})
+        if not check_phone(phone, captcha):
+            return get_json(0, '验证码错误', {})
+        user.phone = phone
+        user.save()
+        return get_json(1, '手机号已更换', {})
+
+class ChangeUsernameView(MethodView):
+    def post(self):
+        user = request.user
+        post_data = request.json
+        username = post_data['username']
+        if User.query.filter_by(username = username).exists():
+            msg = '用户名已存在'
+            return get_json(0, msg, {})
+        user.username = username
+        user.save()
+        return get_json(1, '用户名已更换', {})        
 
 class PrivacyView(MethodView):
     def get(self):

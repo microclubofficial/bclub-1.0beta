@@ -39,7 +39,7 @@ class UserListView(MethodView):
         return get_json(1, '所有用户', data)
 
 
-class UserView(MethodView):
+class UserTopicView(MethodView):
     def get(self, username):
         query_dict = request.data
         user = User.query.filter_by(username=username).first_or_404()
@@ -112,3 +112,28 @@ class UserFollowerListView(MethodView):
         followers = user.followers.paginate(page, number, True)
         data = {'followers': followers, 'user': user}
         return render_template('user/followers.html', **data)
+
+class UserView(MethodView):
+    def get(self, username):
+        user = User.query.filter_by(username=username).first_or_404()
+        id = user.id
+        user.last_login = str(user.last_login)
+        user.register_time = str(user.register_time)
+        user = object_as_dict(user)
+        keys = ['password']
+        for i in keys:
+            user.pop(i)
+        if user.pop('is_confirmed'):
+            user['is_confirm'] = '邮箱未认证'
+        if user.pop('is_superuser'):
+            user['Authority'] = '管理员'
+        else:
+            user['Authority'] = '普通用户'
+        if not current_user.is_active:
+            user['_user'] = '游客浏览'
+        elif request.user.id == id:
+            user['_user'] = '本人'
+        else:
+            user['_user'] = '非本人'
+        return get_json(1, '个人资料', user)
+        

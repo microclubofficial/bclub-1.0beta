@@ -140,14 +140,7 @@ class Reply(db.Model, ModelMixin):
     is_good = db.Column(db.String(512), default='[]')
     is_bad = db.Column(db.String(512), default='[]')
     is_reply = db.Column(db.SmallInteger , default=0, nullable=False)
-    topic_id = db.Column(
-        db.Integer, db.ForeignKey(
-            'topics.id', ondelete="CASCADE"))
-    topic = db.relationship(
-        Topic,
-        backref=db.backref(
-            'replies', cascade='all,delete-orphan', lazy='dynamic'),
-        lazy='joined')
+    topic_id = db.Column(db.Integer)
 
     author_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     author = db.relationship(
