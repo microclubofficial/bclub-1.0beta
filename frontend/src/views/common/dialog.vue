@@ -37,7 +37,7 @@ export default{
   },
   methods: {
     FtContentFun (data) {
-      this.$emit('backnavFt', data)
+      this.$store.dispatch('set_backForNav', data)
     }
   }
 }

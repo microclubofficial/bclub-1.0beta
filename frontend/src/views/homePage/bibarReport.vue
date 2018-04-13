@@ -14,7 +14,7 @@ import E from 'wangeditor'
 import {post} from '../../utils/http'
 
 export default {
-  props: ['contentId', 'toApi', 'talkId'],
+  props: ['contentId', 'toApi', 'talkId', 'mainReplay', 'mainCommnet'],
   name: 'editor',
   data () {
     return {
@@ -33,7 +33,7 @@ export default {
         'is_bad': 0,
         replt_count: 0
       },
-      nowShowApi: ['topic', 'bar', 'bar', 'bar'],
+      nowShowApi: ['topic', 'bar', 'bar', 'bar', 'comment'],
       isHide: false,
       replies: []
     }
@@ -44,7 +44,7 @@ export default {
     },
     getContent: function () {
       this.topicData.content = this.editorContent
-      post(`/api/${this.nowShowApi[this.toApi]}${this.toApi === 1 ? '/question' : this.toApi === 2 ? '/answer' : this.toApi === 3 ? '/comment' : ''}/replies/${this.toApi === 2 ? this.talkId : this.contentId}`, this.topicData).then(data => {
+      post(`/api/${this.nowShowApi[this.toApi]}${this.toApi === 1 ? '/question' : this.toApi === 2 ? '/answer' : this.toApi === 3 ? '/comment' : ''}/replies/${this.toApi === 0 ? this.mainCommnet : this.toApi === 2 ? this.talkId : this.toApi === 3 ? this.contentId : this.mainReplay}`, this.topicData).then(data => {
         //   评论发送完毕
         if (data.message === '未登录') {
           alert('先去登录')
@@ -57,7 +57,7 @@ export default {
             this.replies = data.data.replies
             this.$emit('backReplies', this.replies)
             this.$emit('backList', this.backData)
-            $('.w-e-text-container').find('p').html('')
+            $('.w-e-text-container').find('.w-e-text').html('')
           }
         }
       })

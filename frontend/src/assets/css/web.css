@@ -21,6 +21,8 @@
     fill: currentColor;
     overflow: hidden;
  }
+ /* 模态框 */
+ .modal-backdrop{z-index: 10000;}
  .btn{padding: 0px 10px !important;}
  .box{
     background: #fff;

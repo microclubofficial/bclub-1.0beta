@@ -71,9 +71,8 @@ export default{
     },
     // 填新密码
     setnewpwd () {
-      console.log(this.findForm)
-      post('/api/setpassword', this.findForm).then(data => {
-        console.log(data)
+      let token = this.$route.params.token
+      post(`/api/setpassword/${token}`, this.findForm).then(data => {
         if (data.message === '修改成功') {
           if (data.resultcode === 1) {
             this.$store.commit('USER_INFO', {

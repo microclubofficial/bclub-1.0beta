@@ -3,7 +3,7 @@
         <div class="avatar"><img src="../../assets/img/pic-user1.png" alt=""></div>
         <div ref="editor" style="text-align:left" class='editor'></div>
         <span class="toLongText"  @click="toBibarData(4)"><img src="../../assets/img/longText.png">长文</span>
-        <button @click="getContent" class="report btn">发布</button>
+        <button @click="getContent" class="report btn" data-dismiss="modal">发布</button>
         <button class="cancel" @click="isHideFun">取消</button>
         <!-- <div>{{backData}}</div> -->
     </div>
@@ -45,13 +45,12 @@ export default {
           this.$router.push('/login')
         } else {
           if (data.data.content !== '') {
-            console.log(data.data)
             this.backFt.content = data.data.content
             this.backFt.author = data.data.author
             this.backFt.avatar = data.data.avatar
             this.backFt.id = data.data.id
             this.$emit('backFtContent', this.backFt)
-            $('.w-e-text-container').find('p').html('')
+            // $('.w-e-text-container').find('p').html('')
             // this.$emit('backBibarContent', data.data.content)
           }
         }

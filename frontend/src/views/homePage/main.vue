@@ -1,6 +1,6 @@
 <template>
   <div id="commun">
-      <MainHeader @backnavMain='toHotList' @backLoadMain='toMainLoadFun'></MainHeader>
+      <MainHeader @backLoadMain='toMainLoadFun'></MainHeader>
       <!--社区币吧数据-->
       <BibarData v-show="initShow"></BibarData>
       <!--社区各币种-->
@@ -80,10 +80,6 @@ export default{
     FtContentFun (data) {
       // this.$store.dispatch('set_backForNav', data)
       this.$refs.showFtContent.showFtContentFun(data)
-    },
-    // 导航栏发帖----来自isLogin
-    toHotList (data) {
-      this.$store.dispatch('set_backForNav', data)
     },
     // 退登状态----重新加载页面
     toMainLoadFun () {

@@ -153,9 +153,17 @@ export default {
     },
     // 用户名登录
     handleLogin () {
+      if (this.userForm.username === undefined) {
+        alert('用户名不能为空')
+        return 
+      } else if (this.userForm.password === undefined) {
+        alert('密码不能为空')
+        return 
+      } else if (this.userForm.captcha === undefined) {
+        alert('验证码不能为空')
+        return 
+      }
       post(this.formUrl, this.userForm).then(data => {
-        console.log(data)
-        alert(data.message)
         if (data.message === '验证码错误') {
           this.controlPrompt = data.message
           this.phoneControlPrompt = data.message
@@ -178,8 +186,14 @@ export default {
     },
     // 手机登录
     handlePhoneLogin () {
+      if (this.phoneForm.phone === undefined) {
+        alert('手机号码不能为空')
+        return 
+      } else if (this.userForm.phonecaptcha === undefined) {
+        alert('验证码不能为空')
+        return 
+      }
       post(this.phoneUrl, this.phoneForm).then(data => {
-        alert(data.message)
         if (data.message === '验证码错误') {
           this.controlPrompt = data.message
           this.changeControl()
@@ -215,8 +229,6 @@ export default {
     getPhoneControl () {
       let phone = parseFloat(this.phoneForm.phone)
       post('/api/phoneCaptcha', {'phone': phone}).then((data) => {
-        console.log(data)
-        console.log(phone)
         if (data.message === '短信发送成功') {
           let that = this
           if (that.countdown === 0) {

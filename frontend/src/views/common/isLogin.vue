@@ -37,7 +37,7 @@
       </div>
       <a href="#" v-show="isShowft" class="nav_btn_longtext" @click="postModel">发帖</a>
     </div>
-    <vdialog v-show="Showdialog" :toDialog='postEditor' @backnavFt = 'toHeader'></vdialog>
+    <vdialog v-show="Showdialog" :toDialog='postEditor'></vdialog>
   </div>
 </template>
 
@@ -105,10 +105,6 @@ export default{
       $('#myModal').modal({
         keyboard: true
       })
-    },
-    // 传值
-    toHeader (data) {
-      this.$emit('backnavHeader', data)
     },
     // 退登样式
     outloginSty () {

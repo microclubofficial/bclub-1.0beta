@@ -81,13 +81,13 @@ import HighchartsMore from 'highcharts/highcharts-more'
 import HighchartsDrilldown from 'highcharts/modules/drilldown'
 import Highcharts3D from 'highcharts/highcharts-3d'
 import $ from 'jquery'
-import {get} from '../../../utils/http'
+import { get } from '../../../utils/http'
 
 HighchartsMore(Highcharts)
 HighchartsDrilldown(Highcharts)
 Highcharts3D(Highcharts)
 
-export default{
+export default {
   name: 'bibar',
   props: ['bId'],
   data: function () {
@@ -120,15 +120,18 @@ export default{
   methods: {
     // 获取chart数据
     getChartData (bId) {
-      // https://data.jianshukeji.com/stock/history/000001
+// https://data.jianshukeji.com/stock/history/000001
       var that = this
-      this.bId = bId
-      if (this.bId === '') {
-        if (this.bId.length === 0) {
-          this.bId = this.chartId
-        }
+      if (bId) {
+        this.nowId = bId
+      } else if (this.bId) {
+        this.nowId = this.bId
+      } else if (this.$route.params.currency) {
+        this.nowId = this.$route.params.currency
+      } else {
+        this.nowId = this.chartId
       }
-      $.getJSON(`/api/currency_news/${that.bId}`, function (data) {
+      $.getJSON(`/api/currency_news/${this.nowId}`, function (data) {
         // main数据
         that.bibarData = data.data
         // 人民币汇率
@@ -137,7 +140,6 @@ export default{
         that.BTC_RATE = parseFloat(that.bibarData.BTC_RATE)
         // 人民币转换
         that.cny_price = that.bibarData.price * that.CNY_RATE
-        console.log(that.bibarData)
         // 涨幅
         that.change1h = that.bibarData.change1h
         var change1hStr = that.change1h.toString()
@@ -148,7 +150,7 @@ export default{
         }
       })
       // k线图
-      that.klineChart(that.bId)
+      that.klineChart(that.nowId)
     },
     // k线图
     klineChart (id) {
@@ -157,13 +159,13 @@ export default{
         for (var j = 0; j < data.data.volume_usd.length; j++) {
           that.volumeData.push([
             data.data.volume_usd[j][0], // the date
-            (data.data.volume_usd[j][1] * that.CNY_RATE) // the volume
+            data.data.volume_usd[j][1] * that.CNY_RATE // the volume
           ])
         }
         for (var i = 0; i < data.data.price_usd.length; i++) {
           that.ohlc.push([
             data.data.price_usd[i][0], // the date
-            (data.data.price_usd[i][1] * that.CNY_RATE) // 价格
+            data.data.price_usd[i][1] * that.CNY_RATE // 价格
           ])
         }
         that.drawChart()
@@ -176,29 +178,32 @@ export default{
           selected: 1,
           inputDateFormat: '%Y-%m-%d',
           inputEnabled: false,
-          buttons: [{
-            type: 'all',
-            text: '所有'
-          }, {
-            type: 'month',
-            count: 1,
-            text: '1月'
-          }, {
-            type: 'month',
-            count: 3,
-            text: '3月'
-          }, {
-            type: 'month',
-            count: 6,
-            text: '6月'
-          }, {
-            type: 'ytd',
-            text: 'YTD'
-          }, {
-            type: 'year',
-            count: 1,
-            text: '1年'
-          }]
+          buttons: [
+            {
+              type: 'all',
+              text: '所有'
+            },
+            {
+              type: 'month',
+              count: 1,
+              text: '1月'
+            },
+            {
+              type: 'month',
+              count: 3,
+              text: '3月'
+            },
+            {
+              type: 'month',
+              count: 6,
+              text: '6月'
+            },
+            {
+              type: 'year',
+              count: 1,
+              text: '1年'
+            }
+          ]
         },
         title: {
           text: ''
@@ -228,61 +233,71 @@ export default{
           // layout: 'vertical',
           verticalAlign: 'top'
         },
-        yAxis: [{
-          labels: {
-            align: 'right',
-            x: -3
+        yAxis: [
+          {
+            labels: {
+              align: 'right',
+              x: -3
+            },
+            height: '65%',
+            resize: {
+              enabled: true
+            },
+            lineWidth: 2
           },
-          height: '65%',
-          resize: {
-            enabled: true
+          {
+            labels: {
+              align: 'right',
+              x: -3
+            },
+            top: '65%',
+            height: '35%',
+            offset: 0,
+            lineWidth: 2
+          }
+        ],
+        series: [
+          {
+            type: 'spline',
+            name: '价格(CNY)',
+            color: '#306FCE',
+            lineColor: '#306FCE',
+            navigatorOptions: {
+              color: Highcharts.getOptions().colors[0]
+            },
+            data: this.ohlc,
+            id: 'sz'
           },
-          lineWidth: 2
-        }, {
-          labels: {
-            align: 'right',
-            x: -3
-          },
-          top: '65%',
-          height: '35%',
-          offset: 0,
-          lineWidth: 2
-        }],
-        series: [{
-          type: 'spline',
-          name: '价格(CNY)',
-          color: '#306FCE',
-          lineColor: '#306FCE',
-          navigatorOptions: {
-            color: Highcharts.getOptions().colors[0]
-          },
-          data: this.ohlc,
-          id: 'sz'
-        }, {
-          type: 'column',
-          name: '24交易量',
-          data: this.volumeData,
-          yAxis: 1
-        }]
+          {
+            type: 'column',
+            name: '24交易量',
+            data: this.volumeData,
+            yAxis: 1
+          }
+        ]
       })
     },
     // 去chart详情
     toMsgDetail (id) {
       this.msgId = id
       this.$store.commit('CHART_ID', {
-        'chartId': this.msgId
+        chartId: this.msgId
       })
       this.$router.push(`/msgDetail/${this.msgId}`)
     },
     // 显示当前chart
     showNowChild (id) {
       this.nowId = id
-      this.getChartData(id)
+      this.getChartData(this.nowId)
     }
   }
 }
 </script>
 <style>
-.bibar-indexDisplay-data i.icon-USD{font-size: 14px !important;}
-.bibar-box{cursor: pointer;}
+.bibar-indexDisplay-data i.icon-USD {
+  font-size: 14px !important;
+}
+.bibar-box {
+  cursor: pointer;
+}
 </style>
