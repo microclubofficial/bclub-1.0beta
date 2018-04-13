@@ -240,3 +240,8 @@ export function cnyFunStr (value, rate, num) {
     }
   }
 }
+
+export function needContent (val) {
+  let nowVal = val.replace(/<img.+?>/ig, '')
+  return nowVal.slice(2,nowVal.indexOf('</p>'))
+}

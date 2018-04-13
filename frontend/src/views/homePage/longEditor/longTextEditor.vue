@@ -45,9 +45,9 @@ export default{
     editor.customConfig.menus = [
       'bold',
       'italic',
+      'emoticon',
       'head',
       'image',
-      'emoticon',
       'link'
     ]
     // 上传图片
@@ -64,15 +64,12 @@ export default{
     }
     editor.create()
     $('.long-text-editor').find('.w-e-text-container').css({'border': 'none'})
-    // $('.long-text-editor').find('.w-e-toolbar').css({''})
   },
   methods: {
     getContent: function () {
       this.topicData.content = this.editorContent
       this.topicData.title = this.title
-      console.log(this.topicData)
       post('/api/topic', this.topicData).then(data => {
-        console.log(data)
         if (data.message === '未登录') {
           alert('先去登录')
           this.$router.push('/login')
@@ -83,8 +80,9 @@ export default{
             this.backLong.avatar = data.data.avatar
             this.backLong.id = data.data.id
             this.backLong.diff_time = data.data.diff_time
-            this.backLong.is_good = data.dta.is_good
+            this.backLong.is_good = data.data.is_good
             $('.w-e-text-container').find('p').html('')
+            this.$router.push(`/details/${data.data.id}`)
           }
         }
       })
@@ -111,8 +109,10 @@ export default{
   border-left: none !important;
   border-right: none !important;
   background: #fff !important;
+  width:100%;
+  position:relative !important;
 }
-.w-e-text-container .w-e-panel-container{
-    margin-left: -396px !important;
+.long-text-editor>div>.editor> .w-e-text-container{
+  border:none !important;
 }
 </style>

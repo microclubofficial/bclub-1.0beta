@@ -136,6 +136,7 @@ export default{
   },
   mounted () {
     $('.mainBibar-editor').find('.wangeditor').css({'width': '860px'})
+    let app = document.getElementById('#app')
   },
   methods: {
     // 文章列表切换事件
@@ -160,21 +161,25 @@ export default{
     prev () {
       if (this.cpno > 1) {
         this.go(this.cpno - 1)
+        app.scrollTop = 0
       }
     },
     next () {
       if (this.cpno < this.cpageCount) {
         this.go(this.cpno + 1)
+        app.scrollTop = 0
       }
     },
     first () {
       if (this.cpno !== 1) {
         this.go(1)
+        app.scrollTop = 0
       }
     },
     last () {
       if (this.cpno !== this.cpageCount) {
         this.go(this.cpageCount)
+        app.scrollTop = 0
       }
     },
     go (page) {
@@ -190,6 +195,7 @@ export default{
         this.CNY = data.data.exrateData.CNY
         this.summaryList = data.data.summaryList
       })
+      app.scrollTop = 0
     }
   },
   computed: {

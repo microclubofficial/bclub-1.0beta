@@ -27,7 +27,7 @@
                     <!-- 未登录 -->
                     <NavLogin v-show="!userInfo.isLogin"></NavLogin>
                     <!-- 已登录 -->
-                    <isLogin @backnavHeader= 'toMain' @backLoadContent = 'toLoadMain' v-show="userInfo.isLogin"></isLogin>
+                    <isLogin @backLoadContent = 'toLoadMain' v-show="userInfo.isLogin"></isLogin>
                 </li>
             </ul>
         </div>
@@ -62,9 +62,6 @@ export default{
   mounted: function () {
   },
   methods: {
-    toMain (data) {
-      this.$emit('backnavMain', data)
-    },
     toLoadMain () {
       this.$emit('backLoadMain')
     }

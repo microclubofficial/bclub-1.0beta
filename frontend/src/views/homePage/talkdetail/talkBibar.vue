@@ -211,7 +211,7 @@
                         <a href="#" class="user-name">{{tmp.author}}</a>
                         <span class="time allTalk-time">{{tmp.created_at}}</span>
                       </div>
-                      <p class="replyAuthor">@<span>{{item.author}}:</span><span style="display:inline-block" v-html='talkComment[replayId].content'></span></p>
+                      <p class="replyAuthor">@<span>{{tmp.author}}:</span><span style="display:inline-block">{{talkComment[replayId].content | needContent()}}</span></p>
                       <p v-html="tmp.content">{{tmp.content}}</p>
                       <p></p>
                     </div>
@@ -235,7 +235,7 @@
                     <div class="set">
                       <ul class="bibar-indexNewsItem-infro">
                         <li class="set-choseOne"> <a href="javascript:void(0);" class="icon-quan mr15 active"  @click="changeNum(0,item.author_id)"><i class="iconfont icon-handgood"></i><span>{{isGood}}</span></a><a href="javascript:void(0);" class="icon-quan set-choseOne" @click="changeNum(1,item.author_id)"><i class="iconfont icon-handbad"></i><span>{{ishandbad}}</span></a> </li>
-                        <li class="set-discuss" @click="replyComment(item.author_id,now)">
+                        <li class="set-discuss" @click="replyComment(item.id,now)">
                           <a href="javascript:void(0);">
                             <i class="iconfont icon-pinglun"></i> 回复
                             <span>75</span>
@@ -253,9 +253,9 @@
                       </ul>
                     </div>
                 <!-- 回复 -->
-                <div class="comment-reply"  v-show="talkReplayBox && now === replayId">
+        <div class="comment-reply"  v-show="talkReplayBox && now === replayId">
                 <!-- 回复文本框 -->
-                <div class="editor-comment">
+        <div class="editor-comment">
          <img :src="articles.avatar" alt="" class="avatar" v-show="talkReplyTxt">
          <div class="editor-bd">
            <span class="comment-img-delete"></span>
@@ -266,11 +266,11 @@
              <div class="editor-placeholder">回复...</div>
            </div>
            <div class="editor-toolbar">
-              <BibarReport ref='childShowApi' :toApi='toId' :contentId='item.author_id' v-show="showReport" @backReplies = 'showReplyContent'></BibarReport>
+              <BibarReport ref='childShowApi' :toApi='toId' :contentId='item.id' v-show="showReport" @backReplies = 'showReplyContent'></BibarReport>
           </div>
          <span class="img-upload-delete">
              <img src="../../../assets/img/del.png" alt="">
-        </span>
+          </span>
        </div>
        </div>
                 </div>
@@ -464,8 +464,7 @@ export default{
     },
     // 讨论评论返回数据
     showTalkContent (data) {
-      this.talkContent.content = data
-      this.talkComment.unshift(this.talkContent)
+      this.talkComment.unshift(data)
     },
     // 回复
     replyComment (id, now) {
@@ -499,6 +498,7 @@ export default{
 .set {
     overflow: hidden;
 }
+/*回复*/
 .comment-reply{
   border-top: 1px solid #edf0f5;
   margin-top: 20px;

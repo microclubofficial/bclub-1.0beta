@@ -51,7 +51,7 @@
              <div class="editor-placeholder">评论...</div>
            </div>
            <div class="editor-toolbar">
-              <BibarReport :toApi='toId' :contentId='lid' v-show="showReport" @backList = 'showContent' ></BibarReport>
+              <BibarReport :toApi='toId' :mainCommnet='lid' v-show="showReport" @backList = 'showContent' ></BibarReport>
           </div>
          <span class="img-upload-delete">
              <img src="../../../assets/img/del.png" alt="">
@@ -80,7 +80,7 @@
                     </a>
                     <div class="comment-item-main">
                       <div class="comment-item-hd">
-                        <a href="#" class="user-name">评论标题</a>
+                        <a href="#" class="user-name">{{item.author}}</a>
                         <span class="time">评论时间</span>
                       </div>
                       <!-- <p>{{item}}</p> -->
@@ -90,14 +90,35 @@
                       <ul class="bibar-indexNewsItem-infro">
                         <li class="set-choseOne"> <a href="javascript:void(0);" class="icon-quan mr15 active"  @click="changeNum(0)"><i class="iconfont icon-handgood"></i><span>{{item.is_bad}}</span></a><a href="javascript:void(0);"  :class='{active:tmp.is_bad_bool}' class="icon-quan set-choseOne" @click="changeNum(1)"><i class="iconfont icon-handbad"></i><span class="is-bad">{{item.is_good}}</span></a></li>
                         <li class="set-choseShang"> <a href="javascript:void(0);"><i class="iconfont icon-dashang"></i> 打赏<span>438</span></a> </li>
-                        <li class="set-discuss" @click="showDiscuss(index,tmp.id)">
+                        <li class="set-discuss" @click="replyComment(item.id,now)">
                           <a href="javascript:void(0);">
-                            <i class="iconfont icon-pinglun"></i> 评论
-                            <span>75</span>
+                            <i class="iconfont icon-pinglun"></i> 回复
                           </a>
                         </li>
                       </ul>
                     </div>
+                     <!-- 回复 -->
+        <div class="comment-reply"  v-show="talkReplayBox && now === replayId">
+                <!-- 回复文本框 -->
+        <div class="editor-comment">
+         <img :src="item.avatar" alt="" class="avatar" v-show="talkReplyTxt">
+         <div class="editor-bd">
+           <span class="comment-img-delete"></span>
+           <svg version='1.1' xmlns='http://www.w3.org/2000/svg' class="editor-triangle">
+            <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
+           </svg>
+           <div class="editor-textarea"  v-show="talkReplyTxt" @click="talkReplyEditor">
+             <div class="editor-placeholder">回复...</div>
+           </div>
+           <div class="editor-toolbar">
+              <BibarReport ref='childShowApi' :toApi='toRId' :mainReplay='item.id' v-show="showReportReplay" @backReplies = 'showReplyContent'></BibarReport>
+          </div>
+         <span class="img-upload-delete">
+             <img src="../../../assets/img/del.png" alt="">
+          </span>
+       </div>
+       </div>
+       </div>
                   </div>
                 </div>
               </div>
@@ -147,6 +168,7 @@ export default{
         replt_count: 0
       },
       toId: 0,
+      toRId: 0,
       upId: 0,
       tpno: 1,
       pageCount: 0,
@@ -154,7 +176,12 @@ export default{
       listLoding: true,
       noLoading: false,
       up: 0,
-      loadingShow: false
+      loadingShow: false,
+      talkReplayBox: false,
+      replyContent: [],
+      talkReplyTxt: false,
+      replayId: 0,
+      showReportReplay: false
     }
   },
   components: {
@@ -167,12 +194,14 @@ export default{
   },
   created: function () {
     // 文章分页
+    this.$store.dispatch('clear_backForNav')
     get(`/api/topic/${this.tpno}`).then(data => {
       this.articles = data.data.topics
       this.pageCount = data.data.page_count
       if (this.articles.length > 0) {
         this.loadingShow = true
       }
+      console.log()
       var that = this
       document.querySelector('#app').addEventListener('scroll', function () {
         if (this.clientHeight + this.scrollTop === this.scrollHeight) {
@@ -250,6 +279,7 @@ export default{
     showDiscuss (index, id) {
       get(`/api/topic/${id}/1`).then(data => {
         this.nowData = data.data.replies
+
       })
       if (index !== this.i) {
         this.i = index
@@ -287,6 +317,24 @@ export default{
     },
     showFtContentFun (ftData) {
       this.getNavaVal.unshift(ftData)
+    },
+    // 评论回复
+    replyComment (id, now) {
+      if (now !== this.replayId) {
+        this.replayId = now
+      }
+      this.talkReplayBox = !this.talkReplayBox
+      this.talkReplyTxt = !this.talkReplyTxt
+      this.toRId = 4
+    },
+    // 显示回复富文本框
+    talkReplyEditor () {
+      this.talkReplyTxt = !this.talkReplyTxt
+      this.showReportReplay = !this.showReportReplay
+    },
+    // 回复返回数据
+    showReplyContent (data) {
+      this.replyContent.unshift(data)
     }
   }
 }
@@ -494,4 +542,196 @@ a.avatar img {
     from {transform: rotate(0deg);}
     to {transform: rotate(360deg);}
   }
+  /*回复*/
+.comment-reply{
+  border-top: 1px solid #edf0f5;
+  margin-top: 50px;
+}
+.comment-reply>.comment-item{
+  margin: 15px 0;
+}
+.comment-reply>.editor-comment{
+  margin-top: 15px;
+}
+.talkCommentEditor>.wangeditor>.editor{
+  padding-bottom: 30px;
+}
+.talkCommentEditor .report{
+  right: 317px !important;
+}
+.talkCommentEditor .cancel{
+  right: 375px !important;
+}
+.talkBibar{
+  width: 100%;
+  position: relative;
+}
+.talkBibar-main{
+  width: 1100px;
+  margin: 80px auto 20px auto;
+  position: relative;
+}
+.talkBibar-article{
+  background: #fff;
+  padding: 20px 25px;
+}
+.bibar-indexNewsItem .set>ul>.set-question{
+   padding: 6px 10px;
+   text-align: center;
+   background: #1E8FFF;
+   border-radius: 3px;
+}
+.bibar-indexNewsItem .set>ul>.set-question>a{color: #fff;}
+.bibar-indexNewsItem .set>ul>.set-answer{
+  padding: 5px 10px;
+  border: 1px solid #1E8FFF;
+  border-radius: 3px;
+}
+.bibar-indexNewsItem .set>ul>.set-answer>a{color: #1E8FFF;}
+.bibar-tabitem{
+  overflow: hidden;
+}
+.bibar-indexNewsList{
+    float: left;
+    width: 860px;
+}
+.talkBibar-flow{
+    float: right;
+    padding: 15px 0px 10px;
+    margin: 10px 0;
+}
+.talkBibar-flow>.visitors{
+  padding-left: 20px;
+  border-left: 1px solid #D8D8D8;
+}
+.talkBibar-flow>.visitors>p:first-child{margin-bottom: 15px;}
+.talkBibar-flow>.visitors>p{
+  color: #80A2C6;
+  font-size: 14px;
+}
+.talkBibar-flow>.visitors>p>span{
+  color: #000;
+  font-weight: bold;
+  margin-left: 15px;
+}
+.talkSection{
+  margin-top: 30px;
+}
+.talkSection>span{
+  border:1px solid #1E8FFF;
+  color: #1E8FFF;
+  border-radius: 33%;
+  padding: 5px 15px;
+  margin: 10px 15px;
+}
+
+.talkBibar-editor{
+  padding: 30px;
+  background: #fff;
+  position: relative;
+}
+.avatar{margin-bottom: 15px;}
+.avatar>span{
+  font-size: 16px;
+  margin-left: 15px;
+}
+.avatar>.anonymous-users{
+  float: right;
+  font-size: 14px;
+  color: #87A7C9;
+}
+.talkBibar-editor>button{
+  position: absolute;
+  z-index: 1;
+}
+.talkBibar-editor>.editor>.w-e-toolbar{
+    background: snow !important;
+    border-top: 1px solid rgb(216, 216, 216) !important;
+    border-right: none !important;
+    border-bottom: 1px solid rgb(216, 216, 216) !important;
+    border-left: none !important;
+    position: inherit !important;
+}
+.talkBibar-editor>.editor>.w-e-toolbar .w-e-menu{padding: 7px 10px;}
+.talkBibar-editor>.set{right: 135px;}
+.talkBibar-editor>.report{right: 50px; bottom: 10px;}
+.w-e-text::-webkit-scrollbar{
+  background:snow;
+}
+.w-e-text-container .w-e-panel-container{
+  margin-left: 0 !important;
+  left: 10% !important;
+}
+.talkBibar-editor .w-e-text-container{
+  min-height: 150px !important;
+  border:none !important;
+}
+.talkLeft{
+    margin-top: 20px;
+    width: 860px;
+    position: relative;
+    overflow: hidden;
+    float: left;
+}
+.bibar-comment{
+    width: 100%;
+    overflow: hidden;
+    float: left;
+    margin-left: 0 !important;
+}
+.editor-comment{
+    margin-top: 5px;
+    background-color: #f9f9f9;
+    /* padding: 20px; */
+    padding-left: 10px;
+}
+.editor-comment>.avatar{
+    width: 32px;
+    height: 32px;
+    float: left;
+}
+img.avatar{
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    vertical-align: middle;
+}
+.editor-bd{
+    margin-left: 42px;
+    position: relative;
+    z-index: 1;
+}
+svg:not(:root) {
+    overflow: hidden;
+}
+.editor-triangle{
+    position: absolute;
+    top: 10px;
+    left: -4px;
+    width: 5px;
+    height: 10px;
+    z-index: 11;
+}
+.editor-triangle>.arrow{
+    stroke: #edf0f5;
+    fill: #f9fcfe;
+}
+.editor-textarea{
+    position: relative;
+    z-index: 10;
+    min-height: 32px;
+    border: 1px solid #edf0f5;
+    font-size: 13px;
+    line-height: 1.6;
+    background-color: #fff;
+}
+.editor-textarea .comment-placeholder {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    padding: 5px 10px;
+    color: #d4d7dc;
+}
 </style>
