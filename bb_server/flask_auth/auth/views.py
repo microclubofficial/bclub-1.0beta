@@ -102,10 +102,9 @@ class PhoneLoginView(MethodView):
         domain.as_default()
         return get_json(1, '登录', {})
 
-    @check_params(['phone', 'captcha'])
+    @check_params(['phone', 'phonecaptcha'])
     def post(self):
         post_data = request.json
-        print(post_data)
         phone = post_data['phone']
         captcha = post_data['phonecaptcha']
         remember = post_data.pop('remember', True)
@@ -294,7 +293,12 @@ class ConfirmView(MethodView):
     decorators = [login_required]
 
     def post(self):
-        if current_user.is_confirmed:
+        if request.path.endswith('mail'):
+            user = request.user
+            email = request.values.get('email')
+            user.email = email
+            user.save()
+        elif current_user.is_confirmed:
             #return HTTPResponse(HTTPResponse.USER_IS_CONFIRMED).to_response()
             return get_json(1, '用户已通过确认', {})
         self.send_email(current_user)
@@ -354,8 +358,9 @@ class Auth(object):
         phone_view = ConfirmPhoneView.as_view('phone')
         phonelogin_view = PhoneLoginView.as_view('phonelogin')
         phoneforget_view = PhoneForgetView.as_view('phoneforget')
-        mailsetpassword_view = SetPasswordView.as_view('mailsetpassword')
+        emailsetpassword_view = SetPasswordView.as_view('mailsetpassword')
         phonesetpassword_view = SetPasswordView.as_view('phonesetpassword')
+        settingemail_view = ConfirmView.as_view('setting.email')
 
         app.add_url_rule('/api/login', view_func=login_view)
         app.add_url_rule('/api/logout', view_func=logout_view)
@@ -367,5 +372,6 @@ class Auth(object):
         app.add_url_rule('/api/phoneCaptcha', view_func=phone_view)
         app.add_url_rule('/api/phoneLogin', view_func=phonelogin_view)
         app.add_url_rule('/api/phoneForget', view_func=phoneforget_view)
-        app.add_url_rule('/api/setpassword/<token>', view_func=mailsetpassword_view)
+        app.add_url_rule('/api/setpassword/<token>', view_func=emailsetpassword_view)
         app.add_url_rule('/api/setpassword', view_func=phonesetpassword_view)
+        app.add_url_rule('/api/setting/email', view_func=settingemail_view)

@@ -52,13 +52,6 @@ def init_admin(admin):
             endpoint='admin_topic',
             category='管理主题'))
     admin.add_view(
-        ReplyView(
-            Reply,
-            db.session,
-            name='管理回复',
-            endpoint='admin_reply',
-            category='管理主题'))
-    admin.add_view(
         CollectView(
             Collect,
             db.session,

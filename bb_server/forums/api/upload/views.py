@@ -39,7 +39,7 @@ class AvatarView(MethodView):
         filename = user.username + '-' + str(int(time())) + str(
             randint(1000, 9999))
         img = Image.open(file)
-        size = 120, 120
+        size = 30, 30
         img.thumbnail(size, Image.ANTIALIAS)
         current_app.config.setdefault('AVATAR_FOLDER', os.path.join(
             current_app.static_folder, 'avatars'))
@@ -54,8 +54,8 @@ class AvatarView(MethodView):
             ef = os.path.join(avatar_path, info.avatar)
             if os.path.exists(ef):
                 os.remove(ef)
-        info.avatar = filename + '.png'
-        info.save()
+        user.avatar = filename + '.png'
+        user.save()
         resp = Response(img, mimetype="image/png")
         return resp
 

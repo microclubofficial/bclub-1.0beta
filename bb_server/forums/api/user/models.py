@@ -151,6 +151,7 @@ class User(db.Model, UserMixin):
         mail.send_email(subject=subject, html=html, recipients=recipients)
 
 
+
 class UserInfo(db.Model, ModelMixin):
     __tablename__ = 'userinfo'
     id = db.Column(db.Integer, primary_key=True)

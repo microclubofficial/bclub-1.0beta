@@ -11,20 +11,18 @@
 # Description:
 # **************************************************************************
 from flask import Blueprint
-from .views import (FollowingTagsView, FollowingUsersView, FollowingTopicsView,
-                    FollowingCollectsView)
+from .views import (FollowingTagsView, FollowingUsersView, FollowingTopicsView)
 
 site = Blueprint('follow', __name__, url_prefix='/api/following')
 
 topic_view = FollowingTopicsView.as_view('topic')
 tag_view = FollowingTagsView.as_view('tag')
 user_view = FollowingUsersView.as_view('user')
-collect_view = FollowingCollectsView.as_view('collect')
+
 
 site.add_url_rule('', view_func=topic_view)
 site.add_url_rule('/topics', view_func=topic_view)
 site.add_url_rule('/tags', view_func=tag_view)
-site.add_url_rule('/collects', view_func=collect_view)
 site.add_url_rule('/users', view_func=user_view)
 
 

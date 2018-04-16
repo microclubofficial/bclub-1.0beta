@@ -162,30 +162,44 @@ class TopicView(MethodView):
         start = (page-1)*5
         query_dict = request.data
         topic = Topic.query.filter_by(id=topicId).first_or_404()
-        #page, number = self.page_info
-        keys = ['title']
-        #order_by = gen_order_by(query_dict, keys)
-        #filter_dict = gen_filter_dict(query_dict, keys)
-        reply = topic.replies.filter_by(topic_id = topicId, is_reply = 1).order_by(('-id')).limit(5).offset(start)
-        reply_count = topic.replies.filter_by(topic_id = topicId, is_reply = 1).count()
-        page_count = int(math.ceil(reply_count/5))
-        replies = []
         diff_time = time_diff(topic.updated_at)
         topic.created_at = str(topic.created_at)
         topic.updated_at = str(topic.updated_at)
+        #page, number = self.page_info
+        #order_by = gen_order_by(query_dict, keys)
+        #filter_dict = gen_filter_dict(query_dict, keys)
+        reply = Reply.query.filter_by().order_by(('-id')).limit(5).offset(start)
+        reply_count = FindAndCount(Reply)
+        page_count = int(math.ceil(reply_count/5))
+        replies = []
         for i in reply: 
-            user = User.query.filter_by(id = i.author_id).first()
-            diff_time = time_diff(i.updated_at)
-            i.created_at = str(i.created_at)
-            i.updated_at = str(i.updated_at)
-            replies_data = object_as_dict(i)
-            replies_data['author'] = user.username
-            replies_data['diff_time'] = diff_time
-            replies_data['is_good'], replies_data['is_good_bool'] = Count(i.is_good)
-            replies_data['is_bad'], replies_data['is_bad_bool'] = Count(i.is_bad)
-            Avatar(replies_data, user)
+            if i.is_reply == 1:
+                user = User.query.filter_by(id = i.author_id).first()
+                diff_time = time_diff(i.updated_at)
+                i.created_at = str(i.created_at)
+                i.updated_at = str(i.updated_at)
+                replies_data = object_as_dict(i)
+                replies_data['author'] = user.username
+                replies_data['diff_time'] = diff_time
+                replies_data['is_good'], replies_data['is_good_bool'] = Count(i.is_good)
+                replies_data['is_bad'], replies_data['is_bad_bool'] = Count(i.is_bad)
+                Avatar(replies_data, user)
+            elif i.is_reply == 0:
+                user = User.query.filter_by(id = i.author_id).first()
+                reply = Reply.query.filter_by(id = i.topic_id).first()
+                reply_data = dict()
+                reply_data['author'] = User.query.filter_by(id = reply.author_id).first().username
+                reply_data['content'] = reply.content
+                diff_time = time_diff(i.updated_at)
+                i.created_at = str(i.created_at)
+                i.updated_at = str(i.updated_at)
+                comment_data = object_as_dict(i)
+                Avatar(comment_data, user)
+                comment_data['author'] = user.username
+                comment_data['is_good'], comment_data['is_good_bool'] = Count(i.is_good)
+                comment_data['is_bad'], comment_data['is_bad_bool'] = Count(i.is_bad)
+                replies_data = {'reply_data':reply_data, 'comment_data':comment_data}
             replies.append(replies_data)
-        #topic.read_count = 1
         topic_data = object_as_dict(topic)
         topic_user = User.query.filter_by(id=topic_data['author_id']).first()
         topic_data['author'] = topic_user.username
@@ -229,21 +243,40 @@ class TopicView(MethodView):
 class ReplyListView(MethodView):
     def get(self, topicId, page):
         start = (page-1)*5
-        reply = Reply.query.filter_by(topic_id = topicId, is_reply = 1).order_by(('-id')).limit(5).offset(start)
-        replies = []
+        reply = Reply.query.filter_by().order_by(('-id')).limit(5).offset(start)
+        reply_count = FindAndCount(Reply)
+        page_count = int(math.ceil(reply_count/5))
+        data = []
         for i in reply: 
-            user = User.query.filter_by(id = i.author_id).first()
-            diff_time = time_diff(i.updated_at)
-            i.created_at = str(i.created_at)
-            i.updated_at = str(i.updated_at)
-            replies_data = object_as_dict(i)
-            replies_data['author'] = user.username
-            replies_data['diff_time'] = diff_time
-            replies_data['is_good'], replies_data['is_good_bool'] = Count(i.is_good)
-            replies_data['is_bad'], replies_data['is_bad_bool'] = Count(i.is_bad)
-            Avatar(replies_data, user)
-            replies.append(replies_data)
-        return get_json(1, '评论信息', replies)
+            if i.is_reply == 1:
+                user = User.query.filter_by(id = i.author_id).first()
+                diff_time = time_diff(i.updated_at)
+                i.created_at = str(i.created_at)
+                i.updated_at = str(i.updated_at)
+                replies_data = object_as_dict(i)
+                replies_data['author'] = user.username
+                replies_data['diff_time'] = diff_time
+                replies_data['is_good'], replies_data['is_good_bool'] = Count(i.is_good)
+                replies_data['is_bad'], replies_data['is_bad_bool'] = Count(i.is_bad)
+                Avatar(replies_data, user)
+            elif i.is_reply == 0:
+                user = User.query.filter_by(id = i.author_id).first()
+                reply = Reply.query.filter_by(id = i.topic_id).first()
+                reply_data = dict()
+                reply_data['author'] = User.query.filter_by(id = reply.author_id).first().username
+                reply_data['content'] = reply.content
+                diff_time = time_diff(i.updated_at)
+                i.created_at = str(i.created_at)
+                i.updated_at = str(i.updated_at)
+                comment_data = object_as_dict(i)
+                Avatar(comment_data, user)
+                comment_data['author'] = user.username
+                comment_data['is_good'], comment_data['is_good_bool'] = Count(i.is_good)
+                comment_data['is_bad'], comment_data['is_bad_bool'] = Count(i.is_bad)
+                replies_data = {'reply_data':reply_data, 'comment_data':comment_data}
+            data.append(replies_data)
+            data.append({'page_count':page_count, 'reply_count':reply_count}) 
+        return get_json(1, '评论信息', data)
 
     decorators = (reply_list_permission, )
     #@form_validate(ReplyForm, error=error_callback, f='')
@@ -256,6 +289,9 @@ class ReplyListView(MethodView):
         #user = User.query.filter_by(id=1).first()
         reply.author_id = user.id
         reply.save()
+        diff_time = time_diff(reply.updated_at)
+        reply.created_at = str(reply.created_at)
+        reply.updated_at = str(reply.updated_at)
         replies_data = object_as_dict(reply)
         Avatar(replies_data, user)
         replies_data['author'] = user.username
@@ -268,8 +304,33 @@ class ReplyListView(MethodView):
         #reply.author.reply_count = 1
         return get_json(1, '评论成功', replies_data)
         #return redirect(url_for('topic.topic', topicId=topic.id))
+   
+class ReplyView(MethodView):
+    
+    decorators = (reply_permission, )
+    def post(self, replyId):
+        reply = Reply.query.filter_by(id=replyId).first_or_404()
+        reply_data = dict()
+        reply_data['author'] = User.query.filter_by(id = reply.author_id).first().username
+        reply_data['content'] = reply.content
+        post_data = request.data
+        user = request.user
+        content = post_data.pop('content', None)
+        comment = Reply(content=content, topic_id = reply.id, is_reply = 0)
+        comment.author_id = user.id
+        comment.save()
+        diff_time = time_diff(comment.updated_at)
+        comment.created_at = str(comment.created_at)
+        comment.updated_at = str(comment.updated_at)
+        comment_data = object_as_dict(comment)
+        Avatar(comment_data, user)
+        comment_data['author'] = user.username
+        comment_data['is_good'] = 0
+        comment_data['is_bad'] = 0
+        data = {'reply_data':reply_data, 'comment_data':comment_data}
+        return get_json(1, '回复成功', data)
 
-
+'''
 class ReplyView(MethodView):
 
     decorators = (reply_permission, )
@@ -287,7 +348,7 @@ class ReplyView(MethodView):
         reply = Reply.query.filter_by(id=replyId).first_or_404()
         reply.delete()
         return HTTPResponse(HTTPResponse.NORMAL_STATUS).to_response()
-
+'''
 
 class LikeView(MethodView):
 
