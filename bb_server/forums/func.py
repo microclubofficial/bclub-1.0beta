@@ -35,11 +35,11 @@ def FindAndCount(Sql,**kwargs):
     count = Sql.query.filter_by(**kwargs).count()
     return count
 
-def Avatar(avatar,user):
+def Avatar(data, user):
     if user.avatar:
-        avatar['avatar'] = user.avatar
+        data['avatar'] = user.avatar
     else:
-        avatar['avatar'] = '/api/{}/avatar'.format(user.username)
+        data['avatar'] = '/api/{}/avatar'.format(user.username)
     return 
 
 def Count(Sql, data=False):

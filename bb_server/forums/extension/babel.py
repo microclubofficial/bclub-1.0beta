@@ -38,8 +38,7 @@ def timezone():
     user = getattr(g, 'user', None)
     if user is not None:
         if g.user.is_authenticated:
-            return user.setting.timezone or 'UTC'
-    return 'UTC'
+            return user.setting.timezone
 
 
 def init_app(app):

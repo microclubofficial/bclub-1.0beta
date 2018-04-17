@@ -57,21 +57,9 @@ class FollowingTagsView(MethodView):
         return HTTPResponse(HTTPResponse.NORMAL_STATUS).to_response()
 
 
-class FollowingTopicsView(MethodView):
-    def get(self, token):
-        user = request.user
-        if Follower.query.filter_by(author_id = user.id).exists():
-            follwer = Follower.query.filter_by(author_id = user.id).first()
-            topiclist = json.loads(follwer.follower)
-            topiclist.append(token)
-            follwer.follower = json.dumps(topiclist)
-        else:
-            follwer = Follower(author_id=user.id)
-            follwer.follwer = json.dumps([token])
-        follwer.save()
-        return get_json(1, 'success', {})
+class FollowingTokenView(MethodView):
 
-    def post(self):
+    def get(self):
         user = request.user
         if not Follower.query.filter_by(author_id = user.id).exists():
             return get_json(1, '关注列表', {})
@@ -88,6 +76,21 @@ class FollowingTopicsView(MethodView):
             tokenslist.append(data)
         return get_json(1, '关注列表', tokenslist)
 
+    def post(self, token):
+        user = request.user
+        if Follower.query.filter_by(author_id = user.id).exists():
+            follwer = Follower.query.filter_by(author_id = user.id).first()
+            tokenlist = json.loads(follwer.follower)
+            if token in tokenlist:
+                return get_json(0, '您已关注%s,请勿重新关注'%token, {})
+            tokenlist.append(token)
+            follwer.follower = json.dumps(tokenlist)
+        else:
+            follwer = Follower(author_id=user.id)
+            follwer.follwer = json.dumps([token])
+        follwer.save()
+        return get_json(1, 'success', {})
+        
     def delete(self):
         user = request.user
         post_data = request.data

@@ -27,9 +27,9 @@ class Questions(db.Model, ModelMixin):
     content_type = db.Column(
         db.String(10), nullable=False, default=CONTENT_TYPE_MARKDOWN)
     created_at = db.Column(
-        db.DateTime, default=datetime.utcnow(), nullable=False)
+        db.DateTime, default=datetime.now(), nullable=False)
     updated_at = db.Column(
-        db.DateTime, default=datetime.utcnow(), onupdate=datetime.utcnow())
+        db.DateTime, default=datetime.now(), onupdate=datetime.now())
     is_good = db.Column(db.Integer, default=0, nullable=False)
     is_bad = db.Column(db.Integer, default=0, nullable=False)
     bar_id = db.Column(db.Integer, nullable=False, default=0)
@@ -46,9 +46,9 @@ class Answers(db.Model, ModelMixin):
     is_good = db.Column(db.Integer, default=0, nullable=False)
     is_bad = db.Column(db.Integer, default=0, nullable=False)
     created_at = db.Column(
-        db.DateTime, default=datetime.utcnow(), nullable=False)
+        db.DateTime, default=datetime.now(), nullable=False)
     updated_at = db.Column(
-        db.DateTime, default=datetime.utcnow(), onupdate=datetime.utcnow())
+        db.DateTime, default=datetime.now(), onupdate=datetime.now())
     questions_id = db.Column(db.Integer)
     is_reply = db.Column(db.SmallInteger, default=0)
     author_id = db.Column(db.Integer, db.ForeignKey('user.id'))
@@ -63,9 +63,9 @@ class Comments(db.Model, ModelMixin):
     is_good = db.Column(db.Integer, default=0, nullable=False)
     is_bad = db.Column(db.Integer, default=0, nullable=False)
     created_at = db.Column(
-        db.DateTime, default=datetime.utcnow(), nullable=False)
+        db.DateTime, default=datetime.now(), nullable=False)
     updated_at = db.Column(
-        db.DateTime, default=datetime.utcnow(), onupdate=datetime.utcnow())
+        db.DateTime, default=datetime.now(), onupdate=datetime.now())
     answers_id = db.Column(db.Integer)
     author_id = db.Column(db.Integer)
 
@@ -76,9 +76,9 @@ class Replys(db.Model, ModelMixin):
     is_good = db.Column(db.Integer, default=0, nullable=False)
     is_bad = db.Column(db.Integer, default=0, nullable=False)
     created_at = db.Column(
-        db.DateTime, default=datetime.utcnow(), nullable=False)
+        db.DateTime, default=datetime.now(), nullable=False)
     updated_at = db.Column(
-        db.DateTime, default=datetime.utcnow(), onupdate=datetime.utcnow())
+        db.DateTime, default=datetime.now(), onupdate=datetime.now())
     comments_id = db.Column(db.Integer, nullable=False)
     author_id = db.Column(db.Integer, nullable=False)
         

@@ -17,7 +17,7 @@ from forums.api.forms import (ProfileForm, PasswordForm, PrivacyForm,
 from forums.common.views import IsConfirmedMethodView as MethodView
 from flask_auth.form import form_validate
 from flask_auth.auth.views import check_phone
-from forums.func import get_json
+from forums.func import get_json, Avatar
 from forums.api.user.models import User
 
 def error_callback(url):
@@ -85,12 +85,15 @@ class ChangeUsernameView(MethodView):
         user = request.user
         post_data = request.json
         username = post_data['username']
-        if User.query.filter_by(username = username).exists():
+        if User.query.filter_by(username = username).first():
             msg = '用户名已存在'
             return get_json(0, msg, {})
         user.username = username
         user.save()
-        return get_json(1, '用户名已更换', {})        
+        data = {}
+        data['username'] = username
+        Avatar(data, user)
+        return get_json(1, '用户名已更换', data)        
 
 class PrivacyView(MethodView):
     def get(self):
