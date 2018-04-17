@@ -28,14 +28,14 @@
         </div>
         <div class="user_info_dropdown" v-show="showPersonal">
           <ul>
-            <li><a href="#"><img :src="useravatar" alt=""><span class="user-name"><router-link :to="{path:'/memberCenter'}">{{userName}}</router-link></span></a></li>
-            <li><a href="#"><img src="../../assets/img/set.png" alt=""><span>个人设置</span></a></li>
-            <li><a href="#"><img src="../../assets/img/share.png" alt=""><span>股票设置</span></a></li>
+            <li><a href="javascript:void(0)" @click.stop.prevent><img :src="useravatar" alt=""><span class="user-name"><router-link :to="{path:'/memberCenter'}">{{userName}}</router-link></span></a></li>
+            <li><a href="javascript:void(0)" @click.stop.prevent><img src="../../assets/img/set.png" alt=""><span><router-link :to="{path:'/memberCenter'}">个人设置</router-link></span></a></li>
+            <li><a href="javascript:void(0)" @click.stop.prevent><img src="../../assets/img/share.png" alt=""><span>股票设置</span></a></li>
             <li><a href="#" @click="outlogin"><i class="iconfont">&#xe629;</i><span>退出</span></a></li>
           </ul>
         </div>
       </div>
-      <a href="#" v-show="isShowft" class="nav_btn_longtext" @click="postModel">发帖</a>
+      <a href="javascript:void(0)" v-show="isShowft" class="nav_btn_longtext" @click="postModel">发帖</a>
     </div>
     <vdialog v-show="Showdialog" :toDialog='postEditor'></vdialog>
   </div>

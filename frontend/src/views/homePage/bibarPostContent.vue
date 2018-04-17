@@ -39,22 +39,25 @@ export default {
   methods: {
     getContent: function () {
       this.topicData.content = this.editorContent
-      post('/api/topic', this.topicData).then(data => {
-        if (data.message === '未登录') {
-          alert('先去登录')
-          this.$router.push('/login')
-        } else {
-          if (data.data.content !== '') {
-            this.backFt.content = data.data.content
-            this.backFt.author = data.data.author
-            this.backFt.avatar = data.data.avatar
-            this.backFt.id = data.data.id
-            this.$emit('backFtContent', this.backFt)
+      if (this.topicData.content.length > 0) {
+        post('/api/topic', this.topicData).then(data => {
+          this.editorContent = ''
+          if (data.message === '未登录') {
+            alert('先去登录')
+            this.$router.push('/login')
+          } else {
+            if (data.data.content !== '') {
+              this.backFt.content = data.data.content
+              this.backFt.author = data.data.author
+              this.backFt.avatar = data.data.avatar
+              this.backFt.id = data.data.id
+              this.$emit('backFtContent', this.backFt)
             // $('.w-e-text-container').find('p').html('')
             // this.$emit('backBibarContent', data.data.content)
+            }
           }
-        }
-      })
+        })
+      }
     },
     isHideFun () {
       this.isHide = !this.isHide

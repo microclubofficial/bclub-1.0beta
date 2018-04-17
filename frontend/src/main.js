@@ -41,6 +41,8 @@ import './assets/js/bootstrap.min.js'
 import './assets/plus/scrollfix/js/scrollfix.min.js'
 import './assets/js/highcharts.js'
 
+import 'mint-ui/lib/style.css'
+
 import './assets/js/jquery.cookie.js'
 
 // import $ from 'jquery'

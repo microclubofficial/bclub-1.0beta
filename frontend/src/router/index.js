@@ -70,24 +70,24 @@ export const constantRouterMap = [
   },
   // 个人中心
   {
-    path: '/memberCenter',
+    path: '/memberCenter/',
     component: _import('personal/MemberCenter'),
     children: [
-      {path: '', component: _import('personal/MemberCenter/TopicList')},
-      {path: 'topic', component: _import('personal/MemberCenter/TopicList')},
-      {path: 'comment', component: _import('personal/MemberCenter/CommentList')},
-      {path: 'collection', component: _import('personal/MemberCenter/CollectionList')}
+      {path: '', name: 'topic', component: _import('personal/MemberCenter/TopicList')},
+      {path: 'topic', name: 'topic', component: _import('personal/MemberCenter/TopicList')},
+      {path: 'comment', name: 'comment', component: _import('personal/MemberCenter/CommentList')},
+      {path: 'collection', name: 'collection', component: _import('personal/MemberCenter/CollectionList')}
     ]
   },
   {
     path: '/personalInfo',
     component: _import('personal/PersonalInfo'),
     children: [
-      {path: '', component: _import('personal/PersonalInfo/EditInfo')},
-      {path: 'editInfo', component: _import('personal/PersonalInfo/EditInfo')},
-      {path: 'editAvatar', component: _import('personal/PersonalInfo/EditAvatar')},
-      {path: 'editPassword', component: _import('personal/PersonalInfo/EditPassword')},
-      {path: 'bindEmail', component: _import('personal/PersonalInfo/BindEmail')}
+      {path: '', name: 'editInfo', component: _import('personal/PersonalInfo/EditInfo')},
+      {path: 'editInfo', name: 'editInfo', component: _import('personal/PersonalInfo/EditInfo')},
+      {path: 'editAvatar', name: 'editAvatar', component: _import('personal/PersonalInfo/EditAvatar')},
+      {path: 'editPassword', name: 'editPassword', component: _import('personal/PersonalInfo/EditPassword')},
+      {path: 'bindEmail', name: 'bindEmail', component: _import('personal/PersonalInfo/BindEmail')}
     ]
   },
   // 社区

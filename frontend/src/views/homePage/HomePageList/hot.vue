@@ -22,7 +22,7 @@
                   <span>{{tmp.replies_count}}</span>
                 </a>
               </li>
-              <li class="set-choseStar"> <a href="javascript:void(0);"><i class="iconfont icon-star"></i> 收藏</a> </li>
+              <li class="set-choseStar" @click="collectionTopic(index,tmp.id)"> <a :class="{collectionActive:index === collection}" href="javascript:void(0);"><i class="iconfont icon-star"></i>收藏</a> </li>
               <li> <a href="javascript:void(0);"><i class="iconfont icon-fenxiang"></i> 分享</a> </li>
               <li class="set-choseShang"> <a href="javascript:void(0);"><i class="iconfont icon-dashang"></i> 打赏<span>438</span></a> </li>
               <li>
@@ -140,8 +140,9 @@
 </template>
 
 <script>
-import {get} from '../../../utils/http'
+import {get, post} from '../../../utils/http'
 import BibarReport from '../bibarReport.vue'
+import { Toast } from 'mint-ui'
 export default{
   props: ['getNavData'],
   data: function () {
@@ -181,7 +182,8 @@ export default{
       replyContent: [],
       talkReplyTxt: false,
       replayId: 0,
-      showReportReplay: false
+      showReportReplay: false,
+      collection: null
     }
   },
   components: {
@@ -201,7 +203,6 @@ export default{
       if (this.articles.length > 0) {
         this.loadingShow = true
       }
-      console.log()
       var that = this
       document.querySelector('#app').addEventListener('scroll', function () {
         if (this.clientHeight + this.scrollTop === this.scrollHeight) {
@@ -335,12 +336,40 @@ export default{
     // 回复返回数据
     showReplyContent (data) {
       this.replyContent.unshift(data)
+    },
+    // 收藏
+    collectionTopic (index, id) {
+      let instance
+      post(`/api/collect/${id}`).then(data => {
+        if (data.message === 'success') {
+          this.collection = index
+          instance = new Toast({
+            message: '收藏成功',
+            iconClass: 'glyphicon glyphicon-ok',
+            duration: 1000
+          })
+        } else {
+          instance = new Toast({
+            message: '不能重复收藏',
+            duration: 1000
+          })
+        }
+        setTimeout(() => {
+          instance.close()
+        }, 1000)
+      })
     }
   }
 }
 </script>
 
 <style>
+.glyphicon{
+  font-size: 20px;
+}
+.collectionActive{
+  color: #ffa727 !important;
+}
 .indexNewslimitHeight{
   cursor: pointer;
 }

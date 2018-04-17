@@ -44,23 +44,29 @@ export default {
     },
     getContent: function () {
       this.topicData.content = this.editorContent
-      post(`/api/${this.nowShowApi[this.toApi]}${this.toApi === 1 ? '/question' : this.toApi === 2 ? '/answer' : this.toApi === 3 ? '/comment' : ''}/replies/${this.toApi === 0 ? this.mainCommnet : this.toApi === 2 ? this.talkId : this.toApi === 3 ? this.contentId : this.mainReplay}`, this.topicData).then(data => {
+      if (this.topicData.content.length > 0) {
+        console.log(this.topicData)
+        post(`/api/${this.nowShowApi[this.toApi]}${this.toApi === 1 ? '/question' : this.toApi === 2 ? '/answer' : this.toApi === 3 ? '/comment' : ''}/replies/${this.toApi === 0 ? this.mainCommnet : this.toApi === 2 ? this.talkId : this.toApi === 3 ? this.contentId : this.mainReplay}`, this.topicData).then(data => {
+          console.log(data)
         //   评论发送完毕
-        if (data.message === '未登录') {
-          alert('先去登录')
-          this.$router.push('/login')
-        } else {
-          if (data.data.content !== '') {
-            this.backData.content = data.data.content
-            this.backData.avatar = data.data.avatar
-            this.backData.author = data.data.author
-            this.replies = data.data.replies
-            this.$emit('backReplies', this.replies)
-            this.$emit('backList', this.backData)
-            $('.w-e-text-container').find('.w-e-text').html('')
+          this.editorContent = ''
+          if (data.message === '未登录') {
+            alert('先去登录')
+            this.$router.push('/login')
+          } else {
+            if (data.data.content !== '') {
+              this.backData.content = data.data.content
+              this.backData.avatar = data.data.avatar
+              this.backData.author = data.data.author
+              this.replies = data.data.replies
+              // console.log(this.replies)
+              this.$emit('backReplies', this.replies)
+              this.$emit('backList', this.backData)
+              $('.w-e-text-container').find('.w-e-text').html('')
+            }
           }
-        }
-      })
+        })
+      }
     //   get('api/topic').then(data => {
     //     console.log('这是传回来' + data)
     //   })

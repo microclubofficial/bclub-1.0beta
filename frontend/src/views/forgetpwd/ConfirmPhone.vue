@@ -53,8 +53,8 @@
             </form>
                         </div>
                     <div class="modal-footer">
-                        <button type="button" class="btnm btnm-default" data-dismiss="modal">关闭</button>
-                        <button type="button" class="btnm btnm-primary" @click="setnewpwd">确定</button>
+                        <button type="button" class="btnm btn-default" data-dismiss="modal">关闭</button>
+                        <button type="button" class="btnm btn-primary" @click="setnewpwd">确定</button>
                     </div>
                 </div>
             </div>
