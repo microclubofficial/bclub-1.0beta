@@ -16,6 +16,7 @@ from flask.views import MethodView
 from flask_login import login_required, current_user
 from forums.permission import confirm_permission
 from forums.extension import cache
+from forums.func import get_json
 
 
 def cache_key():
@@ -29,8 +30,7 @@ def is_confirmed(func):
         if confirm_permission.can():
             ret = func(*args, **kwargs)
             return ret
-        flash('请验证你的帐号', 'warning')
-        return redirect(url_for('user.user', username=current_user.username))
+        return get_json(1, '', {})
 
     return _is_confirmed
 
@@ -49,7 +49,7 @@ class BaseMethodView(MethodView):
             number = per_page
         return page, number
 
-    #@cache.cached(timeout=180, key_prefix=cache_key)
+    @cache.cached(timeout=180, key_prefix=cache_key)
     def dispatch_request(self, *args, **kwargs):
         return super(BaseMethodView, self).dispatch_request(*args, **kwargs)
 

@@ -68,7 +68,7 @@ def load_online_users(mode):
         return counts
     if mode == 5:
         high_time = redis_data.hget('online_users', 'high:time')
-        return datetime.utcfromtimestamp(int(high_time))
+        return datetime.fromtimestamp(int(high_time))
 
 
 def load_online_all_users():

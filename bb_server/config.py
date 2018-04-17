@@ -37,7 +37,7 @@ REMEMBER_COOKIE_DURATION = timedelta(days=3)
 ONLINE_LAST_MINUTES = 5
 
 # You want show how many topics per page
-PER_PAGE = 12
+PER_PAGE = 5
 
 # Use cache
 CACHE_TYPE = 'redis'

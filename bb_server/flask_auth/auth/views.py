@@ -66,10 +66,10 @@ def check_phone(phone, captcha):
 class LoginView(MethodView):
     decorators = [guest_required]
 
-    def get(self):
-        domain.as_default()
+    #def get(self):
+    #    domain.as_default()
         #return render_template('auth/login.html')
-        return get_json(1, '登录', {})
+    #    return get_json(1, '登录', {})
 
     @check_params(['username', 'password'])
     def post(self):
@@ -98,9 +98,9 @@ class LoginView(MethodView):
 class PhoneLoginView(MethodView):
     decorators = [guest_required]
 
-    def get(self):
-        domain.as_default()
-        return get_json(1, '登录', {})
+    #def get(self):
+    #    domain.as_default()
+    #    return get_json(1, '登录', {})
 
     @check_params(['phone', 'phonecaptcha'])
     def post(self):

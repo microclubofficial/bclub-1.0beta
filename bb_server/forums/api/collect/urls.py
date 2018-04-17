@@ -11,11 +11,11 @@
 # Description:
 # **************************************************************************
 from flask import Blueprint
-from .views import CollectListView, CollectView, AddToCollectView
+from .views import CollectView, AddToCollectView
 
 site = Blueprint('collect', __name__, url_prefix='/api')
 
-site.add_url_rule('/collect', view_func=CollectListView.as_view('list'))
+site.add_url_rule('/collectlist/<int:page>', view_func=CollectView.as_view('list'))
 site.add_url_rule(
     '/collect/<int:topicId>', view_func=CollectView.as_view('collect'))
 site.add_url_rule(

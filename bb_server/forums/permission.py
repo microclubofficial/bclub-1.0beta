@@ -58,9 +58,9 @@ def is_confirmed(func):
         if not current_user.is_authenticated:
             #return redirect(url_for('auth.login', next=request.path))
             return get_json(0, '未登录', {})
-        if confirm_permission.can():
-            return func(*args, **kwargs)
-        flash('请验证你的帐号', 'warning')
+        #if confirm_permission.can():
+        #    return func(*args, **kwargs)
+        #flash('请验证你的帐号', 'warning')
         return 
     return _is_confirmed
 

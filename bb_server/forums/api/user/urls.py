@@ -23,9 +23,9 @@ replies = UserReplyListView.as_view('reply')
 followers = UserFollowerListView.as_view('follower')
 
 site.add_url_rule('', view_func=user_list)
-site.add_url_rule('/topics/<username>', view_func=topics)
+site.add_url_rule('/topic/<username>/<int:page>', view_func=topics)
 site.add_url_rule('/<username>', view_func=user)
-site.add_url_rule('/replies/<username>', view_func=replies)
+site.add_url_rule('/replies/<username>/<int:page>', view_func=replies)
 site.add_url_rule('/followers/<username>', view_func=followers)
 
 

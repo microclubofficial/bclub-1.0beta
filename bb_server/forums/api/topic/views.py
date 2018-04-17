@@ -39,6 +39,8 @@ from sqlalchemy import func
 import math
 import json
 
+per_page = 5
+
 class TopicAskView(IsConfirmedMethodView):
     def get(self):
         boardId = request.args.get('boardId', type=int)
@@ -78,7 +80,7 @@ class TopicListView(MethodView):
     decorators = (topic_list_permission, )
 
     def get(self, page, token=None):
-        start = (page-1)*5
+        start = (page-1)*per_page
         query_dict = request.data
         keys = ['title']
         order_by = gen_topic_orderby(query_dict, keys)
@@ -91,9 +93,9 @@ class TopicListView(MethodView):
         #    filter_dict.update(is_bad=True)
         #    title = _('bad Topics')
         topics = Topic.query.filter_by(
-            **filter_dict).order_by(*order_by).limit(5).offset(start)
+            **filter_dict).order_by(*order_by).limit(per_page).offset(start)
         topic_count = FindAndCount(Topic)
-        page_count = int(math.ceil(topic_count/5))
+        page_count = int(math.ceil(topic_count/per_page))
         topic = []
         for i in topics:
             user = User.query.filter_by(id = i.author_id).first()
@@ -159,7 +161,7 @@ class TopicView(MethodView):
     
     def get(self, topicId, page):
         #form = ReplyForm()
-        start = (page-1)*5
+        start = (page-1)*per_page
         query_dict = request.data
         topic = Topic.query.filter_by(id=topicId).first_or_404()
         diff_time = time_diff(topic.updated_at)
@@ -168,9 +170,9 @@ class TopicView(MethodView):
         #page, number = self.page_info
         #order_by = gen_order_by(query_dict, keys)
         #filter_dict = gen_filter_dict(query_dict, keys)
-        reply = Reply.query.filter_by().order_by(('-id')).limit(5).offset(start)
+        reply = Reply.query.filter_by().order_by(('-id')).limit(per_page).offset(start)
         reply_count = FindAndCount(Reply)
-        page_count = int(math.ceil(reply_count/5))
+        page_count = int(math.ceil(reply_count/per_page))
         replies = []
         for i in reply: 
             if i.is_reply == 1:
@@ -242,10 +244,10 @@ class TopicView(MethodView):
 
 class ReplyListView(MethodView):
     def get(self, topicId, page):
-        start = (page-1)*5
-        reply = Reply.query.filter_by().order_by(('-id')).limit(5).offset(start)
+        start = (page-1)*per_page
+        reply = Reply.query.filter_by().order_by(('-id')).limit(per_page).offset(start)
         reply_count = FindAndCount(Reply)
-        page_count = int(math.ceil(reply_count/5))
+        page_count = int(math.ceil(reply_count/per_page))
         data = []
         for i in reply: 
             if i.is_reply == 1:

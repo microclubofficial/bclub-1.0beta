@@ -29,9 +29,11 @@ from forums.common.views import IsAuthMethodView as MethodView
 from forums.api.message.models import MessageClient
 from forums.func import get_json, FindAndCount, Count, object_as_dict, Avatar, time_diff
 import json
+import math
 
 from .models import Collect
 
+per_page = 5
 '''
 class CollectListView(MethodView):
     def get(self):
@@ -127,39 +129,45 @@ class AddToCollectView(MethodView):
     #     return redirect(url_for('topic.topic', topicId=topic.id))
 
 class CollectView(MethodView):
-    def get(self, topicId):
+
+    def get(self, page):
+        start = (page-1)*per_page
+        user = request.user
+        collect = Collect.query.filter_by(author_id = user.id).first_or_404()
+        topiclist = json.loads(collect.topic_id)
+        sum_count = len(topiclist)
+        page_count = int(math.ceil(sum_count/per_page))
+        topicslist = []
+        for i in topiclist[-start-1:-start-per_page-1:-1]:
+            topic = Topic.query.filter_by(id=i).first()
+            user = User.query.filter_by(id = topic.author_id).first()
+            reply_count = FindAndCount(Reply, topic_id = topic.id)
+            diff_time = time_diff(topic.updated_at)
+            topics_data = object_as_dict(topic)
+            topics_data['created_at'] = str(topics_data['created_at'])
+            topics_data['updated_at'] = str(topics_data['created_at'])
+            topics_data['author'] = user.username
+            topics_data['diff_time'] = diff_time
+            topics_data['replies_count'] = reply_count
+            topics_data['is_good'], topics_data['is_good_bool'] = Count(topic.is_good)
+            topics_data['is_bad'], topics_data['is_bad_bool'] = Count(topic.is_bad)
+            Avatar(topics_data, user)
+            topicslist.append(topics_data)
+        data = {'topics': topicslist, 'sum_count':sum_count, 'page_count':page_count}
+        return get_json(1, '收藏列表', data)
+
+    def post(self, topicId):
         user = request.user
         if Collect.query.filter_by(author_id = user.id).exists():
             collect = Collect.query.filter_by(author_id = user.id).first()
             topiclist = json.loads(collect.topic_id)
-            topiclist.append(topicId)
-            collect.topic_id = json.dumps(topiclist)
+            if topicId in topiclist:
+                return get_json(0, '您已收藏，请勿重复收藏',{})
+            else:
+                topiclist.append(topicId)
+                collect.topic_id = json.dumps(topiclist)
         else:
             collect = Collect(author_id=user.id)
             collect.topic_id = json.dumps([topicId])
         collect.save()
         return get_json(1, 'success', {})
-
-class CollectListView(MethodView):
-    def get(self):
-        user = request.user
-        collect = Collect.query.filter_by(author_id = user.id).first_or_404()
-        topiclist = json.loads(collect.topic_id)
-        topicslist = []
-        for i in topiclist:
-            topic = Topic.query.filter_by(id=i).order_by('-id').first()
-            user = User.query.filter_by(id = topic.author_id).first()
-            reply_count = FindAndCount(Reply, topic_id = i.id, is_reply = 1)
-            diff_time = time_diff(i.updated_at)
-            i.created_at = str(i.created_at)
-            i.updated_at = str(i.updated_at)
-            topics_data = object_as_dict(i)
-            topics_data['author'] = user.username
-            topics_data['diff_time'] = diff_time
-            topics_data['replies_count'] = reply_count
-            topics_data['is_good'], topics_data['is_good_bool'] = Count(i.is_good)
-            topics_data['is_bad'], topics_data['is_bad_bool'] = Count(i.is_bad)
-            Avatar(topics_data, user)
-            topicslist.append(topics_data)
-        data = {'topics': topicslist}
-        return get_json(1, '收藏列表', data)

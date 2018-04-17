@@ -45,10 +45,10 @@ class Topic(db.Model, ModelMixin):
     content_type = db.Column(
         db.String(10), nullable=False, default=CONTENT_TYPE_MARKDOWN)
     created_at = db.Column(
-        db.DateTime, default=datetime.utcnow(), nullable=False)
+        db.DateTime, default=datetime.now(), nullable=False)
     token = db.Column(db.String(32), nullable=False)
     updated_at = db.Column(
-        db.DateTime, default=datetime.utcnow(), onupdate=datetime.utcnow())
+        db.DateTime, default=datetime.now(), onupdate=datetime.now())
     is_good = db.Column(db.String(512), default='[]')
     is_bad = db.Column(db.String(512), default='[]')
     author_id = db.Column(
@@ -134,9 +134,9 @@ class Reply(db.Model, ModelMixin):
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.Text, nullable=False)
     created_at = db.Column(
-        db.DateTime, default=datetime.utcnow(), nullable=False)
+        db.DateTime, default=datetime.now(), nullable=False)
     updated_at = db.Column(
-        db.DateTime, default=datetime.utcnow(), onupdate=datetime.utcnow())
+        db.DateTime, default=datetime.now(), onupdate=datetime.now())
     is_good = db.Column(db.String(512), default='[]')
     is_bad = db.Column(db.String(512), default='[]')
     is_reply = db.Column(db.SmallInteger , default=0, nullable=False)

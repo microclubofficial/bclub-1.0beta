@@ -39,7 +39,7 @@ def safe_markdown(text):
 
 
 def timesince(dt, default="just now"):
-    now = datetime.utcnow()
+    now = datetime.now()
     diff = now - dt
     if diff.days > 10:
         return format_datetime(dt, 'Y-M-d H:m')
@@ -63,9 +63,9 @@ def timesince(dt, default="just now"):
 def show_time():
     from flask_babelex import format_datetime
     if g.user.is_authenticated:
-        return 'LOCALE:' + format_datetime(datetime.utcnow())
+        return 'LOCALE:' + format_datetime(datetime.now())
     else:
-        return 'UTC:' + format_datetime(datetime.utcnow())
+        return 'locol:' + format_datetime(datetime.now())
 
 
 def hot_tags():

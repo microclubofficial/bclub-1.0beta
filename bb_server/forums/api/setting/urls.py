@@ -11,17 +11,21 @@
 # Description:
 # **************************************************************************
 from flask import Blueprint
-from .views import ProfileView, ChangePasswordView, PrivacyView, BabelView
+from .views import ProfileView, ChangePasswordView, PrivacyView, BabelView, ChangePhoneView, ChangeUsernameView
 
-site = Blueprint('setting', __name__, url_prefix='/setting')
+site = Blueprint('setting', __name__, url_prefix='/api/setting')
 setting_view = ProfileView.as_view('setting')
 password_view = ChangePasswordView.as_view('password')
+phone_view = ChangePhoneView.as_view('phone')
+username_view = ChangeUsernameView.as_view('username')
 privacy_view = PrivacyView.as_view('privacy')
 babel_view = BabelView.as_view('babel')
 
 site.add_url_rule('', view_func=setting_view)
 site.add_url_rule('/profile', view_func=setting_view)
 site.add_url_rule('/password', view_func=password_view)
+site.add_url_rule('/phone', view_func=phone_view)
+site.add_url_rule('/username', view_func=username_view)
 site.add_url_rule('/privacy', view_func=privacy_view)
 site.add_url_rule('/babel', view_func=babel_view)
 

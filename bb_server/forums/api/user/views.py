@@ -10,7 +10,7 @@
 #          By:
 # Description:
 # **************************************************************************
-from flask import redirect, render_template, request, url_for
+from flask import redirect, render_template, request, url_for, current_app
 from flask_login import current_user, login_required
 from forums.api.forums.models import Board
 from forums.api.tag.models import Tags
@@ -18,10 +18,13 @@ from forums.api.topic.models import Topic, Reply
 from forums.api.collect.models import Collect
 from forums.common.utils import gen_filter_dict, gen_order_by
 from forums.common.views import BaseMethodView as MethodView
-from forums.func import get_json, object_as_dict 
+from forums.func import get_json, object_as_dict, Avatar, Count, FindAndCount, time_diff
+from datetime import datetime
+import math
 
 from .models import User
 
+per_page = 5
 
 class UserListView(MethodView):
     @login_required
@@ -40,68 +43,80 @@ class UserListView(MethodView):
 
 
 class UserTopicView(MethodView):
-    def get(self, username):
+    def get(self, username, page):
+        start = (page-1)*per_page
         query_dict = request.data
         user = User.query.filter_by(username=username).first_or_404()
-        #page, number = self.page_info
         keys = ['title']
         order_by = gen_order_by(query_dict, keys)
         filter_dict = gen_filter_dict(query_dict, keys)
         filter_dict.update(author_id=user.id)
+        #elif request.path.endswith('top'):
+        #    filter_dict.update(is_bad=True)
+        #    title = _('bad Topics')
         topics = Topic.query.filter_by(
-            **filter_dict).order_by(*order_by).all()#.paginate(page, number, True)
-        setting = user.setting
+            **filter_dict).order_by(*order_by).limit(per_page).offset(start)
+        topic_count = FindAndCount(Topic, **filter_dict)
+        page_count = int(math.ceil(topic_count/per_page))
+        topic = []
+        for i in topics:
+            reply_count = FindAndCount(Reply, topic_id = i.id)
+            diff_time = time_diff(i.updated_at)
+            i.created_at = str(i.created_at)
+            i.updated_at = str(i.updated_at)
+            topics_data = object_as_dict(i)
+            topics_data['author'] = user.username
+            topics_data['diff_time'] = diff_time
+            topics_data['replies_count'] = reply_count
+            topics_data['is_good'], topics_data['is_good_bool'] = Count(i.is_good)
+            topics_data['is_bad'], topics_data['is_bad_bool'] = Count(i.is_bad)
+            Avatar(topics_data, user)
+            topic.append(topics_data)
+        user_data = {}
+        Avatar(user_data, user)
+        user_data['username'] = user.username
         user = object_as_dict(user)
-        keys = ['password', 'last_login', 'register_time', 'phone', 'id', 'email', 'integral', 'user_code', 'recommender_code']
-        for i in keys:
-            user.pop(i)
         if user.pop('is_confirmed'):
-            user['is_confirm'] = '邮箱未认证'
+            user_data['is_confirm'] = '邮箱未认证'
         if user.pop('is_superuser'):
-            user['Authority'] = '管理员'
+            user_data['Authority'] = '管理员'
         else:
-            user['Authority'] = '普通用户'
-        #topic_is_allowed = False
-        #if setting.topic_list == 1 or (setting.topic_list == 2 and
-        #                               current_user.is_authenticated):
-        #    topic_is_allowed = True
-        #if current_user.is_authenticated and current_user.id == user.id:
-        #    topic_is_allowed = True
-        data = {
-            'topics': [object_as_dict(i) for i in topics],
-            'user': user
-        #    'topic_is_allowed': topic_is_allowed
-        }
-        return get_json(1, '文章信息', data)
+            user_data['Authority'] = '普通用户'
+        data = {'topics': topic, 'topic_count':topic_count, 'page_count':page_count, 'user_data': user_data}
+        return get_json(1, '文章列表', data)
 
 
 class UserReplyListView(MethodView):
-    def get(self, username):
+    def get(self, username, page):
+        start = (page-1)*per_page
         query_dict = request.data
         user = User.query.filter_by(username=username).first_or_404()
-        #page, number = self.page_info
         keys = ['title']
         order_by = gen_order_by(query_dict, keys)
         filter_dict = gen_filter_dict(query_dict, keys)
-        filter_dict.update(author_id=user.id)
+        filter_dict.update(author_id=user.id, is_reply=1)
         replies = Reply.query.filter_by(
-            **filter_dict).order_by(*order_by).all()#.paginate(page, number, True)
-        #setting = user.setting
-        #replies_is_allowed = False
-        #if setting.rep_list == 1 or (current_user.is_authenticated and
-        #                             setting.rep_list == 2):
-        #    replies_is_allowed = True
-        #if current_user.is_authenticated and current_user.id == user.id:
-        #    replies_is_allowed = True
-        reply = []
+            **filter_dict).order_by(*order_by).limit(per_page).offset(start)
+        sum_count = FindAndCount(Reply, **filter_dict)
+        page_count = int(math.ceil(sum_count/per_page))
+        topics = []
         for i in replies:
-            reply.append(object_as_dict(i))
-        data = {
-            'replies': reply,
-            'user': object_as_dict(user)
-            #'replies_is_allowed': replies_is_allowed
-        }
-        return get_json(1, '回复信息', data)
+            topic = Topic.query.filter_by(id=i.topic_id).first()
+            if topic.id not in [i['id'] for i in topics]:
+                reply_count = FindAndCount(Reply, topic_id = topic.id)
+                diff_time = time_diff(topic.updated_at)
+                topics_data = object_as_dict(topic)
+                topics_data['created_at'] = str(topics_data['created_at'])
+                topics_data['updated_at'] = str(topics_data['created_at'])
+                topics_data['author'] = user.username
+                topics_data['diff_time'] = diff_time
+                topics_data['replies_count'] = reply_count
+                topics_data['is_good'], topics_data['is_good_bool'] = Count(i.is_good)
+                topics_data['is_bad'], topics_data['is_bad_bool'] = Count(i.is_bad)
+                Avatar(topics_data, user)
+                topics.append(topics_data)
+        data = {'topics': topics, 'sum_count':sum_count, 'page_count':page_count}
+        return get_json(1, '评论的文章列表', data)
 
 
 class UserFollowerListView(MethodView):
@@ -119,21 +134,22 @@ class UserView(MethodView):
         id = user.id
         user.last_login = str(user.last_login)
         user.register_time = str(user.register_time)
-        user = object_as_dict(user)
+        user_data = object_as_dict(user)
+        Avatar(user_data, user)
         keys = ['password']
         for i in keys:
-            user.pop(i)
-        if user.pop('is_confirmed'):
-            user['is_confirm'] = '邮箱未认证'
-        if user.pop('is_superuser'):
-            user['Authority'] = '管理员'
+            user_data.pop(i)
+        if user_data.pop('is_confirmed'):
+            user_data['is_confirm'] = '邮箱未认证'
+        if user_data.pop('is_superuser'):
+            user_data['Authority'] = '管理员'
         else:
-            user['Authority'] = '普通用户'
+            user_data['Authority'] = '普通用户'
         if not current_user.is_active:
-            user['_user'] = '游客浏览'
+            user_data['_user'] = '游客浏览'
         elif request.user.id == id:
-            user['_user'] = '本人'
+            user_data['_user'] = '本人'
         else:
-            user['_user'] = '非本人'
-        return get_json(1, '个人资料', user)
+            user_data['_user'] = '非本人'
+        return get_json(1, '个人资料', user_data)
         
