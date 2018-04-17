@@ -8,7 +8,7 @@
             <h4 class="modal-title" id="myModalLabel">{{toDialog.title}}</h4>
           </div>
           <div class="modal-body">
-            <BibarPostContent @backFtContent = 'FtContentFun'></BibarPostContent>
+            <BibarPostContent ref="dilogChild" @backFtContent = 'FtContentFun'></BibarPostContent>
           </div>
           <!-- <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
@@ -38,6 +38,9 @@ export default{
   methods: {
     FtContentFun (data) {
       this.$store.dispatch('set_backForNav', data)
+    },
+    ftDilog () {
+      this.$refs.dilogChild.ftEditor()
     }
   }
 }

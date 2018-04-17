@@ -90,7 +90,6 @@ export default {
     }
   },
   mounted () {
-      console.log(this.userInfo)
     get(`/api/u/${this.userInfo.username}`).then(data => {
       this.personalUser = data.data
     })

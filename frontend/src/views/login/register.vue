@@ -59,7 +59,7 @@
                     <div class="col-md-6">
                         <input type="text" class="form-control" v-model="userForm.captcha" @blur='showRegisterMsg(userForm.phone, 5)' id="inputCaptcha3" placeholder="请输入验证码">
                     </div>
-                    <div class="col-md-3 btn getcontrol" style=" padding: 6px 12px !important;height: 100%;width: 22%;" @click="getPhoneControl" v-bind:disabled="hasphone" :class="{disable:hasphone}"><span v-show="hasControl">{{countdown}}</span>{{getcontroltxt}}</div>
+                    <button class="col-md-3 btn getcontrol" type="button" style="padding: 0 !important;height: 34px;line-height: 34px;" @click="getPhoneControl" v-bind:disabled="hasphone" :class="{disable:hasphone}"><span v-show="hasControl">{{countdown}}</span>{{getcontroltxt}}</button>
                 </div>
 
           <div class="form-group">
@@ -73,6 +73,7 @@
             <div class="col-sm-offset-2 col-sm-9 btn submitForm" id="register" @click="submitForm">注册
             </div>
           </div>
+           <h5 style='text-align:center;cursor: pointer'>已注册？<router-link :to="{path:'/login'}">登录</router-link></h5>
         </form>
       </div>
     </div>
@@ -99,7 +100,8 @@ export default {
       countdown: 30,
       hasControl: false,
       getcontroltxt: '获取验证码',
-      timer: null
+      timer: null,
+      kaiguan: true
     }
   },
   methods: {
@@ -111,7 +113,7 @@ export default {
       if (id === 0) {
         var unamereg = /^[a-zA-Z0-9_\u4e00-\u9fa5]{3,16}$/
         if (!unamereg.test(input) && input !== undefined && input.length > 0) {
-          this.unamePrompt = '用户名长度在3-16位之间'
+          this.unamePrompt = '用户名在3-16位之间(数字、大小写字母、下划线、中文)'
           console.log(input.length)
           return false
         } else if (input === undefined || input.length === 0) {
@@ -142,7 +144,7 @@ export default {
           this.confirm_upwdPrompt = ''
         }
       } else if (id === 3) {
-        var ponereg = /^((1[3|4|5|8][0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0,5-9]))\d{8}$/
+        var ponereg = /^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$/
         if (!ponereg.test(input) && input !== undefined && input.length > 0) {
           this.phonePrompt = '手机号码格式不正确'
           this.hasphone = true
@@ -166,15 +168,21 @@ export default {
     },
     submitForm () {
       post(this.formUrl, this.userForm).then(data => {
+        alert(data)
         if (data.message === '验证码错误') {
           this.controlPrompt = data.message
           return
         }
         if (data.resultcode === 1) {
+          this.$store.commit('USER_INFO', {
+            'username': data.data.username,
+            'avatar': data.data.avatar,
+            'isLogin': true
+          })
           this.$router.push('/')
         }
       }).catch(error => {
-        alert(error)
+        console.log(error)
       })
     },
     // 验证码切换
@@ -183,41 +191,29 @@ export default {
     },
     // 获取手机验证码
     getPhoneControl () {
-      let phone = parseFloat(this.userForm.phone)
+      let phone = parseFloat(this.userForm.phone)     
       post('/api/phoneCaptcha', {'phone': phone}).then((data) => {
-        console.log(data)
-        if (data.message === '短信发送成功') {
+        if (data.resultcode === 1) {
+          this.hasphone = true
           let that = this
-          if (that.countdown === 0) {
-            this.timer = setInterval(function () {
-              that.countdown--
-              that.hasControl = true
-              if (that.countdown <= 1) {
-                that.getcontroltxt = '获取验证码'
-                that.hasphone = false
-                that.countdown = 30
-                that.hasControl = false
-                clearInterval(that.timer)
-              }
-            }, 1000)
-          } else {
-            this.timer = setInterval(function () {
-              that.countdown--
-              that.hasControl = true
-              that.getcontroltxt = '重新获取'
-              that.hasphone = true
-              if (that.countdown < 1) {
-                that.getcontroltxt = '获取验证码'
-                that.countdown = 30
-                that.hasphone = false
-                that.hasControl = false
-                clearInterval(that.timer)
-              }
-            }, 1000)
-          }
+          this.timer = setInterval(function () {
+            that.countdown--
+            that.hasControl = true
+            that.getcontroltxt = '重新获取'
+            this.kaiguan = false
+            if (that.countdown < 1) {
+              that.getcontroltxt = '获取验证码'
+              that.hasphone = false
+              that.countdown = 30
+              that.hasControl = false
+              clearInterval(that.timer)
+            }
+          }, 1000)
+        } else if (data.resultcode === 0) {
+          this.phonePrompt = '手机号已注册'
         }
       }).catch(error => {
-        alert(error)
+        console.log(error)
       })
     }
   }

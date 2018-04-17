@@ -25,10 +25,6 @@
   background: #fff;
   margin-bottom: 1%;
 }
-h1{
-  font-size: 18px;
-  font-weight: bold;
-}
 .bibarData-box>li>a{
   display: block;
   padding-left: 28px;
@@ -90,7 +86,7 @@ h1{
                 {{tmp.class}}
                 <span><img src="../../assets/img/logo-coin-BTC.png" alt=""></span>
               </p>
-              <h1>{{tmp.num}}</h1>
+              <h3>{{tmp.num}}</h3>
               <p style="color:#17B769"><span>+</span>{{tmp.change}}</p>
             </a>
           </li>
@@ -104,7 +100,7 @@ h1{
                 {{tmp.class}}
                 <span><img src="../../assets/img/logo-coin-BTC.png" alt=""></span>
               </p>
-              <h1>{{tmp.num}}</h1>
+              <h3>{{tmp.num}}</h3>
               <p><span>+</span>{{tmp.change}}</p>
             </a>
           </li>
@@ -118,7 +114,7 @@ h1{
                 {{tmp.class}}
                 <span><img src="../../assets/img/logo-coin-BTC.png" alt=""></span>
               </p>
-              <h1>{{tmp.num}}</h1>
+              <h3>{{tmp.num}}</h3>
               <p><span>+</span>{{tmp.change}}</p>
             </a>
           </li>

@@ -24,8 +24,6 @@
 }
 </style>
 
-<script src='../../../'></script>
-
 <template>
     <div>
         <div class="container">
