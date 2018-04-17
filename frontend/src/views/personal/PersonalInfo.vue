@@ -19,8 +19,8 @@
                 <li class="active">个人中心</li>
             </ol>
             <ul class="nav nav-tabs">
-                <li v-for="(item,index) in infoList" :class="{active:item.name==$route.name}" @click="routerGo(item)" :key="index">
-                    <a href="#">{{item.name}}</a>
+                <li v-for="(item,index) in infoList" :class="{active:item.name === $route.name}" @click="routerGo(index)" :key="index">
+                    <a href="javascript:void(0)">{{item.cnName}}</a>
                 </li>
             </ul>
             <div class="personal-info">
@@ -32,7 +32,6 @@
                 </div>
             </section>
         </div>
-
     </div>
 </template>
 <script>
@@ -41,16 +40,18 @@ export default {
   data () {
     return {
       infoList: [
-        { 'name': '个人资料', 'path': '/personalInfo/editInfo' },
-        { 'name': '修改头像', 'path': '/personalInfo/editAvatar' },
-        { 'name': '修改密码', 'path': '/personalInfo/editPassword' },
-        { 'name': '绑定邮箱', 'path': '/personalInfo/bindEmail' }
-      ]
+        { 'name': 'editInfo', 'cnName': '个人资料', 'path': 'editInfo' },
+        { 'name': 'editAvatar', 'cnName': '修改头像', 'path': 'editAvatar' },
+        { 'name': 'editPassword', 'cnName': '修改密码', 'path': 'editPassword' },
+        { 'name': 'bindEmail', 'cnName': '绑定邮箱', 'path': 'bindEmail' }
+      ],
+      nowIndex: 0,
+      personalUser: []
     }
   },
   methods: {
-    routerGo (item) {
-      this.$router.push({ path: item.path });
+    routerGo (index) {
+      this.$router.push(`/personalInfo/${this.infoList[index].path}`)
     }
   }
 }

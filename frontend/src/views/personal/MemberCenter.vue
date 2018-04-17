@@ -42,18 +42,18 @@
             <h3 class="page-header">个人中心</h3>
             <div class="personal-info">
                 <div class="avatar">
-                    <img :src="userInfo.avatar" alt="">
+                    <img :src="personalUser.avatar" alt="">
                 </div>
                 <div class="right-main">
-                    <h3>楚人长铗</h3>
+                    <h3>{{personalUser.username}}</h3>
                     <p>
                         关注：<a href="">1652</a>&nbsp;&nbsp;&nbsp;&nbsp;
                         主题：<a href="">152</a>&nbsp;&nbsp;&nbsp;&nbsp;
                         热度：<a href="">16515642</a>
                     </p>
                     <ul class="nav nav-pills">
-                        <li v-for="(item,index) in navList" :class="{active:item.name==$route.name}" @click="routerGo(index)" :key="index">
-                            <a href="#">{{item.name}}</a>
+                        <li v-for="(item,index) in navList" :class="{active:item.name === $route.name}" @click="routerGo(index)" :key="index">
+                            <a href="javascript:void(0)">{{item.cnName}}</a>
                         </li>
                     </ul>
                 </div>
@@ -71,21 +71,30 @@
     </div>
 </template>
 <script>
-// import {post} from '../utils/http'
+import {get} from '../../utils/http'
 export default {
   data () {
     return {
       navList: [
-        { 'name': '主题', 'path': 'topic' },
-        { 'name': '评论', 'path': 'comment' },
-        { 'name': '收藏', 'path': 'collection' }
-      ]
+        { 'name': 'topic', 'cnName': '主题', 'path': 'topic' },
+        { 'name': 'comment', 'cnName': '评论', 'path': 'comment' },
+        { 'name': 'collection', 'cnName': '收藏', 'path': 'collection' }
+      ],
+      nowIndex: 0,
+      personalUser: []
     }
   },
   computed: {
     userInfo () {
       return this.$store.state.userInfo.userInfo
     }
+  },
+  mounted () {
+      console.log(this.userInfo)
+    get(`/api/u/${this.userInfo.username}`).then(data => {
+      this.personalUser = data.data
+    })
+    // this.routerId = this.$route.path.split('/')
   },
   methods: {
     routerGo (index) {

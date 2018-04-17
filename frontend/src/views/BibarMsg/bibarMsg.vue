@@ -1,7 +1,7 @@
 
 <template>
   <div class="main">
-    <MainHeader></MainHeader>
+    <MainHeader @backLoadMain='toMainLoadFun'></MainHeader>
     <!--主体-->
     <section class="bibar-Main">
     <div class="pt40"></div>
@@ -54,7 +54,7 @@
           </div>
             <!-- 富文本区 -->
             <div class="mainBibar-editor" style="width:860px; margin:auto; background:#fff;">
-              <BibarPostContent @backFtContent = 'BibarContentFun' v-if="initHide"></BibarPostContent>
+              <BibarPostContent @backFtContent = 'BibarContentFun' v-show="initHide"></BibarPostContent>
             </div>
             <!--新闻-->
             <article class="bibar-box bibar-boxindex2" style="margin-top:20px;">
@@ -112,6 +112,20 @@ export default{
   computed: {
     userInfo () {
       return this.$store.state.userInfo.userInfo
+    },
+    showPageBtn () {
+      let pageArr = []
+      if (this.cpageCount <= 5) {
+        for (let i = 1; i <= this.cpageCount; i++) {
+          pageArr.push(i)
+        }
+        return pageArr
+      }
+      if (this.cpno <= 2) return [1, 2, 3, '···', this.cpageCount]
+      if (this.cpno >= this.cpageCount - 1) return [1, '···', this.cpageCount - 2, this.cpageCount - 1, this.cpageCount]
+      if (this.cpno === 3) return [1, 2, 3, 4, '···', this.cpageCount]
+      if (this.cpno === this.cpageCount - 2) return [1, '···', this.cpageCount - 3, this.cpageCount - 2, this.cpageCount - 1, this.cpageCount]
+      return [1, '···', this.cpno - 1, this.cpno, this.cpno + 1, '···', this.cpageCount]
     }
   },
   components: {
@@ -133,10 +147,12 @@ export default{
     if (this.chartShow === 0) {
       this.chartState = true
     }
+    this.loadShow()
   },
   mounted () {
     $('.mainBibar-editor').find('.wangeditor').css({'width': '860px'})
     let app = document.getElementById('#app')
+    app.scrollTop = 0
   },
   methods: {
     // 文章列表切换事件
@@ -161,25 +177,21 @@ export default{
     prev () {
       if (this.cpno > 1) {
         this.go(this.cpno - 1)
-        app.scrollTop = 0
       }
     },
     next () {
       if (this.cpno < this.cpageCount) {
         this.go(this.cpno + 1)
-        app.scrollTop = 0
       }
     },
     first () {
       if (this.cpno !== 1) {
         this.go(1)
-        app.scrollTop = 0
       }
     },
     last () {
       if (this.cpno !== this.cpageCount) {
         this.go(this.cpageCount)
-        app.scrollTop = 0
       }
     },
     go (page) {
@@ -195,23 +207,10 @@ export default{
         this.CNY = data.data.exrateData.CNY
         this.summaryList = data.data.summaryList
       })
-      app.scrollTop = 0
-    }
-  },
-  computed: {
-    showPageBtn () {
-      let pageArr = []
-      if (this.cpageCount <= 5) {
-        for (let i = 1; i <= this.cpageCount; i++) {
-          pageArr.push(i)
-        }
-        return pageArr
-      }
-      if (this.cpno <= 2) return [1, 2, 3, '···', this.cpageCount]
-      if (this.cpno >= this.cpageCount - 1) return [1, '···', this.cpageCount - 2, this.cpageCount - 1, this.cpageCount]
-      if (this.cpno === 3) return [1, 2, 3, 4, '···', this.cpageCount]
-      if (this.cpno === this.cpageCount - 2) return [1, '···', this.cpageCount - 3, this.cpageCount - 2, this.cpageCount - 1, this.cpageCount]
-      return [1, '···', this.cpno - 1, this.cpno, this.cpno + 1, '···', this.cpageCount]
+    },
+    // 退登状态----重新加载页面
+    toMainLoadFun () {
+      this.loadShow()
     }
   }
 }

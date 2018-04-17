@@ -2,14 +2,14 @@
   <div class="login-container">
     <div class="panel panel-primary" style="width:30%;margin:100px auto">
       <ul id="myTab" class="nav nav-tabs">
-        <li class="active"><a href="#home" data-toggle="tab">用户名登录</a></li>
-        <li><a href="#ios" data-toggle="tab">手机登录</a></li>
+        <li class="active" @click="changeTab(0)"><a href="#home" data-toggle="tab">用户名登录</a></li>
+        <li @click="changeTab(1)"><a href="#ios" data-toggle="tab">手机登录</a></li>
       </ul>
       <div class="panel-body">
         <div id="myTabContent" class="tab-content">
           <form class="form-horizontal" style="max-width:420px;margin:auto">
             <!-- 用户名登录 -->
-            <div class="tab-pane fade in active" id="home">
+            <div class="tab-pane fade active" id="home" v-if="showTab" :class="{in:showTab}">
             <div class="form-group">
             <label class="col-sm-2 control-label">用户名:</label>
             <div class="col-sm-9">
@@ -53,7 +53,7 @@
           </div>
           </div>
           <!-- 手机登录 -->
-          <div class="tab-pane fade" id="ios">
+          <div class="tab-pane fade  active" id="ios" v-if="!showTab" :class="{in:!showTab}">
             <div class="form-group">
             <label class="col-sm-2 control-label">手机号:</label>
             <div class="col-sm-9">
@@ -155,13 +155,13 @@ export default {
     handleLogin () {
       if (this.userForm.username === undefined) {
         alert('用户名不能为空')
-        return 
+        return
       } else if (this.userForm.password === undefined) {
         alert('密码不能为空')
-        return 
+        return
       } else if (this.userForm.captcha === undefined) {
         alert('验证码不能为空')
-        return 
+        return
       }
       post(this.formUrl, this.userForm).then(data => {
         if (data.message === '验证码错误') {
@@ -188,10 +188,10 @@ export default {
     handlePhoneLogin () {
       if (this.phoneForm.phone === undefined) {
         alert('手机号码不能为空')
-        return 
+        return
       } else if (this.userForm.phonecaptcha === undefined) {
         alert('验证码不能为空')
-        return 
+        return
       }
       post(this.phoneUrl, this.phoneForm).then(data => {
         if (data.message === '验证码错误') {
@@ -262,6 +262,14 @@ export default {
       }).catch(error => {
         alert(error)
       })
+    },
+    // 显示当前tab
+    changeTab (now) {
+      if (now === 0) {
+        this.showTab = true
+      } else {
+        this.showTab = false
+      }
     }
   }
 }
