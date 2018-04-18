@@ -189,6 +189,7 @@ class UserSetting(db.Model, ModelMixin):
     LOCALE_ENGLISH = 'en'
     LOCALE = (('zh', _('Chinese')), ('en', _('English')))
 
+    TIMEZONE_UTC = 'UTC'
     TIMEZONE = [(i, i) for i in all_timezones]
 
     __tablename__ = 'usersetting'
@@ -204,7 +205,7 @@ class UserSetting(db.Model, ModelMixin):
     collect_list = db.Column(
         db.String(10), nullable=False, default=STATUS_ALLOW_AUTHENTICATED)
     locale = db.Column(db.String(32), nullable=False, default=LOCALE_CHINESE)
-    timezone = db.Column(db.String(32), nullable=False)
+    timezone = db.Column(db.String(32), nullable=False, default=TIMEZONE_UTC)
 
     user_id = db.Column(
         db.Integer, db.ForeignKey(

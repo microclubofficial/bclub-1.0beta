@@ -84,7 +84,7 @@ class ChangeUsernameView(MethodView):
     def post(self):
         user = request.user
         post_data = request.json
-        username = post_data['username']
+        username = post_data.get('username')
         if User.query.filter_by(username = username).first():
             msg = '用户名已存在'
             return get_json(0, msg, {})

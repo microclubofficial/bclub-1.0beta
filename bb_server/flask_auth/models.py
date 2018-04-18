@@ -152,6 +152,7 @@ class QueryMixin(BaseQuery):
     def exists(self):
         session = self.session
         return session.query(super(QueryMixin, self).exists()).scalar()
+    
 
     # def one(self):
     #     return super(QueryMixin, self).one()
