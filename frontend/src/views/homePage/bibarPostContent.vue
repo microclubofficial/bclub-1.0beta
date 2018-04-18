@@ -1,10 +1,11 @@
 <template>
-    <div v-show="!isHide">
+    <div>
         <div class="avatar"><img src="../../assets/img/pic-user1.png" alt=""></div>
         <div ref="editor" style="text-align:left" class='editor'></div>
         <span class="toLongText"  @click="toBibarData(4)"><img src="../../assets/img/longText.png">长文</span>
         <button @click="getContent" class="report btn" data-dismiss="modal">发布</button>
-        <button class="cancel" @click="isHideFun">取消</button>
+        <button class="cancel" @click="isHideFun"  v-if="!showDilog">取消</button>
+        <button class="cancel"  data-dismiss="modal" v-if="showDilog">取消</button>
         <!-- <div>{{backData}}</div> -->
     </div>
 </template>
@@ -14,7 +15,7 @@ import E from 'wangeditor'
 import {post} from '../../utils/http'
 
 export default {
-  props: ['contentId'],
+  props: ['contentId', 'fromHeader'],
   name: 'editor',
   data () {
     return {
@@ -33,7 +34,7 @@ export default {
         'is_bad': 0,
         replt_count: 0
       },
-      isHide: false
+      showDilog: false
     }
   },
   methods: {
@@ -52,7 +53,7 @@ export default {
               this.backFt.avatar = data.data.avatar
               this.backFt.id = data.data.id
               this.$emit('backFtContent', this.backFt)
-            // $('.w-e-text-container').find('p').html('')
+              $('.w-e-text').html('')
             // this.$emit('backBibarContent', data.data.content)
             }
           }
@@ -60,10 +61,14 @@ export default {
       }
     },
     isHideFun () {
-      this.isHide = !this.isHide
+      $('.w-e-text').html('')
     },
     toBibarData (router) {
+      $('.modal-backdrop').removeClass('in')
       this.$router.push(`/mainDetail/${router}`)
+    },
+    ftEditor () {
+      this.showDilog = true
     }
   },
   mounted () {
@@ -80,7 +85,6 @@ export default {
       'bold',
       'italic',
       '|',
-      'list',
       'quote'
     ]
     // 上传图片

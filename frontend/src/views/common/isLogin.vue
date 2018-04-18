@@ -37,7 +37,7 @@
       </div>
       <a href="javascript:void(0)" v-show="isShowft" class="nav_btn_longtext" @click="postModel">发帖</a>
     </div>
-    <vdialog v-show="Showdialog" :toDialog='postEditor'></vdialog>
+    <vdialog ref="headerChild" v-show="Showdialog" :toDialog='postEditor'></vdialog>
   </div>
 </template>
 
@@ -54,7 +54,8 @@ export default{
       useravatar: '',
       Showdialog: false,
       postEditor: {
-        'title': '有什么消息告诉大家'
+        'title': '有什么消息告诉大家',
+        'id': 1
       },
       isShowft: false
     }
@@ -87,21 +88,38 @@ export default{
     },
     // 退出登录
     outlogin () {
-      get('/api/logout').then((data) => {
-        if (data.message === '登出成功') {
-          this.$store.commit('USER_INFO', {
+      let that = this
+      $.ajax({
+        url: '/api/logout',
+        type: 'DELETE',
+        success: function(data) {
+          if (data.message === '登出成功') {
+          that.$store.commit('USER_INFO', {
             'username': '',
             'avatar': '',
             'isLogin': false
           })
-          this.outloginSty()
-          this.$emit('backLoadContent')
+          that.outloginSty()
+          that.$emit('backLoadContent')
+          }
         }
       })
+      // get('/api/logout').then((data) => {
+      //   if (data.message === '登出成功') {
+      //     this.$store.commit('USER_INFO', {
+      //       'username': '',
+      //       'avatar': '',
+      //       'isLogin': false
+      //     })
+      //     this.outloginSty()
+      //     this.$emit('backLoadContent')
+      //   }
+      // })
     },
     // 发帖
     postModel () {
       this.Showdialog = true
+      this.$refs.headerChild.ftDilog()
       $('#myModal').modal({
         keyboard: true
       })

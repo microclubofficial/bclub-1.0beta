@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="nav_login">
-      <a href="#" class="nav_login_regis" @click="toRegister">没有账号？立即注册</a>
+      <a href="javascript:void(0)" class="nav_login_regis" @click="toRegister">没有账号？立即注册</a>
       <div class="nav_login_btn" @click.stop="toLogin()">
         <img src="../../assets/img/login.png" alt="">
         <span>登录</span>

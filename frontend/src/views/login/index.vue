@@ -51,6 +51,7 @@
               <button type="button" class="btnm btnm-primary btnm-block" style="width: 100%; border-radius: 5px;background: #286090; color:#fff;"  @click="handleLogin">登陆</button>
             </div>
           </div>
+          <h5 style='text-align:center;cursor: pointer'>没有账号？<router-link :to="{path:'/register'}">注册</router-link></h5>
           </div>
           <!-- 手机登录 -->
           <div class="tab-pane fade  active" id="ios" v-if="!showTab" :class="{in:!showTab}">
@@ -64,10 +65,11 @@
           </div>
                 <div class="form-group">
                     <label for="inputCaptcha3" class="col-md-2 control-label">验证码</label>
-                    <div class="col-md-7">
+                    <div class="col-md-5">
                         <input type="text" @blur='showRegisterMsg(phoneForm.phonecaptcha, 4)' class="form-control" v-model="phoneForm.phonecaptcha" id="inputCaptcha3" placeholder="请输入验证码">
                     </div>
-                    <div class="col-md-2 btnm getcontrol" style=" padding: 6px 12px !important;height: 100%;" @click="getPhoneControl" v-bind:disabled="hasphone" :class="{disable:hasphone}"><span v-show="hasControl">{{countdown}}</span>获取</div>
+                    <button type="button" class="col-md-3 btnm getcontrol" style=" padding: 0 !important;height: 34px;line-height: 34px;
+" @click="getPhoneControl" v-bind:disabled="hasphone" :class="{disable:hasphone}"><span v-show="hasControl">{{countdown}}</span>{{getcontroltxt}}</button>
                     <p class="prompt col-sm-9"><label class="col-md-3 control-label"></label>{{phoneControlPrompt}}</p>
                 </div>
                 <div class="form-group">
@@ -75,6 +77,7 @@
               <button type="button" style="width: 100%; border-radius: 5px;background: #286090; color:#fff;" class="btnm btnm-primary btnm-block" @click="handlePhoneLogin">登陆</button>
             </div>
           </div>
+          <h5 style='text-align:center;cursor: pointer'>没有账号？<router-link :to="{path:'/register'}">注册</router-link></h5>
           </div>
           </form>
         </div>
@@ -103,7 +106,8 @@ export default {
       hasphone: true,
       hasControl: false,
       countdown: 30,
-      showTab: true
+      showTab: true,
+      getcontroltxt: '获取验证码'
     }
   },
   mounted () {
@@ -163,6 +167,7 @@ export default {
         alert('验证码不能为空')
         return
       }
+      console.log(this.userForm)
       post(this.formUrl, this.userForm).then(data => {
         if (data.message === '验证码错误') {
           this.controlPrompt = data.message
@@ -171,6 +176,10 @@ export default {
         } else {
           this.controlPrompt = ''
         }
+        if (data.message === '用户名或密码错误') {
+          alert(data.message)
+        }
+        console.log(data)
         if (data.resultcode === 1) {
           this.$store.commit('USER_INFO', {
             'username': data.data.username,
@@ -189,14 +198,16 @@ export default {
       if (this.phoneForm.phone === undefined) {
         alert('手机号码不能为空')
         return
-      } else if (this.userForm.phonecaptcha === undefined) {
+      } else if (this.phoneForm.phonecaptcha === undefined) {
         alert('验证码不能为空')
         return
       }
       post(this.phoneUrl, this.phoneForm).then(data => {
+        console.log(data)
         if (data.message === '验证码错误') {
+          alert(data.message)
           this.controlPrompt = data.message
-          this.changeControl()
+          // this.changeControl()
           return
         } else if (data.message === '用户名或密码错误') {
           this.changeControl()
@@ -204,6 +215,7 @@ export default {
         } else {
           this.controlPrompt = ''
         }
+        console.log(data)
         if (data.resultcode === 1) {
           this.$store.commit('USER_INFO', {
             'username': data.data.username,
@@ -228,39 +240,29 @@ export default {
     // 获取手机验证码
     getPhoneControl () {
       let phone = parseFloat(this.phoneForm.phone)
-      post('/api/phoneCaptcha', {'phone': phone}).then((data) => {
-        if (data.message === '短信发送成功') {
+      post('/api/phoneCaptcha/login', {'phone': phone}).then((data) => {
+        console.log(data)
+        if (data.resultcode === 1) {
+          this.hasphone = true
           let that = this
-          if (that.countdown === 0) {
-            this.timer = setInterval(function () {
-              that.countdown--
-              that.hasControl = true
-              if (that.countdown <= 1) {
-                that.getcontroltxt = '获取验证码'
-                that.hasphone = false
-                that.countdown = 30
-                that.hasControl = false
-                clearInterval(that.timer)
-              }
-            }, 1000)
-          } else {
-            this.timer = setInterval(function () {
-              that.countdown--
-              that.hasControl = true
-              that.getcontroltxt = '重新获取'
-              that.hasphone = true
-              if (that.countdown < 1) {
-                that.getcontroltxt = '获取验证码'
-                that.countdown = 30
-                that.hasphone = false
-                that.hasControl = false
-                clearInterval(that.timer)
-              }
-            }, 1000)
-          }
+          this.timer = setInterval(function () {
+            that.countdown--
+            that.hasControl = true
+            that.getcontroltxt = '重新获取'
+            this.kaiguan = false
+            if (that.countdown < 1) {
+              that.getcontroltxt = '获取验证码'
+              that.hasphone = false
+              that.countdown = 30
+              that.hasControl = false
+              clearInterval(that.timer)
+            }
+          }, 1000)
+        } else if (data.resultcode === 0) {
+          this.phonePrompt = '手机号未注册'
         }
       }).catch(error => {
-        alert(error)
+        console.log(error)
       })
     },
     // 显示当前tab

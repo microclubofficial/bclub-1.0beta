@@ -61,13 +61,12 @@
                     </div>
                 </div>
                 <p class="prompt col-md-offset-2">{{phonePrompt}}</p>
-                <br>
                 <div class="form-group">
                     <label for="inputCaptcha3" class="col-md-2 control-label">验证码</label>
                     <div class="col-md-4">
                         <input type="text" class="form-control" v-model="setForm.captcha" @blur='showsetFormMsg(setForm.captcha, 2)' id="inputCaptcha3" placeholder="请输入验证码">
                     </div>
-                    <div class="col-md-3 btnm getcontrol" style=" padding: 6px 12px !important;height: 100%;width: 10%;" @click="getPhoneControl" v-bind:disabled="hasphone" :class="{disable:hasphone}"><span v-show="hasControl">{{countdown}}</span>{{getcontroltxt}}</div>
+                    <button type="button" class="col-md-2 btnm getcontrol" style="padding: 0 !important;height: 34px;line-height: 34px;" @click="getPhoneControl" v-bind:disabled="hasphone" :class="{disable:hasphone}"><span v-show="hasControl">{{countdown}}</span>{{getcontroltxt}}</button>
                 </div>
                 <p class="prompt col-md-offset-2">{{phoneControlPrompt}}</p>
             </form>
@@ -108,9 +107,7 @@ export default {
   },
   created: function () {
     // 个人资料
-    get(`/api/u/${this.userInfo.username}`).then(data => {
-      this.personalUserInfo = data.data
-    })
+    this.personalUser(this.userInfo.username)
   },
   mounted () {
   },
@@ -129,14 +126,19 @@ export default {
           this.unamePrompt = ''
         }
       } else if (id === 1) {
-        if (input === undefined || input.length === 0) {
+        var ponereg = /^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$/
+        if (!ponereg.test(input) && input !== undefined && input.length > 0) {
+          this.phonePrompt = '手机号码格式不正确'
+          this.hasphone = true
+          return false
+        } else if (input === undefined || input.length === 0) {
           this.phonePrompt = '手机号码不能为空'
           this.hasphone = true
           return false
         } else {
           this.phonePrompt = ''
           this.hasphone = false
-          this.findForm.phone = input
+          this.setForm.phone = input
         }
       } else if (id === 2) {
         if (input === undefined || input.length === 0) {
@@ -147,75 +149,78 @@ export default {
         }
       }
     },
-    // 修改用户名
+    // 修改用户名和手机号
     setusername () {
-      post(`/api/setting/username`, this.setForm).then(data => {
-        let instance
-        if (data.message === '用户名已存在') {
-          instance = new Toast({
-            message: data.message,
-            duration: 1000
-          })
-          return false
-        } else if (data.message === '用户名已更换') {
-          instance = new Toast({
-            message: data.message,
-            iconClass: 'glyphicon glyphicon-ok',
-            duration: 1000
-          })
-          $('#myModal').removeClass('in')
-          $('.modal-backdrop').removeClass('in')
-          this.$store.commit('USER_INFO', {
-            'username': data.data.username,
-            'avatar': data.data.avatar,
-            'isLogin': true
-          })
-          console.log(data.data.username)
-          get(`/api/u/${data.data.username}`).then(data => {
-            this.personalUserInfo = data.data
-          })
-        }
-        setTimeout(() => {
-          instance.close()
-        }, 1000)
-      })
+      let instance
+      if (this.showModel) {
+        post(`/api/setting/username`, this.setForm).then(data => {
+          if (data.message === '用户名已存在') {
+            instance = new Toast({
+              message: data.message,
+              duration: 1000
+            })
+            return false
+          } else if (data.message === '用户名已更换') {
+            instance = new Toast({
+              message: data.message,
+              iconClass: 'glyphicon glyphicon-ok',
+              duration: 1000
+            })
+            $('#myModal').removeClass('in')
+            $('.modal-backdrop').removeClass('in')
+            this.$store.commit('USER_INFO', {
+              'username': data.data.username,
+              'avatar': data.data.avatar,
+              'isLogin': true
+            })
+            this.personalUser(data.data.username)
+          }
+        })
+      } else {
+        post(`/api/setting/phone`, this.setForm).then(data => {
+          if (data.message === '手机已被注册') {
+            instance = new Toast({
+              message: data.message,
+              duration: 1000
+            })
+            return false
+          } else if (data.message === '手机号已更换') {
+            instance = new Toast({
+              message: data.message,
+              iconClass: 'glyphicon glyphicon-ok',
+              duration: 1000
+            })
+            $('#myModal').css({'display': 'none'}).removeClass('in')
+            $('.modal-backdrop').removeClass('in')
+            this.personalUser(this.userInfo.username)
+          }
+        })
+      }
+      setTimeout(() => {
+        instance.close()
+      }, 1000)
     },
     // 获取手机验证码
     getPhoneControl () {
       let phone = parseFloat(this.setForm.phone)
-      post('/api/phoneCaptcha', {'phone': phone}).then((data) => {
-        if (data.message === '短信发送成功') {
-          let that = this
-          if (that.countdown === 0) {
-            this.timer = setInterval(function () {
-              that.countdown--
-              that.hasControl = true
-              if (that.countdown <= 1) {
-                that.getcontroltxt = '获取验证码'
-                that.hasphone = false
-                that.countdown = 30
-                that.hasControl = false
-                clearInterval(that.timer)
-              }
-            }, 1000)
-          } else {
-            this.timer = setInterval(function () {
-              that.countdown--
-              that.hasControl = true
-              that.getcontroltxt = '重新获取'
-              that.hasphone = true
-              if (that.countdown < 1) {
-                that.getcontroltxt = '获取验证码'
-                that.countdown = 30
-                that.hasphone = false
-                that.hasControl = false
-                clearInterval(that.timer)
-              }
-            }, 1000)
-          }
+      this.hasphone = true
+      let that = this
+      this.timer = setInterval(function () {
+        that.countdown--
+        that.hasControl = true
+        that.getcontroltxt = '重新获取'
+        this.kaiguan = false
+        if (that.countdown < 1) {
+          that.getcontroltxt = '获取验证码'
+          that.hasphone = false
+          that.countdown = 30
+          that.hasControl = false
+          clearInterval(that.timer)
         }
+      }, 1000)
+      post('/api/phoneCaptcha', {'phone': phone}).then((data) => {
       }).catch(error => {
-        alert(error)
+        console.log(error)
       })
     },
     setFormBtn (id) {
@@ -224,6 +229,12 @@ export default {
       } else {
         this.showModel = false
       }
+    },
+    // 个人资料
+    personalUser (uname) {
+      get(`/api/u/${uname}`).then(data => {
+        this.personalUserInfo = data.data
+      })
     }
   }
 }
@@ -238,6 +249,17 @@ export default {
     border-color: #2e6da4;
     border-radius: 3px !important;
     padding: 0px 8px !important;
+}
+.disable{
+    background: #BCBCBC !important;
+    color: #797979 !important;
+    border:none !important;
+}
+.getcontrol{
+    border-radius: 4px;
+    color: #fff;
+    background-color: #5cb85c;
+    border-color: #4cae4c;
 }
 .modal-footer{
     border-top: none !important;

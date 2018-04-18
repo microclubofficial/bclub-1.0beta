@@ -1,6 +1,6 @@
 <template>
   <div class="commun-bibarType">
-    <h3>热门币种</h3>
+    <h4>热门币种</h4>
    <div class="bibarType-main">
      <div class="bibarType-main-box shadow-box" @click="toBibarData(0,type.id)" :key="index" v-for="(type,index) in bibarType">
        <img :src="type.picture" alt="">
@@ -51,9 +51,7 @@ export default{
   display: flex;
   justify-content: space-between;
 }
-.commun-bibarType>h3{
-  font-size: 20px;
-  font-weight: bold;
+.commun-bibarType>h4{
   margin: 20px auto;
   text-align: center;
 }

@@ -1,10 +1,10 @@
 <template>
   <div class="commun-bibarTogether">
-   <h3>综合</h3>
+   <h4>综合</h4>
    <div class="bibar-talk shadow-box" v-for="(tmp,index) in talkList" :key="index" @click="toTalkDetail(tmp.id)">
      <img :src="tmp.picture" alt="">
     <div class="bibar-talk-num">
-      <h3>{{tmp.title}}</h3>
+      <h4>{{tmp.title}}</h4>
       <p>{{tmp.subtitle}}</p>
       <ul class="talk-keep">
         <li>
@@ -35,7 +35,7 @@
      </div>
     <div class="bibar-talk-num">
       <p>{{subList.bar}}</p>
-      <h3>{{subList.title}}</h3>
+      <h4>{{subList.title}}</h4>
       <p>{{subList.content}}</p>
       <!-- <button class="join-talk-btn talk-bottom">加入讨论</button> -->
     </div>
@@ -76,16 +76,12 @@ export default{
 </script>
 
 <style>
+h4{font-weight: bold;}
 .commun-bibarTogether{
   width: 1100px;
   margin: 20px auto;
 }
-h3{
-  font-size: 20px;
-  font-weight: bold;
-}
-
-.commun-bibarTogether>h3{
+.commun-bibarTogether>h4{
   text-align: center;
   margin: 50px auto 20px auto;
 }

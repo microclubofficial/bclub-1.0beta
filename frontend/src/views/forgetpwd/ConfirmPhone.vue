@@ -18,11 +18,11 @@
                     <div class="col-md-4">
                         <input type="text" class="form-control" v-model="phoneObj.captcha" @blur='showRegisterMsg(phoneObj.captcha, 1)' id="inputCaptcha3" placeholder="请输入验证码">
                     </div>
-                    <div class="col-md-1 btnm getcontrol" style=" padding: 6px 12px !important;height: 100%;width: 10%;" @click="getPhoneControl" v-bind:disabled="hasphone" :class="{disable:hasphone}"><span v-show="hasControl">{{countdown}}</span>{{getcontroltxt}}</div>
+                    <button type="button" class="col-md-1 btnm getcontrol" style=" padding: 6px 12px !important;height: 100%;width: 10%;" @click="getPhoneControl" v-bind:disabled="hasphone" :class="{disable:hasphone}"><span v-show="hasControl">{{countdown}}</span>{{getcontroltxt}}</button>
                 </div>
                 <p class="prompt col-md-offset-1">{{phoneControlPrompt}}</p>
                 <div class="form-group">
-                    <div class="col-md-offset-2 col-md-1 btnm confirm"  data-target="#myModal" data-toggle="modal">确认
+                    <div class="col-md-offset-2 col-md-1 forphone btnm confirm" @click='showModel' data-target="#myModal" data-toggle="">确认
                     </div>
                 </div>
             </form>
@@ -73,8 +73,8 @@ export default{
       timer: null,
       getcontroltxt: '获取验证码',
       phoneObj: {
-        'forgetphone': '',
-        'control': ''
+        'phone': '',
+        'captcha': ''
       },
       phonePrompt: '',
       phoneControlPrompt: '',
@@ -135,46 +135,34 @@ export default{
     // 获取手机验证码
     getPhoneControl () {
       let phone = parseFloat(this.phoneObj.phone)
-      post('/api/phoneCaptcha', {'phone': phone}).then((data) => {
-        if (data.message === '短信发送成功') {
+      post('/api/phoneCaptcha/login', {'phone': phone}).then((data) => {
+        if (data.resultcode === 1) {
+          this.hasphone = true
           let that = this
-          if (that.countdown === 0) {
-            this.timer = setInterval(function () {
-              that.countdown--
-              that.hasControl = true
-              if (that.countdown <= 1) {
-                that.getcontroltxt = '获取验证码'
-                that.hasphone = false
-                that.countdown = 30
-                that.hasControl = false
-                clearInterval(that.timer)
-              }
-            }, 1000)
-          } else {
-            this.timer = setInterval(function () {
-              that.countdown--
-              that.hasControl = true
-              that.getcontroltxt = '重新获取'
-              that.hasphone = true
-              if (that.countdown < 1) {
-                that.getcontroltxt = '获取验证码'
-                that.countdown = 30
-                that.hasphone = false
-                that.hasControl = false
-                clearInterval(that.timer)
-              }
-            }, 1000)
-          }
+          this.timer = setInterval(function () {
+            that.countdown--
+            that.hasControl = true
+            that.getcontroltxt = '重新获取'
+            this.kaiguan = false
+            if (that.countdown < 1) {
+              that.getcontroltxt = '获取验证码'
+              that.hasphone = false
+              that.countdown = 30
+              that.hasControl = false
+              clearInterval(that.timer)
+            }
+          }, 1000)
+        } else if (data.resultcode === 0) {
+          this.phonePrompt = '手机号码未注册'
         }
       }).catch(error => {
-        alert(error)
+        console.log(error)
       })
     },
     // 填新密码
     setnewpwd () {
       post('/api/setpassword', this.findForm).then(data => {
-        console.log(data)
-        if (data.message === '修改成功') {
+          if (data.message === '修改成功') {
           $('.modal-backdrop').removeClass('in')
           this.$store.commit('USER_INFO', {
             'username': data.data.username,
@@ -184,6 +172,29 @@ export default{
           this.$router.push('/')
         }
       })
+    },
+    // 显示模态框
+    showModel () {
+      if (this.phoneObj.phone === '') {
+        alert('手机号不能为空')
+        return
+      } else if (this.phoneObj.captcha === '') {
+        alert('验证码不能为空')
+        return
+      } else {
+        post('/api/phoneForget', this.phoneObj).then(data => {
+          if (data.message === '验证码错误') { 
+            this.phoneControlPrompt = '验证码错误，请重新获取'
+            this.phoneObj.captcha = ''
+          } else if (data.message === '手机号不存在') {
+            this.phonePrompt = data.message
+          } else if (data.message === '验证成功') {
+            $('#myModal').modal({
+              keyboard: true
+            })
+          } 
+        })
+      }
     }
   }
 }
