@@ -193,7 +193,7 @@ export default{
     get(`/api/collectlist/${this.tpno}`).then(data => {
       this.articles = data.data.topics
       this.pageCount = data.data.page_count
-      if (this.articles.length > 0) {
+      if (this.articles !== undefined && this.articles.length > 0) {
         this.loadingShow = true
       }
       var that = this

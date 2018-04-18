@@ -14,7 +14,7 @@
         <div class="container">
             <ol class="breadcrumb">
                 <li>
-                    <a href="/">首页</a>
+                    <router-link to='/'>首页</router-link>
                 </li>
                 <li class="active">个人中心</li>
             </ol>

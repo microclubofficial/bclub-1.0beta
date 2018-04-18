@@ -11,17 +11,18 @@
                         <input type="text" class="form-control" id="inputEmail3"  @blur='showRegisterMsg(phoneObj.phone, 0)' v-model="phoneObj.phone" placeholder="请输入手机号">
                     </div>
                 </div>
-                <p class="prompt col-md-offset-1">{{phonePrompt}}</p>
-                <br>
-                <div class="form-group">
+                 <label class="col-sm-1 control-label"></label>
+                  <p class="prompt col-sm-2" style="margin-top:0px !important;">{{phonePrompt}}</p>
+                <div class="form-group" style="margin-top: 37px;">
                     <label for="inputCaptcha3" class="col-md-1 control-label">验证码</label>
                     <div class="col-md-4">
                         <input type="text" class="form-control" v-model="phoneObj.captcha" @blur='showRegisterMsg(phoneObj.captcha, 1)' id="inputCaptcha3" placeholder="请输入验证码">
                     </div>
                     <button type="button" class="col-md-1 btnm getcontrol" style=" padding: 6px 12px !important;height: 100%;width: 10%;" @click="getPhoneControl" v-bind:disabled="hasphone" :class="{disable:hasphone}"><span v-show="hasControl">{{countdown}}</span>{{getcontroltxt}}</button>
                 </div>
-                <p class="prompt col-md-offset-1">{{phoneControlPrompt}}</p>
-                <div class="form-group">
+                <label class="col-sm-1 control-label"></label>
+                <p class="prompt col-sm-2" style="margin-top:0px !important;">{{phoneControlPrompt}}</p>
+                <div class="form-group"  style="margin-top: 37px;">
                     <div class="col-md-offset-2 col-md-1 forphone btnm confirm" @click='showModel' data-target="#myModal" data-toggle="">确认
                     </div>
                 </div>
@@ -162,28 +163,30 @@ export default{
     // 填新密码
     setnewpwd () {
       post('/api/setpassword', this.findForm).then(data => {
-          if (data.message === '修改成功') {
-          $('.modal-backdrop').removeClass('in')
+        if (data.message === '修改成功') {
+          $('#myModal').removeClass('in')
+          $('body').removeClass('modal-open')
+          document.body.removeChild(document.querySelector('.modal-backdrop'))
           this.$store.commit('USER_INFO', {
             'username': data.data.username,
             'avatar': data.data.avatar,
             'isLogin': true
           })
-          this.$router.push('/')
+          this.$router.push('/login')
         }
       })
     },
     // 显示模态框
     showModel () {
       if (this.phoneObj.phone === '') {
-        alert('手机号不能为空')
-        return
+        this.phonePrompt = '手机号码不能为空'
+        return false
       } else if (this.phoneObj.captcha === '') {
-        alert('验证码不能为空')
-        return
+        this.phoneControlPrompt = '验证码不能为空'
+        return false
       } else {
         post('/api/phoneForget', this.phoneObj).then(data => {
-          if (data.message === '验证码错误') { 
+          if (data.message === '验证码错误') {
             this.phoneControlPrompt = '验证码错误，请重新获取'
             this.phoneObj.captcha = ''
           } else if (data.message === '手机号不存在') {
@@ -192,7 +195,7 @@ export default{
             $('#myModal').modal({
               keyboard: true
             })
-          } 
+          }
         })
       }
     }

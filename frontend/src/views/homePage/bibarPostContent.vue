@@ -95,6 +95,7 @@ export default {
       //   // console.log(result)
       // },
       customInsert: function (insertImg, result, editor) {
+        console.log(result)
         that.backFt.url = result.data.file_path
         console.log(that.backFt.url)
         insertImg(that.backFt.url)

@@ -49,7 +49,7 @@ export default{
       if (id === 0) {
         var upwdreg = /^[a-zA-Z0-9_]{6,}$/
         if (!upwdreg.test(input) && input !== undefined && input.length > 0) {
-          this.upwdPrompt = '密码长度不能小于6位'
+          this.upwdPrompt = '密码长度不能小于6位(大小写字母、数字)'
           return false
         } else if (input === undefined || input.length === 0) {
           this.upwdPrompt = '密码不能为空'

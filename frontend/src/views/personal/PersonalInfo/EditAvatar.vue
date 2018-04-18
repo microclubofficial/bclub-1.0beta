@@ -24,41 +24,34 @@
 }
 </style>
 
-<script src='../../../'></script>
-
 <template>
     <div>
         <div class="container">
-            <form class="form-horizontal">
-                <div class="form-group">
-                    <label for="inputOriginPassword3" class="col-md-1 control-label">上传头像</label>
-                    <div class="col-md-4">
-                        <input type="file" class="form-control" id="inputEmail3inputOriginPassword3" placeholder="请输入原密码">
-                    </div>
-                </div>
-                <div class="img-preview">
-                    <div class="rectangle">
-                        <img :src="userInfo.avatar" alt="">
-                    </div>
-                    <div class="round">
-                        <img :src="userInfo.avatar" alt="">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-offset-1 col-md-4">
-                        <button type="reset" class="btn btn-default">取消</button>
-                        <button type="submit" class="btn btn-primary">确认</button>
-                    </div>
-                </div>
-            </form>
+            <a class="btn" @click="toggleShow">设置头像</a>
+            <my-upload field="img" @cropSuccess="cropSuccessFun" @cropUploadSuccess="cropUploadSuccessFun" @cropUploadFail="cropUploadFailFun" :width="50" :height="50" url="/api/avatar" :params="params" :headers="headers" img-format="png"></my-upload>
+            <img :src="imgDataUrl">
         </div>
     </div>
 </template>
 <script>
+import 'babel-polyfill'
+import myUpload from '../uploadImg/upload.vue'
 export default {
   data () {
     return {
+      show: true,
+      params: {
+        token: '123456798',
+        name: 'avatar'
+      },
+      headers: {
+        smail: '*_~'
+      },
+      imgDataUrl: ''
     }
+  },
+  components: {
+    myUpload
   },
   computed: {
     userInfo () {
@@ -68,6 +61,23 @@ export default {
   mounted () {
   },
   methods: {
+    toggleShow () {
+      this.show = !this.show
+    },
+    cropSuccessFun (imgDataUrl, field) {
+      this.imgDataUrl = imgDataUrl
+      console.log(this.imgDataUrl)
+    },
+    cropUploadSuccessFun (data, field) {
+      this.$store.commit('USER_INFO', {
+        'username': data.data.username,
+        'avatar': data.data.avatar,
+        'isLogin': true
+      })
+    },
+    cropUploadFailFun (status, field) {
+      console.log(status)
+    }
   }
 }
 </script>
