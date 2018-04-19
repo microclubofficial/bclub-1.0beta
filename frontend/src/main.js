@@ -51,7 +51,6 @@ import './assets/js/jquery.cookie.js'
 // import Validator from 'vue-validator'
 
 import * as filters from './filters' // global filters
-
 Vue.use(VueAwesomeSwiper)
 
 // Vue.use(VueAxios, axios, Validator)

@@ -6,9 +6,9 @@
             </div>
             <form>
                 <div class="form-group" style="width:30%">
-                    <label for="exampleInputEmail1">请输入注册时的邮箱</label>
+                    <label for="exampleInputEmail1">请输入邮箱</label>
                     <input type="email" class="form-control" v-model="findForm.email" id="exampleInputEmail1" placeholder="Email" @blur='showRegisterMsg(findForm.email, 0)'>
-                    <p class="prompt" style="margin-left: 0 !important;">{{emailPrompt}}</p>
+                    <span class="prompt" style="margin-left: 0 !important; display:block;">{{emailPrompt}}</span>
                 </div>
                 <div class="form-group">
                     <div class=" col-md-1 btnm findforemai"   @click="setfindemail" >确认
@@ -51,8 +51,11 @@ export default {
     // 填新密码
     setfindemail () {
       post('/api/forget', this.findForm).then(data => {
-        console.log(data)
+        if (data.resultcode === 0) {
+          alert(data.message)
+        }
         if (data.resultcode === 1) {
+          alert(data.message)
           this.$store.commit('USER_INFO', {
             'username': data.data.username,
             'avatar': data.data.avatar,

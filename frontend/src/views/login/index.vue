@@ -203,17 +203,20 @@ export default {
         return
       }
       post(this.phoneUrl, this.phoneForm).then(data => {
-        console.log(data)
-        if (data.message === '验证码错误') {
+        if (data.resultcode === 0) {
           alert(data.message)
-          this.controlPrompt = data.message
-          // this.changeControl()
-          return
-        } else if (data.message === '用户名或密码错误') {
-          this.changeControl()
-          return
-        } else {
-          this.controlPrompt = ''
+          if (data.message === '你已经登陆，不能重复登陆') {
+            this.$store.commit('USER_INFO', {
+              'username': data.data.username,
+              'avatar': data.data.avatar,
+              'isLogin': true
+            })
+            this.$router.push('/')
+          } else {
+            this.controlPrompt = data.message
+            // this.changeControl()
+            return
+          }
         }
         console.log(data)
         if (data.resultcode === 1) {
@@ -241,7 +244,10 @@ export default {
     getPhoneControl () {
       let phone = parseFloat(this.phoneForm.phone)
       post('/api/phoneCaptcha/login', {'phone': phone}).then((data) => {
-        console.log(data)
+        if (data.resultcode === 0) {
+          alert(data.message)
+          return
+        }
         if (data.resultcode === 1) {
           this.hasphone = true
           let that = this

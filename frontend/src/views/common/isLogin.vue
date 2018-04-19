@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import {get} from '../../utils/http.js'
+// import {get} from '../../utils/http.js'
 import vdialog from './dialog.vue'
 export default{
   data: function () {
@@ -69,6 +69,7 @@ export default{
     }
   },
   mounted () {
+    console.log(this.userInfo)
     this.outloginSty()
   },
   methods: {
@@ -89,18 +90,20 @@ export default{
     // 退出登录
     outlogin () {
       let that = this
+      console.log(this.userInfo)
       $.ajax({
         url: '/api/logout',
         type: 'DELETE',
-        success: function(data) {
+        success (data) {
+          console.log(data)
           if (data.message === '登出成功') {
-          that.$store.commit('USER_INFO', {
-            'username': '',
-            'avatar': '',
-            'isLogin': false
-          })
-          that.outloginSty()
-          that.$emit('backLoadContent')
+            that.$store.commit('USER_INFO', {
+              'username': '',
+              'avatar': '',
+              'isLogin': false
+            })
+            that.outloginSty()
+            that.$emit('backLoadContent')
           }
         }
       })

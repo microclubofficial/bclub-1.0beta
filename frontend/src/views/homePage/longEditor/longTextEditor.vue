@@ -58,8 +58,8 @@ export default{
       //   // console.log(result)
       // },
       customInsert: function (insertImg, result, editor) {
-        that.backData.url = result.data.file_path
-        insertImg(that.backData.url)
+        that.backLong.url = result.data.file_path
+        insertImg(that.backLong.url)
       }
     }
     editor.create()
@@ -82,7 +82,7 @@ export default{
             this.backLong.diff_time = data.data.diff_time
             this.backLong.is_good = data.data.is_good
             $('.w-e-text-container').find('p').html('')
-            this.$router.push(`/details/${data.data.id}`)
+            this.$router.push('/')
           }
         }
       })

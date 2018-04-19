@@ -154,37 +154,38 @@ export default {
       let instance
       if (this.showModel) {
         post(`/api/setting/username`, this.setForm).then(data => {
-          if (data.message === '用户名已存在') {
-            instance = new Toast({
-              message: data.message,
-              duration: 1000
-            })
+          if (data.resultcode === 0) {
+            alert(data.message)
             return false
-          } else if (data.message === '用户名已更换') {
+          } else if (data.resultcode === 1) {
             instance = new Toast({
               message: data.message,
               iconClass: 'glyphicon glyphicon-ok',
               duration: 1000
             })
-            $('#myModal').removeClass('in')
-            $('.modal-backdrop').removeClass('in')
+            setTimeout(() => {
+              instance.close()
+            }, 1000)
             this.$store.commit('USER_INFO', {
               'username': data.data.username,
               'avatar': data.data.avatar,
               'isLogin': true
             })
             this.personalUser(data.data.username)
+            $('#myModal').removeClass('in')
+            $('body').removeClass('modal-open')
+            document.body.removeChild(document.querySelector('.modal-backdrop'))
           }
         })
       } else {
         post(`/api/setting/phone`, this.setForm).then(data => {
-          if (data.message === '手机已被注册') {
+          if (data.resultcode === 0) {
             instance = new Toast({
               message: data.message,
               duration: 1000
             })
             return false
-          } else if (data.message === '手机号已更换') {
+          } else if (data.resultcode === 1) {
             instance = new Toast({
               message: data.message,
               iconClass: 'glyphicon glyphicon-ok',
@@ -196,9 +197,6 @@ export default {
           }
         })
       }
-      setTimeout(() => {
-        instance.close()
-      }, 1000)
     },
     // 获取手机验证码
     getPhoneControl () {
@@ -218,7 +216,12 @@ export default {
           clearInterval(that.timer)
         }
       }, 1000)
+      console.log(phone)
       post('/api/phoneCaptcha', {'phone': phone}).then((data) => {
+        console.log(data)
+        if (data.resultcode === 0) {
+          alert(data.message)
+        }
       }).catch(error => {
         console.log(error)
       })

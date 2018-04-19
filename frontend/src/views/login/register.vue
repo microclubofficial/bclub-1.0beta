@@ -11,6 +11,7 @@
             <div class="col-sm-9">
               <input  class="form-control" name="username" type="text" placeholder="Username" @blur='showRegisterMsg(userForm.username, 0)'  v-model="userForm.username">
             </div>
+            <label class="col-sm-2 control-label"></label>
             <p class="prompt">{{unamePrompt}}</p>
           </div>
           <div class="form-group">
@@ -18,6 +19,7 @@
             <div class="col-sm-9">
               <input class="form-control" name="password" type="password" placeholder="Password" @blur='showRegisterMsg(userForm.password, 1)' v-model="userForm.password">
             </div>
+            <label class="col-sm-2 control-label"></label>
             <p class="prompt">{{upwdPrompt}}</p>
           </div>
           <div class="form-group">
@@ -25,6 +27,7 @@
             <div class="col-sm-9">
               <input class="form-control" name="repassword" type="password" placeholder="Repassword" @blur='showRegisterMsg(userForm.confirm_password, 2)' v-model="userForm.confirm_password">
             </div>
+            <label class="col-sm-2 control-label"></label>
             <p class="prompt">{{confirm_upwdPrompt}}</p>
           </div>
           <!-- <div class="form-group">
@@ -52,6 +55,7 @@
             <div class="col-sm-9">
               <input class="form-control" name="phone" type="text" placeholder="phone" v-model="userForm.phone" @blur='showRegisterMsg(userForm.phone, 3)'>
             </div>
+            <label class="col-sm-2 control-label"></label>
              <p class="prompt">{{phonePrompt}}</p>
           </div>
                 <div class="form-group">
@@ -59,18 +63,19 @@
                     <div class="col-md-6">
                         <input type="text" class="form-control" v-model="userForm.captcha" @blur='showRegisterMsg(userForm.phone, 5)' id="inputCaptcha3" placeholder="请输入验证码">
                     </div>
-                    <button class="col-md-3 btn getcontrol" type="button" style="padding: 0 !important;height: 34px;line-height: 34px;" @click="getPhoneControl" v-bind:disabled="hasphone" :class="{disable:hasphone}"><span v-show="hasControl">{{countdown}}</span>{{getcontroltxt}}</button>
+                    <button class="col-md-3 btnm getcontrol" type="button" style="padding: 0 !important;height: 34px;line-height: 34px;" @click="getPhoneControl" v-bind:disabled="hasphone" :class="{disable:hasphone}"><span v-show="hasControl">{{countdown}}</span>{{getcontroltxt}}</button>
+                  <label class="col-sm-2 control-label"></label>
+                  <p class="prompt">{{captchaPrompt}}</p>
                 </div>
-
           <div class="form-group">
             <label class="col-sm-2 control-label">邀请码:</label>
             <div class="col-sm-9">
-              <input class="form-control" name="username" type="text" placeholder="Username" v-model="userForm.recommender_code">
+              <input class="form-control" name="username" type="text" placeholder="邀请码" v-model="userForm.recommender_code">
             </div>
           </div>
 
           <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-9 btn submitForm" id="register" @click="submitForm">注册
+            <div class="col-sm-offset-2 col-sm-9 btnm submitForm" id="register" @click="submitForm">注册
             </div>
           </div>
            <h5 style='text-align:center;cursor: pointer'>已注册？<router-link :to="{path:'/login'}">登录</router-link></h5>
@@ -125,7 +130,7 @@ export default {
       } else if (id === 1) {
         var upwdreg = /^[a-zA-Z0-9_]{6,}$/
         if (!upwdreg.test(input) && input !== undefined && input.length > 0) {
-          this.upwdPrompt = '密码长度不能小于6位'
+          this.upwdPrompt = '密码长度不能小于6位(大小写字母、数字)'
           return false
         } else if (input === undefined || input.length === 0) {
           this.upwdPrompt = '密码不能为空'
@@ -168,9 +173,8 @@ export default {
     },
     submitForm () {
       post(this.formUrl, this.userForm).then(data => {
-        alert(data)
-        if (data.message === '验证码错误') {
-          this.controlPrompt = data.message
+        if (data.resultcode === 0) {
+          alert(data.message)
           return
         }
         if (data.resultcode === 1) {
@@ -223,7 +227,7 @@ export default {
 <style rel="stylesheet/scss" lang="scss">
   .prompt{
     float: left;
-    margin-left: 20%;
+    margin-left: 4%;
     margin-top: 10px;
     color: red;
   }
