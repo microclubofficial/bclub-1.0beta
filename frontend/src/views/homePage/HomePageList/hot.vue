@@ -11,7 +11,15 @@
           </div>
           <div class="tit"><a href="#" @click="goDetail(tmp.id)">{{tmp.title}}</a></div>
           <div class="txt indexNewslimitHeight" @click="goDetail(tmp.id)">
-            <p v-html='tmp.content'></p>
+            <div class="media">
+              <a class="pull-left" href="#" v-if="hasImg">
+              <img class="media-object" src="../../../assets/img/pic-news.png"
+              alt="Media Object">
+            </a>
+            <div class="media-body">
+              <div v-html="EditorContent(tmp.content)"></div>
+            </div>
+            </div>
           </div>
           <div class="set">
             <ul class="bibar-indexNewsItem-infro">
@@ -183,7 +191,8 @@ export default{
       talkReplyTxt: false,
       replayId: 0,
       showReportReplay: false,
-      collection: null
+      collection: null,
+      hasImg: false
     }
   },
   components: {
@@ -358,6 +367,16 @@ export default{
           instance.close()
         }, 1000)
       })
+    },
+    // 处理图片
+    EditorContent (val) {
+      let newData = val.split(/<img src="\/static[^>]+>/g)
+      let now = ''
+      for (let i = 0; i < newData.length; i++) {
+        now += `${newData[i]}`
+      }
+      now = now.substr(0, 300) + '...'
+      return now
     }
   }
 }
@@ -763,4 +782,12 @@ svg:not(:root) {
     padding: 5px 10px;
     color: #d4d7dc;
 }
+.media-left, .media>.pull-left {
+    padding-right: 10px;
+    width: 20%;
+    /* height: 50px; */
+    /* position: relative; */
+    height: 100px;
+}
+.pull-left > img{width: 100%; height: 100%;}
 </style>

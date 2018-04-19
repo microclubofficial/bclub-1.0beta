@@ -1,19 +1,25 @@
 <template>
   <div id="commun">
       <MainHeader @backLoadMain='toMainLoadFun'></MainHeader>
-      <!--社区币吧数据-->
+      <section class="bibar-Main">
+    <section class="bibar-w1100">
+      <!-- left slide -->
+      <BibarLeft v-if="initHide"></BibarLeft>
+        <!--主体左侧-->
+      <section class="bibar-Mainleft">
+          <!--社区币吧数据-->
       <BibarData v-show="initShow"></BibarData>
       <!--社区各币种-->
       <BibarType v-show="initShow"></BibarType>
       <!--社区综合-->
       <BibarTogether v-show="initShow"></BibarTogether>
       <!-- 富文本区 -->
-      <div style="width:1100px; margin:auto; background:#fff;" class="Maineditor" :class="{initHideEditor:initHide}"  v-if="initHide">
+      <div style="width:790px; margin:auto; background:#fff;" class="Maineditor" :class="{initHideEditor:initHide}"  v-if="initHide">
         <BibarPostContent @backFtContent = 'FtContentFun'></BibarPostContent>
       </div>
       <!--社区列表-->
       <!--主体左侧-->
-        <section class="bibar-commun">
+        <section class="bibar-commun" :class="{initSty:initShow}">
             <div class="pt20"></div>
             <!--新闻-->
             <article class="bibar-box bibar-boxindex2">
@@ -28,6 +34,14 @@
                 </div>
             </article>
         </section>
+        </section>
+        <!--主体右侧-->
+        <section class="bibar-Mainright" v-if="initHide">
+            <BibarRight></BibarRight>
+        </section>
+    </section>
+    <div class="pt40"></div>
+    </section>
   </div>
 </template>
 
@@ -37,6 +51,8 @@ import BibarData from './bibarData.vue'
 import BibarType from './bibarType.vue'
 import BibarTogether from './bibarTogether.vue'
 import BibarPostContent from './bibarPostContent.vue'
+import BibarRight from '../BibarMsg/BibarRight/bivarRight.vue'
+import BibarLeft from '../homePage/bibarLeft/bibarSideLeft.vue'
 
 export default{
   name: 'common',
@@ -56,7 +72,9 @@ export default{
     BibarData,
     BibarType,
     BibarTogether,
-    BibarPostContent
+    BibarPostContent,
+    BibarRight,
+    BibarLeft
   },
   computed: {
     userInfo () {
@@ -101,9 +119,10 @@ export default{
 
 <style>
   .bibar-commun{
-    width: 1100px;
+    width: 790px;
     margin: 0 auto
   }
-  .Maineditor>.wangeditor>.toLongText{right: 526px !important;}
-  .initHideEditor{margin-top:80px !important;}
+  .Maineditor>.wangeditor>.toLongText{right: 415px !important;}
+  /* .initHideEditor{margin-top:80px !important;} */
+  .initSty{width: 1100px !important;}
 </style>

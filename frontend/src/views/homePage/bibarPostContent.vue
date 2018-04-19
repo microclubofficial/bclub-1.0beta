@@ -21,7 +21,8 @@ export default {
     return {
       editorContent: '',
       topicData: {
-        'content': ''
+        'content': '',
+        'url': ''
       },
       backFt: {
         'author': '',
@@ -32,6 +33,7 @@ export default {
         'content': '',
         'is_good': 0,
         'is_bad': 0,
+        'url': '',
         replt_count: 0
       },
       showDilog: false
@@ -40,9 +42,13 @@ export default {
   methods: {
     getContent: function () {
       this.topicData.content = this.editorContent
-      if (this.topicData.content.length > 0) {
+      let image = this.topicData.content.match(/<img src="\/static[^>]+>/g)
+      this.topicData.url = ''
+      if (image !== null) {
+        this.topicData.url = image[0]
+      }
+      if (this.topicData.content.length > 0 || this.topicData.url.length > 0) {
         post('/api/topic', this.topicData).then(data => {
-          console.log(data)
           this.editorContent = ''
           if (data.message === '未登录') {
             alert('先去登录')
@@ -53,6 +59,7 @@ export default {
               this.backFt.author = data.data.author
               this.backFt.avatar = data.data.avatar
               this.backFt.id = data.data.id
+              this.backFt.url = data.data.url
               this.$emit('backFtContent', this.backFt)
               $('.w-e-text').html('')
             // this.$emit('backBibarContent', data.data.content)
@@ -65,7 +72,9 @@ export default {
       $('.w-e-text').html('')
     },
     toBibarData (router) {
-      $('.modal-backdrop').removeClass('in')
+      $('#myModal').removeClass('in')
+      $('body').removeClass('modal-open')
+      document.body.removeChild(document.querySelector('.modal-backdrop'))
       this.$router.push(`/mainDetail/${router}`)
     },
     ftEditor () {
@@ -96,9 +105,7 @@ export default {
       //   // console.log(result)
       // },
       customInsert: function (insertImg, result, editor) {
-        console.log(result)
         that.backFt.url = result.data.file_path
-        console.log(that.backFt.url)
         insertImg(that.backFt.url)
       }
     }
@@ -108,7 +115,7 @@ export default {
     // })
     var div = $('.avatar').parent('div')
     div.addClass('wangeditor')
-    $('.editor').css({'height': 'auto', 'padding-bottom': '30px'})
+    $('.editor').css({'height': 'auto', 'padding-bottom': '37px'})
     $('.w-e-text-container').css({'min-height': '87px', 'height': 'auto', 'border': '1px solid rgb(204, 204, 204)'})
     $('.w-e-text-container').find('div').css('min-height', '87px')
     $('.w-e-toolbar').css({'position': 'absolute', 'bottom': '0', 'border': '0', 'background-color': '#fff'})
@@ -134,13 +141,13 @@ export default {
     box-shadow: navajowhite;
 }
 .wangeditor{
-    width: 1020px;
-    margin: 20px auto 0 auto;
+    width: 790px;
+    /* margin: 20px auto 0 auto; */
     background-color: #fff;
     padding: 20px 0;
     position: relative;
     overflow: hidden;
-    padding-left: 16%;
+    padding-left: 7%;
 }
 .avatar{
     float: left;
@@ -181,8 +188,8 @@ export default {
     line-height: 30px;
     border-radius: 2px;
     position: absolute;
-    bottom: 10px;
-    right: 274px;
+    bottom: 20px;
+    right: 124px;
 }
 .cancel{
     font-size: 14px;
@@ -190,7 +197,7 @@ export default {
     margin-right: 20px;
     background: #fff;
     position: absolute;
-    bottom: 15px;
-    right: 335px;
+    bottom: 25px;
+    right: 192px;
 }
 </style>

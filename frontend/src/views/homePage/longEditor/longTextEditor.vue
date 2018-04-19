@@ -82,6 +82,7 @@ export default{
             this.backLong.diff_time = data.data.diff_time
             this.backLong.is_good = data.data.is_good
             $('.w-e-text-container').find('p').html('')
+            alert(1)
             this.$router.push('/')
           }
         }

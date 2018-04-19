@@ -547,8 +547,8 @@ ul.dropdown-menu{height: auto;}
 .pagTop:hover i{color:#999;}
 
 /*首页框架*/
-.bibar-Main{margin-top: 60px; position: relative; z-index: 5;}
-.bibar-Mainleft{width: 860px; float: left;}
+.bibar-Main{margin-top: 80px; position: relative; z-index: 5;}
+.bibar-Mainleft{width: 790px; float: left;}
 .bibar-Mainright{width: 220px; float: right;}
 .bibar-box{background-color: #fff; box-shadow: 0px 0px 4px 3px #ededed;}
 .bibar-box:after{visibility: hidden;display: block;font-size: 0;content: " ";clear: both;height: 0;}
@@ -595,6 +595,8 @@ ul.dropdown-menu{height: auto;}
 .bibar-Legend li{float: left; line-height: 20px; margin-left: 20px;}
 .bibar-Legend li:first-child{margin-left:0px}
 .bibar-Legend li .color{float: left; width: 10px; height: 3px; margin-top: 8px; margin-right: 5px;}
+/* 首页左边栏 */
+.bibar-sidebar{width: 150px;float: left;position: relative;margin-right: 20px;}
 /*首页新闻*/
 .bibar-boxindex2{padding:20px 40px;}
 .bibar-indexNewsList{}

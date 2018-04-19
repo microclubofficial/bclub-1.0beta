@@ -1,7 +1,7 @@
 <template>
 <div>
  <!--简介-->
-            <article class="bibar-box bibar-boxindex3">
+            <article class="bibar-box bibar-boxindex3" v-if="isBx">
                 <div class="bibar-boxtitle"> <span class="name">简介</span> </div>
                 <div class="bibar-boxbody">
                     <div class="bibar-indexintro">
@@ -32,6 +32,21 @@
                     </div>
                 </div>
             </article>
+            <!-- 热门话题 -->
+            <!-- tab -->
+      <div class="recommend-tab shadow-box">
+        <ul id="myTab" class="nav nav-tabs">
+          <li class="active"><a href="#tech" data-toggle="tab">全球</a></li>
+          <li><a href="#future" data-toggle="tab">美股</a></li>
+          <li><a href="#future" data-toggle="tab">沪深</a></li>
+          <li><a href="#future" data-toggle="tab">港股</a></li>
+        </ul>
+        <div id="myTabContent" class="tab-content" v-for="(tmp,index) in toTalk" :key="index">
+          <div class="tab-pane fade in active" :id="tmp" >
+            <p>{{hotHd[index]}}</p>
+          </div>
+        </div>
+      </div>
             <div class="pt20"></div>
             <!--影响力-->
             <div class="bibar-box bibar-boxindex3">
@@ -151,7 +166,10 @@ export default{
   data: function () {
     return {
       txt: '',
-      txth: ''
+      txth: '',
+      isBx: false,
+      hotHd: ['区块链技术吧', '区块链发展与区块链未来'],
+      toTalk: ['tech', 'future']
     }
   },
   created: function () {
@@ -162,6 +180,7 @@ export default{
       $p.text($p.text().replace(/(\s)*([a-zA-Z0-9]+|\W)(\.\.\.)?$/, '...'))
     };
     this.txth = $('.bibar-indexintro').html()
+    $('#myTab li:eq(1) a').tab('show')
   },
   methods: {
     showText: function () {
@@ -179,3 +198,9 @@ export default{
   }
 }
 </script>
+
+<style>
+.nav>li>a {
+    padding: 10px 12px !important;
+}
+</style>
