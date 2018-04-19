@@ -51,7 +51,6 @@ export default {
     // 填新密码
     setfindemail () {
       post('/api/forget', this.findForm).then(data => {
-        console.log(data)
         if (data.resultcode === 0) {
           alert(data.message)
         }

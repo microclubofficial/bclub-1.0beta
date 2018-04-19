@@ -42,6 +42,7 @@ export default {
       this.topicData.content = this.editorContent
       if (this.topicData.content.length > 0) {
         post('/api/topic', this.topicData).then(data => {
+          console.log(data)
           this.editorContent = ''
           if (data.message === '未登录') {
             alert('先去登录')

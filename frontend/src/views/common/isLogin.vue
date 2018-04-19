@@ -69,6 +69,7 @@ export default{
     }
   },
   mounted () {
+    console.log(this.userInfo)
     this.outloginSty()
   },
   methods: {
@@ -89,10 +90,12 @@ export default{
     // 退出登录
     outlogin () {
       let that = this
+      console.log(this.userInfo)
       $.ajax({
         url: '/api/logout',
         type: 'DELETE',
         success (data) {
+          console.log(data)
           if (data.message === '登出成功') {
             that.$store.commit('USER_INFO', {
               'username': '',
