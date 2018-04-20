@@ -241,7 +241,8 @@ export function cnyFunStr (value, rate, num) {
   }
 }
 
+// 处理图片
 export function needContent (val) {
   let nowVal = val.replace(/<img.+?>/ig, '')
-  return nowVal.slice(2,nowVal.indexOf('</p>'))
+  return nowVal.slice(2, nowVal.indexOf('</p>'))
 }

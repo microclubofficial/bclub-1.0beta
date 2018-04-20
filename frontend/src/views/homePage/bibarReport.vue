@@ -20,7 +20,8 @@ export default {
     return {
       editorContent: '',
       topicData: {
-        'content': ''
+        'content': '',
+        'url': ''
       },
       backData: {
         'author': '',
@@ -31,6 +32,7 @@ export default {
         'content': '',
         'is_good': 0,
         'is_bad': 0,
+        'url': '',
         replt_count: 0
       },
       nowShowApi: ['topic', 'bar', 'bar', 'bar', 'comment'],
@@ -44,7 +46,19 @@ export default {
     },
     getContent: function () {
       this.topicData.content = this.editorContent
-      if (this.topicData.content.length > 0) {
+      let image = this.topicData.content.match(/<img src="\/static[^>]+>/g)
+      let newData = this.topicData.content.split(/<img src="\/static[^>]+>/g)
+      this.topicData.url = ''
+      if (image !== null) {
+        for (let j = 0; j < image.length; j++) {
+          this.topicData.url += `${image[j]}`
+        }
+      }
+      this.topicData.content = ''
+      for (let i = 0; i < newData.length; i++) {
+        this.topicData.content += `${newData[i]}`
+      }
+      if (this.topicData.content.length > 0 || this.topicData.url.length > 0) {
         console.log(this.topicData)
         post(`/api/${this.nowShowApi[this.toApi]}${this.toApi === 1 ? '/question' : this.toApi === 2 ? '/answer' : this.toApi === 3 ? '/comment' : ''}/replies/${this.toApi === 0 ? this.mainCommnet : this.toApi === 2 ? this.talkId : this.toApi === 3 ? this.contentId : this.mainReplay}`, this.topicData).then(data => {
           console.log(data)
@@ -58,6 +72,7 @@ export default {
               this.backData.content = data.data.content
               this.backData.avatar = data.data.avatar
               this.backData.author = data.data.author
+              this.backData.url = data.data.url
               this.replies = data.data.replies
               // console.log(this.replies)
               this.$emit('backReplies', this.replies)
@@ -95,7 +110,6 @@ export default {
       //   // console.log(result)
       // },
       customInsert: function (insertImg, result, editor) {
-        that.backData.url = result.data.file_path
         insertImg(that.backData.url)
       }
     }

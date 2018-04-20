@@ -82,7 +82,7 @@ export default{
     min-width: 1200px;
     z-index: 10001;
 }
-.bibar-w1100{width:1100px;margin: 0 auto;}
+.bibar-w1100{width:1200px;margin: 0 auto;}
 .bibar-w1100:after{
     visibility: hidden;
     display: block;

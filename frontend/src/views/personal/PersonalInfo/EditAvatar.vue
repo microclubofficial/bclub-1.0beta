@@ -69,6 +69,7 @@ export default {
       console.log(this.imgDataUrl)
     },
     cropUploadSuccessFun (data, field) {
+      console.log(data)
       this.$store.commit('USER_INFO', {
         'username': data.data.username,
         'avatar': data.data.avatar,
