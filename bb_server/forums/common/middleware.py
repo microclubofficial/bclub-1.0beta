@@ -10,10 +10,12 @@
 #          By:
 # Description:
 # **************************************************************************
-from flask import g, request, abort
-from flask_login import current_user
+from flask import g, request, abort, session, app
+from flask_login import current_user, login_manager
 from forums.api.forms import SortForm, SearchForm
 from .records import mark_online, load_online_users
+
+from datetime import timedelta
 
 
 def set_form(form):

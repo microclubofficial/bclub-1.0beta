@@ -1,4 +1,3 @@
-from flask import jsonify
 from flask.views import MethodView
 from forums.func import get_json, object_as_dict
 from .models import B_Picture
@@ -47,7 +46,7 @@ class B_List(MethodView):
         blist['page_count'] = int(math.ceil(int(blist['count'])/int(limit)))
         for i in blist['summaryList']:
             i['picture'] = 'https://blockchains.oss-cn-shanghai.aliyuncs.com/static/coinInfo/%s.png'%(i['id'])
-        return get_json(1, 'succeMethodViewss', blist)
+        return get_json(1, 'success', blist)
 
 class Picture(MethodView):
     def get(self):

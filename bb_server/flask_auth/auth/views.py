@@ -32,10 +32,14 @@ def guest_required(func):
     @wraps(func)
     def decorator(*args, **kwargs):
         if current_user.is_authenticated:
+            user = request.user
+            data = {"username":user.username}
+            Avatar(data, user)
             #flash(_("You have logined in ,needn't login again"))
             msg = _("You have logined in ,needn't login again")
             #return redirect('/')
-            return get_json(1, msg, {})
+
+            return get_json(0, msg, data)
         return func(*args, **kwargs)
     return decorator
 
@@ -81,7 +85,7 @@ class LoginView(MethodView):
         post_data = request.json
         username = post_data['username']
         password = post_data['password']
-        remember = post_data.pop('remember', True)
+        remember = post_data.pop('remember', False)
         user = User.query.filter_by(username=username).first()
         if not user or not user.check_password(password):
             #msg = _('用户名或密码错误')
@@ -112,7 +116,7 @@ class PhoneLoginView(MethodView):
         post_data = request.json
         phone = post_data['phone']
         captcha = post_data['phonecaptcha']
-        remember = post_data.pop('remember', True)
+        remember = post_data.pop('remember', False)
         user = User.query.filter_by(phone=phone).first()
         if not user:
             return get_json(0, '手机号未注册', {})
@@ -121,6 +125,7 @@ class PhoneLoginView(MethodView):
         user.login(remember)
         data = {"username":user.username}
         Avatar(data, user)
+        redis_data.delete(phone)
         return get_json(1, '登录成功', data)
         
 
@@ -151,7 +156,7 @@ class RegisterView(MethodView):
             recommender_code = post_data['recommender_code']
         else:
             recommender_code = None
-        if check_phone:
+        if check_phone(phone):
             msg = _('The phone has been registered')
             #return HTTPResponse(HTTPResponse.HTTP_PARA_ERROR, message=msg).to_response()
             return get_json(0, msg, {})
@@ -174,6 +179,7 @@ class RegisterView(MethodView):
             recommender_user.save()
         user.set_password(password)
         user.save()
+        redis_data.delete(phone)
         user.login(True)
         #self.send_email(user)
         #flash(_('An email has been sent to your.Please receive'))
@@ -216,7 +222,7 @@ class ForgetView(MethodView):
         email = post_data['email']
         user = User.query.filter_by(email=email).first()
         if not user:
-            msg = 'The email is error'
+            msg = '邮箱不存在'
             #return HTTPResponse(HTTPResponse.HTTP_PARA_ERROR, message=msg).to_response()
             return get_json(0, msg, {})
         #password = ''.join(sample(ascii_letters + digits, 8))
@@ -268,7 +274,6 @@ class SetPasswordView(MethodView):
             return get_json(0, msg, {})
         user.set_password(password)
         user.save()
-        user.login(True)
         data = {"username":user.username}
         Avatar(data, user)
         return get_json(1, '修改成功', data)
@@ -290,6 +295,7 @@ class PhoneForgetView(MethodView):
             return get_json(0, msg, {})
         if not check_captcha(phone, captcha):
             return get_json(0, '验证码错误', {})
+        redis_data.delete(phone)
         return get_json(1, '验证成功', {})
 
 
@@ -304,11 +310,12 @@ class ConfirmView(MethodView):
             user.save()
         elif current_user.is_confirmed:
             #return HTTPResponse(HTTPResponse.USER_IS_CONFIRMED).to_response()
-            return get_json(1, '用户已通过确认', {})
+            return get_json(0, '用户已通过确认', {})
         self.send_email(current_user)
         #return HTTPResponse(HTTPResponse.NORMAL_STATUS,
         # description=_('An email has been sent to your.Please receive')).to_response()
         return get_json(1, '一封邮件已发出', {})
+
 
     def send_email(self, user):
         token = user.email_token
@@ -337,17 +344,16 @@ class ConfirmTokenView(MethodView):
 class ConfirmPhoneView(MethodView):
     def post(self):
         phone = request.json['phone']
-        print(phone)
         if (request.path.endswith('login') and check_phone(phone)) or (request.path.endswith('phoneCaptcha') and not check_phone(phone)):
-            print(1)
             captcha = ''.join(sample(digits, 6))
-            url = "http://www.kanyanbao.com/websocket/aip/send_sms_template.json"
-            data = {"phone":phone, "templateId": "1001", "content":captcha}
+            url = "http://www.kanyanbao.com/websocket/aip/send_sms.json"
+            data = {"phone":phone, "content":'您的验证码是%s,5分钟内有效。'%captcha}
             headers = {'Content-Type':'application/json'}
             ori = requests.post(url, headers = headers, json = data)
             redis_data.set(phone, captcha, ex=300)
             return get_json(1, '短信发送成功', {})
         return get_json(0, 'failed', {})
+
 
 class Auth(object):
     def __init__(self, app=None):
@@ -370,6 +376,7 @@ class Auth(object):
         emailsetpassword_view = SetPasswordView.as_view('mailsetpassword')
         phonesetpassword_view = SetPasswordView.as_view('phonesetpassword')
         settingemail_view = ConfirmView.as_view('setting.email')
+
 
         app.add_url_rule('/api/login', view_func=login_view)
         app.add_url_rule('/api/logout', view_func=logout_view)

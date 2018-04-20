@@ -10,3 +10,7 @@ fabfile.py
 *.pyc
 **/.webassets-cache/
 *config.example
+*config.py
+Dockerfile
+static/
+gunicorn.conf
