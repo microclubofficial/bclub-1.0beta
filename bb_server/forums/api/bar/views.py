@@ -5,6 +5,7 @@ from forums.api.user.models import User
 from forums.func import get_json, object_as_dict, time_diff, Avatar
 from .models import Bar, Questions, Answers, Comments, Replys
 from .permissions import reply_list_permission
+import json
 
 
 class BarListView(MethodView):
@@ -93,6 +94,7 @@ class BarQuestionView(MethodView):
         qusetion = Questions.query.filter_by(id = id).first_or_404()
         post_data = request.data
         user = request.user
+        #content = json.dumps(post_data.pop('content', None))
         content = post_data.pop('content', None)
         bar_answer = Answers(content = content, questions_id = id, is_reply = 0)
         bar_answer.author_id = user.id

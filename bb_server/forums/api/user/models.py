@@ -66,7 +66,7 @@ class User(db.Model, UserMixin):
             user_follower.c.user_id == self.id,
             user_follower.c.follower_id == user.id).exists()
 
-    def login(self, remember=True):
+    def login(self, remember=False):
         login_user(self, remember)
         identity_changed.send(
             current_app._get_current_object(), identity=Identity(self.id))

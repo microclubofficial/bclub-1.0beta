@@ -13,7 +13,7 @@ site.add_url_rule('/currency_news/<token>', view_func=currency_news)
 site.add_url_rule('/blist/<page>/<limit>', view_func=b_list)
 site.add_url_rule('/bpicture', view_func=b_picture)
 site.add_url_rule('/kline/<token>', view_func=k_line)
-site.add_url_rule('/tokenintroduce', view_func=sidebar)
+site.add_url_rule('/side/tokenintroduce/<token>', view_func=sidebar)
 
 def init_app(app):
     app.register_blueprint(site)

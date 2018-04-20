@@ -30,34 +30,31 @@ def check_file(filename):
 class AvatarView(MethodView):
     decorators = [login_required]
 
-    @form_validate(
-        AvatarForm, error=lambda: redirect(url_for('setting.setting')), f='')
+    #@form_validate(
+    #    AvatarForm, error=lambda: redirect(url_for('setting.setting')), f='')
     def post(self):
-        form = AvatarForm()
         user = request.user
-        file = request.files[form.avatar.name]
-        filename = user.username + '-' + str(int(time())) + str(
-            randint(1000, 9999))
-        img = Image.open(file)
-        size = 30, 30
-        img.thumbnail(size, Image.ANTIALIAS)
-        current_app.config.setdefault('AVATAR_FOLDER', os.path.join(
-            current_app.static_folder, 'avatars'))
-        avatar_path = current_app.config['AVATAR_FOLDER']
-        avatar = os.path.join(avatar_path, filename + '.png')
-        if not os.path.exists(avatar_path):
-            os.makedirs(avatar_path)
-        img.save(avatar)
-        #img.close()
-        info = user.info
-        if info.avatar:
-            ef = os.path.join(avatar_path, info.avatar)
-            if os.path.exists(ef):
-                os.remove(ef)
-        user.avatar = filename + '.png'
-        user.save()
-        resp = Response(img, mimetype="image/png")
-        return resp
+        file_dict = request.files.to_dict()
+        for filename in file_dict:
+            file = file_dict[filename]
+            if file and check_file(file.filename):
+                filename = user.username + '-' + str(int(time())) + str(
+                    randint(1000, 9999))
+                img = Image.open(file)
+                size = 30, 30
+                img.thumbnail(size, Image.ANTIALIAS)
+                current_app.config.setdefault('AVATAR_FOLDER', os.path.join(
+                    current_app.static_folder, 'avatars'))
+                avatar_path = current_app.config['AVATAR_FOLDER']
+                avatar = os.path.join(avatar_path, filename + '.png')
+                if not os.path.exists(avatar_path):
+                    os.makedirs(avatar_path)
+                img.save(avatar)
+                #img.close()
+                user.avatar = '/' + avatar_path + '/' + filename + '.png'
+                user.save()
+                data = {"username": user.username, "avatar": user.avatar}
+                return get_json(1, '更换头像成功', data)
 
 
 class AvatarFileView(MethodView):

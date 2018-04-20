@@ -62,4 +62,4 @@ class IsAuthMethodView(BaseMethodView):
 
 
 class IsConfirmedMethodView(BaseMethodView):
-    decorators = [is_confirmed, login_required]
+    decorators = [login_required]

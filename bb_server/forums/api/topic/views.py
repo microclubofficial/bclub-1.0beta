@@ -24,7 +24,7 @@ from forums.api.tag.models import Tags
 from forums.api.utils import gen_topic_filter, gen_topic_orderby
 from forums.common.serializer import Serializer
 from forums.common.utils import gen_filter_dict, gen_order_by
-from forums.common.views import BaseMethodView as MethodView
+from flask.views import MethodView
 from forums.common.views import IsAuthMethodView, IsConfirmedMethodView
 from forums.jinja import safe_markdown
 
@@ -117,19 +117,22 @@ class TopicListView(MethodView):
     #@form_validate(form_board, error=error_callback, f='')
     def post(self):
         user = request.user
-        form = TopicForm()
-        post_data = form.data
+        #form = TopicForm()
+        #post_data = form.data
+        post_data = request.data
         title = post_data.pop('title', None)
         content = post_data.pop('content', None)
         #tags = post_data.pop('tags', None)
         content_type = post_data.pop('content_type', 0)
         token = post_data.pop('token', None)
+        picture = post_data.pop('picture', None)
         #board = post_data.pop('category', None)
         topic = Topic(
             title=title,
             content=content,
             content_type=content_type,
-            token = token)
+            token = token,
+            picture = picture)
             #board_id=int(board))
         #tags = tags.split(',')
         #topic_tags = []

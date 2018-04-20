@@ -1,5 +1,5 @@
 from flask.views import MethodView
-from forums.func import get_json, object_as_dict
+from forums.func import get_json, object_as_dict, Avatar
 from forums.api.topic.models import Topic, Reply
 from sqlalchemy import func
 from forums.api.user.models import User
@@ -19,8 +19,9 @@ class SideInfluence(MethodView):
         page_count = int(math.ceil(sum_count/per_page))
         for i in influence:
             reply = {}
-            user = User.query.filter_by(id = i[0]).first().username
-            reply['username'] = user
+            user = User.query.filter_by(id = i[0]).first()
+            Avatar(reply, user)
+            reply['username'] = user.username
             reply['reply_count'] = i[1]
             data.append(reply)
         influence_data = {'reply':data, 'sum_count': sum_count, 'page_count': page_count}
@@ -44,9 +45,11 @@ class SideAnalyst(MethodView):
         data = []
         for i in datalist[start:(start+per_page)]:
             thumb = {}
-            user = User.query.filter_by(id = i[0]).first().username
-            thumb['username'] = user
+            user = User.query.filter_by(id = i[0]).first()
+            Avatar(thumb, user)
+            thumb['username'] = user.username
             thumb['sum_is_good'] = i[1]
             data.append(thumb)
         analyst_data = {'analyst':data, 'sum_count': sum_count, 'page_count': page_count}
         return get_json(1, '分析师', analyst_data)
+

@@ -32,8 +32,9 @@ ALLOWED_EXTENSIONS = set([ 'png', 'jpg', 'gif', 'txt', 'pdf', 'doc', 'docx'])
 # SERVER_NAME = 'localhost:5000'
 
 # remember me to save cookies
-PERMANENT_SESSION_LIFETIME = timedelta(days=3)
-REMEMBER_COOKIE_DURATION = timedelta(days=3)
+PERMANENT = True
+PERMANENT_SESSION_LIFETIME = timedelta(days=7)
+REMEMBER_COOKIE_DURATION = timedelta(days=7)
 ONLINE_LAST_MINUTES = 5
 
 # You want show how many topics per page

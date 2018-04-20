@@ -40,17 +40,18 @@ class Topic(db.Model, ModelMixin):
     CONTENT_TYPE = (('0', 'text'), ('1', 'markdown'), ('2', 'org-mode'))
 
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(81), nullable=False)
+    title = db.Column(db.String(81))
     content = db.Column(db.Text, nullable=False)
     content_type = db.Column(
         db.String(10), nullable=False, default=CONTENT_TYPE_MARKDOWN)
     created_at = db.Column(
         db.DateTime, default=datetime.now(), nullable=False)
-    token = db.Column(db.String(32), nullable=False)
+    token = db.Column(db.String(24))
     updated_at = db.Column(
         db.DateTime, default=datetime.now(), onupdate=datetime.now())
     is_good = db.Column(db.String(512), default='[]')
     is_bad = db.Column(db.String(512), default='[]')
+    picture = db.Column(db.String(81))
     author_id = db.Column(
         db.Integer, db.ForeignKey(
             'user.id', ondelete="CASCADE"))

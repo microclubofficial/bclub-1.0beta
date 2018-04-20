@@ -16,9 +16,10 @@ from forums.api.forms import (ProfileForm, PasswordForm, PrivacyForm,
                               AvatarForm, BabelForm)
 from forums.common.views import IsConfirmedMethodView as MethodView
 from flask_auth.form import form_validate
-from flask_auth.auth.views import check_phone
+from flask_auth.auth.views import check_captcha, check_phone
 from forums.func import get_json, Avatar
 from forums.api.user.models import User
+from forums.extension import redis_data
 
 def error_callback(url):
     return lambda: redirect(url_for(url))
@@ -53,17 +54,22 @@ class ChangePasswordView(MethodView):
         data = {'form': form}
         return render_template('setting/password.html', **data)
 
-    @form_validate(
-        PasswordForm, error=error_callback('setting.password'), f='')
     def post(self):
         user = request.user
-        form = PasswordForm()
-        if user.check_password(form.old_password.data):
-            user.set_password(form.new_password.data)
+        data = request.json
+        old_password = data.get('OldPassword')
+        new_password = data.get('NewPassword')
+        confirm_password = data.get('confirm_password')
+        if not user.check_password(old_password):
+            return get_json(0, '原密码错误', {})
+        elif new_password != confirm_password:
+            return get_json(0, '两次密码不相同', {})
+        else:    
+            user.set_password(new_password)
             user.save()
-            logout_user()
+            current_user.logout()
             return get_json(1, '修改密码成功，请重新登录', {})
-        return get_json(0, '原密码错误', {})
+        
 
 class ChangePhoneView(MethodView):
     def post(self):
@@ -71,13 +77,14 @@ class ChangePhoneView(MethodView):
         post_data = request.json
         phone = post_data['phone']
         captcha = post_data['captcha']
-        if User.query.filter_by(phone = phone).exists():
+        if check_phone(phone):
             msg = '手机已被注册'
             return get_json(0, msg, {})
-        if not check_phone(phone, captcha):
+        if not check_captcha(phone, captcha):
             return get_json(0, '验证码错误', {})
         user.phone = phone
         user.save()
+        redis_data.delete(phone)
         return get_json(1, '手机号已更换', {})
 
 class ChangeUsernameView(MethodView):
@@ -85,7 +92,7 @@ class ChangeUsernameView(MethodView):
         user = request.user
         post_data = request.json
         username = post_data.get('username')
-        if User.query.filter_by(username = username).first():
+        if User.query.filter_by(username = username).exists():
             msg = '用户名已存在'
             return get_json(0, msg, {})
         user.username = username
