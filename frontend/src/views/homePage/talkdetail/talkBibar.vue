@@ -19,7 +19,7 @@
             <ul class="bibar-indexNewsItem-infro">
               <li class="set-question"><a href="javascript:void(0)">关注问题</a></li>
               <li class="set-answer" @click="showEditor"><a href="javascript:void(0)">写回答</a></li>
-              <li class="set-choseOne"> <a href="javascript:void(0);" class="icon-quan mr15 active"  @click="changeNum(0,question.id)"><i class="iconfont icon-handgood"></i><span>{{isGood}}</span></a> <a href="javascript:void(0);" class="icon-quan set-choseOne" @click="changeNum(1,question.id)"><i class="iconfont icon-handbad"></i><span>{{ishandbad}}</span></a> </li>
+              <li class="set-choseOne"> <a href="javascript:void(0);" class="icon-quan mr15 active"  @click="changeNum(0,question.id)"><i class="iconfont">&#xe603;</i><span>{{isGood}}</span></a> <a href="javascript:void(0);" class="icon-quan set-choseOne" @click="changeNum(1,question.id)"><i class="iconfont">&#xe731;</i><span>{{ishandbad}}</span></a> </li>
               <li class="set-discuss" @click="showDiscuss(question.id)">
                 <a href="javascript:void(0);">
                   <i class="iconfont icon-pinglun"></i> 评论
@@ -102,7 +102,7 @@
                     </div>
                     <div class="set">
                       <ul class="bibar-indexNewsItem-infro">
-                        <li class="set-choseOne"> <a href="javascript:void(0);" class="icon-quan mr15 active"  @click="changeNum(0,item.author_id)"><i class="iconfont icon-handgood"></i><span>{{isGood}}</span></a><a href="javascript:void(0);" class="icon-quan set-choseOne" @click="changeNum(1,item.author_id)"><i class="iconfont icon-handbad"></i><span>{{ishandbad}}</span></a> </li>
+                        <li class="set-choseOne"> <a href="javascript:void(0);" class="icon-quan mr15 active"  @click="changeNum(0,item.author_id)"><i class="iconfont">&#xe603;</i><span>{{isGood}}</span></a><a href="javascript:void(0);" class="icon-quan set-choseOne" @click="changeNum(1,item.author_id)"><i class="iconfont">&#xe731;</i><span>{{ishandbad}}</span></a> </li>
                         <li class="set-choseShang"> <a href="javascript:void(0);"><i class="iconfont icon-dashang"></i> 打赏<span>438</span></a> </li>
                         <li class="set-discuss">
                           <a href="javascript:void(0);">
@@ -159,7 +159,7 @@
                     </div>
                     <div class="set">
                       <ul class="bibar-indexNewsItem-infro">
-                        <li class="set-choseOne"> <a href="javascript:void(0);" class="icon-quan mr15 active"  @click="changeNum(0,item.author_id)"><i class="iconfont icon-handgood"></i><span>{{isGood}}</span></a><a href="javascript:void(0);" class="icon-quan set-choseOne" @click="changeNum(1,item.author_id)"><i class="iconfont icon-handbad"></i><span>{{ishandbad}}</span></a> </li>
+                        <li class="set-choseOne"> <a href="javascript:void(0);" class="icon-quan mr15 active"  @click="changeNum(0,item.author_id)"><i class="iconfont">&#xe603;</i><span>{{isGood}}</span></a><a href="javascript:void(0);" class="icon-quan set-choseOne" @click="changeNum(1,item.author_id)"><i class="iconfont">&#xe731;</i><span>{{ishandbad}}</span></a> </li>
                         <li class="set-discuss" @click="talkToComment(item.id,now)">
                           <a href="javascript:void(0);">
                             <i class="iconfont icon-pinglun"></i> 评论

@@ -9,7 +9,7 @@
         <div id="myTabContent" class="tab-content">
           <form class="form-horizontal" style="max-width:420px;margin:auto">
             <!-- 用户名登录 -->
-            <div class="tab-pane fade active" id="home" v-if="showTab" :class="{in:showTab}">
+            <div class="tab-pane fade active" id="home" v-show="showTab" :class="{in:showTab}">
             <div class="form-group">
             <label class="col-sm-2 control-label">用户名:</label>
             <div class="col-sm-9">
@@ -41,7 +41,7 @@
           </div>
           <div class="form-group">
             <div class="col-sm-offset-2 col-sm-9">
-              <input id="remember" name="remember" type="checkbox" value="y">
+              <input id="remember" v-model="userForm.remember" type="checkbox" value="y">
               <label for="remember">记住我</label>
               <a class="pull-right" @click="toForgetPwd">忘记密码?</a>
             </div>
@@ -54,7 +54,7 @@
           <h5 style='text-align:center;cursor: pointer'>没有账号？<router-link :to="{path:'/register'}">注册</router-link></h5>
           </div>
           <!-- 手机登录 -->
-          <div class="tab-pane fade  active" id="ios" v-if="!showTab" :class="{in:!showTab}">
+          <div class="tab-pane fade  active" id="ios" v-show="!showTab" :class="{in:!showTab}">
             <div class="form-group">
             <label class="col-sm-2 control-label">手机号:</label>
             <div class="col-sm-9">
@@ -75,6 +75,13 @@
                 <div class="form-group">
             <div class="col-sm-offset-2 col-sm-9">
               <button type="button" style="width: 100%; border-radius: 5px;background: #286090; color:#fff;" class="btnm btnm-primary btnm-block" @click="handlePhoneLogin">登陆</button>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-9">
+              <input id="rememberPhone"  v-model="phoneForm.remember" type="checkbox" value="p">
+              <label for="rememberPhone">记住我</label>
+              <a class="pull-right" @click="toForgetPwd">忘记密码?</a>
             </div>
           </div>
           <h5 style='text-align:center;cursor: pointer'>没有账号？<router-link :to="{path:'/register'}">注册</router-link></h5>
@@ -107,6 +114,7 @@ export default {
       hasControl: false,
       countdown: 30,
       showTab: true,
+      remember: '',
       getcontroltxt: '获取验证码'
     }
   },
@@ -169,6 +177,7 @@ export default {
       }
       console.log(this.userForm)
       post(this.formUrl, this.userForm).then(data => {
+        alert(data.message)
         if (data.message === '验证码错误') {
           this.controlPrompt = data.message
           this.phoneControlPrompt = data.message
@@ -179,7 +188,6 @@ export default {
         if (data.message === '用户名或密码错误') {
           alert(data.message)
         }
-        console.log(data)
         if (data.resultcode === 1) {
           this.$store.commit('USER_INFO', {
             'username': data.data.username,
@@ -203,6 +211,7 @@ export default {
         return
       }
       post(this.phoneUrl, this.phoneForm).then(data => {
+        alert(data.message)
         if (data.resultcode === 0) {
           alert(data.message)
           if (data.message === '你已经登陆，不能重复登陆') {

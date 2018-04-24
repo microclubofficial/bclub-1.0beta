@@ -35,38 +35,35 @@
             <!-- 热门话题 -->
             <!-- tab -->
       <div class="recommend-tab shadow-box">
+        <div class="hot_talk">
+          <h5>热门话题<span>更多话题>></span></h5>
+        </div>
         <ul id="myTab" class="nav nav-tabs">
-          <li class="active"><a href="#tech" data-toggle="tab">全球</a></li>
-          <li><a href="#future" data-toggle="tab">美股</a></li>
-          <li><a href="#future" data-toggle="tab">沪深</a></li>
-          <li><a href="#future" data-toggle="tab">港股</a></li>
+          <li class="active" @click="showHotTab(0)"><a href="#tech" data-toggle="tab">全球</a></li>
+          <li @click="showHotTab(1)"><a href="#future" data-toggle="tab">美股</a></li>
+          <li @click="showHotTab(2)"><a href="#american" data-toggle="tab">沪深</a></li>
+          <li @click="showHotTab(3)"><a href="#hongkong" data-toggle="tab">港股</a></li>
         </ul>
-        <div id="myTabContent" class="tab-content" v-for="(tmp,index) in toTalk" :key="index">
-          <div class="tab-pane fade in active" :id="tmp" >
-            <p>{{hotHd[index]}}</p>
+        <div id="myTabContent" class="tab-content">
+          <div class="tab-pane fade in active" id="tech">
+            <li></li>
+          </div>
+          <div class="tab-pane fade" id="future">
+          </div>
+          <div class="tab-pane fade" id="american">
+          </div>
+          <div class="tab-pane fade" id="hongkong">
           </div>
         </div>
       </div>
             <div class="pt20"></div>
             <!--影响力-->
             <div class="bibar-box bibar-boxindex3">
-                <div class="bibar-boxtitle"> <span class="name">影响力</span> <span class="fr"><a href="#">上五位</a> <a href="#">下五位</a> </span></div>
+                <div class="bibar-boxtitle"> <span class="name">影响力</span> <span class="fr"><a href="#" @click="changePage(0)">上五位</a> <a href="#" @click="changePage(1)">下五位</a> </span></div>
                 <div class="bibar-boxbody">
                     <ul class="bibar-indexYQLlist">
-                        <li class="bibar-indexYQLitem">
-                            <div class="bibar-author"> <a href="#"><span class="photo"><img src="img/pic-user3.png"></span> <span class="name">啃米</span> <span class="time">相关评论1050条</span> </a></div>
-                            <a href="#" class="btn btn-theme btn-outline">提问</a> </li>
-                        <li class="bibar-indexYQLitem">
-                            <div class="bibar-author"> <a href="#"><span class="photo"><img src="img/pic-user1.png"></span> <span class="name">凡心_订阅号凡心_订阅号</span> <span class="time">相关评论1050条</span> </a></div>
-                            <a href="#" class="btn btn-theme btn-outline">提问</a> </li>
-                        <li class="bibar-indexYQLitem">
-                            <div class="bibar-author"> <a href="#"><span class="photo"><img src="img/pic-user1.png"></span> <span class="name">说球不行吗</span> <span class="time">相关评论1050条</span> </a></div>
-                            <a href="#" class="btn btn-theme btn-outline">提问</a> </li>
-                        <li class="bibar-indexYQLitem">
-                            <div class="bibar-author"> <a href="#"><span class="photo"><img src="img/pic-user1.png"></span> <span class="name">说球不行吗</span> <span class="time">相关评论1050条</span> </a></div>
-                            <a href="#" class="btn btn-theme btn-outline">提问</a> </li>
-                        <li class="bibar-indexYQLitem">
-                            <div class="bibar-author"> <a href="#"><span class="photo"><img src="img/pic-user1.png"></span> <span class="name">说球不行吗</span> <span class="time">相关评论1050条</span> </a></div>
+                        <li class="bibar-indexYQLitem" v-for="(tmp, index) in sideList" :key="index">
+                            <div class="bibar-author"> <a href="#"><span class="photo"><img :src="tmp.avatar"></span> <span class="name">{{tmp.username}}</span> <span class="time">相关评论{{tmp.reply_count}}条</span> </a></div>
                             <a href="#" class="btn btn-theme btn-outline">提问</a> </li>
                     </ul>
                 </div>
@@ -77,11 +74,8 @@
                 <div class="bibar-boxtitle"> <span class="name">分析师</span></div>
                 <div class="bibar-boxbody">
                     <ul class="bibar-indexYQLlist">
-                        <li class="bibar-indexYQLitem">
-                            <div class="bibar-author"> <a href="#"><span class="photo"><img src="img/pic-user2.png"></span> <span class="name">啃米</span> <span class="time"><i class="iconfont icon-hot"></i> 热度61029</span> </a></div>
-                            <a href="#" class="btn btn-theme btn-outline">提问</a> </li>
-                        <li class="bibar-indexYQLitem">
-                            <div class="bibar-author"> <a href="#"><span class="photo"><img src="img/pic-user1.png"></span> <span class="name">凡心_订阅号凡心_订阅号</span> <span class="time"><i class="iconfont icon-hot"></i> 热度61029</span> </a></div>
+                        <li class="bibar-indexYQLitem" v-for="(tmp,index) in analystList" :key="index">
+                            <div class="bibar-author"> <a href="#"><span class="photo"><img :src="tmp.avatar"></span> <span class="name">{{tmp.username}}</span> <span class="time"><i class="iconfont icon-hot"></i> 热度{{tmp.sum_is_good}}</span> </a></div>
                             <a href="#" class="btn btn-theme btn-outline">提问</a> </li>
                     </ul>
                 </div>
@@ -90,58 +84,13 @@
   <div class="indexrightscroll-top">
     <!--热门-->
     <div class="bibar-box bibar-boxindex3">
-      <div class="bibar-boxtitle"> <span class="name">热门</span> <a href="#" class="fr">更多</a></div>
+      <div class="bibar-boxtitle"> <span class="name">热门币</span> <a href="#" class="fr" @click="changeBtb(0)">上一页</a><a href="#" class="fr" @click="changeBtb(1)">下一页</a></div>
       <div class="bibar-boxbody">
         <ul class="bibar-indexRMlist">
-          <li class="bibar-indexRMitem row">
-            <div class="col-sm-4"><a href="#">BTC</a></div>
-            <div class="col-sm-4"><span class="fr">9465.68</span></div>
-            <div class="col-sm-4"><span class="text-green fr">+0.85%</span></div>
-          </li>
-          <li class="bibar-indexRMitem row">
-            <div class="col-sm-4"><a href="#">BTH</a></div>
-            <div class="col-sm-4"><span class="fr">1147.34</span></div>
-            <div class="col-sm-4"><span class="fr text-red">-0.40%</span></div>
-          </li>
-          <li class="bibar-indexRMitem row">
-            <div class="col-sm-4"><a href="#">BTC</a></div>
-            <div class="col-sm-4"><span class="fr">9465.68</span></div>
-            <div class="col-sm-4"><span class="text-green fr">+0.85%</span></div>
-          </li>
-          <li class="bibar-indexRMitem row">
-            <div class="col-sm-4"><a href="#">BTH</a></div>
-            <div class="col-sm-4"><span class="fr">1147.34</span></div>
-            <div class="col-sm-4"><span class="fr text-red">-0.40%</span></div>
-          </li>
-          <li class="bibar-indexRMitem row">
-            <div class="col-sm-4"><a href="#">BTC</a></div>
-            <div class="col-sm-4"><span class="fr">9465.68</span></div>
-            <div class="col-sm-4"><span class="text-green fr">+0.85%</span></div>
-          </li>
-          <li class="bibar-indexRMitem row">
-            <div class="col-sm-4"><a href="#">BTH</a></div>
-            <div class="col-sm-4"><span class="fr">1147.34</span></div>
-            <div class="col-sm-4"><span class="fr text-red">-0.40%</span></div>
-          </li>
-          <li class="bibar-indexRMitem row">
-            <div class="col-sm-4"><a href="#">BTC</a></div>
-            <div class="col-sm-4"><span class="fr">9465.68</span></div>
-            <div class="col-sm-4"><span class="text-green fr">+0.85%</span></div>
-          </li>
-          <li class="bibar-indexRMitem row">
-            <div class="col-sm-4"><a href="#">BTH</a></div>
-            <div class="col-sm-4"><span class="fr">1147.34</span></div>
-            <div class="col-sm-4"><span class="fr text-red">-0.40%</span></div>
-          </li>
-          <li class="bibar-indexRMitem row">
-            <div class="col-sm-4"><a href="#">BTC</a></div>
-            <div class="col-sm-4"><span class="fr">9465.68</span></div>
-            <div class="col-sm-4"><span class="text-green fr">+0.85%</span></div>
-          </li>
-          <li class="bibar-indexRMitem row">
-            <div class="col-sm-4"><a href="#">BTH</a></div>
-            <div class="col-sm-4"><span class="fr">1147.34</span></div>
-            <div class="col-sm-4"><span class="fr text-red">-0.40%</span></div>
+          <li class="bibar-indexRMitem row" v-for="(tmp,index) in hotList" :key="index">
+            <div class="col-sm-4"><a href="#">{{tmp.symbol}}</a></div>
+            <div class="col-sm-4"><span class="fr">{{tmp.price |  cnyFun(CNY,2)}}</span></div>
+            <div class="col-sm-4"><span class="fr" :class="tmp.change_1h >= 0 ? 'text-green' : 'text-red'">{{tmp.change_1h | bfb(2)}}</span></div>
           </li>
         </ul>
       </div>
@@ -162,14 +111,23 @@
 
 <script>
 import $ from 'jquery'
+import {get} from '../../../utils/http'
 export default{
   data: function () {
     return {
       txt: '',
       txth: '',
       isBx: false,
-      hotHd: ['区块链技术吧', '区块链发展与区块链未来'],
-      toTalk: ['tech', 'future']
+      sideList: [],
+      sidePage: 1,
+      pageCount: 0,
+      analystPage: 1,
+      analystList: [],
+      hotbPage: 1,
+      hotCount: 8,
+      hotList: [],
+      hotPageCount: 0,
+      CNY: 0
     }
   },
   created: function () {
@@ -181,6 +139,12 @@ export default{
     };
     this.txth = $('.bibar-indexintro').html()
     $('#myTab li:eq(1) a').tab('show')
+    // 影响力
+    this.sideFun(this.sidePage)
+    // 分析师
+    this.analystFun(this.analystPage)
+    // 热门币
+    this.bibarHot(this.hotbPage)
   },
   methods: {
     showText: function () {
@@ -194,6 +158,60 @@ export default{
         $('.bibar-indexintro').html(this.txth)
         $('.bibar-indexintro').css({'height': '108px'})
       };
+    },
+    // 热门话题
+    showHotTab (id) {
+      if (id === 0) {
+      }
+    },
+    // 影响力
+    sideFun (pno) {
+      get(`/api/side/influence/${pno}`).then(data => {
+        this.sideList = data.data.reply
+        this.pageCount = data.data.page_count
+      })
+    },
+    // 影响力翻页
+    changePage (id) {
+      if (id === 0) {
+        if (this.sidePage > 1 && this.sidePage < this.pageCount) {
+          this.sidePage--
+          this.sideFun(this.sidePage)
+        }
+      } else if (id === 1) {
+        if (this.sidePage < this.pageCount) {
+          this.sidePage++
+          this.sideFun(this.sidePage)
+        }
+      }
+    },
+    // 分析师
+    analystFun (pno) {
+      get(`/api/side/analyst/${pno}`).then(data => {
+        this.analystList = data.data.analyst
+      })
+    },
+    // 热门币
+    bibarHot (pno) {
+      get(`/api/blist/${pno}/${this.hotCount}`).then(data => {
+        this.hotList = data.data.summaryList
+        this.CNY = data.data.exrateData.CNY
+        this.hotPageCount = data.data.page_count
+      })
+    },
+    // 热门币翻页
+    changeBtb (id) {
+      if (id === 0) {
+        if (this.hotbPage > 1 && this.hotbPage < this.hotPageCount) {
+          this.hotbPage--
+          this.bibarHot(this.hotbPage)
+        }
+      } else if (id === 1) {
+        if (this.hotbPage < this.hotPageCount) {
+          this.hotbPage++
+          this.bibarHot(this.hotbPage)
+        }
+      }
     }
   }
 }
@@ -201,6 +219,32 @@ export default{
 
 <style>
 .nav>li>a {
-    padding: 10px 12px !important;
+    padding: 8px 12px !important;
 }
+.hot_talk{padding: 10px 12px;}
+.hot_talk>h5>span{
+    float: right;
+    font-size: 12px;
+    color: #bfbfbf;}
+.nav-tabs>li.active>a{
+    color: #555;
+    cursor: default;
+    background-color: #F7F8F7 !important;
+    border-top: 2px solid #26ADDD !important;
+    border-right: none !important;
+    border-left: none !important;
+    border-bottom-color: transparent;
+    border-radius: 0 !important;
+}
+.recommend-tab{background: #fff;}
+.nav-tabs {
+    border-top: 1px solid #F3F4F3 !important;
+    border-bottom: 1px solid #F3F4F3 !important;
+    background: #F7F8F7;
+    margin: 10px 0 20px 0;
+}
+.btn {
+    padding: 0px 5px !important;
+}
+.text-red{color:red;}
 </style>

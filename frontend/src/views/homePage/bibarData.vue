@@ -5,7 +5,7 @@
   width: 100%;
   position: relative;
   background: linen;
-  margin-top: 80px;
+  /* margin-top: 80px; */
 }
 .commun-bibarData>.bibarData-main{
   width: 1100px;
@@ -122,7 +122,11 @@
       </div>
     </div>
     <!-- Add Pagination -->
-    <div class="swiper-pagination"></div>
+    <div class="swiper-pagination swiper-pagination-clickable swiper-pagination-bullets">
+      <span class="swiper-pagination-bullet swiper-pagination-bullet-active">1</span>
+      <span class="swiper-pagination-bullet">2</span>
+      <span class="swiper-pagination-bullet">3</span>
+    </div>
   </div>
    </div>
   </div>
@@ -163,7 +167,7 @@ export default{
         el: '.swiper-pagination',
         clickable: true,
         renderBullet: function (index, className) {
-          return '<span class="' + className + '">' + (index + 1) + '</span>';
+          return '<span class="' + className + '">' + (index + 1) + '</span>'
         }
       }
       // autoplay: {

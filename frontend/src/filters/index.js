@@ -246,3 +246,13 @@ export function needContent (val) {
   let nowVal = val.replace(/<img.+?>/ig, '')
   return nowVal.slice(2, nowVal.indexOf('</p>'))
 }
+
+// 转百分比
+export function bfb (val, num) {
+  if (val === 0) {
+    return val
+  } else {
+    let nowData = val.toFixed(num) + '%'
+    return nowData
+  }
+}

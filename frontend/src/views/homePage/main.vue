@@ -6,7 +6,7 @@
       <!-- left slide -->
       <BibarLeft v-if="initHide"></BibarLeft>
         <!--主体左侧-->
-      <section class="bibar-Mainleft">
+      <section class="bibar-Mainleft" :class="{initClass:initShow}">
           <!--社区币吧数据-->
       <BibarData v-show="initShow"></BibarData>
       <!--社区各币种-->
@@ -122,7 +122,8 @@ export default{
     width: 790px;
     margin: 0 auto
   }
-  .Maineditor>.wangeditor>.toLongText{right: 415px !important;}
+  .Maineditor>.wangeditor>.toLongText{right: 442px !important;}
   /* .initHideEditor{margin-top:80px !important;} */
-  .initSty{width: 1100px !important;}
+  .initSty{width: 1200px !important;}
+  .initClass{width: 1200px !important;}
 </style>

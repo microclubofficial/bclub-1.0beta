@@ -1,7 +1,7 @@
 <template>
   <section class="bibar-sidebar">
-        <a class="personal_avatar" href=""><img src="" alt=""></a>
-        <div class="user_name"></div>
+        <a class="personal_avatar" href=""><img :src="userInfo.avatar" alt=""></a>
+        <div class="user_name">{{userInfo.username}}</div>
         <table class="user_friends">
           <tbody>
             <tr>
@@ -23,16 +23,16 @@
           </tbody>
         </table>
         <ul class="user_pannel">
-          <li :key="index" v-for="(pannel,index) in personalList.from"><i class="iconfont" v-html="pannel.icon"></i><a href="">{{pannel.tit}}</a></li>
+          <li @click="toSomeWhere(index)" :key="index" v-for="(pannel,index) in personalList.from"><i class="iconfont" v-html="pannel.icon"></i><a href="javascript:void(0)">{{pannel.tit}}</a></li>
         </ul>
         <ul class="user_pannel">
-          <li :key="index" v-for="(pannel,index) in personalList.friend"><i class="iconfont" v-html="pannel.icon"></i><a href="">{{pannel.tit}}</a></li>
+          <li :key="index" v-for="(pannel,index) in personalList.friend"><i class="iconfont" v-html="pannel.icon"></i><a href="javascript:void(0)">{{pannel.tit}}</a></li>
         </ul>
         <ul class="user_pannel">
-          <li :key="index" v-for="(pannel,index) in personalList.myHouse"><i class="iconfont" v-html="pannel.icon"></i><a href="">{{pannel.tit}}</a></li>
+          <li :key="index" v-for="(pannel,index) in personalList.myHouse"><i class="iconfont" v-html="pannel.icon"></i><a href="javascript:void(0)">{{pannel.tit}}</a></li>
         </ul>
         <ul class="about_bibar">
-          <li :key="index" v-for="(pannel,index) in personalList.aboutMe"><i class="iconfont" v-html="pannel.icon"></i><a href="">{{pannel.tit}}</a></li>
+          <li :key="index" v-for="(pannel,index) in personalList.aboutMe"><i class="iconfont" v-html="pannel.icon"></i><a href="javascript:void(0)">{{pannel.tit}}</a></li>
         </ul>
       </section>
 </template>
@@ -44,8 +44,8 @@ export default{
       personalList: {
         'from': [
           {'icon': '&#xe627;', 'tit': '首页'},
-          {'icon': '&#xe608;', 'tit': '讨论'},
-          {'icon': '&#xe616;', 'tit': '持亏盈亏'},
+          {'icon': '&#xe608;', 'tit': '主题'},
+          {'icon': '&#xe616;', 'tit': '评论'},
           {'icon': '&#xe6a7;', 'tit': '收藏'}
         ],
         'friend': [
@@ -66,11 +66,26 @@ export default{
       }
     }
   },
+  computed: {
+    userInfo () {
+      return this.$store.state.userInfo.userInfo
+    }
+  },
   mounted: function () {
 
   },
   methods: {
-
+    toSomeWhere (index) {
+      if (index === 0) {
+        this.$router.push('/')
+      } else if (index === 1) {
+        this.$router.push('/memberCenter/topic')
+      } else if (index === 2) {
+        this.$router.push('/memberCenter/comment')
+      } else if (index === 3) {
+        this.$router.push('/memberCenter/collection')
+      }
+    }
   }
 }
 </script>

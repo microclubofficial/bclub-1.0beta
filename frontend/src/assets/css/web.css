@@ -42,7 +42,22 @@
     border: 1px solid transparent;
     border-radius: 5px;
 }
- /* 模态框 */
+/* 富文本 */
+.w-e-text p a{
+    color: #0181ff;
+    text-decoration: underline;
+  }
+.media-body > div{
+    display: -webkit-box;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-all;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    max-height: 100px;
+}
+/* 模态框 */
  .modal-backdrop{z-index: 10000;}
  #myModal{z-index: 10002;}
  .btn{padding: 0px 10px !important;}
@@ -457,7 +472,7 @@ ul.dropdown-menu{height: auto;}
 .bibar-tabs .bibar-tabs-list{width: 200%;overflow: hidden;}
 /*.bibar-tabs .bibar-tabs-list{background: url(../img/tab-line.png) repeat-x left bottom;}*/
 .bibar-tabs .bibar-tabs-list:after{visibility: hidden;display: block;font-size: 0;content: " ";clear: both;height: 0;}
-.bibar-tabs-listSty2{overflow: hidden; background: url(../img/hline.png) repeat-x left bottom;}
+.bibar-tabs-listSty2{overflow: hidden;width:100%; background: url(../img/hline.png) repeat-x left bottom;}
 .bibar-tabs .bibar-tabs-listSty2:after{visibility: hidden;display: block;font-size: 0;content: " ";clear: both;height: 0;}
 .bibar-tabs-listSty2 li{float: left;margin-left: 40px;}
 .bibar-tabs-listSty2 li:first-child{margin-left: 0px}
@@ -612,7 +627,7 @@ ul.dropdown-menu{height: auto;}
 .bibar-author{overflow: hidden;}
 .bibar-author .photo{margin-right: 10px; float: left;}
 .bibar-author .photo img{width: 30px; height: 30px; border-radius: 30px;}
-.bibar-author .name{display: block; font-size: 14px; white-space: nowrap;}
+.bibar-author .name{ font-size: 14px; white-space: nowrap;}
 .bibar-author .time{color: #999;display: block;}
 .bibar-indexNewsItem .bibar-author{margin: 10px 0px;}
 .bibar-indexNewsItem .tit{margin: 0px 0px 10px;}

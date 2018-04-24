@@ -56,6 +56,7 @@ export default {
         }
         if (data.resultcode === 1) {
           alert(data.message)
+          console.log(data)
           this.$store.commit('USER_INFO', {
             'username': data.data.username,
             'avatar': data.data.avatar,

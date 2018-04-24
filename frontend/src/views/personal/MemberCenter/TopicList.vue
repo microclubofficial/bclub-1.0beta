@@ -15,7 +15,7 @@
           </div>
           <div class="set">
             <ul class="bibar-indexNewsItem-infro">
-              <li class="set-choseOne"> <a href="javascript:void(0);" class="icon-quan mr15" :class='{active:tmp.is_good_bool}'  @click="changeNum(0,index,tmp.id)" ><i class="iconfont icon-handgood"></i><span class="is-good">{{tmp.is_good}}</span></a> <a href="javascript:void(0);"  :class='{active:tmp.is_bad_bool}' class="icon-quan set-choseOne" @click="changeNum(1,index,tmp.id)"><i class="iconfont icon-handbad"></i><span class="is-bad">{{tmp.is_bad}}</span></a> </li>
+              <li class="set-choseOne"> <a href="javascript:void(0);" class="icon-quan mr15" :class='{active:tmp.is_good_bool}'  @click="changeNum(0,index,tmp.id)" ><i class="iconfont">&#xe603;</i><span class="is-good">{{tmp.is_good}}</span></a> <a href="javascript:void(0);"  :class='{active:tmp.is_bad_bool}' class="icon-quan set-choseOne" @click="changeNum(1,index,tmp.id)"><i class="iconfont">&#xe731;</i><span class="is-bad">{{tmp.is_bad}}</span></a> </li>
               <li class="set-discuss" @click="showDiscuss(index,tmp.id)">
                 <a href="javascript:void(0);">
                   <i class="iconfont icon-pinglun"></i> 评论
@@ -87,7 +87,7 @@
                     </div>
                     <div class="set">
                       <ul class="bibar-indexNewsItem-infro">
-                        <li class="set-choseOne"> <a href="javascript:void(0);" class="icon-quan mr15 active"  @click="changeNum(0)"><i class="iconfont icon-handgood"></i><span>{{item.is_bad}}</span></a><a href="javascript:void(0);"  :class='{active:tmp.is_bad_bool}' class="icon-quan set-choseOne" @click="changeNum(1)"><i class="iconfont icon-handbad"></i><span class="is-bad">{{item.is_good}}</span></a></li>
+                        <li class="set-choseOne"> <a href="javascript:void(0);" class="icon-quan mr15 active"  @click="changeNum(0)"><i class="iconfont">&#xe603;</i><span>{{item.is_bad}}</span></a><a href="javascript:void(0);"  :class='{active:tmp.is_bad_bool}' class="icon-quan set-choseOne" @click="changeNum(1)"><i class="iconfont">&#xe731;</i><span class="is-bad">{{item.is_good}}</span></a></li>
                         <li class="set-choseShang"> <a href="javascript:void(0);"><i class="iconfont icon-dashang"></i> 打赏<span>438</span></a> </li>
                         <li class="set-discuss" @click="replyComment(item.id,now)">
                           <a href="javascript:void(0);">

@@ -9,12 +9,11 @@
           <div class="user">
             <div class="bibar-author"> <a href="#"> <span class="photo"><img :src="tmp.avatar"></span> <span class="name">{{tmp.author}}</span> <span class="time">7小时前发布</span> </a> </div>
           </div>
-          <div class="tit"><a href="#" @click="goDetail(tmp.id)">{{tmp.title}}</a></div>
+          <div class="tit"><a href="javascript:void(0)" @click="goDetail(tmp.id)">{{tmp.title}}</a></div>
           <div class="txt indexNewslimitHeight" @click="goDetail(tmp.id)">
             <div class="media">
-              <a class="pull-left" href="#" v-if="hasImg">
-              <img class="media-object" src="../../../assets/img/pic-news.png"
-              alt="Media Object">
+              <a class="pull-left" href="javascript:void(0)" v-if="tmp.picture">
+              <img class="media-object" :src="tmp.picture">
             </a>
             <div class="media-body">
               <div v-html="EditorContent(tmp.content)"></div>
@@ -23,7 +22,7 @@
           </div>
           <div class="set">
             <ul class="bibar-indexNewsItem-infro">
-              <li class="set-choseOne"> <a href="javascript:void(0);" class="icon-quan mr15" :class='{active:tmp.is_good_bool}'  @click="changeNum(0,index,tmp.id)" ><i class="iconfont icon-handgood"></i><span class="is-good">{{tmp.is_good}}</span></a> <a href="javascript:void(0);"  :class='{active:tmp.is_bad_bool}' class="icon-quan set-choseOne" @click="changeNum(1,index,tmp.id)"><i class="iconfont icon-handbad"></i><span class="is-bad">{{tmp.is_bad}}</span></a> </li>
+              <li class="set-choseOne"> <a href="javascript:void(0);" class="icon-quan mr15" :class='{active:tmp.is_good_bool}'  @click="changeNum(0,index,tmp.id)" ><i class="iconfont">&#xe603;</i><span class="is-good">{{tmp.is_good}}</span></a> <a href="javascript:void(0);"  :class='{active:tmp.is_bad_bool}' class="icon-quan set-choseOne" @click="changeNum(1,index,tmp.id)"><i class="iconfont">&#xe731;</i><span class="is-bad">{{tmp.is_bad}}</span></a> </li>
               <li class="set-discuss" @click="showDiscuss(index,tmp.id)">
                 <a href="javascript:void(0);">
                   <i class="iconfont icon-pinglun"></i> 评论
@@ -46,7 +45,7 @@
           </div>
         </div>
       </div>
-     <div class="bibar-comment"  v-show="showComment&&index==i">
+     <div class="bibar-hot"  v-show="showComment&&index==i">
        <!-- 评论框 -->
        <div class="editor-comment">
          <img :src="tmp.avatar" alt="" class="avatar"  v-show="commentShow">
@@ -96,7 +95,7 @@
                     </div>
                     <div class="set">
                       <ul class="bibar-indexNewsItem-infro">
-                        <li class="set-choseOne"> <a href="javascript:void(0);" class="icon-quan mr15 active"  @click="changeNum(0)"><i class="iconfont icon-handgood"></i><span>{{item.is_bad}}</span></a><a href="javascript:void(0);"  :class='{active:tmp.is_bad_bool}' class="icon-quan set-choseOne" @click="changeNum(1)"><i class="iconfont icon-handbad"></i><span class="is-bad">{{item.is_good}}</span></a></li>
+                        <li class="set-choseOne"> <a href="javascript:void(0);" class="icon-quan mr15 active"  @click="changeNum(0)"><i class="iconfont">&#xe603;</i><span>{{item.is_good}}</span></a><a href="javascript:void(0);"  :class='{active:tmp.is_bad_bool}' class="icon-quan set-choseOne" @click="changeNum(1)"><i class="iconfont">&#xe731;</i><span class="is-bad">{{item.is_bad}}</span></a></li>
                         <li class="set-choseShang"> <a href="javascript:void(0);"><i class="iconfont icon-dashang"></i> 打赏<span>438</span></a> </li>
                         <li class="set-discuss" @click="replyComment(item.id,now)">
                           <a href="javascript:void(0);">
@@ -212,7 +211,7 @@ export default{
       if (this.articles.length > 0) {
         this.loadingShow = true
       }
-      var that = this
+      let that = this
       document.querySelector('#app').addEventListener('scroll', function () {
         if (this.clientHeight + this.scrollTop === this.scrollHeight) {
           that.loadTopicPage()
@@ -289,7 +288,6 @@ export default{
     showDiscuss (index, id) {
       get(`/api/topic/${id}/1`).then(data => {
         this.nowData = data.data.replies
-
       })
       if (index !== this.i) {
         this.i = index
@@ -326,7 +324,8 @@ export default{
       })
     },
     showFtContentFun (ftData) {
-      this.getNavaVal.unshift(ftData)
+      // console.log(this.getNavaVal)
+      this.articles.unshift(ftData)
     },
     // 评论回复
     replyComment (id, now) {
@@ -375,7 +374,9 @@ export default{
       for (let i = 0; i < newData.length; i++) {
         now += `${newData[i]}`
       }
-      now = now.substr(0, 300) + '...'
+      if (now.length > 300) {
+        now = now.substr(0, 300) + '...'
+      }
       return now
     }
   }
@@ -641,7 +642,6 @@ a.avatar img {
 }
 .bibar-indexNewsList{
     float: left;
-    width: 860px;
 }
 .talkBibar-flow{
     float: right;

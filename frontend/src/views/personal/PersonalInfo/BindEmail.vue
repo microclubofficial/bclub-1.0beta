@@ -3,7 +3,7 @@
         <div class="container">
             <form>
                 <div class="form-group">
-                    <label class="col-sm-12" for="exampleInputEmail1">请输入注册时的邮箱</label>
+                    <label class="col-sm-12" for="exampleInputEmail1">请输入要绑定的邮箱</label>
                     <input type="email" style="width:25%;margin-top:10px" class="form-control col-sm-3" v-model="bindForm.email" id="exampleInputEmail1" placeholder="Email" @blur='showBindEmailMsg(bindForm.email, 0)'>
                     <span class="prompt col-sm-9" style="margin-left: 0 !important;height:34px;margin-top:20px; display:block;">{{emailPrompt}}</span>
                 </div>
@@ -43,8 +43,8 @@ export default {
     // 绑定邮箱
     bindEmailFun () {
       let instance
-      console.log(this.setPwd)
-      post(`/api/setting/email`, this.setPwd).then(data => {
+      console.log(this.bindForm)
+      post(`/api/setting/email`, this.bindForm).then(data => {
         console.log(data)
         if (data.resultcode === 0) {
           alert(data.message)

@@ -45,7 +45,7 @@ export default{
 
 <style>
 .bibarType-main{
-  width: 1100px;
+  width: 1200px;
   margin: auto;
   position: relative;
   display: flex;
