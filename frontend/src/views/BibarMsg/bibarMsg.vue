@@ -4,10 +4,12 @@
     <MainHeader @backLoadMain='toMainLoadFun'></MainHeader>
     <!--主体-->
     <section class="bibar-Main">
-    <div class="pt40"></div>
+    <!-- <div class="pt40"></div> -->
     <section class="bibar-w1100">
+      <!-- left slide -->
+      <BibarLeft v-if="initHide"></BibarLeft>
         <!--主体左侧-->
-        <section class="bibar-Mainleft">
+        <section class="bibar-Mainleft" :class="{initSty:initShow}">
           <div class="chartListBox">
             <!-- chart列表 -->
             <div class="panel-group" id="accordion">
@@ -53,7 +55,7 @@
             </div>
           </div>
             <!-- 富文本区 -->
-            <div class="mainBibar-editor" style="width:860px; margin:auto; background:#fff;">
+            <div class="mainBibar-editor" :class="{initSty:initShow}" style="margin:auto; background:#fff;">
               <BibarPostContent @backFtContent = 'BibarContentFun' v-show="initHide"></BibarPostContent>
             </div>
             <!--新闻-->
@@ -70,7 +72,7 @@
             </article>
         </section>
         <!--主体右侧-->
-        <section class="bibar-Mainright">
+        <section class="bibar-Mainright" v-show="initHide">
             <BibarRight></BibarRight>
         </section>
     </section>
@@ -82,6 +84,7 @@
 <script>
 import MainHeader from '../common/header.vue'
 import btb from './BibarChart/BTB.vue'
+import BibarLeft from '../homePage/bibarLeft/bibarSideLeft.vue'
 import BibarRight from './BibarRight/bivarRight.vue'
 import BibarPostContent from '../homePage/bibarPostContent.vue'
 import {get} from '../../utils/http'
@@ -106,7 +109,8 @@ export default{
       cpageCount: 0,
       showPrevMore: false,
       showNextMore: false,
-      initHide: false
+      initHide: false,
+      initShow: false
     }
   },
   computed: {
@@ -132,7 +136,8 @@ export default{
     MainHeader,
     btb,
     BibarRight,
-    BibarPostContent
+    BibarPostContent,
+    BibarLeft
   },
   created () {
     this.collapseId = `collapse${this.i++}`
@@ -150,7 +155,7 @@ export default{
     this.loadShow()
   },
   mounted () {
-    $('.mainBibar-editor').find('.wangeditor').css({'width': '860px'})
+    $('.mainBibar-editor').find('.wangeditor').css({'width': '790px'})
     let app = document.getElementById('#app')
     app.scrollTop = 0
   },
@@ -168,8 +173,10 @@ export default{
     // 退登状态
     loadShow () {
       if (!this.userInfo.isLogin) {
+        this.initShow = true
         this.initHide = false
       } else {
+        this.initShow = false
         this.initHide = true
       }
     },
@@ -318,4 +325,7 @@ export default{
     z-index: 1 !important;
     border-color: #0275d8 !important;
 }
+.initLfSty{width: 1200px !important;}
+.initSty{width: 1200px !important;}
+.initClass{width: 1200px !important;}
 </style>

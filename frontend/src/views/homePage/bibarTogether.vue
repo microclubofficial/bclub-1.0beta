@@ -78,7 +78,7 @@ export default{
 <style>
 h4{font-weight: bold;}
 .commun-bibarTogether{
-  width: 1100px;
+  width: 1200px;
   margin: 20px auto;
 }
 .commun-bibarTogether>h4{

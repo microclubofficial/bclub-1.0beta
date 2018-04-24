@@ -1,5 +1,5 @@
 <template>
-    <div v-show="!isHide">
+    <div>
         <div class="avatar"><img src="../../assets/img/pic-user1.png" alt=""></div>
         <div ref="editor" style="text-align:left" class='editor'></div>
         <button @click="getContent" v-show="toApi!==3" class="report btn">发布</button>
@@ -87,6 +87,7 @@ export default {
     //   })
     },
     isHideFun () {
+      $('.w-e-text-container').find('.w-e-text').html('')
       this.isHide = !this.isHide
     }
   },

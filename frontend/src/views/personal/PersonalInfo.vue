@@ -1,4 +1,5 @@
 <style lang="scss" scoped>
+.member-center{margin-top: 40px;}
 .personal-info {
     background-color: #fefefe;
     border: 1px solid #eee;
@@ -10,6 +11,8 @@
 </style>
 
 <template>
+<div>
+    <MainHeader></MainHeader>
     <div class="member-center">
         <div class="container">
             <ol class="breadcrumb">
@@ -33,9 +36,11 @@
             </section>
         </div>
     </div>
+</div>
 </template>
 <script>
 // import {post} from '../utils/http'
+import MainHeader from '../common/header.vue'
 export default {
   data () {
     return {
@@ -48,6 +53,9 @@ export default {
       nowIndex: 0,
       personalUser: []
     }
+  },
+  components: {
+    MainHeader
   },
   methods: {
     routerGo (index) {

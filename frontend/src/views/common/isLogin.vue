@@ -6,7 +6,7 @@
           <a href="javascript:;">
             <div class="user-info" @click="handlePersonal">
               <img class="user-avatar" :src="useravatar" alt="">
-              <span class="user-name">{{userName}}</span>
+              <span class="user-name">{{userInfo.username}}</span>
             </div>
             <div class="nav-info-msg">
               <a href="#"  @click="handleMsg">
@@ -28,7 +28,7 @@
         </div>
         <div class="user_info_dropdown" v-show="showPersonal">
           <ul>
-            <li><a href="javascript:void(0)" @click.stop.prevent><img :src="useravatar" alt=""><span class="user-name"><router-link :to="{path:'/memberCenter'}">{{userName}}</router-link></span></a></li>
+            <li><a href="javascript:void(0)" @click.stop.prevent><img :src="useravatar" alt=""><span class="user-name"><router-link :to="{path:'/memberCenter'}">{{userInfo.username}}</router-link></span></a></li>
             <li><a href="javascript:void(0)" @click.stop.prevent><img src="../../assets/img/set.png" alt=""><span><router-link :to="{path:'/memberCenter'}">个人设置</router-link></span></a></li>
             <li><a href="javascript:void(0)" @click.stop.prevent><img src="../../assets/img/share.png" alt=""><span>股票设置</span></a></li>
             <li><a href="#" @click="outlogin"><i class="iconfont">&#xe629;</i><span>退出</span></a></li>
@@ -69,7 +69,6 @@ export default{
     }
   },
   mounted () {
-    console.log(this.userInfo)
     this.outloginSty()
   },
   methods: {
@@ -90,13 +89,12 @@ export default{
     // 退出登录
     outlogin () {
       let that = this
-      console.log(this.userInfo)
       $.ajax({
         url: '/api/logout',
         type: 'DELETE',
         success (data) {
           console.log(data)
-          if (data.message === '登出成功') {
+          if (data.isLogin) {
             that.$store.commit('USER_INFO', {
               'username': '',
               'avatar': '',
@@ -104,6 +102,16 @@ export default{
             })
             that.outloginSty()
             that.$emit('backLoadContent')
+          } else {
+            if (data.message === '登出成功') {
+              that.$store.commit('USER_INFO', {
+                'username': '',
+                'avatar': '',
+                'isLogin': false
+              })
+              that.outloginSty()
+              that.$emit('backLoadContent')
+            }
           }
         }
       })

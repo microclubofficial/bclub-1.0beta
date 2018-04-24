@@ -1,13 +1,14 @@
 <template>
   <div>
     <div ref="editor" style="text-align:left" class='editor'></div>
-    <button @click="getContent" class="report">发布</button>
+    <button type="button" @click="getContent" class="report">发布</button>
   </div>
 </template>
 
 <script>
 import E from 'wangeditor'
 import {post} from '../../../utils/http.js'
+import { Toast } from 'mint-ui'
 export default{
   props: ['title'],
   name: 'editor',
@@ -43,10 +44,10 @@ export default{
     }
     // 菜单配置
     editor.customConfig.menus = [
+      'head',
       'bold',
       'italic',
       'emoticon',
-      'head',
       'image',
       'link'
     ]
@@ -68,25 +69,39 @@ export default{
   methods: {
     getContent: function () {
       this.topicData.content = this.editorContent
-      this.topicData.title = this.title
-      post('/api/topic', this.topicData).then(data => {
-        if (data.message === '未登录') {
-          alert('先去登录')
-          this.$router.push('/login')
-        } else {
-          if (data.data.content !== '') {
-            this.backLong.content = data.data.content
-            this.backLong.author = data.data.author
-            this.backLong.avatar = data.data.avatar
-            this.backLong.id = data.data.id
-            this.backLong.diff_time = data.data.diff_time
-            this.backLong.is_good = data.data.is_good
-            $('.w-e-text-container').find('p').html('')
-            alert(1)
-            this.$router.push('/')
+      let image = this.topicData.content.match(/<img src="\/static[^>]+>/g)
+      this.topicData.picture = ''
+      if (image !== null) {
+        this.topicData.picture = image[0]
+        this.topicData.picture = this.topicData.picture.slice(this.topicData.picture.indexOf('/'), this.topicData.picture.lastIndexOf('=') - 7)
+      }
+      if (this.topicData.content.length > 0 || this.topicData.picture.length > 0) {
+        post('/api/topic', this.topicData).then(data => {
+          if (data.message === '未登录') {
+            alert('先去登录')
+            this.$router.push('/login')
+          } else {
+            if (data.data.content !== '') {
+              this.backLong.content = data.data.content
+              this.backLong.author = data.data.author
+              this.backLong.avatar = data.data.avatar
+              this.backLong.id = data.data.id
+              this.backLong.diff_time = data.data.diff_time
+              this.backLong.is_good = data.data.is_good
+              $('.w-e-text-container').find('p').html('')
+              this.$router.push('/')
+            }
           }
-        }
-      })
+        })
+      } else {
+        let instance = new Toast({
+          message: '发帖内容不能为空',
+          duration: 1000
+        })
+        setTimeout(() => {
+          instance.close()
+        }, 1000)
+      }
     }
   }
 }
@@ -116,4 +131,5 @@ export default{
 .long-text-editor>div>.editor> .w-e-text-container{
   border:none !important;
 }
+.w-e-text-container{z-index: 9999 !important;}
 </style>

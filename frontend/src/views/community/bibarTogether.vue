@@ -70,7 +70,7 @@ export default{
 
 <style>
 .commun-bibarTogether{
-  width: 790px;
+  width: 1200px;
   margin: 20px auto;
 }
 h3{

@@ -5,7 +5,7 @@
                 <div class="form-group">
                     <label class="col-md-1 control-label">用户名:</label>
                     <div class="col-md-2">
-                        <p class="form-control-static">{{personalUserInfo.username}}</p>
+                        <p class="form-control-static">{{userInfo.username}}</p>
                     </div>
                     <div class="col-md-2">
                         <div class="btnm setFormconfirm" data-target="#myModal" data-toggle="modal" @click="setFormBtn(0)">修改</div>
@@ -34,11 +34,11 @@
                 </div>
             </form>
             <!-- 模态框填新密码 -->
-            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal fade in" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <button type="button" @click="closeModal" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                             <h4 class="modal-title" id="myModalLabel">请填写用户名</h4>
                         </div>
                         <div class="modal-body">
@@ -72,7 +72,7 @@
             </form>
                         </div>
                     <div class="modal-footer">
-                        <button type="button" class="btnm btn-default" data-dismiss="modal">关闭</button>
+                        <button type="button" class="btnm btn-default" @click="closeModal" data-dismiss="modal">关闭</button>
                         <button type="button" class="btnm btn-primary" @click="setusername">确定</button>
                     </div>
                 </div>
@@ -172,8 +172,8 @@ export default {
               'isLogin': true
             })
             this.personalUser(data.data.username)
-            $('#myModal').removeClass('in')
-            $('body').removeClass('modal-open')
+            $('.modal').css({'display': 'none'})
+            $('.modal').removeClass('in')
             document.body.removeChild(document.querySelector('.modal-backdrop'))
           }
         })
@@ -191,9 +191,10 @@ export default {
               iconClass: 'glyphicon glyphicon-ok',
               duration: 1000
             })
-            $('#myModal').css({'display': 'none'}).removeClass('in')
-            $('.modal-backdrop').removeClass('in')
             this.personalUser(this.userInfo.username)
+            $('.modal').css({'display': 'none'})
+            $('.modal').removeClass('in')
+            document.body.removeChild(document.querySelector('.modal-backdrop'))
           }
         })
       }
@@ -220,7 +221,9 @@ export default {
       post('/api/phoneCaptcha', {'phone': phone}).then((data) => {
         console.log(data)
         if (data.resultcode === 0) {
-          alert(data.message)
+          if (data.message === 'failed') {
+            alert('手机号已注册')
+          }
         }
       }).catch(error => {
         console.log(error)
@@ -229,9 +232,16 @@ export default {
     setFormBtn (id) {
       if (id === 0) {
         this.showModel = true
+        $('.modal').css({'display': 'block'})
       } else {
         this.showModel = false
+        $('.modal').css({'display': 'block'})
       }
+    },
+    closeModal () {
+      $('.modal').css({'display': 'none'})
+      $('.modal').removeClass('in')
+      document.body.removeChild(document.querySelector('.modal-backdrop'))
     },
     // 个人资料
     personalUser (uname) {
@@ -268,4 +278,5 @@ export default {
     border-top: none !important;
     padding-top: 0 !important;
 }
+.show{display: none;}
 </style>

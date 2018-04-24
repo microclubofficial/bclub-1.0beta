@@ -1,4 +1,5 @@
 <style lang="scss" scoped>
+.member-center{margin-top: 40px;}
 .personal-info {
     background-color: #fefefe;
     border: 1px solid #eee;
@@ -37,6 +38,8 @@
 </style>
 
 <template>
+<div>
+ <MainHeader></MainHeader>
     <div class="member-center">
         <div class="container">
             <h3 class="page-header">个人中心</h3>
@@ -69,9 +72,11 @@
         </div>
 
     </div>
+</div>
 </template>
 <script>
 import {get} from '../../utils/http'
+import MainHeader from '../common/header.vue'
 export default {
   data () {
     return {
@@ -83,6 +88,9 @@ export default {
       nowIndex: 0,
       personalUser: []
     }
+  },
+  components: {
+    MainHeader
   },
   computed: {
     userInfo () {

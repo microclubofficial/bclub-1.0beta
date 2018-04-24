@@ -13,6 +13,7 @@
 <script>
 import E from 'wangeditor'
 import {post} from '../../utils/http'
+import { Toast } from 'mint-ui'
 
 export default {
   props: ['contentId', 'fromHeader'],
@@ -22,7 +23,7 @@ export default {
       editorContent: '',
       topicData: {
         'content': '',
-        'url': ''
+        'picture': ''
       },
       backFt: {
         'author': '',
@@ -33,7 +34,7 @@ export default {
         'content': '',
         'is_good': 0,
         'is_bad': 0,
-        'url': '',
+        'picture': '',
         replt_count: 0
       },
       showDilog: false
@@ -43,11 +44,12 @@ export default {
     getContent: function () {
       this.topicData.content = this.editorContent
       let image = this.topicData.content.match(/<img src="\/static[^>]+>/g)
-      this.topicData.url = ''
+      this.topicData.picture = ''
       if (image !== null) {
-        this.topicData.url = image[0]
+        this.topicData.picture = image[0]
+        this.topicData.picture = this.topicData.picture.slice(this.topicData.picture.indexOf('/'), this.topicData.picture.lastIndexOf('=') - 7)
       }
-      if (this.topicData.content.length > 0 || this.topicData.url.length > 0) {
+      if (this.topicData.content.length > 0 || this.topicData.picture.length > 0) {
         post('/api/topic', this.topicData).then(data => {
           this.editorContent = ''
           if (data.message === '未登录') {
@@ -59,13 +61,25 @@ export default {
               this.backFt.author = data.data.author
               this.backFt.avatar = data.data.avatar
               this.backFt.id = data.data.id
-              this.backFt.url = data.data.url
-              this.$emit('backFtContent', this.backFt)
+              this.backFt.picture = data.data.picture
+              if (this.showDilog) {
+                this.$emit('backFtNav', this.backFt)
+              } else {
+                this.$emit('backFtContent', this.backFt)
+              }
               $('.w-e-text').html('')
             // this.$emit('backBibarContent', data.data.content)
             }
           }
         })
+      } else {
+        let instance = new Toast({
+          message: '发帖内容不能为空',
+          duration: 1000
+        })
+        setTimeout(() => {
+          instance.close()
+        }, 1000)
       }
     },
     isHideFun () {
@@ -74,7 +88,9 @@ export default {
     toBibarData (router) {
       $('#myModal').removeClass('in')
       $('body').removeClass('modal-open')
-      document.body.removeChild(document.querySelector('.modal-backdrop'))
+      if (this.showDilog) {
+        document.body.removeChild(document.querySelector('.modal-backdrop'))
+      }
       this.$router.push(`/mainDetail/${router}`)
     },
     ftEditor () {
@@ -105,8 +121,8 @@ export default {
       //   // console.log(result)
       // },
       customInsert: function (insertImg, result, editor) {
-        that.backFt.url = result.data.file_path
-        insertImg(that.backFt.url)
+        that.backFt.picture = result.data.file_path
+        insertImg(that.backFt.picture)
       }
     }
     editor.create()

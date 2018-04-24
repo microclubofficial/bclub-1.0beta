@@ -68,7 +68,7 @@
                     </div>
                     <div class="clear hline"></div>
                     <!--chart-->
-                    <div ref="chat" :style="{width:'780px',height:'450px',margin: '0 auto'}"></div>
+                    <div ref="chat" :style="{width:'640px',height:'450px',margin: '0 auto'}" :class="{initChart:initShow}"></div>
                 </article>
             </article>
 
@@ -109,12 +109,18 @@ export default {
       // bId: 'bitcoin'
     }
   },
+  created () {
+    this.loadShow()
+  },
   mounted () {
     this.getChartData(this.bId)
   },
   computed: {
     chartId () {
       return this.$store.state.chartId.chartId
+    },
+    userInfo () {
+      return this.$store.state.userInfo.userInfo
     }
   },
   methods: {
@@ -289,6 +295,17 @@ export default {
     showNowChild (id) {
       this.nowId = id
       this.getChartData(this.nowId)
+    },
+    // 退登状态
+    loadShow () {
+      console.log(this.userInfo)
+      if (!this.userInfo.isLogin) {
+        this.initShow = true
+        this.initHide = false
+      } else {
+        this.initShow = false
+        this.initHide = true
+      }
     }
   }
 }
@@ -300,4 +317,5 @@ export default {
 .bibar-box {
   cursor: pointer;
 }
+.initChart{width: 960px !important;}
 </style>

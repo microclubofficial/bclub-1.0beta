@@ -8,7 +8,7 @@
             <h4 class="modal-title" id="myModalLabel">{{toDialog.title}}</h4>
           </div>
           <div class="modal-body">
-            <BibarPostContent ref="dilogChild" @backFtContent = 'FtContentFun'></BibarPostContent>
+            <BibarPostContent ref="dilogChild" @backFtNav = 'FtNavFun'></BibarPostContent>
           </div>
           <!-- <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
@@ -36,7 +36,7 @@ export default{
     $('.modal-body').find('.w-e-panel-tab-content').css({'height': '142px'})
   },
   methods: {
-    FtContentFun (data) {
+    FtNavFun (data) {
       this.$store.dispatch('set_backForNav', data)
     },
     ftDilog () {
@@ -77,6 +77,7 @@ export default{
 .modal-body>.wangeditor>.avatar{display: none;}
 .modal-body>.wangeditor .report{
   right: 0;
+  bottom: 10px;
 }
 .modal-body>.wangeditor .cancel{
     bottom: -6px;
@@ -99,7 +100,7 @@ export default{
   height: 143px !important;
 }
 .modal-body>.wangeditor .toLongText{
-    bottom: 8px;
-    right: 290px;
+    bottom: 0;
+    right: 320px;
 }
 </style>
