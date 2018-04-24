@@ -57,9 +57,9 @@ class BaseMethodView(MethodView):
         return render_template(template, **kwargs)
 
 
-class IsAuthMethodView(BaseMethodView):
+class IsAuthMethodView(MethodView):
     decorators = [login_required]
 
 
-class IsConfirmedMethodView(BaseMethodView):
+class IsConfirmedMethodView(MethodView):
     decorators = [login_required]

@@ -303,18 +303,16 @@ class ConfirmView(MethodView):
     decorators = [login_required]
 
     def post(self):
-        if request.path.endswith('mail'):
+        if request.path.endswith('email'):
             user = request.user
-            email = request.values.get('email')
+            email = request.data.get('email')
             user.email = email
             user.save()
         elif current_user.is_confirmed:
-            #return HTTPResponse(HTTPResponse.USER_IS_CONFIRMED).to_response()
             return get_json(0, '用户已通过确认', {})
-        self.send_email(current_user)
-        #return HTTPResponse(HTTPResponse.NORMAL_STATUS,
-        # description=_('An email has been sent to your.Please receive')).to_response()
-        return get_json(1, '一封邮件已发出', {})
+        self.send_email(user)
+        msg = '一封邮件已发出'
+        return get_json(1, msg, {})
 
 
     def send_email(self, user):
@@ -322,8 +320,9 @@ class ConfirmView(MethodView):
         confirm_url = url_for(
             'auth.confirm_token', token=token, _external=True)
         html = render_template('templet/email.html', confirm_url=confirm_url)
-        subject = _("Please confirm  your email")
+        subject = '请确认你的邮件'
         user.send_email(html=html, subject=subject)
+        
 
 class ConfirmTokenView(MethodView):
     def get(self, token):
@@ -347,7 +346,7 @@ class ConfirmPhoneView(MethodView):
         if (request.path.endswith('login') and check_phone(phone)) or (request.path.endswith('phoneCaptcha') and not check_phone(phone)):
             captcha = ''.join(sample(digits, 6))
             url = "http://www.kanyanbao.com/websocket/aip/send_sms.json"
-            data = {"phone":phone, "content":'您的验证码是%s,5分钟内有效。'%captcha}
+            data = {"phone":phone, "content":'您的验证码是%s,五分钟内有效。'%captcha}
             headers = {'Content-Type':'application/json'}
             ori = requests.post(url, headers = headers, json = data)
             redis_data.set(phone, captcha, ex=300)

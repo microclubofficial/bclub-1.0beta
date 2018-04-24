@@ -14,6 +14,10 @@ from flask import request, render_template
 from forums.common.views import BaseMethodView as MethodView
 from forums.api.topic.models import Topic
 
+#es = Elasticsearch([ 
+#        'http://root:940530@127.0.0.1:3306/maple_db'
+#    ]
+#)
 
 class SearchView(MethodView):
     def get(self):
