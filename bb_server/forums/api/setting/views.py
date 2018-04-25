@@ -11,7 +11,7 @@
 # Description:
 # **************************************************************************
 from flask import render_template, redirect, url_for, flash, request
-from flask_login import current_user, logout_user
+from flask_login import current_user, logout_user, login_user
 from forums.api.forms import (ProfileForm, PasswordForm, PrivacyForm,
                               AvatarForm, BabelForm)
 from forums.common.views import IsConfirmedMethodView as MethodView
@@ -85,7 +85,7 @@ class ChangePhoneView(MethodView):
         user.phone = phone
         user.save()
         redis_data.delete(phone)
-        return get_json(1, '手机号已更换', {})
+        return get_json(1, '手机号已更换', phone)
 
 class ChangeUsernameView(MethodView):
     def post(self):
@@ -98,7 +98,7 @@ class ChangeUsernameView(MethodView):
         user.username = username
         user.save()
         data = {}
-        data['username'] = username
+        data['username'] = user.username
         Avatar(data, user)
         return get_json(1, '用户名已更换', data)        
 

@@ -83,8 +83,9 @@ class TopicListView(MethodView):
         start = (page-1)*per_page
         query_dict = request.data
         keys = ['title']
-        order_by = gen_topic_orderby(query_dict, keys)
-        filter_dict = gen_topic_filter(query_dict, keys)
+        #order_by = gen_topic_orderby(query_dict, keys)
+        #filter_dict = gen_topic_filter(query_dict, keys)
+        filter_dict = {}
         title = _('All Topics')
         if 'token' in request.path:
             filter_dict.update(token=token)
@@ -92,18 +93,27 @@ class TopicListView(MethodView):
         #elif request.path.endswith('top'):
         #    filter_dict.update(is_bad=True)
         #    title = _('bad Topics')
-        topics = Topic.query.filter_by(
-            **filter_dict).order_by(*order_by).limit(per_page).offset(start)
+        topics = Topic.query.filter_by(**filter_dict).order_by('-id').limit(per_page).offset(start)
         topic_count = FindAndCount(Topic)
         page_count = int(math.ceil(topic_count/per_page))
         topic = []
         for i in topics:
             user = User.query.filter_by(id = i.author_id).first()
-            reply_count = FindAndCount(Reply, topic_id = i.id, is_reply = 1)
+            reply = Reply.query.filter_by(topic_id = i.id).order_by('-id').first()
+            if reply:
+                reply_id = reply.author_id
+                reply_user = User.query.filter_by(id = reply_id).first().username
+                reply_time = time_diff(reply.updated_at)
+            else:
+                reply_user = None
+                reply_time = None
+            reply_count = FindAndCount(Reply, topic_id = i.id)
             diff_time = time_diff(i.updated_at)
             i.created_at = str(i.created_at)
             i.updated_at = str(i.updated_at)
             topics_data = object_as_dict(i)
+            topics_data['reply_time'] = reply_time
+            topics_data['reply_user'] = reply_user
             topics_data['author'] = user.username
             topics_data['diff_time'] = diff_time
             topics_data['replies_count'] = reply_count
@@ -173,37 +183,21 @@ class TopicView(MethodView):
         #page, number = self.page_info
         #order_by = gen_order_by(query_dict, keys)
         #filter_dict = gen_filter_dict(query_dict, keys)
-        reply = Reply.query.filter_by().order_by(('-id')).limit(per_page).offset(start)
-        reply_count = FindAndCount(Reply)
+        reply = Reply.query.filter_by(topic_id = topicId).order_by(('-id')).limit(per_page).offset(start)
+        reply_count = FindAndCount(Reply, topic_id = topicId)
         page_count = int(math.ceil(reply_count/per_page))
         replies = []
         for i in reply: 
-            if i.is_reply == 1:
-                user = User.query.filter_by(id = i.author_id).first()
-                diff_time = time_diff(i.updated_at)
-                i.created_at = str(i.created_at)
-                i.updated_at = str(i.updated_at)
-                replies_data = object_as_dict(i)
-                replies_data['author'] = user.username
-                replies_data['diff_time'] = diff_time
-                replies_data['is_good'], replies_data['is_good_bool'] = Count(i.is_good)
-                replies_data['is_bad'], replies_data['is_bad_bool'] = Count(i.is_bad)
-                Avatar(replies_data, user)
-            elif i.is_reply == 0:
-                user = User.query.filter_by(id = i.author_id).first()
-                reply = Reply.query.filter_by(id = i.topic_id).first()
-                reply_data = dict()
-                reply_data['author'] = User.query.filter_by(id = reply.author_id).first().username
-                reply_data['content'] = reply.content
-                diff_time = time_diff(i.updated_at)
-                i.created_at = str(i.created_at)
-                i.updated_at = str(i.updated_at)
-                comment_data = object_as_dict(i)
-                Avatar(comment_data, user)
-                comment_data['author'] = user.username
-                comment_data['is_good'], comment_data['is_good_bool'] = Count(i.is_good)
-                comment_data['is_bad'], comment_data['is_bad_bool'] = Count(i.is_bad)
-                replies_data = {'reply_data':reply_data, 'comment_data':comment_data}
+            user = User.query.filter_by(id = i.author_id).first()
+            diff_time = time_diff(i.updated_at)
+            i.created_at = str(i.created_at)
+            i.updated_at = str(i.updated_at)
+            replies_data = object_as_dict(i)
+            replies_data['author'] = user.username
+            replies_data['diff_time'] = diff_time
+            replies_data['is_good'], replies_data['is_good_bool'] = Count(i.is_good)
+            replies_data['is_bad'], replies_data['is_bad_bool'] = Count(i.is_bad)
+            Avatar(replies_data, user)
             replies.append(replies_data)
         topic_data = object_as_dict(topic)
         topic_user = User.query.filter_by(id=topic_data['author_id']).first()
@@ -248,39 +242,23 @@ class TopicView(MethodView):
 class ReplyListView(MethodView):
     def get(self, topicId, page):
         start = (page-1)*per_page
-        reply = Reply.query.filter_by().order_by(('-id')).limit(per_page).offset(start)
-        reply_count = FindAndCount(Reply)
+        reply = Reply.query.filter_by(topic_id = topicId).order_by(('-id')).limit(per_page).offset(start)
+        reply_count = FindAndCount(Reply, topic_id = topicId)
         page_count = int(math.ceil(reply_count/per_page))
         data = []
         for i in reply: 
-            if i.is_reply == 1:
-                user = User.query.filter_by(id = i.author_id).first()
-                diff_time = time_diff(i.updated_at)
-                i.created_at = str(i.created_at)
-                i.updated_at = str(i.updated_at)
-                replies_data = object_as_dict(i)
-                replies_data['author'] = user.username
-                replies_data['diff_time'] = diff_time
-                replies_data['is_good'], replies_data['is_good_bool'] = Count(i.is_good)
-                replies_data['is_bad'], replies_data['is_bad_bool'] = Count(i.is_bad)
-                Avatar(replies_data, user)
-            elif i.is_reply == 0:
-                user = User.query.filter_by(id = i.author_id).first()
-                reply = Reply.query.filter_by(id = i.topic_id).first()
-                reply_data = dict()
-                reply_data['author'] = User.query.filter_by(id = reply.author_id).first().username
-                reply_data['content'] = reply.content
-                diff_time = time_diff(i.updated_at)
-                i.created_at = str(i.created_at)
-                i.updated_at = str(i.updated_at)
-                comment_data = object_as_dict(i)
-                Avatar(comment_data, user)
-                comment_data['author'] = user.username
-                comment_data['is_good'], comment_data['is_good_bool'] = Count(i.is_good)
-                comment_data['is_bad'], comment_data['is_bad_bool'] = Count(i.is_bad)
-                replies_data = {'reply_data':reply_data, 'comment_data':comment_data}
+            user = User.query.filter_by(id = i.author_id).first()
+            diff_time = time_diff(i.updated_at)
+            i.created_at = str(i.created_at)
+            i.updated_at = str(i.updated_at)
+            replies_data = object_as_dict(i)
+            replies_data['author'] = user.username
+            replies_data['diff_time'] = diff_time
+            replies_data['is_good'], replies_data['is_good_bool'] = Count(i.is_good)
+            replies_data['is_bad'], replies_data['is_bad_bool'] = Count(i.is_bad)
+            Avatar(replies_data, user)
             data.append(replies_data)
-            data.append({'page_count':page_count, 'reply_count':reply_count}) 
+        data.append({'page_count':page_count, 'reply_count':reply_count}) 
         return get_json(1, '评论信息', data)
 
     decorators = (reply_list_permission, )
@@ -290,7 +268,9 @@ class ReplyListView(MethodView):
         post_data = request.data
         user = request.user
         content = post_data.pop('content', None)
-        reply = Reply(content=content, topic_id = topic.id, is_reply = 1)
+        reference = post_data.pop('replyContent', None)
+        at_user = post_data.pop('author', None)
+        reply = Reply(content=content, reference = reference, topic_id = topic.id, at_user = at_user)
         #user = User.query.filter_by(id=1).first()
         reply.author_id = user.id
         reply.save()
@@ -302,6 +282,7 @@ class ReplyListView(MethodView):
         replies_data['author'] = user.username
         replies_data['is_good'] = 0
         replies_data['is_bad'] = 0
+        replies_data['diff_time'] = diff_time
         # notice
         #MessageClient.topic(reply)
         # count
@@ -309,7 +290,8 @@ class ReplyListView(MethodView):
         #reply.author.reply_count = 1
         return get_json(1, '评论成功', replies_data)
         #return redirect(url_for('topic.topic', topicId=topic.id))
-   
+
+'''   
 class ReplyView(MethodView):
     
     decorators = (reply_permission, )
@@ -321,7 +303,7 @@ class ReplyView(MethodView):
         post_data = request.data
         user = request.user
         content = post_data.pop('content', None)
-        comment = Reply(content=content, topic_id = reply.id, is_reply = 0)
+        comment = Reply(content=content, topic_id = reply.id)
         comment.author_id = user.id
         comment.save()
         diff_time = time_diff(comment.updated_at)
@@ -335,7 +317,7 @@ class ReplyView(MethodView):
         data = {'reply_data':reply_data, 'comment_data':comment_data}
         return get_json(1, '回复成功', data)
 
-'''
+
 class ReplyView(MethodView):
 
     decorators = (reply_permission, )

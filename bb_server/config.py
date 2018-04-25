@@ -20,7 +20,7 @@ SECURITY_PASSWORD_SALT = '123!@#'
 SECRET_KEY_SALT = '123^&*'
 
 # avatar upload directory
-AVATAR_FOLDER = path.join(path.abspath(path.dirname(__file__)), 'static/avatars')
+AVATAR_FOLDER = path.join('static/avatars')
 # avatar generate range
 AVATAR_RANGE = [122, 512]
 PICTURE_FOLDER = path.join('static/avatars')

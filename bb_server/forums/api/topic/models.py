@@ -140,8 +140,9 @@ class Reply(db.Model, ModelMixin):
         db.DateTime, default=datetime.now(), onupdate=datetime.now())
     is_good = db.Column(db.String(512), default='[]')
     is_bad = db.Column(db.String(512), default='[]')
-    is_reply = db.Column(db.SmallInteger , default=0, nullable=False)
     topic_id = db.Column(db.Integer)
+    reference = db.Column(db.String(81))
+    at_user = db.Column(db.String(81))
 
     author_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     author = db.relationship(
