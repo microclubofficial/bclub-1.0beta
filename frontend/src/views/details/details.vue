@@ -195,6 +195,8 @@ export default {
       })
     })
     $('.editor').css({'padding-bottom': '35px'})
+    $('.editor-toolbar').find('.report ').css({'right': '260px', 'bottom': '2px'})
+    $('.editor-toolbar').find('.cancel ').css({'right': '315px', 'bottom': '6px'})
   },
   methods: {
     loadDetailPage () {
@@ -256,6 +258,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.editor-toolbar>.wangeditor{
+  padding-left: 18%;
+}
 .reward-btn{
     display: block;
     width: 56px;

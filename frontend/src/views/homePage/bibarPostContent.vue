@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="avatar"><img src="../../assets/img/pic-user1.png" alt=""></div>
+        <div class="avatar"><img :src="userInfo.avatar" alt=""></div>
         <div ref="editor" style="text-align:left" class='editor'></div>
         <span class="toLongText"  @click="toBibarData(4)"><img src="../../assets/img/longText.png">长文</span>
         <button @click="getContent" class="report btn" data-dismiss="modal">发布</button>
@@ -40,6 +40,11 @@ export default {
       showDilog: false
     }
   },
+  computed: {
+    userInfo () {
+      return this.$store.state.userInfo.userInfo
+    }
+  },
   methods: {
     getContent: function () {
       this.topicData.content = this.editorContent
@@ -57,15 +62,17 @@ export default {
             this.$router.push('/login')
           } else {
             if (data.data.content !== '') {
-              this.backFt.content = data.data.content
-              this.backFt.author = data.data.author
-              this.backFt.avatar = data.data.avatar
-              this.backFt.id = data.data.id
-              this.backFt.picture = data.data.picture
+              let backFt = {}
+              backFt.content = data.data.content
+              backFt.author = data.data.author
+              backFt.avatar = data.data.avatar
+              backFt.id = data.data.id
+              backFt.picture = data.data.picture
               if (this.showDilog) {
-                this.$emit('backFtNav', this.backFt)
+                this.$emit('backFtNav', backFt)
+                this.showDilog = false
               } else {
-                this.$emit('backFtContent', this.backFt)
+                this.$emit('backFtContent', backFt)
               }
               $('.w-e-text').html('')
             // this.$emit('backBibarContent', data.data.content)
@@ -163,11 +170,14 @@ export default {
     padding: 20px 0;
     position: relative;
     overflow: hidden;
-    padding-left: 7%;
+    padding-left: 10%;
 }
 .avatar{
     float: left;
     margin-right: 10px;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
 }
 .editor{
     width: 540px;
@@ -205,7 +215,7 @@ export default {
     border-radius: 2px;
     position: absolute;
     bottom: 20px;
-    right: 124px;
+    right: 125px;
 }
 .cancel{
     font-size: 14px;

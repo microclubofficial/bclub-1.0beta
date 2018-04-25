@@ -1,9 +1,9 @@
 <template>
     <div>
-        <div class="avatar"><img src="../../assets/img/pic-user1.png" alt=""></div>
+        <div class="avatar"><img :src="userInfo.avatar" alt=""></div>
         <div ref="editor" style="text-align:left" class='editor'></div>
-        <button @click="getContent" v-show="toApi!==3" class="report btn">发布</button>
-        <button @click="getContent" v-show="toApi===3" class="report btn">回复</button>
+        <button @click="getContent" v-show="toApi!==3 || toApi!==4" class="report btn">发布</button>
+        <button @click="getContent" v-show="toApi===3 || toApi===4" class="report btn">回复</button>
         <button class="cancel" @click="isHideFun">取消</button>
         <!-- <div>{{backData}}</div> -->
     </div>
@@ -14,7 +14,7 @@ import E from 'wangeditor'
 import {post} from '../../utils/http'
 
 export default {
-  props: ['contentId', 'toApi', 'talkId', 'mainReplay', 'mainCommnet'],
+  props: ['contentId', 'toApi', 'talkId', 'mainReplay', 'mainCommnet', 'replyAuthor', 'replyContent'],
   name: 'editor',
   data () {
     return {
@@ -40,6 +40,11 @@ export default {
       replies: []
     }
   },
+  computed: {
+    userInfo () {
+      return this.$store.state.userInfo.userInfo
+    }
+  },
   methods: {
     showApi (api) {
       this.nowApi = api
@@ -58,10 +63,12 @@ export default {
       for (let i = 0; i < newData.length; i++) {
         this.topicData.content += `${newData[i]}`
       }
+      if (this.toApi === 4) {
+        this.topicData.author = this.replyAuthor
+        this.topicData.replyContent = this.replyContent
+      }
       if (this.topicData.content.length > 0 || this.topicData.url.length > 0) {
-        console.log(this.topicData)
         post(`/api/${this.nowShowApi[this.toApi]}${this.toApi === 1 ? '/question' : this.toApi === 2 ? '/answer' : this.toApi === 3 ? '/comment' : ''}/replies/${this.toApi === 0 ? this.mainCommnet : this.toApi === 2 ? this.talkId : this.toApi === 3 ? this.contentId : this.mainReplay}`, this.topicData).then(data => {
-          console.log(data)
           //   评论发送完毕
           this.editorContent = ''
           if (data.message === '未登录') {
@@ -69,14 +76,19 @@ export default {
             this.$router.push('/login')
           } else {
             if (data.data.content !== '') {
-              this.backData.content = data.data.content
-              this.backData.avatar = data.data.avatar
-              this.backData.author = data.data.author
-              this.backData.url = data.data.url
+              let backData = {}
+              backData.content = data.data.content
+              backData.avatar = data.data.avatar
+              backData.author = data.data.author
+              backData.url = data.data.url
+              let hotreplies = {}
+              hotreplies = data.data
+              // 热门回复
+              this.$emit('backhotReplies', hotreplies)
+              // 回复
               this.replies = data.data.replies
-              // console.log(this.replies)
               this.$emit('backReplies', this.replies)
-              this.$emit('backList', this.backData)
+              this.$emit('backList', backData)
               $('.w-e-text-container').find('.w-e-text').html('')
             }
           }
@@ -132,10 +144,12 @@ export default {
   padding-bottom: 33px;
 }
 .comment-reply .wangeditor .report{
-  right: 438px;
+  right: 58px;
+  bottom: 0;
 }
 .comment-reply .wangeditor .cancel{
-  right: 495px;
+  right:120px;
+  bottom: 5px;
 }
 .bibar-commun {
     margin: -20px auto 0 auto;
@@ -145,17 +159,20 @@ export default {
     box-shadow: navajowhite;
 }
 .wangeditor{
-    width: 1020px;
-    margin: 20px auto 0 auto;
+    /* width: 1020px; */
+    /* margin: 20px auto 0 auto; */
     background-color: #fff;
-    padding: 20px 0;
+    /* padding: 20px 0; */
     position: relative;
     overflow: hidden;
-    padding-left: 16%;
+    /* padding-left: 16%; */
 }
 .avatar{
     float: left;
     margin-right: 10px;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
 }
 .editor{
     width: 540px;
@@ -192,7 +209,7 @@ export default {
     border-radius: 2px;
     position: absolute;
     bottom: 10px;
-    right: 274px;
+    right: 112px;
 }
 .cancel{
     font-size: 14px;
@@ -201,6 +218,6 @@ export default {
     background: #fff;
     position: absolute;
     bottom: 15px;
-    right: 335px;
+    right: 172px;
 }
 </style>

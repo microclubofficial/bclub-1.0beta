@@ -5,9 +5,9 @@
     <div class="bibar-tabitem fade in active" :key="index" id="bibar-newstab1" v-for="(tmp,index) in [...getNavaVal, ...articles]">
       <div class="bibar-indexNewsList">
         <div class="bibar-indexNewsItem">
-          <div class="speech"> <span>周文君评论了讨论</span><i class="iconfont icon-dot"></i><span class="time">{{tmp.created_at}}</span> </div>
+          <div class="speech"> <span>{{tmp.reply_user}}评论了讨论</span><i class="iconfont icon-dot"></i><span class="time">{{tmp.reply_time}}</span> </div>
           <div class="user">
-            <div class="bibar-author"> <a href="#"> <span class="photo"><img :src="tmp.avatar"></span> <span class="name">{{tmp.author}}</span> <span class="time">7小时前发布</span> </a> </div>
+            <div class="bibar-author"> <a href="#"> <span class="photo"><img :src="tmp.avatar"></span> <span class="name">{{tmp.author}}</span> <span class="time">{{tmp.diff_time}}前发布</span> </a> </div>
           </div>
           <div class="tit"><a href="javascript:void(0)" @click="goDetail(tmp.id)">{{tmp.title}}</a></div>
           <div class="txt indexNewslimitHeight" @click="goDetail(tmp.id)">
@@ -30,22 +30,20 @@
                 </a>
               </li>
               <li class="set-choseStar" @click="collectionTopic(index,tmp.id)"> <a :class="{collectionActive:index === collection}" href="javascript:void(0);"><i class="iconfont icon-star"></i>收藏</a> </li>
-              <li> <a href="javascript:void(0);"><i class="iconfont icon-fenxiang"></i> 分享</a> </li>
-              <li class="set-choseShang"> <a href="javascript:void(0);"><i class="iconfont icon-dashang"></i> 打赏<span>438</span></a> </li>
+              <!-- <li> <a href="javascript:void(0);"><i class="iconfont icon-fenxiang"></i> 分享</a> </li> -->
+              <!-- <li class="set-choseShang"> <a href="javascript:void(0);"><i class="iconfont icon-dashang"></i> 打赏<span>438</span></a> </li> -->
               <li>
-                <div class="dropdown">
+                <!-- <div class="dropdown">
                   <a href="javascript:void(0);" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="iconfont icon-genduo"></i> 更多</a>
                   <ul class="dropdown-menu">
                     <li><a href="javascript:void(0);">举报</a></li>
                     <li><a href="javascript:void(0);">没有帮助</a></li>
                   </ul>
-                </div>
+                </div> -->
               </li>
             </ul>
           </div>
-        </div>
-      </div>
-     <div class="bibar-hot"  v-show="showComment&&index==i">
+            <div class="bibar-hot"  v-show="showComment&&index==i">
        <!-- 评论框 -->
        <div class="editor-comment">
          <img :src="tmp.avatar" alt="" class="avatar"  v-show="commentShow">
@@ -79,24 +77,44 @@
                 <a href="#">最早</a>
                 <a href="#">赞</a>
               </div> -->
+              <!-- 回复内容 -->
+                  <!-- <div class="comment-item" data-index='' data-id='' v-for="(tmp,rIndex) in replyContent" :key='rIndex'>
+                  <div>
+                    <a href="#" data-tooltip='' class="avatar">
+                      <img :src="tmp.avatar" alt="">
+                    </a>
+                    <div class="comment-item-main">
+                      <div class="comment-item-hd">
+                        <a href="#" class="user-name">{{tmp.author}}</a>
+                        <span class="time allTalk-time">{{tmp.created_at}}</span>
+                      </div>
+                      <p class="replyAuthor">@<span>{{tmp.author}}:</span><span style="display:inline-block">{{talkComment[replayId].content | needContent()}}</span></p>
+                      <p v-html="tmp.content">{{tmp.content}}</p>
+                      <p></p>
+                    </div>
+                  </div>
+                </div> -->
+                <!-- 评论 -->
               <div class="comment-list">
                 <div class="comment-item" data-index='' data-id=''  :key ='now' v-for="(item,now) in nowData">
                   <div>
                     <a href="#" data-tooltip='' class="avatar">
-                      <img src="../../../assets/img/pic-user1.png" alt="">
+                      <img :src="item.avatar" alt="">
                     </a>
                     <div class="comment-item-main">
                       <div class="comment-item-hd">
                         <a href="#" class="user-name">{{item.author}}</a>
                         <span class="time">评论时间</span>
                       </div>
+                      <!-- @ 样式 -->
+                      <p class="replyAuthor" v-if="item.reference !== null">@<span>{{item.author}}:</span><span style="display:inline-block;font-weight: normal;">{{item.reference | needTxt()}}</span></p>
                       <!-- <p>{{item}}</p> -->
                       <p v-html="item.content">{{item.content}}</p>
                     </div>
                     <div class="set">
                       <ul class="bibar-indexNewsItem-infro">
                         <li class="set-choseOne"> <a href="javascript:void(0);" class="icon-quan mr15 active"  @click="changeNum(0)"><i class="iconfont">&#xe603;</i><span>{{item.is_good}}</span></a><a href="javascript:void(0);"  :class='{active:tmp.is_bad_bool}' class="icon-quan set-choseOne" @click="changeNum(1)"><i class="iconfont">&#xe731;</i><span class="is-bad">{{item.is_bad}}</span></a></li>
-                        <li class="set-choseShang"> <a href="javascript:void(0);"><i class="iconfont icon-dashang"></i> 打赏<span>438</span></a> </li>
+                        <!-- <li class="set-choseShang"> <a href="javascript:void(0);"><i class="iconfont icon-dashang"></i> 打赏<span>438</span></a> </li> -->
                         <li class="set-discuss" @click="replyComment(item.id,now)">
                           <a href="javascript:void(0);">
                             <i class="iconfont icon-pinglun"></i> 回复
@@ -118,7 +136,7 @@
              <div class="editor-placeholder">回复...</div>
            </div>
            <div class="editor-toolbar">
-              <BibarReport ref='childShowApi' :toApi='toRId' :mainReplay='item.id' v-show="showReportReplay" @backReplies = 'showReplyContent'></BibarReport>
+              <BibarReport ref='childShowApi' :toApi='toRId' :replyAuthor='item.author' :replyContent='item.content' :mainReplay='tmp.id' v-show="showReportReplay" @backhotReplies = 'showReplyContent'></BibarReport>
           </div>
          <span class="img-upload-delete">
              <img src="../../../assets/img/del.png" alt="">
@@ -134,6 +152,8 @@
        </div>
        </div>
      <!-- <div class='backContent' :key ='now' v-for="(item,now) in nowData">{{item}}</div> -->
+        </div>
+      </div>
     </div>
     <div class="loading-bar" v-if='loadingShow'>
                   <!-- <svg class="icon icon-loading" aria-hidden="true">
@@ -151,7 +171,7 @@ import {get, post} from '../../../utils/http'
 import BibarReport from '../bibarReport.vue'
 import { Toast } from 'mint-ui'
 export default{
-  props: ['getNavData'],
+  // props: ['getNavData'],
   data: function () {
     return {
       articles: [],
@@ -191,7 +211,8 @@ export default{
       replayId: 0,
       showReportReplay: false,
       collection: null,
-      hasImg: false
+      hasImg: false,
+      hotreplyContent: []
     }
   },
   components: {
@@ -300,7 +321,7 @@ export default{
       if (this.commentShow) {
         this.showReport = false
       }
-      $('.editor-toolbar').find('.wangeditor').css({'width': '832px', 'margin': '0 0 0 -39px', 'padding': '0'})
+      $('.editor-toolbar').find('.wangeditor').css({'margin': '0 0 0 -39px', 'padding': '0'})
       $('.editor-toolbar').find('.wangeditor>.report').css('bottom', '0')
       $('.editor-toolbar').find('.wangeditor>.cancel').css('bottom', '4px')
       $('.editor-toolbar').find('.wangeditor>.editor').css({'min-height': '130px', 'padding-bottom': '37px'})
@@ -324,8 +345,7 @@ export default{
       })
     },
     showFtContentFun (ftData) {
-      // console.log(this.getNavaVal)
-      this.articles.unshift(ftData)
+      this.articles = [ftData, ...this.articles]
     },
     // 评论回复
     replyComment (id, now) {
@@ -343,7 +363,16 @@ export default{
     },
     // 回复返回数据
     showReplyContent (data) {
-      this.replyContent.unshift(data)
+      this.nowData.unshift(data)
+      get(`/api/topic/${this.tpno}`).then(data => {
+        console.log(data)
+        if (this.tpno === 1) {
+          this.articles = data.data.topics
+        } else {
+          let oldArr = this.articles.slice(0, -5)
+          this.articles = oldArr.concat(data.data.topics)
+        }
+      })
     },
     // 收藏
     collectionTopic (index, id) {
@@ -380,10 +409,24 @@ export default{
       return now
     }
   }
+  // watch: {
+  //   articles (va) {
+  //     console.log(va, 12)
+  //   }
+  // }
 }
 </script>
 
 <style>
+/*回复样式*/
+.replyAuthor{
+    height: 50px;
+    background: #F2F2F2;
+    line-height: 50px !important;
+    padding-left: 20px !important;
+    font-weight: 700;
+    margin-right: 2px;
+}
 .glyphicon{
   font-size: 20px;
 }
@@ -594,7 +637,7 @@ a.avatar img {
   /*回复*/
 .comment-reply{
   border-top: 1px solid #edf0f5;
-  margin-top: 50px;
+  margin-top: 20px;
 }
 .comment-reply>.comment-item{
   margin: 15px 0;
@@ -790,4 +833,6 @@ svg:not(:root) {
     height: 100px;
 }
 .pull-left > img{width: 100%; height: 100%;}
+/*评论默认框*/
+.editor-placeholder{margin: 6px;}
 </style>
