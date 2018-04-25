@@ -122,7 +122,7 @@ export default{
     width: 790px;
     margin: 0 auto
   }
-  .Maineditor>.wangeditor>.toLongText{right: 442px !important;}
+  .Maineditor>.wangeditor>.toLongText{right: 420px !important;}
   /* .initHideEditor{margin-top:80px !important;} */
   .initSty{width: 1200px !important;}
   .initClass{width: 1200px !important;}

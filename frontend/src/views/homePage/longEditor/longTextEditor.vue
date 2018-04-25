@@ -32,7 +32,8 @@ export default{
       },
       topicData: {
         'content': '',
-        'title': ''
+        'title': '',
+        'picture': ''
       }
     }
   },
@@ -75,6 +76,7 @@ export default{
         this.topicData.picture = image[0]
         this.topicData.picture = this.topicData.picture.slice(this.topicData.picture.indexOf('/'), this.topicData.picture.lastIndexOf('=') - 7)
       }
+      this.topicData.title = this.title
       if (this.topicData.content.length > 0 || this.topicData.picture.length > 0) {
         post('/api/topic', this.topicData).then(data => {
           if (data.message === '未登录') {

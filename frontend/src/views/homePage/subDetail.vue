@@ -555,7 +555,7 @@ export default{
 }
 .bibar-indexNewsList{
     float: left;
-    width: 860px;
+    /* width: 860px; */
 }
 .talkBibar-flow{
     float: right;

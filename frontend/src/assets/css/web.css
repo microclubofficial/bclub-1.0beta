@@ -54,7 +54,7 @@
     text-overflow: ellipsis;
     word-break: break-all;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 4;
     max-height: 100px;
 }
 /* 模态框 */
@@ -210,7 +210,7 @@ select.wlarge, select.input-large, select.btn-large{width: 308px !important;}
 }
 .input-group .input-icon > .form-control{-webkit-border-radius: 4px 0 0 4px;-moz-border-radius: 4px 0 0 4px;-ms-border-radius: 4px 0 0 4px;-o-border-radius: 4px 0 0 4px;border-radius: 4px 0 0 4px;}
 .input-icon.input-icon-sm >i{margin-top: 2px;top: 0px !important;}
-.input-icon > i{color: #aaa;position: absolute; top:0; width: 14px;font-size: 16px !important;text-align: center;z-index: 2;cursor: pointer;}
+.input-icon > i{color: #c7c4c4;position: absolute; top:0; width: 14px;font-size: 14px !important;text-align: center;z-index: 2;cursor: pointer; line-height: 71px;}
 .input-icon > i.icon-closebox{color: #ccc;font-size: 12px;top: 0px;top: 1px\0;transform: scale(0.8);}
 .input-icon input:focus~i{color: #ccc}
 .input-icon > .input-sm + i{top: 1px;}

@@ -247,6 +247,17 @@ export function needContent (val) {
   return nowVal.slice(2, nowVal.indexOf('</p>'))
 }
 
+// 处理文字
+export function needTxt (val) {
+  if (val) {
+    let newTxt = val.slice(3, val.indexOf('</p>'))
+    if (newTxt.length > 20) {
+      newTxt = newTxt.substring(0, 20) + '...'
+    }
+    return newTxt
+  }
+}
+
 // 转百分比
 export function bfb (val, num) {
   if (val === 0) {

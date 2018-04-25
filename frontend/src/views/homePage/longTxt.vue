@@ -23,6 +23,7 @@ export default{
     LongEditor
   },
   mounted: function () {
+    console.log(this.Longtitle)
   },
   methods: {
     autoHeight () {

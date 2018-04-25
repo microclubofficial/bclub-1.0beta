@@ -8,11 +8,11 @@
         <!--菜单-->
         <nav class="bibar-headernav">
             <ul class="bibar-headernavlist">
-                <li class="bibar-headernavitem"> <a href="javascript:void(0)"><router-link :to="{path:'/'}">首页</router-link></a> </li>
-                <li class="bibar-headernavitem"> <a href="javascript:void(0)"><router-link :to="{path:'/community'}">社区</router-link></a> </li>
-                <li class="bibar-headernavitem"> <a href="javascript:void(0)"><router-link :to="{path:'/bibarLayout'}">币讯</router-link></a> </li>
-                <li class="bibar-headernavitem"> <a href="javascript:void(0)"><router-link :to="{path:'/maintalk'}">讨论</router-link></a> </li>
-                <li class="bibar-headernavitem"> <a href="javascript:void(0)"><router-link :to="{path:'/cream'}">精华</router-link></a> </li>
+                <li class="bibar-headernavitem"> <a href="javascript:void(0)"><router-link :class="{headerActive: routerSelect('')}" :to="{path:'/'}">首页</router-link></a> </li>
+                <li class="bibar-headernavitem"> <a href="javascript:void(0)"><router-link :class="{headerActive: routerSelect('community')}" :to="{path:'/community'}">社区</router-link></a> </li>
+                <li class="bibar-headernavitem"> <a href="javascript:void(0)"><router-link :class="{headerActive: routerSelect('bibarLayout')}" :to="{path:'/bibarLayout'}">币讯</router-link></a> </li>
+                <li class="bibar-headernavitem"> <a href="javascript:void(0)"><router-link :class="{headerActive: routerSelect('maintalk')}" :to="{path:'/maintalk'}">讨论</router-link></a> </li>
+                <li class="bibar-headernavitem"> <a href="javascript:void(0)"><router-link :class="{headerActive: routerSelect('cream')}" :to="{path:'/cream'}">精华</router-link></a> </li>
             </ul>
         </nav>
         <!--搜索框-->
@@ -21,7 +21,7 @@
                 <li class="bibar-headerSearchitem">
                     <div class="input-icon left dib">
                         <input type="text" class="form-control btn-circle w180 bg-greyLight" placeholder="搜索">
-                        <i class="iconfont icon-search"></i> </div>
+                        <i class="iconfont">&#xe613;</i> </div>
                 </li>
                 <li class="bibar-headerSearchitem">
                     <!-- 未登录 -->
@@ -59,11 +59,20 @@ export default{
       return this.$store.state.userInfo.userInfo
     }
   },
-  mounted: function () {
+  mounted () {
   },
   methods: {
     toLoadMain () {
       this.$emit('backLoadMain')
+    },
+    routerSelect (url) {
+      let path = this.$route.path.substr(1)
+      if (url === path) {
+        return true
+      } else if (path.indexOf(url) === 0 && url !== '') {
+        return true
+      }
+      return false
     }
   }
 }
@@ -118,4 +127,5 @@ export default{
 .bibar-headerSearchitem input{font-size: 12px; margin-top: 18px;}
 .bibar-headerSearchitem input+i{}
 .bibar-headeruserpic{}
+.headerActive{color:#0181ff !important;}
 </style>

@@ -83,39 +83,39 @@
           <li v-for="(tmp,index) in firstList" :key="index">
             <a href="#">
               <p class="bibar-class">
-                {{tmp.class}}
-                <span><img src="../../assets/img/logo-coin-BTC.png" alt=""></span>
+                {{tmp.symbol}}
+                <span><img :src="tmp.picture" alt=""></span>
               </p>
-              <h3>{{tmp.num}}</h3>
-              <p style="color:#17B769"><span>+</span>{{tmp.change}}</p>
+              <h3>{{tmp.price | cnyFun(CNY,2)}}</h3>
+              <p style="color:#17B769" :class="tmp.change_1h >= 0 ? 'text-green' : 'text-red'"><span>+</span>{{tmp.change_1h | bfb(2)}}</p>
             </a>
           </li>
         </ul>
       </div>
       <div class="swiper-slide">
         <ul class="bibarData-box">
-          <li v-for="(tmp,index) in firstList" :key="index">
+          <li v-for="(tmp,index) in twoList" :key="index">
             <a href="#">
               <p class="bibar-class">
-                {{tmp.class}}
-                <span><img src="../../assets/img/logo-coin-BTC.png" alt=""></span>
+                {{tmp.symbol}}
+                <span><img :src="tmp.picture" alt=""></span>
               </p>
-              <h3>{{tmp.num}}</h3>
-              <p><span>+</span>{{tmp.change}}</p>
+              <h3>{{tmp.price | cnyFun(CNY,2)}}</h3>
+              <p style="color:#17B769" :class="tmp.change_1h >= 0 ? 'text-green' : 'text-red'"><span>+</span>{{tmp.change_1h | bfb(2)}}</p>
             </a>
           </li>
         </ul>
       </div>
       <div class="swiper-slide">
         <ul class="bibarData-box">
-          <li v-for="(tmp,index) in firstList" :key="index">
+          <li v-for="(tmp,index) in threeList" :key="index">
             <a href="#">
               <p class="bibar-class">
-                {{tmp.class}}
-                <span><img src="../../assets/img/logo-coin-BTC.png" alt=""></span>
+                {{tmp.symbol}}
+                <span><img :src="tmp.picture" alt=""></span>
               </p>
-              <h3>{{tmp.num}}</h3>
-              <p><span>+</span>{{tmp.change}}</p>
+              <h3>{{tmp.price | cnyFun(CNY,2)}}</h3>
+              <p style="color:#17B769" :class="tmp.change_1h >= 0 ? 'text-green' : 'text-red'"><span>+</span>{{tmp.change_1h | bfb(2)}}</p>
             </a>
           </li>
         </ul>
@@ -135,24 +135,16 @@
 <script>
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import Swiper from '../../assets/js/swiper.min.js'
+import {get} from '../../utils/http.js'
 export default{
   name: 'swiper',
   data: function () {
     return {
-      firstList: [
-        {'class': 'BTC/USDT', 'img': 'src/assets/img/logo-coin-BTC.png', 'num': '10329.61', 'change': '0.6.%'},
-        {'class': 'BTC/USDT', 'img': 'src/assets/img/logo-coin-BTC.png', 'num': '10329.61', 'change': '0.6.%'},
-        {'class': 'BTC/USDT', 'img': 'src/assets/img/logo-coin-BTC.png', 'num': '10329.61', 'change': '0.6.%'},
-        {'class': 'BTC/USDT', 'img': 'src/assets/img/logo-coin-BTC.png', 'num': '10329.61', 'change': '0.6.%'},
-        {'class': 'BTC/USDT', 'img': 'src/assets/img/logo-coin-BTC.png', 'num': '10329.61', 'change': '0.6.%'},
-        {'class': 'BTC/USDT', 'img': 'src/assets/img/logo-coin-BTC.png', 'num': '10329.61', 'change': '0.6.%'},
-        {'class': 'BTC/USDT', 'img': 'src/assets/img/logo-coin-BTC.png', 'num': '10329.61', 'change': '0.6.%'},
-        {'class': 'BTC/USDT', 'img': 'src/assets/img/logo-coin-BTC.png', 'num': '10329.61', 'change': '0.6.%'},
-        {'class': 'BTC/USDT', 'img': 'src/assets/img/logo-coin-BTC.png', 'num': '10329.61', 'change': '0.6.%'},
-        {'class': 'BTC/USDT', 'img': 'src/assets/img/logo-coin-BTC.png', 'num': '10329.61', 'change': '0.6.%'},
-        {'class': 'BTC/USDT', 'img': 'src/assets/img/logo-coin-BTC.png', 'num': '10329.61', 'change': '0.6.%'},
-        {'class': 'BTC/USDT', 'img': 'src/assets/img/logo-coin-BTC.png', 'num': '10329.61', 'change': '0.6.%'}
-      ]
+      firstList: [],
+      twoList: [],
+      threeList: [],
+      pno: 1,
+      hotCount: 12
     }
   },
   components: {
@@ -162,6 +154,7 @@ export default{
   created () {
   },
   mounted: function () {
+    let that = this
     let swiper = new Swiper('.swiper-container', {
       pagination: {
         el: '.swiper-pagination',
@@ -169,15 +162,31 @@ export default{
         renderBullet: function (index, className) {
           return '<span class="' + className + '">' + (index + 1) + '</span>'
         }
-      }
-      // autoplay: {
-      //   delay: 2500,
-      //   disableOnInteraction: false
-      // },
-      // speed: 500
+      },
+      autoplay: {
+        delay: 2500,
+        disableOnInteraction: false
+      },
+      speed: 500
+    })
+    // 币列表
+    get(`/api/blist/1/${that.hotCount}`).then(data => {
+      that.firstList = data.data.summaryList
+      that.CNY = data.data.exrateData.CNY
+    })
+    get(`/api/blist/2/${that.hotCount}`).then(data => {
+      that.twoList = data.data.summaryList
+      that.CNY = data.data.exrateData.CNY
+    })
+    get(`/api/blist/3/${that.hotCount}`).then(data => {
+      that.threeList = data.data.summaryList
+      that.CNY = data.data.exrateData.CNY
     })
   },
   methods: {
   }
 }
 </script>
+<style>
+.text-red{color:red;}
+</style>
