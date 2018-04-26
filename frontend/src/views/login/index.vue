@@ -152,7 +152,9 @@ export default {
           return false
         } else {
           this.phonePrompt = ''
-          this.hasphone = false
+          if (this.countdown === 30) {
+            this.hasphone = false
+          }
         }
       } else if (id === 4) {
         if (input === undefined || input.length === 0) {

@@ -97,4 +97,17 @@ export default{
   color: #1E8FFF;
   background: snow;
 }
+.avatar{
+    float: left;
+    margin-right: 10px;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+}
+.avatar>img{
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+.w-e-toolbar{z-index: 9998 !important;}
 </style>

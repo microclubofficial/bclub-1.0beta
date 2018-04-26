@@ -1,5 +1,5 @@
 <template>
-  <div class="list-detail">
+  <div class="comment-item">
     <main-header></main-header>
     <div class="article_container">
       <div class="article_author">
@@ -21,7 +21,7 @@
         <div class="article_bd_from">来自
           <a href="">金氪投行之家的雪球原创专栏</a>
         </div>
-        <p v-html="articleDetail.content">
+        <p class="detail-main-content" v-html="articleDetail.content">
           <strong>{{articleDetail.diff_time}}:</strong>{{articleDetail.content}}
         </p>
         <div class="image">
@@ -29,7 +29,7 @@
         </div>
       </article>
       <div class="meta-container">
-        <a href="#" class="reward-btn">赞</a>
+        <!-- <a href="#" class="reward-btn">赞</a> -->
         <div class="meta-share">
         <a href="#" class="btn-share-wechat">
           <span><img src="../../assets/img/weixin.png" alt=""></span>
@@ -42,9 +42,9 @@
         <a href="#" class="btn-article-retweet">
           <span><img src="../../assets/img/collect.png" alt=""></span>转发
         </a>
-        <a href="#" class="btn-article-like">
+        <!-- <a href="#" class="btn-article-like">
           <span><img src="../../assets/img/isGood.png" alt=""></span>赞
-        </a>
+        </a> -->
         <a href="#" class="btn-article-retweet">
           <span><img src="../../assets/img/repeat.png" alt=""></span>收藏
         </a>
@@ -55,7 +55,7 @@
       </div>
       </div>
       <div class="editor-toolbar">
-        <BibarReport :toApi='toId' :contentId='did' @backList = 'showDetailContent'></BibarReport>
+        <BibarReport :toApi='5' :detailId='articleDetail.id' @backList = 'showDetailContent'></BibarReport>
       </div>
       <!-- 评论内容 -->
        <div class="comment-wrap">
@@ -66,11 +66,11 @@
             </div>
             <div class="comment-all">
               <h3>全部评论({{repliesCcount}})</h3>
-              <div class="comment-sort">
+              <!-- <div class="comment-sort">
                 <a href="#" class="active">最近</a>
                 <a href="#">最早</a>
                 <a href="#">赞</a>
-              </div>
+              </div> -->
                 <div class="comment-list">
                   <!-- <pull-to> -->
                   <div class="comment-item" data-index='' data-id=''  :key ='now' v-for="(item,now) in nowData">
@@ -88,8 +88,7 @@
                     </div>
                     <div class="set">
                       <ul class="bibar-indexNewsItem-infro">
-                        <li class="set-choseOne"> <a href="javascript:void(0);" class="icon-quan mr15 active"  @click="changeNum(0)"><i class="iconfont">&#xe603;</i><span>{{isGood}}</span></a></li>
-                        <li class="set-choseShang"> <a href="javascript:void(0);"><i class="iconfont icon-dashang"></i> 打赏<span>438</span></a> </li>
+                        <li class="set-choseOne"> <a href="javascript:void(0);" class="icon-quan mr15" :class='{active:item.is_good_bool}'  @click="changeNum(0,now,item.id,item)"><i class="iconfont">&#xe603;</i><span class="is-good">{{item.is_good}}</span></a><a href="javascript:void(0);" :class='{active:item.is_bad_bool}' class="icon-quan" @click="changeNum(1,now,item.id,item)"><i class="iconfont">&#xe731;</i><span class="is-bad">{{item.is_bad}}</span></a> </li>
                         <li class="set-discuss" @click="replyComment(now, item.id)">
                           <a href="javascript:void(0);">
                             <i class="iconfont icon-pinglun"></i> 回复
@@ -101,7 +100,7 @@
         <div class="comment-reply" v-show="talkReplayBox && now === replayId">
                 <!-- 回复文本框 -->
         <div class="editor-comment">
-         <img :src="item.avatar" alt="" class="avatar" v-show="talkReplyTxt">
+         <img :src="userInfo.avatar" alt="" class="avatar" v-show="talkReplyTxt">
          <div class="editor-bd">
            <span class="comment-img-delete"></span>
            <svg version='1.1' xmlns='http://www.w3.org/2000/svg' class="editor-triangle">
@@ -175,6 +174,11 @@ export default {
       repliesCcount: 0
     }
   },
+  computed: {
+    userInfo () {
+      return this.$store.state.userInfo.userInfo
+    }
+  },
   mounted () {
     this.did = this.$route.params.id
     // console.log(this.pageCount)
@@ -182,7 +186,6 @@ export default {
       this.articleDetail = data.data.topic
       this.repliesCcount = data.data.replies_count
       this.nowData = data.data.replies
-      console.log(data)
       if (this.nowData.length === 0) {
         this.loadingShow = false
       }
@@ -197,6 +200,7 @@ export default {
     $('.editor').css({'padding-bottom': '35px'})
     $('.editor-toolbar').find('.report ').css({'right': '260px', 'bottom': '2px'})
     $('.editor-toolbar').find('.cancel ').css({'right': '315px', 'bottom': '6px'})
+    $('.article_bd').find('img').css({'display': 'block', 'text-align': 'center', 'margin': '10px auto'})
   },
   methods: {
     loadDetailPage () {
@@ -218,21 +222,41 @@ export default {
         return false
       }
     },
-    changeNum (isNum, id) {
-      $('.set-choseOne>a:eq(' + isNum + ')').addClass('active').siblings().removeClass('active')
+    changeNum (isNum, index, id, item) {
+      index = index + 1
       if (isNum === 0) {
-        get(`/api/topic/${id}/up`).then(data => {
-          this.is_good = data
+        if (index !== this.up) {
+          this.up = index
+        }
+        get(`/api/reply/up/${id}`).then(data => {
+          if (data.message === '成功') {
+            $('.comment-item:eq(' + index + ')').find('.set-choseOne>a:eq(' + isNum + ')').addClass('active')
+            item.is_good = data.data.good_count
+          } else if (data.message === '未登录') {
+            this.$router.push('/login')
+          } else {
+            alert(data.message)
+          }
         })
       } else {
-        get(`/api/topic/${id}/down`).then(data => {
-          this.is_bad = data
+        if (index !== this.up) {
+          this.up = index
+        }
+        get(`/api/reply/down/${id}`).then(data => {
+          if (data.message === '成功') {
+            $('.comment-item:eq(' + index + ')').find('.set-choseOne>a:eq(' + isNum + ')').addClass('active')
+            item.is_bad = data.data.bad_count
+          } else if (data.message === '未登录') {
+            alert(data.message)
+            this.$router.push('/login')
+          } else {
+            alert(data.message)
+          }
         })
       }
     },
     showDetailContent (data) {
-      this.backDetail.content = data
-      this.nowData.unshift(this.backDetail)
+      this.nowData.unshift(data)      
     },
     // 评论回复
     replyComment (id, now) {
@@ -583,7 +607,7 @@ a.avatar img {
   border-radius: 3px;
 }
 .bibar-indexNewsItem .set>ul>.set-answer>a{color: #1E8FFF;}
-.bibar-tabitem{
+.comment-item{
   overflow: hidden;
 }
 .bibar-indexNewsList{

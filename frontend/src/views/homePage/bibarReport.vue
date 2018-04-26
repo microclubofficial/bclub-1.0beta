@@ -14,7 +14,7 @@ import E from 'wangeditor'
 import {post} from '../../utils/http'
 
 export default {
-  props: ['contentId', 'toApi', 'talkId', 'mainReplay', 'mainCommnet', 'replyAuthor', 'replyContent'],
+  props: ['contentId', 'toApi', 'talkId', 'mainReplay', 'mainCommnet', 'replyAuthor', 'replyContent', 'detailId'],
   name: 'editor',
   data () {
     return {
@@ -35,7 +35,7 @@ export default {
         'url': '',
         replt_count: 0
       },
-      nowShowApi: ['topic', 'bar', 'bar', 'bar', 'comment'],
+      nowShowApi: ['topic', 'bar', 'bar', 'bar', 'comment', 'topic'],
       isHide: false,
       replies: []
     }
@@ -68,7 +68,7 @@ export default {
         this.topicData.replyContent = this.replyContent
       }
       if (this.topicData.content.length > 0 || this.topicData.url.length > 0) {
-        post(`/api/${this.nowShowApi[this.toApi]}${this.toApi === 1 ? '/question' : this.toApi === 2 ? '/answer' : this.toApi === 3 ? '/comment' : ''}/replies/${this.toApi === 0 ? this.mainCommnet : this.toApi === 2 ? this.talkId : this.toApi === 3 ? this.contentId : this.mainReplay}`, this.topicData).then(data => {
+        post(`/api/${this.nowShowApi[this.toApi]}${this.toApi === 1 ? '/question' : this.toApi === 2 ? '/answer' : this.toApi === 3 ? '/comment' : ''}/replies/${this.toApi === 0 ? this.mainCommnet : this.toApi === 2 ? this.talkId : this.toApi === 3 ? this.contentId : this.toApi === 5 ? this.detailId : this.mainReplay}`, this.topicData).then(data => {
           //   评论发送完毕
           this.editorContent = ''
           if (data.message === '未登录') {
@@ -76,11 +76,20 @@ export default {
             this.$router.push('/login')
           } else {
             if (data.data.content !== '') {
+              console.log(data)
               let backData = {}
-              backData.content = data.data.content
+              backData.at_user = data.data.at_user
               backData.avatar = data.data.avatar
               backData.author = data.data.author
+              backData.author_id = data.data.author_id
+              backData.content = data.data.content
+              backData.diff_time = data.data.diff_time
+              backData.is_bad = data.data.is_bad
+              backData.is_good = data.data.is_good
+              backData.id = data.data.id
+              backData.picture = data.data.picture
               backData.url = data.data.url
+              backData.reference = data.data.reference
               let hotreplies = {}
               hotreplies = data.data
               // 热门回复
@@ -174,6 +183,11 @@ export default {
     height: 35px;
     border-radius: 50%;
 }
+.avatar>img{
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
 .editor{
     width: 540px;
     margin: auto;
@@ -220,4 +234,5 @@ export default {
     bottom: 15px;
     right: 172px;
 }
+.w-e-toolbar{z-index: 9998 !important;}
 </style>

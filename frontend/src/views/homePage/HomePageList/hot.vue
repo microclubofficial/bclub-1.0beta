@@ -5,7 +5,7 @@
     <div class="bibar-tabitem fade in active" :key="index" id="bibar-newstab1" v-for="(tmp,index) in [...getNavaVal, ...articles]">
       <div class="bibar-indexNewsList">
         <div class="bibar-indexNewsItem">
-          <div class="speech"> <span>{{tmp.reply_user}}评论了讨论</span><i class="iconfont icon-dot"></i><span class="time">{{tmp.reply_time}}</span> </div>
+          <div class="speech" v-if="tmp.reply_user !== null"> <span>{{tmp.reply_user}}<span class="time">{{tmp.reply_time}}</span>前评论了讨论</span><i class="iconfont icon-dot"></i></div>
           <div class="user">
             <div class="bibar-author"> <a href="#"> <span class="photo"><img :src="tmp.avatar"></span> <span class="name">{{tmp.author}}</span> <span class="time">{{tmp.diff_time}}前发布</span> </a> </div>
           </div>
@@ -22,14 +22,14 @@
           </div>
           <div class="set">
             <ul class="bibar-indexNewsItem-infro">
-              <li class="set-choseOne"> <a href="javascript:void(0);" class="icon-quan mr15" :class='{active:tmp.is_good_bool}'  @click="changeNum(0,index,tmp.id)" ><i class="iconfont">&#xe603;</i><span class="is-good">{{tmp.is_good}}</span></a> <a href="javascript:void(0);"  :class='{active:tmp.is_bad_bool}' class="icon-quan set-choseOne" @click="changeNum(1,index,tmp.id)"><i class="iconfont">&#xe731;</i><span class="is-bad">{{tmp.is_bad}}</span></a> </li>
+              <li class="set-choseOne"> <a href="javascript:void(0);" class="icon-quan mr15" :class='{active:tmp.is_good_bool}'  @click="changeNum(0,index,tmp.id,0,tmp)" ><i class="iconfont">&#xe603;</i><span class="is-good">{{tmp.is_good}}</span></a> <a href="javascript:void(0);" :class='{active:tmp.is_bad_bool}' class="icon-quan set-choseOne" @click="changeNum(1,index,tmp.id,0,tmp)"><i class="iconfont">&#xe731;</i><span class="is-bad">{{tmp.is_bad}}</span></a> </li>
               <li class="set-discuss" @click="showDiscuss(index,tmp.id)">
                 <a href="javascript:void(0);">
                   <i class="iconfont icon-pinglun"></i> 评论
                   <span>{{tmp.replies_count}}</span>
                 </a>
               </li>
-              <li class="set-choseStar" @click="collectionTopic(index,tmp.id)"> <a :class="{collectionActive:index === collection}" href="javascript:void(0);"><i class="iconfont icon-star"></i>收藏</a> </li>
+              <li class="set-choseStar" @click="collectionTopic(index,tmp.id)"> <a :class="{collectionActive:index === collection}" href="javascript:void(0);"><i class="iconfont icon-star">&#xe6a7;</i>收藏</a> </li>
               <!-- <li> <a href="javascript:void(0);"><i class="iconfont icon-fenxiang"></i> 分享</a> </li> -->
               <!-- <li class="set-choseShang"> <a href="javascript:void(0);"><i class="iconfont icon-dashang"></i> 打赏<span>438</span></a> </li> -->
               <li>
@@ -46,7 +46,7 @@
             <div class="bibar-hot"  v-show="showComment&&index==i">
        <!-- 评论框 -->
        <div class="editor-comment">
-         <img :src="tmp.avatar" alt="" class="avatar"  v-show="commentShow">
+         <img :src="userInfo.avatar" alt="" class="avatar"  v-show="commentShow">
          <div class="editor-bd">
            <span class="comment-img-delete"></span>
            <svg version='1.1' xmlns='http://www.w3.org/2000/svg' class="editor-triangle">
@@ -104,7 +104,7 @@
                     <div class="comment-item-main">
                       <div class="comment-item-hd">
                         <a href="#" class="user-name">{{item.author}}</a>
-                        <span class="time">评论时间</span>
+                        <span class="time">{{item.diff_time}}</span>
                       </div>
                       <!-- @ 样式 -->
                       <p class="replyAuthor" v-if="item.reference !== null">@<span>{{item.author}}:</span><span style="display:inline-block;font-weight: normal;">{{item.reference | needTxt()}}</span></p>
@@ -113,7 +113,7 @@
                     </div>
                     <div class="set">
                       <ul class="bibar-indexNewsItem-infro">
-                        <li class="set-choseOne"> <a href="javascript:void(0);" class="icon-quan mr15 active"  @click="changeNum(0)"><i class="iconfont">&#xe603;</i><span>{{item.is_good}}</span></a><a href="javascript:void(0);"  :class='{active:tmp.is_bad_bool}' class="icon-quan set-choseOne" @click="changeNum(1)"><i class="iconfont">&#xe731;</i><span class="is-bad">{{item.is_bad}}</span></a></li>
+                        <li class="set-choseTwo"> <a href="javascript:void(0);" class="icon-quan mr15"  @click="changeNum(0,now,item.id,1,item)" :class='{active:tmp.is_good_bool}'><i class="iconfont">&#xe603;</i><span class="is-good-t">{{item.is_good}}</span></a><a href="javascript:void(0);"  :class='{active:tmp.is_bad_bool}' class="icon-quan set-choseTwo" @click="changeNum(1,now,item.id,1,item)"><i class="iconfont">&#xe731;</i><span class="is-bad-t">{{item.is_bad}}</span></a></li>
                         <!-- <li class="set-choseShang"> <a href="javascript:void(0);"><i class="iconfont icon-dashang"></i> 打赏<span>438</span></a> </li> -->
                         <li class="set-discuss" @click="replyComment(item.id,now)">
                           <a href="javascript:void(0);">
@@ -126,7 +126,7 @@
         <div class="comment-reply"  v-show="talkReplayBox && now === replayId">
                 <!-- 回复文本框 -->
         <div class="editor-comment">
-         <img :src="item.avatar" alt="" class="avatar" v-show="talkReplyTxt">
+         <img :src="userInfo.avatar" alt="" class="avatar" v-show="talkReplyTxt">
          <div class="editor-bd">
            <span class="comment-img-delete"></span>
            <svg version='1.1' xmlns='http://www.w3.org/2000/svg' class="editor-triangle">
@@ -175,8 +175,6 @@ export default{
   data: function () {
     return {
       articles: [],
-      isGood: 0,
-      ishandbad: 0,
       isClick: 0,
       lid: '',
       i: 0,
@@ -212,7 +210,9 @@ export default{
       showReportReplay: false,
       collection: null,
       hasImg: false,
-      hotreplyContent: []
+      hotreplyContent: [],
+      isGood: 0,
+      isBad: 0
     }
   },
   components: {
@@ -221,6 +221,9 @@ export default{
   computed: {
     getNavaVal () {
       return this.$store.state.homePageList.backForNav
+    },
+    userInfo () {
+      return this.$store.state.userInfo.userInfo
     }
   },
   created: function () {
@@ -268,36 +271,65 @@ export default{
       }
     },
     // 点赞吐槽
-    changeNum (isNum, index, id) {
-      if (isNum === 0) {
-        if (index !== this.up) {
-          this.up = index
+    changeNum (isNum, index, id, classId, item) {
+      if (index !== this.up) {
+        this.up = index
+      }
+      // 文章点赞吐槽
+      if (classId === 0) {
+        // 点赞
+        if (isNum === 0) {
+          get(`/api/topic/up/${id}`).then(data => {
+            if (data.message === '成功') {
+              $('.bibar-tabitem:eq(' + index + ')').find('.set-choseOne>a:eq(' + isNum + ')').addClass('active')
+              item.is_good = data.data.good_count
+            } else if (data.message === '未登录') {
+              this.$router.push('/login')
+            } else {
+              alert(data.message)
+            }
+          })
+          // 吐槽
+        } else if (isNum === 1) {
+          get(`/api/topic/down/${id}`).then(data => {
+            if (data.message === '成功') {
+              $('.bibar-tabitem:eq(' + index + ')').find('.set-choseOne>a:eq(' + isNum + ')').addClass('active')
+              item.is_bad = data.data.bad_count
+            } else if (data.message === '未登录') {
+              alert(data.message)
+              this.$router.push('/login')
+            } else {
+              alert(data.message)
+            }
+          })
         }
-        get(`/api/topic/up/${id}`).then(data => {
-          if (data.message === '成功') {
-            $('.bibar-tabitem:eq(' + index + ')').find('.set-choseOne>a:eq(' + isNum + ')').addClass('active')
-            $('.bibar-tabitem:eq(' + index + ')').find('.is-good').html(data.data)
-          } else if (data.message === '未登录') {
-            this.$router.push('/login')
-          } else {
-            alert(data.message)
-          }
-        })
-      } else {
-        if (index !== this.up) {
-          this.up = index
+        // 评论点赞吐槽
+      } else if (classId === 1) {
+        // 点赞
+        if (isNum === 0) {
+          get(`/api/reply/up/${id}`).then(data => {
+            if (data.message === '成功') {
+              $('.comment-item:eq(' + index + ')').find('.set-choseTwo>a:eq(' + isNum + ')').addClass('active')
+              item.is_good = data.data.good_count
+            } else if (data.message === '未登录') {
+              this.$router.push('/login')
+            } else {
+              alert(data.message)
+            }
+          })
+          // 吐槽
+        } else if (isNum === 1) {
+          get(`/api/reply/down/${id}`).then(data => {
+            if (data.message === '成功') {
+              $('.comment-item:eq(' + index + ')').find('.set-choseTwo>a:eq(' + isNum + ')').addClass('active')
+              item.is_bad = data.data.bad_count
+            } else if (data.message === '未登录') {
+              this.$router.push('/login')
+            } else {
+              alert(data.message)
+            }
+          })
         }
-        get(`/api/topic/down/${id}`).then(data => {
-          if (data.message === '成功') {
-            $('.bibar-tabitem:eq(' + index + ')').find('.set-choseOne>a:eq(' + isNum + ')').addClass('active')
-            $('.bibar-tabitem:eq(' + index + ')').find('.is-bad').html(data.data)
-          } else if (data.message === '未登录') {
-            alert(data.message)
-            this.$router.push('/login')
-          } else {
-            alert(data.message)
-          }
-        })
       }
     },
     // 去详情页
@@ -309,6 +341,7 @@ export default{
     showDiscuss (index, id) {
       get(`/api/topic/${id}/1`).then(data => {
         this.nowData = data.data.replies
+        console.log(this.nowData)
       })
       if (index !== this.i) {
         this.i = index

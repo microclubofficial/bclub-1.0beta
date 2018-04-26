@@ -47,15 +47,23 @@ export default{
 </script>
 
 <style>
+.modal-dialog>.modal-content>.modal-body>.wangeditor>.editor>.w-e-text-container{
+    overflow-y: scroll;
+    height: 87px !important;
+}
+/* .modal-dialog>.modal-content>.modal-body>.wangeditor>.editor>.w-e-text-container .w-e-panel-container{
+  margin-left: 0 !important;
+  left: 47% !important;
+} */
 .modal-body{
     position: relative;
-    padding: 0 15px 15px 15px;
-    margin: 0;
+    padding: 0 15px 15px 15px !important;
+    margin: 0 !important;
 }
 .modal-title{
-    font-size: 18px;
-    font-weight: 700;
-    color: #000;
+    font-size: 18px !important;
+    font-weight: 700 !important;
+    color: #000 !important;
 }
 .modal-header{border: none;}
 .modal-body>.wangeditor{
@@ -73,6 +81,7 @@ export default{
 }
 .modal-body>.wangeditor>.editor>.w-e-toolbar{
   bottom:-30px !important;
+  z-index: 9998;
 }
 .modal-body>.wangeditor>.avatar{display: none;}
 .modal-body>.wangeditor .report{
@@ -86,15 +95,15 @@ export default{
 .modal .modal-content{
   border-radius: 5px !important;
 }
-.w-e-toolbar .w-e-menu{z-index: 10000 !important;}
-.modal-body>.wangeditor>.editor>.w-e-text-container{border: 1px solid #edf0f5 !important;}
+/* .w-e-toolbar .w-e-menu{z-index: 10000 !important;} */
+.modal-body>.wangeditor>.editor>.w-e-text-container{border: 1px solid #edf0f5 !important; z-index: 9999;}
 .modal-body>.wangeditor>.editor>.w-e-text-container>.w-e-panel-container{
     width: 300px !important;
-    margin-left: -285px !important;
+    /* margin-left: -285px !important; */
     z-index: 20000;
     border-top: 1px solid #ccc !important;
     position: fixed !important;
-    top: 193px !important;
+    top: 195px !important;
 }
 .modal-body>.wangeditor>.editor>.w-e-text-container>.w-e-panel-container>.w-e-panel-tab-content{
   height: 143px !important;
