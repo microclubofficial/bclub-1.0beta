@@ -1,5 +1,5 @@
 
-<style scoped>@import '../../assets/css/swiper.min.css'</style>
+<style>@import 'swiper/dist/css/swiper.css'</style>
 <style>
 .commun-bibarData{
   width: 100%;
@@ -67,6 +67,8 @@
       background: #ffffff;
       margin: 0 10px;
       cursor: pointer;
+      border-radius: 0 !important;
+      display:initial !important;
     }
     .swiper-pagination-bullet-active {
       color:#fff;
@@ -74,12 +76,10 @@
     }
 </style>
 <template>
-  <div class="commun-bibarData">
-   <div class="bibarData-main">
-     <div class="swiper-container">
-    <div class="swiper-wrapper">
-      <div class="swiper-slide">
-        <ul class="bibarData-box">
+  <swiper :options="swiperOption" ref="mySwiper">
+    <!-- slides -->
+    <swiper-slide>
+      <ul class="bibarData-box">
           <li v-for="(tmp,index) in firstList" :key="index">
             <a href="#">
               <p class="bibar-class">
@@ -87,13 +87,13 @@
                 <span><img :src="tmp.picture" alt=""></span>
               </p>
               <h3>{{tmp.price | cnyFun(CNY,2)}}</h3>
-              <p style="color:#17B769" :class="tmp.change_1h >= 0 ? 'text-green' : 'text-red'"><span>+</span>{{tmp.change_1h | bfb(2)}}</p>
+              <p style="color:#17B769" :class="tmp.change_1h >= 0 ? 'text-green' : 'text-red'">{{tmp.change_1h | bfb(2)}}</p>
             </a>
           </li>
         </ul>
-      </div>
-      <div class="swiper-slide">
-        <ul class="bibarData-box">
+    </swiper-slide>
+    <swiper-slide>
+      <ul class="bibarData-box">
           <li v-for="(tmp,index) in twoList" :key="index">
             <a href="#">
               <p class="bibar-class">
@@ -101,13 +101,13 @@
                 <span><img :src="tmp.picture" alt=""></span>
               </p>
               <h3>{{tmp.price | cnyFun(CNY,2)}}</h3>
-              <p style="color:#17B769" :class="tmp.change_1h >= 0 ? 'text-green' : 'text-red'"><span>+</span>{{tmp.change_1h | bfb(2)}}</p>
+              <p style="color:#17B769" :class="tmp.change_1h >= 0 ? 'text-green' : 'text-red'">{{tmp.change_1h | bfb(2)}}</p>
             </a>
           </li>
         </ul>
-      </div>
-      <div class="swiper-slide">
-        <ul class="bibarData-box">
+    </swiper-slide>
+    <swiper-slide>
+      <ul class="bibarData-box">
           <li v-for="(tmp,index) in threeList" :key="index">
             <a href="#">
               <p class="bibar-class">
@@ -115,60 +115,53 @@
                 <span><img :src="tmp.picture" alt=""></span>
               </p>
               <h3>{{tmp.price | cnyFun(CNY,2)}}</h3>
-              <p style="color:#17B769" :class="tmp.change_1h >= 0 ? 'text-green' : 'text-red'"><span>+</span>{{tmp.change_1h | bfb(2)}}</p>
+              <p style="color:#17B769" :class="tmp.change_1h >= 0 ? 'text-green' : 'text-red'">{{tmp.change_1h | bfb(2)}}</p>
             </a>
           </li>
         </ul>
-      </div>
-    </div>
-    <!-- Add Pagination -->
-    <div class="swiper-pagination swiper-pagination-clickable swiper-pagination-bullets">
-      <span class="swiper-pagination-bullet swiper-pagination-bullet-active">1</span>
-      <span class="swiper-pagination-bullet">2</span>
-      <span class="swiper-pagination-bullet">3</span>
-    </div>
-  </div>
-   </div>
-  </div>
+    </swiper-slide>
+    <!-- Optional controls -->
+    <div class="swiper-pagination"  slot="pagination"></div>
+  </swiper>
 </template>
 
 <script>
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
-import Swiper from '../../assets/js/swiper.min.js'
 import {get} from '../../utils/http.js'
 export default{
-  name: 'swiper',
+  name: 'carrousel',
   data: function () {
     return {
       firstList: [],
       twoList: [],
       threeList: [],
       pno: 1,
-      hotCount: 12
+      hotCount: 12,
+      swiperOption: {
+        pagination: {
+          el: '.swiper-pagination',
+          renderBullet: function (index, className) {
+            return '<span class="' + className + '">' + (index + 1) + '</span>'
+          },
+          clickable: true
+        },
+        autoplay: true
+      }
     }
   },
   components: {
     swiper,
     swiperSlide
   },
+  computed: {
+    swiper () {
+      return this.$refs.mySwiper.swiper
+    }
+  },
   created () {
   },
   mounted: function () {
     let that = this
-    let swiper = new Swiper('.swiper-container', {
-      pagination: {
-        el: '.swiper-pagination',
-        clickable: true,
-        renderBullet: function (index, className) {
-          return '<span class="' + className + '">' + (index + 1) + '</span>'
-        }
-      },
-      autoplay: {
-        delay: 2500,
-        disableOnInteraction: false
-      },
-      speed: 500
-    })
     // 币列表
     get(`/api/blist/1/${that.hotCount}`).then(data => {
       that.firstList = data.data.summaryList

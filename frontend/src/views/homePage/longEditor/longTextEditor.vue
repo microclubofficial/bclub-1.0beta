@@ -121,6 +121,18 @@ export default{
   color: #1E8FFF;
   background: snow;
 }
+.avatar{
+    float: left;
+    margin-right: 10px;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+}
+.avatar>img{
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
 .long-text-editor>div>.editor> .w-e-toolbar{
   border-top:1px solid #ccc !important;
   border-bottom: 1px solid #ccc !important;
@@ -134,4 +146,5 @@ export default{
   border:none !important;
 }
 .w-e-text-container{z-index: 9999 !important;}
+.w-e-toolbar{z-index: 9998 !important;}
 </style>

@@ -5,7 +5,7 @@
         <span class="toLongText"  @click="toBibarData(4)"><img src="../../assets/img/longText.png">长文</span>
         <button @click="getContent" class="report btn" data-dismiss="modal">发布</button>
         <button class="cancel" @click="isHideFun"  v-if="!showDilog">取消</button>
-        <button class="cancel"  data-dismiss="modal" v-if="showDilog">取消</button>
+        <button class="cancel"  data-dismiss="modal" @click="isHideFun" v-if="showDilog">取消</button>
         <!-- <div>{{backData}}</div> -->
     </div>
 </template>
@@ -63,11 +63,22 @@ export default {
           } else {
             if (data.data.content !== '') {
               let backFt = {}
+              backFt.author_id = data.data.author_id
+              backFt.board_id = data.data.board_id
+              backFt.content_type = data.data.content_type
+              backFt.diff_time = data.data.diff_time
+              backFt.is_bad = data.data.is_bad
+              backFt.is_good = data.data.is_good
+              backFt.title = data.data.title
+              backFt.token = data.data.token
+              backFt.updated_at = data.data.updated_at
               backFt.content = data.data.content
               backFt.author = data.data.author
               backFt.avatar = data.data.avatar
               backFt.id = data.data.id
               backFt.picture = data.data.picture
+              backFt.reply_user = null
+              backFt.replies_count = 0
               if (this.showDilog) {
                 this.$emit('backFtNav', backFt)
                 this.showDilog = false
@@ -90,6 +101,7 @@ export default {
       }
     },
     isHideFun () {
+      alert(1)
       $('.w-e-text').html('')
     },
     toBibarData (router) {
@@ -179,6 +191,11 @@ export default {
     height: 35px;
     border-radius: 50%;
 }
+.avatar>img{
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
 .editor{
     width: 540px;
     margin: auto;
@@ -226,4 +243,5 @@ export default {
     bottom: 25px;
     right: 192px;
 }
+.w-e-toolbar{z-index: 9998 !important;}
 </style>

@@ -5,42 +5,48 @@
     <div class="bibar-tabitem fade in active" :key="index" id="bibar-newstab1" v-for="(tmp,index) in articles">
       <div class="bibar-indexNewsList">
         <div class="bibar-indexNewsItem">
-          <div class="speech"> <span>周文君评论了讨论</span><i class="iconfont icon-dot"></i><span class="time">{{tmp.created_at}}</span> </div>
+          <div class="speech" v-if="tmp.reply_user !== null"> <span>{{tmp.reply_user}}<span class="time">{{tmp.reply_time}}</span>前评论了讨论</span><i class="iconfont icon-dot"></i></div>
           <div class="user">
-            <div class="bibar-author"> <a href="#"> <span class="photo"><img :src="tmp.avatar"></span> <span class="name">{{tmp.author}}</span> <span class="time">7小时前发布</span> </a> </div>
+            <div class="bibar-author"> <a href="#"> <span class="photo"><img :src="tmp.avatar"></span> <span class="name">{{tmp.author}}</span> <span class="time">{{tmp.diff_time}}前发布</span> </a> </div>
           </div>
-          <div class="tit"><a href="#" @click="goDetail(tmp.id)">{{tmp.title}}</a></div>
+          <div class="tit"><a href="javascript:void(0)" @click="goDetail(tmp.id)">{{tmp.title}}</a></div>
           <div class="txt indexNewslimitHeight" @click="goDetail(tmp.id)">
-            <p v-html='tmp.content'></p>
+            <div class="media">
+              <a class="pull-left" href="javascript:void(0)" v-if="tmp.picture">
+              <img class="media-object" :src="tmp.picture">
+            </a>
+            <div class="media-body">
+              <div v-html="EditorContent(tmp.content)"></div>
+            </div>
+            </div>
           </div>
           <div class="set">
             <ul class="bibar-indexNewsItem-infro">
-              <li class="set-choseOne"> <a href="javascript:void(0);" class="icon-quan mr15" :class='{active:tmp.is_good_bool}'  @click="changeNum(0,index,tmp.id)" ><i class="iconfont">&#xe603;</i><span class="is-good">{{tmp.is_good}}</span></a> <a href="javascript:void(0);"  :class='{active:tmp.is_bad_bool}' class="icon-quan set-choseOne" @click="changeNum(1,index,tmp.id)"><i class="iconfont">&#xe731;</i><span class="is-bad">{{tmp.is_bad}}</span></a> </li>
+              <li class="set-choseOne"> <a href="javascript:void(0);" class="icon-quan mr15" :class='{active:tmp.is_good_bool}'  @click="changeNum(0,index,tmp.id,0,tmp)" ><i class="iconfont">&#xe603;</i><span class="is-good">{{tmp.is_good}}</span></a> <a href="javascript:void(0);" :class='{active:tmp.is_bad_bool}' class="icon-quan set-choseOne" @click="changeNum(1,index,tmp.id,0,tmp)"><i class="iconfont">&#xe731;</i><span class="is-bad">{{tmp.is_bad}}</span></a> </li>
               <li class="set-discuss" @click="showDiscuss(index,tmp.id)">
                 <a href="javascript:void(0);">
                   <i class="iconfont icon-pinglun"></i> 评论
                   <span>{{tmp.replies_count}}</span>
                 </a>
               </li>
-              <li class="set-choseStar" @click="collectionTopic(index,tmp.id)"> <a :class="{collectionActive:index === collection}" href="javascript:void(0);"><i class="iconfont icon-star"></i>收藏</a> </li>
-              <li class="set-choseShang"> <a href="javascript:void(0);"><i class="iconfont icon-dashang"></i> 打赏<span>438</span></a> </li>
+              <li class="set-choseStar" @click="collectionTopic(index,tmp.id)"> <a :class="{collectionActive:index === collection}" href="javascript:void(0);"><i class="iconfont icon-star">&#xe6a7;</i>收藏</a> </li>
+              <!-- <li> <a href="javascript:void(0);"><i class="iconfont icon-fenxiang"></i> 分享</a> </li> -->
+              <!-- <li class="set-choseShang"> <a href="javascript:void(0);"><i class="iconfont icon-dashang"></i> 打赏<span>438</span></a> </li> -->
               <li>
-                <div class="dropdown">
+                <!-- <div class="dropdown">
                   <a href="javascript:void(0);" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="iconfont icon-genduo"></i> 更多</a>
                   <ul class="dropdown-menu">
                     <li><a href="javascript:void(0);">举报</a></li>
                     <li><a href="javascript:void(0);">没有帮助</a></li>
                   </ul>
-                </div>
+                </div> -->
               </li>
             </ul>
           </div>
-        </div>
-      </div>
-     <div class="bibar-comment"  v-show="showComment&&index==i">
+            <div class="bibar-hot"  v-show="showComment&&index==i">
        <!-- 评论框 -->
        <div class="editor-comment">
-         <img :src="tmp.avatar" alt="" class="avatar"  v-show="commentShow">
+         <img :src="userInfo.avatar" alt="" class="avatar"  v-show="commentShow">
          <div class="editor-bd">
            <span class="comment-img-delete"></span>
            <svg version='1.1' xmlns='http://www.w3.org/2000/svg' class="editor-triangle">
@@ -71,24 +77,44 @@
                 <a href="#">最早</a>
                 <a href="#">赞</a>
               </div> -->
+              <!-- 回复内容 -->
+                  <!-- <div class="comment-item" data-index='' data-id='' v-for="(tmp,rIndex) in replyContent" :key='rIndex'>
+                  <div>
+                    <a href="#" data-tooltip='' class="avatar">
+                      <img :src="tmp.avatar" alt="">
+                    </a>
+                    <div class="comment-item-main">
+                      <div class="comment-item-hd">
+                        <a href="#" class="user-name">{{tmp.author}}</a>
+                        <span class="time allTalk-time">{{tmp.created_at}}</span>
+                      </div>
+                      <p class="replyAuthor">@<span>{{tmp.author}}:</span><span style="display:inline-block">{{talkComment[replayId].content | needContent()}}</span></p>
+                      <p v-html="tmp.content">{{tmp.content}}</p>
+                      <p></p>
+                    </div>
+                  </div>
+                </div> -->
+                <!-- 评论 -->
               <div class="comment-list">
                 <div class="comment-item" data-index='' data-id=''  :key ='now' v-for="(item,now) in nowData">
                   <div>
                     <a href="#" data-tooltip='' class="avatar">
-                      <img src="../../../assets/img/pic-user1.png" alt="">
+                      <img :src="item.avatar" alt="">
                     </a>
                     <div class="comment-item-main">
                       <div class="comment-item-hd">
                         <a href="#" class="user-name">{{item.author}}</a>
-                        <span class="time">评论时间</span>
+                        <span class="time">{{item.diff_time}}</span>
                       </div>
+                      <!-- @ 样式 -->
+                      <p class="replyAuthor" v-if="item.reference !== null">@<span>{{item.author}}:</span><span style="display:inline-block;font-weight: normal;">{{item.reference | needTxt()}}</span></p>
                       <!-- <p>{{item}}</p> -->
                       <p v-html="item.content">{{item.content}}</p>
                     </div>
                     <div class="set">
                       <ul class="bibar-indexNewsItem-infro">
-                        <li class="set-choseOne"> <a href="javascript:void(0);" class="icon-quan mr15 active"  @click="changeNum(0)"><i class="iconfont">&#xe603;</i><span>{{item.is_bad}}</span></a><a href="javascript:void(0);"  :class='{active:tmp.is_bad_bool}' class="icon-quan set-choseOne" @click="changeNum(1)"><i class="iconfont">&#xe731;</i><span class="is-bad">{{item.is_good}}</span></a></li>
-                        <li class="set-choseShang"> <a href="javascript:void(0);"><i class="iconfont icon-dashang"></i> 打赏<span>438</span></a> </li>
+                        <li class="set-choseTwo"> <a href="javascript:void(0);" class="icon-quan mr15"  @click="changeNum(0,now,item.id,1,item)" :class='{active:tmp.is_good_bool}'><i class="iconfont">&#xe603;</i><span class="is-good-t">{{item.is_good}}</span></a><a href="javascript:void(0);"  :class='{active:tmp.is_bad_bool}' class="icon-quan set-choseTwo" @click="changeNum(1,now,item.id,1,item)"><i class="iconfont">&#xe731;</i><span class="is-bad-t">{{item.is_bad}}</span></a></li>
+                        <!-- <li class="set-choseShang"> <a href="javascript:void(0);"><i class="iconfont icon-dashang"></i> 打赏<span>438</span></a> </li> -->
                         <li class="set-discuss" @click="replyComment(item.id,now)">
                           <a href="javascript:void(0);">
                             <i class="iconfont icon-pinglun"></i> 回复
@@ -100,7 +126,7 @@
         <div class="comment-reply"  v-show="talkReplayBox && now === replayId">
                 <!-- 回复文本框 -->
         <div class="editor-comment">
-         <img :src="item.avatar" alt="" class="avatar" v-show="talkReplyTxt">
+         <img :src="userInfo.avatar" alt="" class="avatar" v-show="talkReplyTxt">
          <div class="editor-bd">
            <span class="comment-img-delete"></span>
            <svg version='1.1' xmlns='http://www.w3.org/2000/svg' class="editor-triangle">
@@ -110,7 +136,7 @@
              <div class="editor-placeholder">回复...</div>
            </div>
            <div class="editor-toolbar">
-              <BibarReport ref='childShowApi' :toApi='toRId' :mainReplay='item.id' v-show="showReportReplay" @backReplies = 'showReplyContent'></BibarReport>
+              <BibarReport ref='childShowApi' :toApi='toRId' :replyAuthor='item.author' :replyContent='item.content' :mainReplay='tmp.id' v-show="showReportReplay" @backhotReplies = 'showReplyContent'></BibarReport>
           </div>
          <span class="img-upload-delete">
              <img src="../../../assets/img/del.png" alt="">
@@ -126,6 +152,8 @@
        </div>
        </div>
      <!-- <div class='backContent' :key ='now' v-for="(item,now) in nowData">{{item}}</div> -->
+        </div>
+      </div>
     </div>
     <div class="loading-bar" v-if='loadingShow'>
                   <!-- <svg class="icon icon-loading" aria-hidden="true">
@@ -237,36 +265,65 @@ export default{
       }
     },
     // 点赞吐槽
-    changeNum (isNum, index, id) {
-      if (isNum === 0) {
-        if (index !== this.up) {
-          this.up = index
+    changeNum (isNum, index, id, classId, item) {
+      if (index !== this.up) {
+        this.up = index
+      }
+      // 文章点赞吐槽
+      if (classId === 0) {
+        // 点赞
+        if (isNum === 0) {
+          get(`/api/topic/up/${id}`).then(data => {
+            if (data.message === '成功') {
+              $('.bibar-tabitem:eq(' + index + ')').find('.set-choseOne>a:eq(' + isNum + ')').addClass('active')
+              item.is_good = data.data.good_count
+            } else if (data.message === '未登录') {
+              this.$router.push('/login')
+            } else {
+              alert(data.message)
+            }
+          })
+          // 吐槽
+        } else if (isNum === 1) {
+          get(`/api/topic/down/${id}`).then(data => {
+            if (data.message === '成功') {
+              $('.bibar-tabitem:eq(' + index + ')').find('.set-choseOne>a:eq(' + isNum + ')').addClass('active')
+              item.is_bad = data.data.bad_count
+            } else if (data.message === '未登录') {
+              alert(data.message)
+              this.$router.push('/login')
+            } else {
+              alert(data.message)
+            }
+          })
         }
-        get(`/api/topic/up/${id}`).then(data => {
-          if (data.message === '成功') {
-            $('.bibar-tabitem:eq(' + index + ')').find('.set-choseOne>a:eq(' + isNum + ')').addClass('active')
-            $('.bibar-tabitem:eq(' + index + ')').find('.is-good').html(data.data)
-          } else if (data.message === '未登录') {
-            this.$router.push('/login')
-          } else {
-            alert(data.message)
-          }
-        })
-      } else {
-        if (index !== this.up) {
-          this.up = index
+        // 评论点赞吐槽
+      } else if (classId === 1) {
+        // 点赞
+        if (isNum === 0) {
+          get(`/api/reply/up/${id}`).then(data => {
+            if (data.message === '成功') {
+              $('.comment-item:eq(' + index + ')').find('.set-choseTwo>a:eq(' + isNum + ')').addClass('active')
+              item.is_good = data.data.good_count
+            } else if (data.message === '未登录') {
+              this.$router.push('/login')
+            } else {
+              alert(data.message)
+            }
+          })
+          // 吐槽
+        } else if (isNum === 1) {
+          get(`/api/reply/down/${id}`).then(data => {
+            if (data.message === '成功') {
+              $('.comment-item:eq(' + index + ')').find('.set-choseTwo>a:eq(' + isNum + ')').addClass('active')
+              item.is_bad = data.data.bad_count
+            } else if (data.message === '未登录') {
+              this.$router.push('/login')
+            } else {
+              alert(data.message)
+            }
+          })
         }
-        get(`/api/topic/down/${id}`).then(data => {
-          if (data.message === '成功') {
-            $('.bibar-tabitem:eq(' + index + ')').find('.set-choseOne>a:eq(' + isNum + ')').addClass('active')
-            $('.bibar-tabitem:eq(' + index + ')').find('.is-bad').html(data.data)
-          } else if (data.message === '未登录') {
-            alert(data.message)
-            this.$router.push('/login')
-          } else {
-            alert(data.message)
-          }
-        })
       }
     },
     // 去详情页
@@ -278,7 +335,7 @@ export default{
     showDiscuss (index, id) {
       get(`/api/topic/${id}/1`).then(data => {
         this.nowData = data.data.replies
-
+        console.log(this.nowData)
       })
       if (index !== this.i) {
         this.i = index
@@ -291,7 +348,7 @@ export default{
       if (this.commentShow) {
         this.showReport = false
       }
-      $('.editor-toolbar').find('.wangeditor').css({'width': '832px', 'margin': '0 0 0 -39px', 'padding': '0'})
+      $('.editor-toolbar').find('.wangeditor').css({'margin': '0 0 0 -39px', 'padding': '0'})
       $('.editor-toolbar').find('.wangeditor>.report').css('bottom', '0')
       $('.editor-toolbar').find('.wangeditor>.cancel').css('bottom', '4px')
       $('.editor-toolbar').find('.wangeditor>.editor').css({'min-height': '130px', 'padding-bottom': '37px'})
@@ -315,7 +372,7 @@ export default{
       })
     },
     showFtContentFun (ftData) {
-      this.getNavaVal.unshift(ftData)
+      this.articles = [ftData, ...this.articles]
     },
     // 评论回复
     replyComment (id, now) {
@@ -333,23 +390,50 @@ export default{
     },
     // 回复返回数据
     showReplyContent (data) {
-      this.replyContent.unshift(data)
+      this.nowData.unshift(data)
+      get(`/api/topic/${this.tpno}`).then(data => {
+        console.log(data)
+        if (this.tpno === 1) {
+          this.articles = data.data.topics
+        } else {
+          let oldArr = this.articles.slice(0, -5)
+          this.articles = oldArr.concat(data.data.topics)
+        }
+      })
     },
     // 收藏
     collectionTopic (index, id) {
-      this.collection = index
-      let instance = new Toast({
-        message: '收藏成功',
-        iconClass: 'glyphicon glyphicon-ok',
-        duration: 1000
-      })
+      let instance
       post(`/api/collect/${id}`).then(data => {
         if (data.message === 'success') {
-          setTimeout(() => {
-            instance.close()
-          }, 1000)
+          this.collection = index
+          instance = new Toast({
+            message: '收藏成功',
+            iconClass: 'glyphicon glyphicon-ok',
+            duration: 1000
+          })
+        } else {
+          instance = new Toast({
+            message: '不能重复收藏',
+            duration: 1000
+          })
         }
+        setTimeout(() => {
+          instance.close()
+        }, 1000)
       })
+    },
+    // 处理图片
+    EditorContent (val) {
+      let newData = val.split(/<img src="\/static[^>]+>/g)
+      let now = ''
+      for (let i = 0; i < newData.length; i++) {
+        now += `${newData[i]}`
+      }
+      if (now.length > 300) {
+        now = now.substr(0, 300) + '...'
+      }
+      return now
     }
   }
 }
