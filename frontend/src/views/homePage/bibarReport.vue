@@ -51,22 +51,29 @@ export default {
     },
     getContent: function () {
       this.topicData.content = this.editorContent
-      let image = this.topicData.content.match(/<img src="\/static[^>]+>/g)
-      let newData = this.topicData.content.split(/<img src="\/static[^>]+>/g)
-      this.topicData.url = ''
-      if (image !== null) {
-        for (let j = 0; j < image.length; j++) {
-          this.topicData.url += `${image[j]}`
+      if (this.toApi !== 0 || this.toApi !== 5) {
+        // 处理回复数据
+        if (this.toApi === 4) {
+          this.topicData.author = this.replyAuthor
+          this.topicData.replyContent = this.replyContent
         }
+        // 处理正常内容
+        let image = this.topicData.content.match(/<img src="\/static[^>]+>/g)
+        let newData = this.topicData.content.split(/<img src="\/static[^>]+>/g)
+        this.topicData.url = ''
+        if (image !== null) {
+          for (let j = 0; j < image.length; j++) {
+            this.topicData.url += `${image[j]}`
+          }
+        }
+        this.topicData.content = ''
+        for (let i = 0; i < newData.length; i++) {
+          this.topicData.content += `${newData[i]}`
+        }
+        console.log(this.topicData)
       }
-      this.topicData.content = ''
-      for (let i = 0; i < newData.length; i++) {
-        this.topicData.content += `${newData[i]}`
-      }
-      if (this.toApi === 4) {
-        this.topicData.author = this.replyAuthor
-        this.topicData.replyContent = this.replyContent
-      }
+      console.log(this.topicData)
+      console.log(this.toApi)
       if (this.topicData.content.length > 0 || this.topicData.url.length > 0) {
         post(`/api/${this.nowShowApi[this.toApi]}${this.toApi === 1 ? '/question' : this.toApi === 2 ? '/answer' : this.toApi === 3 ? '/comment' : ''}/replies/${this.toApi === 0 ? this.mainCommnet : this.toApi === 2 ? this.talkId : this.toApi === 3 ? this.contentId : this.toApi === 5 ? this.detailId : this.mainReplay}`, this.topicData).then(data => {
           //   评论发送完毕
@@ -113,7 +120,6 @@ export default {
     }
   },
   mounted () {
-    let that = this
     var editor = new E(this.$refs.editor)
     editor.customConfig.onchange = (html) => {
       this.editorContent = html
@@ -129,10 +135,10 @@ export default {
     editor.customConfig.uploadImgServer = '/api/file'
     editor.customConfig.uploadImgHooks = {
       // success: function (xhr, editor, result) {
-      //   // console.log(result)
+      //   console.log(result)
       // },
       customInsert: function (insertImg, result, editor) {
-        insertImg(that.backData.url)
+        insertImg(result.data.file_path)
       }
     }
     editor.create()
@@ -145,19 +151,20 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 .comment-reply .wangeditor{
-  padding-left: 0 !important;
+  /*padding-left: 7% !important;*/
+  width: 643px;
 }
 .comment-reply .wangeditor .editor{
   padding-bottom: 33px;
 }
 .comment-reply .wangeditor .report{
-  right: 58px;
+  right: 60px;
   bottom: 0;
 }
 .comment-reply .wangeditor .cancel{
-  right:120px;
+  right:123px;
   bottom: 5px;
 }
 .bibar-commun {

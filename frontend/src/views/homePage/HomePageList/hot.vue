@@ -29,7 +29,7 @@
                   <span>{{tmp.replies_count}}</span>
                 </a>
               </li>
-              <li class="set-choseStar" @click="collectionTopic(index,tmp.id)"> <a :class="{collectionActive:index === collection}" href="javascript:void(0);"><i class="iconfont icon-star">&#xe6a7;</i>收藏</a> </li>
+              <li class="set-choseStar" @click="collectionTopic(index,tmp.id)"> <a href="javascript:void(0);"><i class="iconfont icon-star">&#xe6a7;</i>收藏</a> </li>
               <!-- <li> <a href="javascript:void(0);"><i class="iconfont icon-fenxiang"></i> 分享</a> </li> -->
               <!-- <li class="set-choseShang"> <a href="javascript:void(0);"><i class="iconfont icon-dashang"></i> 打赏<span>438</span></a> </li> -->
               <li>
@@ -107,13 +107,13 @@
                         <span class="time">{{item.diff_time}}</span>
                       </div>
                       <!-- @ 样式 -->
-                      <p class="replyAuthor" v-if="item.reference !== null">@<span>{{item.author}}:</span><span style="display:inline-block;font-weight: normal;">{{item.reference | needTxt()}}</span></p>
+                      <p class="replyAuthor" v-if="item.reference !== null">@<span>{{item.author}}:</span><span style="display:inline-block;font-weight: normal;" v-html='needTxt(item.reference)'></span></p>
                       <!-- <p>{{item}}</p> -->
                       <p v-html="item.content">{{item.content}}</p>
                     </div>
                     <div class="set">
                       <ul class="bibar-indexNewsItem-infro">
-                        <li class="set-choseTwo"> <a href="javascript:void(0);" class="icon-quan mr15"  @click="changeNum(0,now,item.id,1,item)" :class='{active:tmp.is_good_bool}'><i class="iconfont">&#xe603;</i><span class="is-good-t">{{item.is_good}}</span></a><a href="javascript:void(0);"  :class='{active:tmp.is_bad_bool}' class="icon-quan set-choseTwo" @click="changeNum(1,now,item.id,1,item)"><i class="iconfont">&#xe731;</i><span class="is-bad-t">{{item.is_bad}}</span></a></li>
+                        <li class="set-choseTwo"> <a href="javascript:void(0);" class="icon-quan mr15"  @click="changeNum(0,now,item.id,1,item)" :class='{active:item.is_good_bool}'><i class="iconfont">&#xe603;</i><span class="is-good-t">{{item.is_good}}</span></a><a href="javascript:void(0);"  :class='{active:item.is_bad_bool}' class="icon-quan set-choseTwo" @click="changeNum(1,now,item.id,1,item)"><i class="iconfont">&#xe731;</i><span class="is-bad-t">{{item.is_bad}}</span></a></li>
                         <!-- <li class="set-choseShang"> <a href="javascript:void(0);"><i class="iconfont icon-dashang"></i> 打赏<span>438</span></a> </li> -->
                         <li class="set-discuss" @click="replyComment(item.id,now)">
                           <a href="javascript:void(0);">
@@ -147,6 +147,22 @@
                   </div>
                 </div>
               </div>
+              <!-- 分页条 -->
+            <div class="pages" v-if='showPage'>
+              <ul class="mo-paging">
+              <!-- prev -->
+        <li class="paging-item paging-item--prev" :class="{'paging-item--disabled' : cpno === 1}" @click="prev">prev</li>
+        <!-- first -->
+        <li :class="['paging-item', 'paging-item--first', {'paging-item--disabled' : cpno === 1}]" @click="first">first</li>
+        <li :class="['paging-item', 'paging-item--more']" v-if="showPrevMore">...</li>
+        <li :class="['paging-item', {'paging-item--current' : cpno === tmp}]" :key="index" v-for="(tmp, index) in showPageBtn"  @click="go(tmp)">{{tmp}}</li>
+        <li :class="['paging-item', 'paging-item--more']" v-if="showNextMore">...</li>
+        <!-- next -->
+        <li :class="['paging-item', 'paging-item--next', {'paging-item--disabled' : cpno === cpageCount}]" @click="next">next</li>
+        <!-- last -->
+        <li :class="['paging-item', 'paging-item--last', {'paging-item--disabled' : cpno === cpageCount}]"  @click="last">last</li>
+        </ul>
+            </div>
             </div>
           </div>
        </div>
@@ -212,7 +228,17 @@ export default{
       hasImg: false,
       hotreplyContent: [],
       isGood: 0,
-      isBad: 0
+      isBad: 0,
+      // 分页
+      replyId: 0,
+      cpno: 1,
+      cpageLimit: 10,
+      cpageCount: 0,
+      showPrevMore: false,
+      showNextMore: false,
+      showPage: false,
+      // 收藏
+      collectionAct: false
     }
   },
   components: {
@@ -224,6 +250,20 @@ export default{
     },
     userInfo () {
       return this.$store.state.userInfo.userInfo
+    },
+    showPageBtn () {
+      let pageArr = []
+      if (this.cpageCount <= 5) {
+        for (let i = 1; i <= this.cpageCount; i++) {
+          pageArr.push(i)
+        }
+        return pageArr
+      }
+      if (this.cpno <= 2) return [1, 2, 3, '···', this.cpageCount]
+      if (this.cpno >= this.cpageCount - 1) return [1, '···', this.cpageCount - 2, this.cpageCount - 1, this.cpageCount]
+      if (this.cpno === 3) return [1, 2, 3, 4, '···', this.cpageCount]
+      if (this.cpno === this.cpageCount - 2) return [1, '···', this.cpageCount - 3, this.cpageCount - 2, this.cpageCount - 1, this.cpageCount]
+      return [1, '···', this.cpno - 1, this.cpno, this.cpno + 1, '···', this.cpageCount]
     }
   },
   created: function () {
@@ -280,9 +320,12 @@ export default{
         // 点赞
         if (isNum === 0) {
           get(`/api/topic/up/${id}`).then(data => {
-            if (data.message === '成功') {
-              $('.bibar-tabitem:eq(' + index + ')').find('.set-choseOne>a:eq(' + isNum + ')').addClass('active')
-              item.is_good = data.data.good_count
+            if (data.resultcode === 1) {
+              // $('.bibar-tabitem:eq(' + index + ')').find('.set-choseOne>a:eq(' + isNum + ')').addClass('active')
+              item.is_good = data.data.is_good
+              item.is_bad = data.data.is_bad
+              item.is_bad_bool = data.data.is_bad_bool
+              item.is_good_bool = data.data.is_good_bool
             } else if (data.message === '未登录') {
               this.$router.push('/login')
             } else {
@@ -292,9 +335,13 @@ export default{
           // 吐槽
         } else if (isNum === 1) {
           get(`/api/topic/down/${id}`).then(data => {
-            if (data.message === '成功') {
-              $('.bibar-tabitem:eq(' + index + ')').find('.set-choseOne>a:eq(' + isNum + ')').addClass('active')
-              item.is_bad = data.data.bad_count
+            if (data.resultcode === 1) {
+              // $('.bibar-tabitem:eq(' + index + ')').find('.set-choseOne>a:eq(' + isNum + ')').addClass('active')
+              item.is_good = data.data.is_good
+              item.is_bad = data.data.is_bad
+              console.log(data.data.is_good_bool)
+              item.is_bad_bool = data.data.is_bad_bool
+              item.is_good_bool = data.data.is_good_bool
             } else if (data.message === '未登录') {
               alert(data.message)
               this.$router.push('/login')
@@ -308,9 +355,12 @@ export default{
         // 点赞
         if (isNum === 0) {
           get(`/api/reply/up/${id}`).then(data => {
-            if (data.message === '成功') {
-              $('.comment-item:eq(' + index + ')').find('.set-choseTwo>a:eq(' + isNum + ')').addClass('active')
-              item.is_good = data.data.good_count
+            if (data.resultcode === 1) {
+              // $('.comment-item:eq(' + index + ')').find('.set-choseTwo>a:eq(' + isNum + ')').addClass('active')
+              item.is_good = data.data.is_good
+              item.is_bad = data.data.is_bad
+              item.is_bad_bool = data.data.is_bad_bool
+              item.is_good_bool = data.data.is_good_bool
             } else if (data.message === '未登录') {
               this.$router.push('/login')
             } else {
@@ -320,9 +370,12 @@ export default{
           // 吐槽
         } else if (isNum === 1) {
           get(`/api/reply/down/${id}`).then(data => {
-            if (data.message === '成功') {
-              $('.comment-item:eq(' + index + ')').find('.set-choseTwo>a:eq(' + isNum + ')').addClass('active')
-              item.is_bad = data.data.bad_count
+            if (data.resultcode === 1) {
+              // $('.comment-item:eq(' + index + ')').find('.set-choseTwo>a:eq(' + isNum + ')').addClass('active')
+              item.is_good = data.data.is_good
+              item.is_bad = data.data.is_bad
+              item.is_bad_bool = data.data.is_bad_bool
+              item.is_good_bool = data.data.is_good_bool
             } else if (data.message === '未登录') {
               this.$router.push('/login')
             } else {
@@ -339,9 +392,15 @@ export default{
     },
     // 评论
     showDiscuss (index, id) {
-      get(`/api/topic/${id}/1`).then(data => {
+      this.replyId = id
+      get(`/api/topic/${id}/${this.cpno}`).then(data => {
         this.nowData = data.data.replies
-        console.log(this.nowData)
+        this.cpageCount = data.data.page_count
+        if (this.cpageCount > 1) {
+          this.showPage = true
+        } else {
+          this.showPage = false
+        }
       })
       if (index !== this.i) {
         this.i = index
@@ -396,9 +455,9 @@ export default{
     },
     // 回复返回数据
     showReplyContent (data) {
+      console.log(data)
       this.nowData.unshift(data)
       get(`/api/topic/${this.tpno}`).then(data => {
-        console.log(data)
         if (this.tpno === 1) {
           this.articles = data.data.topics
         } else {
@@ -412,6 +471,7 @@ export default{
       let instance
       post(`/api/collect/${id}`).then(data => {
         if (data.message === 'success') {
+          $('.bibar-tabitem:eq(' + index + ')').find('.set-choseStar > a').addClass('collectionActive')
           this.collection = index
           instance = new Toast({
             message: '收藏成功',
@@ -440,6 +500,49 @@ export default{
         now = now.substr(0, 300) + '...'
       }
       return now
+    },
+    // 分页
+    prev () {
+      if (this.cpno > 1) {
+        this.go(this.cpno - 1)
+      }
+    },
+    next () {
+      if (this.cpno < this.cpageCount) {
+        this.go(this.cpno + 1)
+      }
+    },
+    first () {
+      if (this.cpno !== 1) {
+        this.go(1)
+      }
+    },
+    last () {
+      if (this.cpno !== this.cpageCount) {
+        this.go(this.cpageCount)
+      }
+    },
+    go (page) {
+      this.chartShow = 0
+      this.summaryList = []
+      if (this.cpno !== page) {
+        this.cpno = page
+      }
+      get(`/api/topic/${this.replyId}/${page}`).then(data => {
+        this.nowData = data.data.replies
+      })
+    },
+    // 回复人文字处理
+    needTxt (val) {
+      if (val) {
+        let newTxt = val.slice(3, val.indexOf('</p>'))
+        if (newTxt.indexOf('img') > 0) {
+          newTxt = newTxt.substring(0, 300) + '...'
+        } else if (newTxt.length > 20) {
+          newTxt = newTxt.substring(0, 20) + '...'
+        }
+        return newTxt
+      }
     }
   }
   // watch: {
@@ -451,6 +554,56 @@ export default{
 </script>
 
 <style>
+/*分页*/
+.pages{float: right;}
+.mo-paging {
+    display: inline-block;
+    padding: 0;
+    margin: 1rem 0;
+    font-size: 0;
+    list-style: none;
+    user-select: none;
+}
+.mo-paging>.paging-item {
+    display: inline;
+    font-size: 14px;
+    position: relative;
+    padding: 6px 12px;
+    line-height: 1.42857143;
+    text-decoration: none;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    margin-left: -1px;
+    cursor: pointer;
+    color: #0275d8;
+}
+.mo-paging>.paging-item:first-child {
+    margin-left: 0;
+}
+.mo-paging>.paging-item:hover {
+    background-color: #f0f0f0;
+    color: #0275d8;
+}
+.paging-item--disabled,.paging-item--more{
+    background-color: #fff !important;
+    color: #505050 !important;
+}
+/*禁用*/
+.paging-item--disabled {
+    cursor: not-allowed;
+    opacity: .75;
+}
+.paging-item--more,.paging-item--current {
+    cursor: default !important;
+}
+/*选中*/
+.paging-item--current {
+    background-color: #0275d8 !important;
+    color:#fff !important;
+    position: relative !important;
+    z-index: 1 !important;
+    border-color: #0275d8 !important;
+}
 /*回复样式*/
 .replyAuthor{
     height: 50px;

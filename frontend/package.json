@@ -22,6 +22,7 @@
     "jquery": "1.12.4",
     "js-cookie": "2.2.0",
     "jsencrypt": "2.3.1",
+    "mint-ui": "^2.2.13",
     "mockjs": "1.0.1-beta3",
     "normalize.css": "7.0.0",
     "nprogress": "0.2.0",
@@ -92,7 +93,8 @@
     "vue-template-compiler": "2.5.2",
     "webpack": "3.10.0",
     "webpack-bundle-analyzer": "2.9.0",
-    "webpack-dev-server": "2.9.1",
+    "webpack-dev-middleware": "^3.1.2",
+    "webpack-dev-server": "^2.9.1",
     "webpack-merge": "4.1.0"
   },
   "engines": {
