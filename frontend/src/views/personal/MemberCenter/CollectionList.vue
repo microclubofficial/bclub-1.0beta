@@ -107,7 +107,7 @@
                         <span class="time">{{item.diff_time}}</span>
                       </div>
                       <!-- @ 样式 -->
-                      <p class="replyAuthor" v-if="item.reference !== null">@<span>{{item.author}}:</span><span style="display:inline-block;font-weight: normal;">{{item.reference | needTxt()}}</span></p>
+                      <p class="replyAuthor" v-if="item.reference !== null"><span style="position:absolute;">@{{item.author}}:</span><span class="replyBackConten" style="display:inline-block;margin-left:100px;font-weight: normal;" v-html='item.reference'></span></p>
                       <!-- <p>{{item}}</p> -->
                       <p v-html="item.content">{{item.content}}</p>
                     </div>
@@ -413,9 +413,9 @@ export default{
       if (this.commentShow) {
         this.showReport = false
       }
-      $('.editor-toolbar').find('.wangeditor').css({'margin': '0 0 0 -39px', 'padding': '0'})
-      $('.editor-toolbar').find('.wangeditor>.report').css('bottom', '0')
-      $('.editor-toolbar').find('.wangeditor>.cancel').css('bottom', '4px')
+      $('.editor-toolbar').find('.wangeditor').css({'margin': '0 0 0 -39px', 'padding-left': '16%'})
+      $('.editor-toolbar').find('.wangeditor>.report').css({'bottom': '0', 'right': '242px'})
+      $('.editor-toolbar').find('.wangeditor>.cancel').css({'bottom': '4px', 'right': '302px'})
       $('.editor-toolbar').find('.wangeditor>.editor').css({'min-height': '130px', 'padding-bottom': '37px'})
       $('.editor-toolbar').find('.wangeditor>div:eq(2)').css('display', 'none')
     },
@@ -536,6 +536,13 @@ export default{
 </script>
 
 <style>
+  .replyBackConten>p:first-child{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 500px;
+    float: right;
+}
 .glyphicon{
   font-size: 20px;
 }

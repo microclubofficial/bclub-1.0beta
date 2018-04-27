@@ -80,8 +80,8 @@
     <!-- slides -->
     <swiper-slide>
       <ul class="bibarData-box">
-          <li v-for="(tmp,index) in firstList" :key="index">
-            <a href="#">
+          <li v-for="(tmp,index) in firstList" :key="index" @click='toBibarDetail(tmp)'>
+            <a href="javascript:void(0)">
               <p class="bibar-class">
                 {{tmp.symbol}}
                 <span><img :src="tmp.picture" alt=""></span>
@@ -94,8 +94,8 @@
     </swiper-slide>
     <swiper-slide>
       <ul class="bibarData-box">
-          <li v-for="(tmp,index) in twoList" :key="index">
-            <a href="#">
+          <li v-for="(tmp,index) in twoList" :key="index" @click='toBibarDetail(tmp)'>
+            <a href="javascript:void(0)">
               <p class="bibar-class">
                 {{tmp.symbol}}
                 <span><img :src="tmp.picture" alt=""></span>
@@ -108,8 +108,8 @@
     </swiper-slide>
     <swiper-slide>
       <ul class="bibarData-box">
-          <li v-for="(tmp,index) in threeList" :key="index">
-            <a href="#">
+          <li v-for="(tmp,index) in threeList" :key="index" @click='toBibarDetail(tmp)'>
+            <a href="javascript:void(0)">
               <p class="bibar-class">
                 {{tmp.symbol}}
                 <span><img :src="tmp.picture" alt=""></span>
@@ -181,6 +181,10 @@ export default{
     })
   },
   methods: {
+    // 去币详情页
+    toBibarDetail (tmp) {
+      this.$router.push(`/msgDetail/${tmp.id}`)
+    }
   }
 }
 </script>

@@ -40,10 +40,10 @@
       </div>
       <div class="meta-handle">
         <a href="#" class="btn-article-retweet">
-          <span><img src="../../assets/img/repeat.png" alt=""></span>收藏
+          <span><img src="../../assets/img/collect.png" alt=""></span>收藏
         </a>
         <a href="#" class="btn-article-retweet">
-          <span><img src="../../assets/img/collect.png" alt=""></span>转发
+          <span><img src="../../assets/img/repeat.png" alt=""></span>转发
         </a>
         <!-- <a href="#" class="btn-article-like">
           <span><img src="../../assets/img/isGood.png" alt=""></span>赞

@@ -6,11 +6,11 @@
     <div class="pt40"></div>
     <section class="bibar-w1100">
         <!--主体左侧-->
-        <section class="bibar-Mainleft">
+        <section class="bibar-Mainleft bx-mainLeft">
             <btb :bId="bitId"></btb>
             <!-- 富文本区 -->
-            <div class="mainBibar-editor" style="width:860px; margin:auto; background:#fff;">
-              <BibarPostContent @backFtContent = 'BibarContentFun'></BibarPostContent>
+            <div class="mainBibar-editor" v-if='initHide' style="width:960px; margin:auto; background:#fff;">
+              <BibarPostContent @backFtContent = 'BibarContentFun' ></BibarPostContent>
             </div>
             <!--新闻-->
             <article class="bibar-box bibar-boxindex2">
@@ -49,7 +49,9 @@ export default{
       i: 1,
       collapseId: '',
       hrefCollapse: '',
-      bitId: ''
+      bitId: '',
+      initHide: false,
+      initShow: false
     }
   },
   components: {
@@ -57,6 +59,11 @@ export default{
     btb,
     BibarRight,
     BibarPostContent
+  },
+  computed: {
+    userInfo () {
+      return this.$store.state.userInfo.userInfo
+    }
   },
   created () {
     this.collapseId = `collapse${this.i++}`
@@ -74,6 +81,7 @@ export default{
     } else if (scope === '+') {
       scopeStyle.addClass('up-avtive')
     }
+    $('.bx-mainLeft').find('.wangeditor').css({'padding-left': '14%'})
   },
   methods: {
     // 文章列表切换事件
@@ -85,12 +93,23 @@ export default{
     },
     BibarContentFun (data) {
       this.$refs.showBibarContent.showBibarContentFun(data)
+    },
+    // 退登状态
+    loadShow () {
+      if (!this.userInfo.isLogin) {
+        this.initShow = true
+        this.initHide = false
+      } else {
+        this.initShow = false
+        this.initHide = true
+      }
     }
   }
 }
 </script>
 
 <style>
+ .bibar-Main>.bibar-w1100>.bx-mainLeft{width: 960px;}
 .bibarMainGzList{background: #fff}
 .bibar-list-item{
   /* padding: 0 40px; */
@@ -100,7 +119,7 @@ export default{
 .bibar-box{box-shadow: none;}
 .bibar-list-item ul li{
   float: left;
-  margin: 10px 2px;
+  margin: 10px 1px;
 }
 .bibar-list-item ul li a{
     font-size: 16px;

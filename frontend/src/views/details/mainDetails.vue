@@ -2,7 +2,8 @@
   <div class="list-detail">
     <main-header></main-header>
     <div class="main-details-box">
-      <!-- 比特币 -->
+      <div class="DetailmainLeft">
+        <!-- 比特币 -->
       <btb v-show="isShow==0" :bId="chartId"></btb>
       <!-- 富文本区 -->
       <div class="mainBibar-editor bibarType-editor bibar-box" style="width:1100px; margin:20px auto 20px; padding:20px 0; background:#fff;" v-show="isShow==0 && initHide">
@@ -21,8 +22,13 @@
                     <router-view ref="showBibarContent"></router-view>
                 </div>
             </article>
+      </div>
       <subDetail v-show="isShow==3"></subDetail>
       <longTxt v-show='isShow==4'></longTxt>
+      <!--主体右侧-->
+        <section class="bibar-Mainright" v-show='isShow==0'>
+            <BibarRight></BibarRight>
+        </section>
     </div>
   </div>
 </template>
@@ -35,13 +41,15 @@ import btb from '../BibarMsg/BibarChart/BTB.vue'
 import subDetail from '../homePage/subDetail.vue'
 import longTxt from '../homePage/longTxt.vue'
 import BibarPostContent from '../homePage/bibarPostContent.vue'
+import BibarRight from '../BibarMsg/BibarRight/bivarRight.vue'
 export default {
   components: {
     MainHeader,
     btb,
     subDetail,
     longTxt,
-    BibarPostContent
+    BibarPostContent,
+    BibarRight
   },
   data: function () {
     return {
@@ -85,9 +93,10 @@ export default {
 </script>
 
 <style>
+  .DetailmainLeft{width: 960px; position: relative;float: left;}
 .list-detail{width: 100%;}
 .list-detail>.main-details-box{
-  width: 1100px;
+  width: 1200px;
   margin: 80px auto;
   position: relative;
 }

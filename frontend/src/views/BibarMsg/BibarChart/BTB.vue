@@ -10,7 +10,7 @@
                     </div>
                     <a href="#" class="btn btn-default"><i class="iconfont icon-add-sm"></i> 关注</a> </div>
                 <!--数-->
-                <div class="bibar-indexDisplay-data"> <i class="iconfont icon-CNY" style="font-size:30px;"></i> <span class="bibar-indexDisplay-dollar">{{cny_price | formatNum(2)}}</span><span class="bibar-indexDisplay-rmb"><i class="iconfont icon-yueden"></i><i class="iconfont icon-USD"></i>{{bibarData.price | formatNum(2)}}</span> <span class="bibar-indexDisplay-den"><i class="iconfont icon-denyu"></i> <i class="iconfont icon-BTC"></i> {{bibarData.price | bitcoinFun(BTC_RATE,0)}}</span> </div>
+                <div class="bibar-indexDisplay-data"> <i class="iconfont icon-rmb">&#xe634;</i> <span class="bibar-indexDisplay-dollar">{{cny_price | formatNum(2)}}</span><span class="bibar-indexDisplay-rmb"><i class="iconfont">&#xe6ca;</i><i class="iconfont icon-CNY">&#xe634;</i>{{bibarData.price | formatNum(2)}}</span> <span class="bibar-indexDisplay-den"><i class="iconfont icon-denyu">=</i> <i class="iconfont icon-BTC">&#xe63a;</i> {{bibarData.price | bitcoinFun(BTC_RATE,0)}}</span> </div>
                 <!--涨跌-->
                 <div class="bibar-indexDisplay-trend">
                     <div v-show="!isDown" class="bibar-indextrend green"> <span class="num">{{change1h}}</span> <i class="iconfont icon-angleup-bold"></i> </div>
@@ -22,17 +22,17 @@
                     <div class="col-sm-6">
                         <dl>
                             <dt>市值</dt>
-                            <dd> <i class="iconfont icon-CNY"></i>{{bibarData.marketCap
+                            <dd> <i class="iconfont icon-USD">&#xe736;</i>{{bibarData.marketCap
  | cnyFun(CNY_RATE,2)}}
                                 <div class="sprit-12 bg-green ml10">第{{bibarData.level}}名</div>
                             </dd>
-                            <dd> <i class="iconfont icon-yueden"></i> <i class="iconfont icon-rmb icon-USD"></i>{{bibarData.marketCap | formatNum(2)}} </dd>
-                            <dd> <i class="iconfont icon-yueden"></i> <i class="iconfont icon-btb icon-BTC"></i> {{bibarData.marketCap | bitcoinFun(BTC_RATE)}} </dd>
+                            <dd> <i class="iconfont icon-yueden">&#xe6ca;</i> <i class="iconfont icon-rmb icon-CNY">&#xe634;</i>{{bibarData.marketCap | formatNum(2)}} </dd>
+                            <dd> <i class="iconfont icon-yueden">&#xe6ca;</i> <i class="iconfont icon-BTC">&#xe63a;</i> {{bibarData.marketCap | bitcoinFun(BTC_RATE)}} </dd>
                         </dl>
                         <dl>
                             <dt>占全球总市值</dt>
                             <dd> {{bibarData.global_market_rate}}
-                                <div class="bibar-uipress"><span class="w40p"></span></div>
+                                <div class="bibar-uipress"><span :style="{width:initmarket + 'px'}"></span></div>
                             </dd>
                         </dl>
                         <dl>
@@ -43,11 +43,11 @@
                     <div class="col-sm-6">
                         <dl>
                             <dt>交易量(24h)</dt>
-                            <dd> <i class="iconfont icon-CNY"></i>{{bibarData.volume_ex | cnyFun(CNY_RATE,2)}}
+                            <dd> <i class="iconfont icon-USD">&#xe736;</i>{{bibarData.volume_ex | cnyFun(CNY_RATE,2)}}
                                 <div class="sprit-12 bg-green ml10">第{{bibarData.volume_level}}名</div>
                             </dd>
-                            <dd> <i class="iconfont icon-yueden"></i><i class="iconfont icon-USD"></i> {{bibarData.volume_ex | formatNum(2)}}</dd>
-                            <dd> <i class="iconfont icon-yueden"></i><i class="iconfont icon-btb icon-BTC"></i>{{bibarData.volume_ex | bitcoinFun(BTC_RATE)}} </dd>
+                            <dd> <i class="iconfont icon-yueden">&#xe6ca;</i><i class="iconfont icon-CNY">&#xe634;</i> {{bibarData.volume_ex | formatNum(2)}}</dd>
+                            <dd> <i class="iconfont icon-yueden"></i><i class="iconfont icon-btb icon-BTC">&#xe63a;</i>{{bibarData.volume_ex | bitcoinFun(BTC_RATE)}} </dd>
                         </dl>
                         <dl>
                             <dt>流通数量</dt>
@@ -56,7 +56,7 @@
                         <dl>
                             <dt>流通率</dt>
                             <dd> {{bibarData.Circulation_rate}}
-                                <div class="bibar-uipress"><span class="w90p"></span></div>
+                                <div class="bibar-uipress"><span :style="{width:initmarketT + 'px'}"></span></div>
                             </dd>
                         </dl>
                     </div>
@@ -68,7 +68,7 @@
                     </div>
                     <div class="clear hline"></div>
                     <!--chart-->
-                    <div ref="chat" :style="{width:'640px',height:'450px',margin: '0 auto'}" :class="{initChart:initShow}"></div>
+                    <div ref="chat" :style="{width:'810px',height:'450px',margin: '0 auto'}" :class="{initChart:initShow}"></div>
                 </article>
             </article>
 
@@ -105,8 +105,14 @@ export default {
       isDown: false,
       msgId: '',
       chartList: [],
-      nowId: ''
-      // bId: 'bitcoin'
+      nowId: '',
+      // bId: 'bitcoin',
+      market: 0,
+      initmarket: 0,
+      rate: 0,
+      initmarketT: 0,
+      timer: null,
+      timerT: null
     }
   },
   created () {
@@ -140,6 +146,22 @@ export default {
       $.getJSON(`/api/currency_news/${this.nowId}`, function (data) {
         // main数据
         that.bibarData = data.data
+        that.market = parseFloat(that.bibarData.global_market_rate.split(/%/g)[0])
+        // 总市值进度条
+        that.timer = setInterval(function () {
+          that.initmarket++
+          if (that.initmarket >= that.market) {
+            clearInterval(that.timer)
+          }
+        }, 30)
+        // 流通率进度条
+        that.rate = parseFloat(that.bibarData.Circulation_rate.split(/%/g)[0])
+        that.timerT = setInterval(function () {
+          that.initmarketT++
+          if (that.initmarketT >= that.rate) {
+            clearInterval(that.timerT)
+          }
+        }, 30)
         // 人民币汇率
         that.CNY_RATE = parseFloat(that.bibarData.CNY_RATE)
         // 比特币汇率
@@ -154,9 +176,9 @@ export default {
         } else {
           that.isDown = true
         }
+        // k线图
+        that.klineChart(that.nowId)
       })
-      // k线图
-      that.klineChart(that.nowId)
     },
     // k线图
     klineChart (id) {
@@ -278,7 +300,8 @@ export default {
             type: 'column',
             name: '24交易量',
             data: this.volumeData,
-            yAxis: 1
+            yAxis: 1,
+            color: '#44DFE4'
           }
         ]
       })
@@ -298,7 +321,6 @@ export default {
     },
     // 退登状态
     loadShow () {
-      console.log(this.userInfo)
       if (!this.userInfo.isLogin) {
         this.initShow = true
         this.initHide = false
@@ -317,5 +339,5 @@ export default {
 .bibar-box {
   cursor: pointer;
 }
-.initChart{width: 960px !important;}
+.initChart{width: 810px !important;}
 </style>

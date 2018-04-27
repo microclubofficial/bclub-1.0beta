@@ -3,7 +3,7 @@
         <div class="avatar"><img :src="userInfo.avatar" alt=""></div>
         <div ref="editor" style="text-align:left" class='editor'></div>
         <span class="toLongText"  @click="toBibarData(4)"><img src="../../assets/img/longText.png">长文</span>
-        <button @click="getContent" class="report btn" data-dismiss="modal">发布</button>
+        <button @click="getContent" class="report btnm" data-dismiss="modal">发布</button>
         <button class="cancel" @click="isHideFun"  v-if="!showDilog">取消</button>
         <button class="cancel"  data-dismiss="modal" @click="isHideFun" v-if="showDilog">取消</button>
         <!-- <div>{{backData}}</div> -->
@@ -203,7 +203,7 @@ export default {
     position: relative;
     float: left;
 }
-.btn{
+.btnm{
     display: inline-block;
     min-width: 48px;
     line-height: 1.25;
