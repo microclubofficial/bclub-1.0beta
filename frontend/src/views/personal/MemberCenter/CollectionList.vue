@@ -144,6 +144,22 @@
        </div>
        </div>
        </div>
+       <!-- 分页条 -->
+            <div class="pages" v-if='showPage'>
+              <ul class="mo-paging">
+              <!-- prev -->
+        <li class="paging-item paging-item--prev" :class="{'paging-item--disabled' : cpno === 1}" @click="prev">prev</li>
+        <!-- first -->
+        <li :class="['paging-item', 'paging-item--first', {'paging-item--disabled' : cpno === 1}]" @click="first">first</li>
+        <li :class="['paging-item', 'paging-item--more']" v-if="showPrevMore">...</li>
+        <li :class="['paging-item', {'paging-item--current' : cpno === tmp}]" :key="index" v-for="(tmp, index) in showPageBtn"  @click="go(tmp)">{{tmp}}</li>
+        <li :class="['paging-item', 'paging-item--more']" v-if="showNextMore">...</li>
+        <!-- next -->
+        <li :class="['paging-item', 'paging-item--next', {'paging-item--disabled' : cpno === cpageCount}]" @click="next">next</li>
+        <!-- last -->
+        <li :class="['paging-item', 'paging-item--last', {'paging-item--disabled' : cpno === cpageCount}]"  @click="last">last</li>
+        </ul>
+            </div>
                   </div>
                 </div>
               </div>
@@ -212,7 +228,15 @@ export default{
       hasImg: false,
       hotreplyContent: [],
       isGood: 0,
-      isBad: 0
+      isBad: 0,
+      // 分页
+      replyId: 0,
+      cpno: 1,
+      cpageLimit: 10,
+      cpageCount: 0,
+      showPrevMore: false,
+      showNextMore: false,
+      showPage: false
     }
   },
   components: {
@@ -224,6 +248,20 @@ export default{
     },
     userInfo () {
       return this.$store.state.userInfo.userInfo
+    },
+    showPageBtn () {
+      let pageArr = []
+      if (this.cpageCount <= 5) {
+        for (let i = 1; i <= this.cpageCount; i++) {
+          pageArr.push(i)
+        }
+        return pageArr
+      }
+      if (this.cpno <= 2) return [1, 2, 3, '···', this.cpageCount]
+      if (this.cpno >= this.cpageCount - 1) return [1, '···', this.cpageCount - 2, this.cpageCount - 1, this.cpageCount]
+      if (this.cpno === 3) return [1, 2, 3, 4, '···', this.cpageCount]
+      if (this.cpno === this.cpageCount - 2) return [1, '···', this.cpageCount - 3, this.cpageCount - 2, this.cpageCount - 1, this.cpageCount]
+      return [1, '···', this.cpno - 1, this.cpno, this.cpno + 1, '···', this.cpageCount]
     }
   },
   created: function () {
@@ -280,9 +318,12 @@ export default{
         // 点赞
         if (isNum === 0) {
           get(`/api/topic/up/${id}`).then(data => {
-            if (data.message === '成功') {
-              $('.bibar-tabitem:eq(' + index + ')').find('.set-choseOne>a:eq(' + isNum + ')').addClass('active')
-              item.is_good = data.data.good_count
+            if (data.resultcode === 1) {
+              // $('.bibar-tabitem:eq(' + index + ')').find('.set-choseOne>a:eq(' + isNum + ')').addClass('active')
+              item.is_good = data.data.is_good
+              item.is_bad = data.data.is_bad
+              item.is_bad_bool = data.data.is_bad_bool
+              item.is_good_bool = data.data.is_good_bool
             } else if (data.message === '未登录') {
               this.$router.push('/login')
             } else {
@@ -292,9 +333,13 @@ export default{
           // 吐槽
         } else if (isNum === 1) {
           get(`/api/topic/down/${id}`).then(data => {
-            if (data.message === '成功') {
-              $('.bibar-tabitem:eq(' + index + ')').find('.set-choseOne>a:eq(' + isNum + ')').addClass('active')
-              item.is_bad = data.data.bad_count
+            if (data.resultcode === 1) {
+              // $('.bibar-tabitem:eq(' + index + ')').find('.set-choseOne>a:eq(' + isNum + ')').addClass('active')
+              item.is_good = data.data.is_good
+              item.is_bad = data.data.is_bad
+              console.log(data.data.is_good_bool)
+              item.is_bad_bool = data.data.is_bad_bool
+              item.is_good_bool = data.data.is_good_bool
             } else if (data.message === '未登录') {
               alert(data.message)
               this.$router.push('/login')
@@ -308,9 +353,13 @@ export default{
         // 点赞
         if (isNum === 0) {
           get(`/api/reply/up/${id}`).then(data => {
-            if (data.message === '成功') {
-              $('.comment-item:eq(' + index + ')').find('.set-choseTwo>a:eq(' + isNum + ')').addClass('active')
-              item.is_good = data.data.good_count
+            console.log(data)
+            if (data.resultcode === 1) {
+              // $('.comment-item:eq(' + index + ')').find('.set-choseTwo>a:eq(' + isNum + ')').addClass('active')
+              item.is_good = data.data.is_good
+              item.is_bad = data.data.is_bad
+              item.is_bad_bool = data.data.is_bad_bool
+              item.is_good_bool = data.data.is_good_bool
             } else if (data.message === '未登录') {
               this.$router.push('/login')
             } else {
@@ -320,9 +369,13 @@ export default{
           // 吐槽
         } else if (isNum === 1) {
           get(`/api/reply/down/${id}`).then(data => {
-            if (data.message === '成功') {
-              $('.comment-item:eq(' + index + ')').find('.set-choseTwo>a:eq(' + isNum + ')').addClass('active')
-              item.is_bad = data.data.bad_count
+            console.log(data)
+            if (data.resultcode === 1) {
+              // $('.comment-item:eq(' + index + ')').find('.set-choseTwo>a:eq(' + isNum + ')').addClass('active')
+              item.is_good = data.data.is_good
+              item.is_bad = data.data.is_bad
+              item.is_bad_bool = data.data.is_bad_bool
+              item.is_good_bool = data.data.is_good_bool
             } else if (data.message === '未登录') {
               this.$router.push('/login')
             } else {
@@ -339,9 +392,15 @@ export default{
     },
     // 评论
     showDiscuss (index, id) {
-      get(`/api/topic/${id}/1`).then(data => {
+      this.replyId = id
+      get(`/api/topic/${id}/${this.cpno}`).then(data => {
         this.nowData = data.data.replies
-        console.log(this.nowData)
+        this.cpageCount = data.data.page_count
+        if (this.cpageCount > 1) {
+          this.showPage = true
+        } else {
+          this.showPage = false
+        }
       })
       if (index !== this.i) {
         this.i = index
@@ -440,6 +499,37 @@ export default{
         now = now.substr(0, 300) + '...'
       }
       return now
+    },
+    // 分页
+    prev () {
+      if (this.cpno > 1) {
+        this.go(this.cpno - 1)
+      }
+    },
+    next () {
+      if (this.cpno < this.cpageCount) {
+        this.go(this.cpno + 1)
+      }
+    },
+    first () {
+      if (this.cpno !== 1) {
+        this.go(1)
+      }
+    },
+    last () {
+      if (this.cpno !== this.cpageCount) {
+        this.go(this.cpageCount)
+      }
+    },
+    go (page) {
+      this.chartShow = 0
+      this.summaryList = []
+      if (this.cpno !== page) {
+        this.cpno = page
+      }
+      get(`/api/topic/${this.replyId}/${page}`).then(data => {
+        this.nowData = data.data.replies
+      })
     }
   }
 }

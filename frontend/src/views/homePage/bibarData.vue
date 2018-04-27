@@ -145,7 +145,11 @@ export default{
           },
           clickable: true
         },
-        autoplay: true
+        autoplay: {
+          delay: 3000,
+          stopOnLastSlide: true,
+          disableOnInteraction: false
+        }
       }
     }
   },

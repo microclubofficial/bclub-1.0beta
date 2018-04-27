@@ -40,21 +40,21 @@
       </div>
       <div class="meta-handle">
         <a href="#" class="btn-article-retweet">
+          <span><img src="../../assets/img/repeat.png" alt=""></span>收藏
+        </a>
+        <a href="#" class="btn-article-retweet">
           <span><img src="../../assets/img/collect.png" alt=""></span>转发
         </a>
         <!-- <a href="#" class="btn-article-like">
           <span><img src="../../assets/img/isGood.png" alt=""></span>赞
         </a> -->
-        <a href="#" class="btn-article-retweet">
-          <span><img src="../../assets/img/repeat.png" alt=""></span>收藏
-        </a>
       </div>
       <div class="meta-info">
         <span>{{repliesCcount}}</span>评论 · <span>{{articleDetail.is_good}}</span>赞
         <a href="#" class="btn-report-spam">举报</a>
       </div>
       </div>
-      <div class="editor-toolbar">
+      <div class="detail-editor-toolbar">
         <BibarReport :toApi='5' :detailId='articleDetail.id' @backList = 'showDetailContent'></BibarReport>
       </div>
       <!-- 评论内容 -->
@@ -83,13 +83,16 @@
                         <a href="#" class="user-name">{{item.author}}</a>
                         <span class="time">{{item.created_at}}</span>
                       </div>
+                      <!-- @ 样式 -->
+                      <p class="replyAuthor" v-if="item.reference !== null">@<span>{{item.author}}:</span><span style="display:inline-block;font-weight: normal;" v-html='needTxt(item.reference)'></span></p>
+                      <!-- <p>{{item}}</p> -->
                       <!-- <p>{{item}}</p> -->
                       <p v-html="item.content">{{item.content}}</p>
                     </div>
                     <div class="set">
                       <ul class="bibar-indexNewsItem-infro">
                         <li class="set-choseOne"> <a href="javascript:void(0);" class="icon-quan mr15" :class='{active:item.is_good_bool}'  @click="changeNum(0,now,item.id,item)"><i class="iconfont">&#xe603;</i><span class="is-good">{{item.is_good}}</span></a><a href="javascript:void(0);" :class='{active:item.is_bad_bool}' class="icon-quan" @click="changeNum(1,now,item.id,item)"><i class="iconfont">&#xe731;</i><span class="is-bad">{{item.is_bad}}</span></a> </li>
-                        <li class="set-discuss" @click="replyComment(now, item.id)">
+                        <li class="set-discuss" @click="replyComment(item.id,now)">
                           <a href="javascript:void(0);">
                             <i class="iconfont icon-pinglun"></i> 回复
                           </a>
@@ -110,7 +113,7 @@
              <div class="editor-placeholder">回复...</div>
            </div>
            <div class="editor-toolbar">
-              <BibarReport ref='childShowApi' :toApi='toRId' :mainReplay='item.id' v-show="showReportReplay"></BibarReport>
+              <BibarReport ref='childShowApi' :toApi='toRId' :replyAuthor='item.author' :replyContent='item.content' @backhotReplies = 'showReplyContent' :mainReplay='articleDetail.id' v-show="showReportReplay"></BibarReport>
           </div>
          <span class="img-upload-delete">
              <img src="../../assets/img/del.png" alt="">
@@ -201,6 +204,7 @@ export default {
     $('.editor-toolbar').find('.report ').css({'right': '260px', 'bottom': '2px'})
     $('.editor-toolbar').find('.cancel ').css({'right': '315px', 'bottom': '6px'})
     $('.article_bd').find('img').css({'display': 'block', 'text-align': 'center', 'margin': '10px auto'})
+    $('.detail-editor-toolbar').find('.editor').css({'padding-bottom': '45px'})
   },
   methods: {
     loadDetailPage () {
@@ -222,32 +226,36 @@ export default {
         return false
       }
     },
+    // 点赞吐槽
     changeNum (isNum, index, id, item) {
-      index = index + 1
+      if (index !== this.up) {
+        this.up = index
+      }
+      // 点赞
       if (isNum === 0) {
-        if (index !== this.up) {
-          this.up = index
-        }
         get(`/api/reply/up/${id}`).then(data => {
-          if (data.message === '成功') {
-            $('.comment-item:eq(' + index + ')').find('.set-choseOne>a:eq(' + isNum + ')').addClass('active')
-            item.is_good = data.data.good_count
+          if (data.resultcode === 1) {
+            // $('.comment-item:eq(' + index + ')').find('.set-choseTwo>a:eq(' + isNum + ')').addClass('active')
+            item.is_good = data.data.is_good
+            item.is_bad = data.data.is_bad
+            item.is_bad_bool = data.data.is_bad_bool
+            item.is_good_bool = data.data.is_good_bool
           } else if (data.message === '未登录') {
             this.$router.push('/login')
           } else {
             alert(data.message)
           }
         })
-      } else {
-        if (index !== this.up) {
-          this.up = index
-        }
+        // 吐槽
+      } else if (isNum === 1) {
         get(`/api/reply/down/${id}`).then(data => {
-          if (data.message === '成功') {
-            $('.comment-item:eq(' + index + ')').find('.set-choseOne>a:eq(' + isNum + ')').addClass('active')
-            item.is_bad = data.data.bad_count
+          if (data.resultcode === 1) {
+            // $('.comment-item:eq(' + index + ')').find('.set-choseTwo>a:eq(' + isNum + ')').addClass('active')
+            item.is_good = data.data.is_good
+            item.is_bad = data.data.is_bad
+            item.is_bad_bool = data.data.is_bad_bool
+            item.is_good_bool = data.data.is_good_bool
           } else if (data.message === '未登录') {
-            alert(data.message)
             this.$router.push('/login')
           } else {
             alert(data.message)
@@ -256,7 +264,7 @@ export default {
       }
     },
     showDetailContent (data) {
-      this.nowData.unshift(data)      
+      this.nowData.unshift(data)
     },
     // 评论回复
     replyComment (id, now) {
@@ -265,7 +273,7 @@ export default {
       }
       this.talkReplayBox = !this.talkReplayBox
       this.talkReplyTxt = !this.talkReplyTxt
-      this.toRId = 3
+      this.toRId = 4
     },
     // 显示回复富文本框
     talkReplyEditor () {
@@ -274,17 +282,44 @@ export default {
     },
     // 回复返回数据
     showReplyContent (data) {
-      console.log(data)
-      this.replyContent.unshift(data)
+      this.nowData.unshift(data)
+      get(`api/topic/${this.did}/${this.pno}`).then(data => {
+        this.repliesCcount = data.data.replies_count
+      })
+    },
+    // 回复人文字处理
+    needTxt (val) {
+      if (val) {
+        let newTxt = val.slice(3, val.indexOf('</p>'))
+        if (newTxt.indexOf('img') > 0) {
+          newTxt = newTxt.substring(0, 300) + '...'
+        } else if (newTxt.length > 20) {
+          newTxt = newTxt.substring(0, 20) + '...'
+        }
+        return newTxt
+      }
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.editor-toolbar>.wangeditor{
-  padding-left: 18%;
+  /*回复样式*/
+.replyAuthor{
+    height: 50px;
+    background: #F2F2F2;
+    line-height: 50px !important;
+    padding-left: 20px !important;
+    font-weight: 700;
+    margin-right: 2px;
 }
+.detail-editor-toolbar>.wangeditor{
+    width: 697px;
+    margin: 0 auto;
+}
+/*.editor-toolbar>.wangeditor{
+  padding-left: 18%;
+}*/
 .reward-btn{
     display: block;
     width: 56px;
