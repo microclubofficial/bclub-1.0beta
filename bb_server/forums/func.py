@@ -22,13 +22,13 @@ def time_diff(update_time):
     now = datetime.datetime.now()
     diff = now - update_time
     if int(diff.seconds)<=60:
-        return str(diff.seconds)+'s'
+        return str(diff.seconds)+'秒'
     elif int(diff.seconds)<=3600:
-        return str(int(diff.seconds//60))+'min'
+        return str(int(diff.seconds//60))+'分钟'
     elif int(diff.days)==0:
-        return str(int(diff.seconds//3600))+'hour'
+        return str(int(diff.seconds//3600))+'小时'
     elif int(diff.days)<=7:
-        return str(int(diff.days))+'day'
+        return str(int(diff.days))+'天'
     return str(update_time)
 
 def FindAndCount(Sql,**kwargs):

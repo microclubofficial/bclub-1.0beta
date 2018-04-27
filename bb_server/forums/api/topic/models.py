@@ -141,7 +141,7 @@ class Reply(db.Model, ModelMixin):
     is_good = db.Column(db.String(512), default='[]')
     is_bad = db.Column(db.String(512), default='[]')
     topic_id = db.Column(db.Integer)
-    reference = db.Column(db.String(81))
+    reference = db.Column(db.String(512))
     at_user = db.Column(db.String(81))
 
     author_id = db.Column(db.Integer, db.ForeignKey('user.id'))

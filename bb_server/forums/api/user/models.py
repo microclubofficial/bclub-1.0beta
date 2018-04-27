@@ -48,7 +48,7 @@ class User(db.Model, UserMixin):
     recommender_code = db.Column(db.Integer)
     email = db.Column(db.String(512))
     phone = db.Column(db.String(64), nullable=False)
-    avatar = db.Column(db.String(512), nullable=False)
+    avatar = db.Column(db.String(512))
 
     followers = db.relationship(
         'User',

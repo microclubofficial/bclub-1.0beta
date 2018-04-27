@@ -157,11 +157,13 @@ class TopicListView(MethodView):
         #user = User.query.filter_by(id=1).first()
         topic.author = user
         topic.save()
+        diff_time = time_diff(topic.updated_at)
         topic = object_as_dict(topic)
         Avatar(topic, user)
         topic['author'] = user.username
         topic['is_good'] = 0
         topic['is_bad'] = 0
+        topic['diff_time'] = diff_time
         #topic.board.topic_count = 1
         #topic.board.post_count = 1
         #topic.author.topic_count = 1
@@ -370,21 +372,31 @@ class ThumbView(MethodView):
             session = Topic.query.filter_by(id = id).first()
         elif 'reply' in request.path:
             session = Reply.query.filter_by(id = id).first()
+        userlist_good = json.loads(session.is_good)
+        userlist_bad = json.loads(session.is_bad)
         if thumb == 'up':
-            userlist = json.loads(session.is_good)
-            if user.id in userlist:
-                return get_json(0, '不能重复点赞', len(userlist))
-            else:
-                userlist.append(user.id)
-                count = len(userlist)
-                session.is_good = json.dumps(userlist)
+            if user.id in userlist_good:
+                return get_json(0, '不能重复点赞', len(userlist_good))
+            elif user.id in userlist_bad:
+                userlist_bad.remove(user.id)
+            userlist_good.append(user.id)
+            #good_count = len(userlist_good)
+            #bad_count = len(userlist_bad)
+            session.is_good = json.dumps(userlist_good)
+            session.is_bad = json.dumps(userlist_bad)
         elif thumb == 'down':
-            userlist = json.loads(session.is_bad)
-            if user.id in userlist:
-                return get_json(0, '不能重复吐槽', len(userlist))
-            else:
-                userlist.append(user.id)
-                count = len(userlist)
-                session.is_bad = json.dumps(userlist)
+            if user.id in userlist_bad:
+                return get_json(0, '不能重复吐槽', len(userlist_bad))
+            elif user.id in userlist_good:
+                userlist_good.remove(user.id)
+            userlist_bad.append(user.id)
+            #good_count = len(userlist_good)
+            #bad_count = len(userlist_bad)
+            session.is_good = json.dumps(userlist_good)
+            session.is_bad = json.dumps(userlist_bad)
         session.save()
-        return get_json(1, '成功', count)
+        #data = {'good_count':good_count, 'bad_count':bad_count}
+        data = {}
+        data['is_good'], data['is_good_bool'] = Count(session.is_good)
+        data['is_bad'], data['is_bad_bool'] = Count(session.is_bad)
+        return get_json(1, '成功', data)
