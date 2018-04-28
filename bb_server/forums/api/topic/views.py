@@ -35,11 +35,23 @@ from .permissions import (like_permission, reply_list_permission,
 from forums.api.message.models import MessageClient
 from forums.func import get_json, object_as_dict, time_diff, FindAndCount, Avatar, Count
 from forums.api.user.models import User
+from forums.api.collect.models import Collect
 from sqlalchemy import func
 import math
 import json
 
 per_page = 5
+
+def collect_bool(topicid):
+    if current_user.is_authenticated: 
+        topic_id = Collect.query.with_entities(Collect.topic_id).filter_by(author_id = request.user.id).first()
+        if not topic_id:
+            return False
+        if topicid in json.loads(topic_id[0]):
+            return True
+        else:
+            return False
+    return False
 
 class TopicAskView(IsConfirmedMethodView):
     def get(self):
@@ -86,7 +98,7 @@ class TopicListView(MethodView):
         #order_by = gen_topic_orderby(query_dict, keys)
         #filter_dict = gen_topic_filter(query_dict, keys)
         filter_dict = {}
-        title = _('All Topics')
+        title = _('All Topics') 
         if 'token' in request.path:
             filter_dict.update(token=token)
             title = _(token+'Topics')
@@ -111,6 +123,9 @@ class TopicListView(MethodView):
             diff_time = time_diff(i.updated_at)
             i.created_at = str(i.created_at)
             i.updated_at = str(i.updated_at)
+
+            collect = collect_bool(i.id)
+
             topics_data = object_as_dict(i)
             topics_data['reply_time'] = reply_time
             topics_data['reply_user'] = reply_user
@@ -119,6 +134,7 @@ class TopicListView(MethodView):
             topics_data['replies_count'] = reply_count
             topics_data['is_good'], topics_data['is_good_bool'] = Count(i.is_good)
             topics_data['is_bad'], topics_data['is_bad_bool'] = Count(i.is_bad)
+            topics_data['collect_bool'] = collect
             Avatar(topics_data, user)
             topic.append(topics_data)
         data = {'classification': title, 'topics': topic, 'topic_count':topic_count, 'page_count':page_count}
@@ -207,6 +223,7 @@ class TopicView(MethodView):
         topic_data['diff_time'] = diff_time
         topic_data['is_good'], topic_data['is_good_bool'] = Count(topic.is_good)
         topic_data['is_bad'], topic_data['is_bad_bool'] = Count(topic.is_bad)
+        topic_data['collect_bool'] = collect_bool(topicId)
         Avatar(topic_data, topic_user)
         data = {
             #'title': topic['title'],
@@ -285,7 +302,7 @@ class ReplyListView(MethodView):
         replies_data['is_good'] = 0
         replies_data['is_bad'] = 0
         replies_data['diff_time'] = diff_time
-        # notice
+        # noticetopicId
         #MessageClient.topic(reply)
         # count
         #topic.board.post_count = 1

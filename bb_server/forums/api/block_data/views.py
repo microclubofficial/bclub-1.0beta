@@ -5,6 +5,7 @@ from forums.extension import redis_data
 import requests
 import math
 import json
+import time
 
 class Currency_News(MethodView):
     def get(self, token):
@@ -62,6 +63,7 @@ class Picture(MethodView):
             Blist['id'] = j['id']
             Blist['symbol'] = j['symbol']
             Blist['name_ch'] = j['name_ch']
+            Blist['b_picture'] = 'https://blockchains.oss-cn-shanghai.aliyuncs.com/static/coinInfo/%s.png'%(j['id'])
             data.append(Blist)
         for p in range(3):
             data[p]['picture'] = picturelist[p]
@@ -76,5 +78,8 @@ class SideBar(MethodView):
         # websites:官网  message:论坛  explorers：区块浏览器
         data = {}
         for i in keys:
-            data[i] = details[i]
+            if i == 'publicTime':
+                data[i] = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(details[i]/1000))
+            else:
+                data[i] = details[i]
         return get_json(1, 'success', data)

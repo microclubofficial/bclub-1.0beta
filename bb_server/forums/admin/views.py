@@ -10,11 +10,12 @@
 #          By:
 # Description:
 # **************************************************************************
-from flask import abort
+from flask import abort, request
 from flask_admin.contrib.sqla import ModelView
-
 from flask_wtf import Form
 from forums.permission import super_permission
+from flask_login import current_user
+from forums.func import object_as_dict
 
 class BaseForm(Form):
     def __init__(self, formdata=None, obj=None, prefix=u'', **kwargs):
@@ -30,7 +31,10 @@ class BaseView(ModelView):
     form_base_class = BaseForm
 
     def is_accessible(self):
-        return super_permission.can()
+        user = request.user
+        if not user:
+            return False
+        return user.is_superuser
 
     def inaccessible_callback(self, name, **kwargs):
         abort(404)

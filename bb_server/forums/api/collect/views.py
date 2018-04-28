@@ -152,6 +152,7 @@ class CollectView(MethodView):
                 topics_data['replies_count'] = reply_count
                 topics_data['is_good'], topics_data['is_good_bool'] = Count(topic.is_good)
                 topics_data['is_bad'], topics_data['is_bad_bool'] = Count(topic.is_bad)
+                #a, topics_data['collect_bool'] = Count(Collect.topic_id)
                 Avatar(topics_data, user)
                 topics.append(topics_data)
             data = {'topics': topics, 'sum_count':sum_count, 'page_count':page_count}
@@ -164,7 +165,12 @@ class CollectView(MethodView):
             collect = Collect.query.filter_by(author_id = user.id).first()
             topiclist = json.loads(collect.topic_id)
             if topicId in topiclist:
-                return get_json(0, '您已收藏，请勿重复收藏',{})
+                topiclist.remove(topicId)
+                collect.topic_id = json.dumps(topiclist)
+                collect.save()
+                data={}
+                data['collect_bool'] = False
+                return get_json(1, '取消收藏成功', data)
             else:
                 topiclist.append(topicId)
                 collect.topic_id = json.dumps(topiclist)
@@ -172,4 +178,6 @@ class CollectView(MethodView):
             collect = Collect(author_id=user.id)
             collect.topic_id = json.dumps([topicId])
         collect.save()
-        return get_json(1, 'success', {})
+        data={}
+        data['collect_bool'] = True
+        return get_json(1, '收藏成功', data)
