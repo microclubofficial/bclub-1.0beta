@@ -96,7 +96,7 @@ class UserReplyListView(MethodView):
         filter_dict = gen_filter_dict(query_dict, keys)
         filter_dict.update(author_id=user.id)
         replies = Reply.query.filter_by(
-            **filter_dict).order_by(*order_by).limit(per_page).offset(start)
+            **filter_dict).order_by('-id').limit(per_page).offset(start)
         sum_count = FindAndCount(Reply, **filter_dict)
         page_count = int(math.ceil(sum_count/per_page))
         topics = []

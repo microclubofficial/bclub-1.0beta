@@ -4,6 +4,8 @@ from flask_login import current_user
 import datetime
 import json
 
+#from forums.api.collect.models import Collect
+
 
 def get_json(errorcode,msg,data):
     data_json={
@@ -47,3 +49,14 @@ def Count(Sql, data=False):
         if request.user.id in json.loads(Sql):
             data = True
     return len(json.loads(Sql)), data
+
+'''def collect_bool(topicid):
+    if current_user.is_authenticated: 
+        topic_id = Collect.query.with_entities(Collect.topic_id).filter_by(author_id = request.user.id).first()
+        if not topic_id:
+            return False
+        if topicid in json.loads(topic_id[0]):
+            return True
+        else:
+            return False
+    return False'''

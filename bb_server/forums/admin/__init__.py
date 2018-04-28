@@ -10,15 +10,15 @@
 #          By:
 # Description:
 # **************************************************************************
-from flask_admin import Admin
-from forums.admin import bar, user, topic, message, permission
-
-from flask_admin import expose, AdminIndexView
+from forums.admin import bar, user, topic, message, permission 
+from flask_admin import expose, AdminIndexView, Admin
 from forums.api.user.models import User
-from flask import redirect, url_for, request
+from flask import redirect, url_for, request, render_template
 from flask_login import current_user
 from forums.func import get_json
-'''
+from flask.views import MethodView
+from flask import Blueprint
+
 class MyAdminIndexView(AdminIndexView):
     
     @expose('/admin')
@@ -27,20 +27,26 @@ class MyAdminIndexView(AdminIndexView):
             return redirect(url_for('.login_view'))
         return super(MyAdminIndexView, self).index()
 
-    @expose('/admin/login', methods=('GET', 'POST'))
-    def login_view(self):
+class LoginView(MethodView):
+    def get(self):
+        return render_template('admin/login.html')
+
+    def post(self):
         post_data = request.data
         username = post_data.get('username')
         password = post_data.get('password')
         user = User.query.filter_by(username=username).first()
         if not user or not user.check_password(password):
-            return get_json(0, '用户名或密码错误', {})
+            return redirect('/admin/login')
+        if not user.is_superuser:
+            return redirect('/admin/login')
         user.login()
-        return redirect(url_for('.index'))
+        return redirect('/admin/')
 
-admin1 = Admin(index_view=AdminIndexView())'''
 admin = Admin(name='Bclub', template_mode='bootstrap3')
-
+#admin = Admin(name='Bclub', index_view=MyAdminIndexView(),template_mode='bootstrap3')
+site = Blueprint('login', __name__)
+site.add_url_rule('/admin/login', view_func=LoginView.as_view('login'))
 def init_app(app):
     admin.init_app(app)
     bar.init_admin(admin)
@@ -48,3 +54,5 @@ def init_app(app):
     topic.init_admin(admin)
     #message.init_admin(admin)
     #permission.init_admin(admin)
+    app.register_blueprint(site)
+

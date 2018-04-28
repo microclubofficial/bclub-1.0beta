@@ -62,6 +62,7 @@ class Picture(MethodView):
             Blist['id'] = j['id']
             Blist['symbol'] = j['symbol']
             Blist['name_ch'] = j['name_ch']
+            Blist['b_picture'] = 'https://blockchains.oss-cn-shanghai.aliyuncs.com/static/coinInfo/%s.png'%(j['id'])
             data.append(Blist)
         for p in range(3):
             data[p]['picture'] = picturelist[p]
