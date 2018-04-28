@@ -70,6 +70,7 @@ export default{
     this.hrefCollapse = `#${this.collapseId}`
   },
   mounted () {
+    this.loadShow()
     // 币种
     this.bitId = this.$route.params.currency
     // 富文本样式
@@ -96,6 +97,7 @@ export default{
     },
     // 退登状态
     loadShow () {
+      console.log(!this.userInfo.isLogin)
       if (!this.userInfo.isLogin) {
         this.initShow = true
         this.initHide = false
@@ -103,6 +105,7 @@ export default{
         this.initShow = false
         this.initHide = true
       }
+      console.log(this.initHide)
     }
   }
 }
