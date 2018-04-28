@@ -25,11 +25,11 @@ def display_status(column):
 
 class UserView(BaseView):
     column_exclude_list = ['password', 'info', 'setting']
-    column_searchable_list = ['username', 'email']
-    column_filters = ['email', 'is_superuser', 'is_confirmed', 'register_time']
+    column_searchable_list = ['username', 'email', 'phone']
+    column_filters = ['email', 'is_superuser', 'username', 'phone']
     column_editable_list = ['is_confirmed', 'is_superuser']
-    form_columns = ('username', 'email', 'password', 'is_confirmed',
-                    'is_superuser')
+    form_columns = ('username', 'email', 'phone', 'user_code', 'integral',
+                     'recommender_code', 'avatar', 'is_confirmed', 'is_superuser')
     # inline_models = (UserInfo, UserSetting)
     # form_extra_fields = {
     #     'password': PasswordField('Password', [DataRequired()])
@@ -70,6 +70,8 @@ def init_admin(admin):
             name='管理用户',
             endpoint='admin_user',
             category='管理用户'))
+            
+'''
     admin.add_view(
         UserInfoView(
             UserInfo,
@@ -84,3 +86,4 @@ def init_admin(admin):
             name='管理用户设置',
             endpoint='admin_usersetting',
             category='管理用户'))
+'''

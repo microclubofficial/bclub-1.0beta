@@ -7,10 +7,20 @@ from datetime import datetime
 class Bar(db.Model, ModelMixin):
     __tablename__ = 'bar'
     id = db.Column(db.Integer, primary_key=True)
-    author_id = db.Column(db.Integer)
+    author_id = db.Column(
+        db.Integer, db.ForeignKey(
+            'user.id', ondelete="CASCADE"))
+    author = db.relationship(
+        User,
+        backref=db.backref(
+            'bars', cascade='all,delete-orphan', lazy='dynamic'),
+        lazy='joined')
     title = db.Column(db.String(81), nullable=False)
     subtitle = db.Column(db.String(81))
     picture = db.Column(db.String(512), nullable=False)
+
+    def __repr__(self):
+        return self.title
 
 class Questions(db.Model, ModelMixin):
     __tablename__ = 'questions'
@@ -27,17 +37,28 @@ class Questions(db.Model, ModelMixin):
     content_type = db.Column(
         db.String(10), nullable=False, default=CONTENT_TYPE_MARKDOWN)
     created_at = db.Column(
-        db.DateTime, default=datetime.now(), nullable=False)
+        db.DateTime, default=datetime.now, nullable=False)
     updated_at = db.Column(
-        db.DateTime, default=datetime.now(), onupdate=datetime.now())
+        db.DateTime, default=datetime.now, onupdate=datetime.now)
     is_good = db.Column(db.Integer, default=0, nullable=False)
     is_bad = db.Column(db.Integer, default=0, nullable=False)
-    bar_id = db.Column(db.Integer, nullable=False, default=0)
+    bar_id = db.Column(db.Integer, 
+                db.ForeignKey('bar.id', ondelete="CASCADE"), nullable=False, default=0,)
+    bar = db.relationship(
+        Bar,
+        backref=db.backref(
+            'bar-questions', cascade='all,delete-orphan', lazy='dynamic'),
+        lazy='joined')
+
     is_bar = db.Column(db.SmallInteger,  default=0)
-    author_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    author_id = db.Column(
+        db.Integer, db.ForeignKey(
+            'user.id', ondelete="CASCADE"))
     author = db.relationship(
-        User, backref=db.backref(
-            'user', lazy='dynamic'), lazy='joined')
+        User,
+        backref=db.backref(
+            'questions', cascade='all,delete-orphan', lazy='dynamic'),
+        lazy='joined')
 
 class Answers(db.Model, ModelMixin):
     __tablename__ = 'answers'
@@ -46,9 +67,9 @@ class Answers(db.Model, ModelMixin):
     is_good = db.Column(db.Integer, default=0, nullable=False)
     is_bad = db.Column(db.Integer, default=0, nullable=False)
     created_at = db.Column(
-        db.DateTime, default=datetime.now(), nullable=False)
+        db.DateTime, default=datetime.now, nullable=False)
     updated_at = db.Column(
-        db.DateTime, default=datetime.now(), onupdate=datetime.now())
+        db.DateTime, default=datetime.now, onupdate=datetime.now)
     questions_id = db.Column(db.Integer)
     is_reply = db.Column(db.SmallInteger, default=0)
     author_id = db.Column(db.Integer, db.ForeignKey('user.id'))
@@ -63,9 +84,9 @@ class Comments(db.Model, ModelMixin):
     is_good = db.Column(db.Integer, default=0, nullable=False)
     is_bad = db.Column(db.Integer, default=0, nullable=False)
     created_at = db.Column(
-        db.DateTime, default=datetime.now(), nullable=False)
+        db.DateTime, default=datetime.now, nullable=False)
     updated_at = db.Column(
-        db.DateTime, default=datetime.now(), onupdate=datetime.now())
+        db.DateTime, default=datetime.now, onupdate=datetime.now)
     answers_id = db.Column(db.Integer)
     author_id = db.Column(db.Integer)
 
@@ -76,9 +97,9 @@ class Replys(db.Model, ModelMixin):
     is_good = db.Column(db.Integer, default=0, nullable=False)
     is_bad = db.Column(db.Integer, default=0, nullable=False)
     created_at = db.Column(
-        db.DateTime, default=datetime.now(), nullable=False)
+        db.DateTime, default=datetime.now, nullable=False)
     updated_at = db.Column(
-        db.DateTime, default=datetime.now(), onupdate=datetime.now())
+        db.DateTime, default=datetime.now, onupdate=datetime.now)
     comments_id = db.Column(db.Integer, nullable=False)
     author_id = db.Column(db.Integer, nullable=False)
         

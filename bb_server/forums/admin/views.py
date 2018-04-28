@@ -12,9 +12,9 @@
 # **************************************************************************
 from flask import abort
 from flask_admin.contrib.sqla import ModelView
+
 from flask_wtf import Form
 from forums.permission import super_permission
-
 
 class BaseForm(Form):
     def __init__(self, formdata=None, obj=None, prefix=u'', **kwargs):

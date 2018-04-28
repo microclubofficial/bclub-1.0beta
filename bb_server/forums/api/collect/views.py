@@ -133,13 +133,12 @@ class CollectView(MethodView):
     def get(self, page):
         start = (page-1)*per_page
         user = request.user
-        print(1)
         collect = Collect.query.filter_by(author_id = user.id).first()
         if collect:
             topiclist = json.loads(collect.topic_id)
             sum_count = len(topiclist)
             page_count = int(math.ceil(sum_count/per_page))
-            topicslist = []
+            topics = []
             for i in topiclist[-start-1:-start-per_page-1:-1]:
                 topic = Topic.query.filter_by(id=i).first()
                 user = User.query.filter_by(id = topic.author_id).first()
@@ -154,8 +153,8 @@ class CollectView(MethodView):
                 topics_data['is_good'], topics_data['is_good_bool'] = Count(topic.is_good)
                 topics_data['is_bad'], topics_data['is_bad_bool'] = Count(topic.is_bad)
                 Avatar(topics_data, user)
-                topicslist.append(topics_data)
-            data = {'topics': topicslist, 'sum_count':sum_count, 'page_count':page_count}
+                topics.append(topics_data)
+            data = {'topics': topics, 'sum_count':sum_count, 'page_count':page_count}
             return get_json(1, '收藏列表', data)
         return get_json(1, '收藏列表', {})
 

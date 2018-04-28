@@ -10,7 +10,7 @@
 #          By:
 # Description:
 # **************************************************************************
-from flask import redirect, render_template, request, url_for, current_app
+from flask import redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 from forums.api.forums.models import Board
 from forums.api.tag.models import Tags
@@ -94,7 +94,7 @@ class UserReplyListView(MethodView):
         keys = ['title']
         order_by = gen_order_by(query_dict, keys)
         filter_dict = gen_filter_dict(query_dict, keys)
-        filter_dict.update(author_id=user.id, is_reply=1)
+        filter_dict.update(author_id=user.id)
         replies = Reply.query.filter_by(
             **filter_dict).order_by(*order_by).limit(per_page).offset(start)
         sum_count = FindAndCount(Reply, **filter_dict)
@@ -103,17 +103,18 @@ class UserReplyListView(MethodView):
         for i in replies:
             topic = Topic.query.filter_by(id=i.topic_id).first()
             if topic.id not in [i['id'] for i in topics]:
+                topic_user = User.query.filter_by(id = topic.author_id).first()
                 reply_count = FindAndCount(Reply, topic_id = topic.id)
                 diff_time = time_diff(topic.updated_at)
                 topics_data = object_as_dict(topic)
                 topics_data['created_at'] = str(topics_data['created_at'])
                 topics_data['updated_at'] = str(topics_data['created_at'])
-                topics_data['author'] = user.username
+                topics_data['author'] = topic_user.username
                 topics_data['diff_time'] = diff_time
                 topics_data['replies_count'] = reply_count
                 topics_data['is_good'], topics_data['is_good_bool'] = Count(i.is_good)
                 topics_data['is_bad'], topics_data['is_bad_bool'] = Count(i.is_bad)
-                Avatar(topics_data, user)
+                Avatar(topics_data, topic_user)
                 topics.append(topics_data)
         data = {'topics': topics, 'sum_count':sum_count, 'page_count':page_count}
         return get_json(1, '评论的文章列表', data)

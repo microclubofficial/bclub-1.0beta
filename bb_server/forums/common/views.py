@@ -49,7 +49,7 @@ class BaseMethodView(MethodView):
             number = per_page
         return page, number
 
-    @cache.cached(timeout=180, key_prefix=cache_key)
+    #@cache.cached(timeout=180, key_prefix=cache_key)
     def dispatch_request(self, *args, **kwargs):
         return super(BaseMethodView, self).dispatch_request(*args, **kwargs)
 
