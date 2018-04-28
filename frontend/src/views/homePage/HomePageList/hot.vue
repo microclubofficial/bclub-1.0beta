@@ -23,13 +23,13 @@
           <div class="set">
             <ul class="bibar-indexNewsItem-infro">
               <li class="set-choseOne"> <a href="javascript:void(0);" class="icon-quan mr15" :class='{active:tmp.is_good_bool}'  @click="changeNum(0,index,tmp.id,0,tmp)" ><i class="iconfont">&#xe603;</i><span class="is-good">{{tmp.is_good}}</span></a> <a href="javascript:void(0);" :class='{active:tmp.is_bad_bool}' class="icon-quan set-choseOne" @click="changeNum(1,index,tmp.id,0,tmp)"><i class="iconfont">&#xe731;</i><span class="is-bad">{{tmp.is_bad}}</span></a> </li>
-              <li class="set-discuss" @click="showDiscuss(index,tmp.id)">
+              <li class="set-discuss">
                 <a href="javascript:void(0);">
                   <i class="iconfont icon-pinglun"></i> 评论
                   <span>{{tmp.replies_count}}</span>
                 </a>
               </li>
-              <li class="set-choseStar" @click="collectionTopic(index,tmp.id)"> <a href="javascript:void(0);"><i class="iconfont icon-star">&#xe6a7;</i>收藏</a> </li>
+              <li class="set-choseStar" @click="collectionTopic(tmp)"> <a :class='{collectionActive:tmp.collect_bool}' href="javascript:void(0);"><i class="iconfont icon-star">&#xe6a7;</i>收藏</a> </li>
               <!-- <li> <a href="javascript:void(0);"><i class="iconfont icon-fenxiang"></i> 分享</a> </li> -->
               <!-- <li class="set-choseShang"> <a href="javascript:void(0);"><i class="iconfont icon-dashang"></i> 打赏<span>438</span></a> </li> -->
               <li>
@@ -52,7 +52,7 @@
            <svg version='1.1' xmlns='http://www.w3.org/2000/svg' class="editor-triangle">
             <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
            </svg>
-           <div class="editor-textarea" v-show="commentShow" @click="commentShowFun">
+           <div class="editor-textarea" v-show="commentShow">
              <div class="editor-placeholder">评论...</div>
            </div>
            <div class="editor-toolbar">
@@ -236,9 +236,7 @@ export default{
       cpageCount: 0,
       showPrevMore: false,
       showNextMore: false,
-      showPage: false,
-      // 收藏
-      collectionAct: false
+      showPage: false
     }
   },
   components: {
@@ -270,6 +268,7 @@ export default{
     // 文章分页
     this.$store.dispatch('clear_backForNav')
     get(`/api/topic/${this.tpno}`).then(data => {
+      console.log(data)
       this.articles = data.data.topics
       this.pageCount = data.data.page_count
       if (this.articles.length > 0) {
@@ -466,20 +465,20 @@ export default{
       })
     },
     // 收藏
-    collectionTopic (index, id) {
+    collectionTopic (tmp) {
       let instance
-      post(`/api/collect/${id}`).then(data => {
-        if (data.message === 'success') {
-          $('.bibar-tabitem:eq(' + index + ')').find('.set-choseStar > a').addClass('collectionActive')
-          this.collection = index
+      post(`/api/collect/${tmp.id}`).then(data => {
+        if (data.data.collect_bool) {
+          tmp.collect_bool = data.data.collect_bool
           instance = new Toast({
-            message: '收藏成功',
+            message: data.message,
             iconClass: 'glyphicon glyphicon-ok',
             duration: 1000
           })
         } else {
+          tmp.collect_bool = data.data.collect_bool
           instance = new Toast({
-            message: '不能重复收藏',
+            message: data.message,
             duration: 1000
           })
         }
@@ -621,9 +620,6 @@ export default{
 }
 .glyphicon{
   font-size: 20px;
-}
-.collectionActive{
-  color: #ffa727 !important;
 }
 .indexNewslimitHeight{
   cursor: pointer;

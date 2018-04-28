@@ -58,15 +58,15 @@ export const constantRouterMap = [
   // 首页
   { path: '',
     // name: 'homePage',
-    component: homePage,
-    children: [
-      {path: '', component: _import('homePage/HomePageList/hot')},
-      {path: 'hot', component: _import('homePage/HomePageList/hot')},
-      {path: 'market', component: _import('homePage/HomePageList/market')},
-      {path: 'analyst', component: _import('homePage/HomePageList/analyst')},
-      {path: 'depth', component: _import('homePage/HomePageList/depth')},
-      {path: 'baike', component: _import('homePage/HomePageList/baike')}
-    ]
+    component: homePage
+    // children: [
+    //   {path: '', component: _import('homePage/HomePageList/hot')},
+    //   {path: 'hot', component: _import('homePage/HomePageList/hot')},
+    //   {path: 'market', component: _import('homePage/HomePageList/market')},
+    //   {path: 'analyst', component: _import('homePage/HomePageList/analyst')},
+    //   {path: 'depth', component: _import('homePage/HomePageList/depth')},
+    //   {path: 'baike', component: _import('homePage/HomePageList/baike')}
+    // ]
   },
   // 个人中心
   {

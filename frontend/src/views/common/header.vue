@@ -9,20 +9,21 @@
         <nav class="bibar-headernav">
             <ul class="bibar-headernavlist">
                 <li class="bibar-headernavitem"> <a href="javascript:void(0)"><router-link :class="{headerActive: routerSelect('')}" :to="{path:'/'}">首页</router-link></a> </li>
-                <li class="bibar-headernavitem"> <a href="javascript:void(0)"><router-link :class="{headerActive: routerSelect('community')}" :to="{path:'/community'}">社区</router-link></a> </li>
+                <!--<li class="bibar-headernavitem"> <a href="javascript:void(0)"><router-link :class="{headerActive: routerSelect('community')}" :to="{path:'/community'}">社区</router-link></a> </li>-->
                 <li class="bibar-headernavitem"> <a href="javascript:void(0)"><router-link :class="{headerActive: routerSelect('bibarLayout')}" :to="{path:'/bibarLayout'}">币讯</router-link></a> </li>
-                <li class="bibar-headernavitem"> <a href="javascript:void(0)"><router-link :class="{headerActive: routerSelect('maintalk')}" :to="{path:'/maintalk'}">讨论</router-link></a> </li>
-                <li class="bibar-headernavitem"> <a href="javascript:void(0)"><router-link :class="{headerActive: routerSelect('cream')}" :to="{path:'/cream'}">精华</router-link></a> </li>
+                <!--<li class="bibar-headernavitem"> <a href="javascript:void(0)"><router-link :class="{headerActive: routerSelect('maintalk')}" :to="{path:'/maintalk'}">讨论</router-link></a> </li>-->
+                <!--<li class="bibar-headernavitem"> <a href="javascript:void(0)"><router-link :class="{headerActive: routerSelect('cream')}" :to="{path:'/cream'}">精华</router-link></a> </li>-->
             </ul>
         </nav>
         <!--搜索框-->
         <div class="bibar-headerSearch">
             <ul class="bibar-headerSearchlist">
-                <li class="bibar-headerSearchitem">
+              <!--搜索框-->
+                <!--<li class="bibar-headerSearchitem">
                     <div class="input-icon left dib">
                         <input type="text" class="form-control btn-circle w180 bg-greyLight" placeholder="搜索">
                         <i class="iconfont">&#xe613;</i> </div>
-                </li>
+                </li>-->
                 <li class="bibar-headerSearchitem">
                     <!-- 未登录 -->
                     <NavLogin v-show="!userInfo.isLogin"></NavLogin>

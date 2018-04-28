@@ -1,36 +1,39 @@
 <template>
   <div id="commun">
-      <MainHeader @backLoadMain='toMainLoadFun'></MainHeader>
+      <MainHeader></MainHeader>
+      <!--<MainHeader @backLoadMain='toMainLoadFun'></MainHeader>-->
       <section class="bibar-Main">
     <section class="bibar-w1100">
       <!-- left slide -->
       <BibarLeft v-if="initHide"></BibarLeft>
         <!--主体左侧-->
-      <section class="bibar-Mainleft" :class="{initClass:initShow}">
+      <section class="bibar-Mainleft">
           <!--社区币吧数据-->
-      <BibarData v-show="initShow"></BibarData>
+      <BibarData></BibarData>
       <!--社区各币种-->
-      <BibarType v-show="initShow"></BibarType>
+      <BibarType></BibarType>
       <!--社区综合-->
-      <BibarTogether v-show="initShow"></BibarTogether>
+      <BibarTogether v-show="initHide"></BibarTogether>
       <!-- 富文本区 -->
-      <div style="width:790px; margin:auto; background:#fff;" class="Maineditor" :class="{initHideEditor:initHide}"  v-if="initHide">
+      <div style="width:790px; margin:auto; background:#fff;" class="Maineditor" :class="{initHideEditor:initHide}" v-if="initHide">
         <BibarPostContent @backFtContent = 'FtContentFun'></BibarPostContent>
       </div>
       <!--社区列表-->
       <!--主体左侧-->
-        <section class="bibar-commun" :class="{initSty:initShow}">
+        <section class="bibar-commun">
             <div class="pt20"></div>
             <!--新闻-->
             <article class="bibar-box bibar-boxindex2">
                 <div class="bibar-indexNews">
                     <div class="bibar-indexNews-TAB">
                         <ul class="bibar-tabs-listSty2">
-                            <li class="bibar-tabs-item" :key='index' v-for="(tmp,index) in newList" :class="{active:state==index}" @click="changeActive(index)"> <a href="#bibar-newstab1" data-toggle="tab">{{tmp}}</a></li>
+                          <li class="bibar-tabs-item active"> <a href="#bibar-newstab1" data-toggle="tab">全部</a></li>
+                            <!--<li class="bibar-tabs-item" :key='index' v-for="(tmp,index) in newList" :class="{active:state==index}" @click="changeActive(index)"> <a href="#bibar-newstab1" data-toggle="tab">{{tmp}}</a></li>-->
                         </ul>
                     </div>
+                    <Hot></Hot>
                     <!--新闻列表-->
-                    <router-view ref="showFtContent" :getNavData='backForNav'></router-view>
+                    <!--<router-view ref="showFtContent" :getNavData='backForNav'></router-view>                   -->
                 </div>
             </article>
         </section>
@@ -53,6 +56,8 @@ import BibarTogether from './bibarTogether.vue'
 import BibarPostContent from './bibarPostContent.vue'
 import BibarRight from '../BibarMsg/BibarRight/bivarRight.vue'
 import BibarLeft from '../homePage/bibarLeft/bibarSideLeft.vue'
+// 全部文章
+import Hot from '../homePage/HomePageList/hot.vue'
 
 export default{
   name: 'common',
@@ -74,7 +79,8 @@ export default{
     BibarTogether,
     BibarPostContent,
     BibarRight,
-    BibarLeft
+    BibarLeft,
+    Hot
   },
   computed: {
     userInfo () {
@@ -82,7 +88,7 @@ export default{
     }
   },
   mounted () {
-    this.loadShow()
+    // this.loadShow()
   },
   methods: {
     // 社区文章列表切换事件
@@ -98,29 +104,29 @@ export default{
     FtContentFun (data) {
       // this.$store.dispatch('set_backForNav', data)
       this.$refs.showFtContent.showFtContentFun(data)
-    },
-    // 退登状态----重新加载页面
-    toMainLoadFun () {
-      this.loadShow()
-    },
-    // 退登状态
-    loadShow () {
-      if (!this.userInfo.isLogin) {
-        this.initShow = true
-        this.initHide = false
-      } else {
-        this.initShow = false
-        this.initHide = true
-      }
     }
+    // // 退登状态----重新加载页面
+    // toMainLoadFun () {
+    //   this.loadShow()
+    // }
+    // // 退登状态
+    // loadShow () {
+    //   if (!this.userInfo.isLogin) {
+    //     this.initShow = true
+    //     this.initHide = false
+    //   } else {
+    //     this.initShow = false
+    //     this.initHide = true
+    //   }
+    // }
   }
 }
 </script>
 
 <style>
   .bibar-commun{
-    width: 790px;
-    margin: 0 auto
+    width: 1200px;
+    margin: 20px auto 0 auto;
   }
   .Maineditor>.wangeditor>.toLongText{right: 415px !important;}
   /* .initHideEditor{margin-top:80px !important;} */

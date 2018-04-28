@@ -4,7 +4,7 @@
     <div class="article_container">
       <div class="article_author">
         <div class="top_left">
-          <a href="/5900650325" target="_blank" class="avatar"><img :src='articleDetail.avatar' alt="金氪投行之家"></a>
+          <a href="/5900650325" target="_blank" class="avatar"><img :src='articleDetail.avatar'></a>
         </div>
         <div class="top_right">
           <div class="avatar_name">
@@ -30,28 +30,40 @@
       </article>
       <div class="meta-container">
         <!-- <a href="#" class="reward-btn">赞</a> -->
-        <div class="meta-share">
+        <!--分享-->
+        <!--<div class="meta-share">
         <a href="#" class="btn-share-wechat">
           <span><img src="../../assets/img/weixin.png" alt=""></span>
         </a>
         <a href="#" class="btn-share-weibo">
           <span><img src="../../assets/img/weibo.png" alt=""></span>
         </a>
-      </div>
+      </div>-->
       <div class="meta-handle">
-        <a href="#" class="btn-article-retweet">
-          <span><img src="../../assets/img/collect.png" alt=""></span>收藏
-        </a>
-        <a href="#" class="btn-article-retweet">
-          <span><img src="../../assets/img/repeat.png" alt=""></span>转发
-        </a>
-        <!-- <a href="#" class="btn-article-like">
-          <span><img src="../../assets/img/isGood.png" alt=""></span>赞
-        </a> -->
+        <div class="set">
+            <ul class="bibar-indexNewsItem-infro">
+              <li class="set-choseOne"> <a href="javascript:void(0);" class="icon-quan mr15" :class='{active:articleDetail.is_good_bool}'  @click="changeNumAriticle(0,articleDetail)" ><i class="iconfont">&#xe603;</i><span class="is-good">{{articleDetail.is_good}}</span></a> <a href="javascript:void(0);" :class='{active:articleDetail.is_bad_bool}' class="icon-quan set-choseOne" @click="changeNumAriticle(1,articleDetail)"><i class="iconfont">&#xe731;</i><span class="is-bad">{{articleDetail.is_bad}}</span></a> </li>
+              <li class="set-choseStar" @click="collectionTopic(articleDetail)"> <a href="javascript:void(0)" class="btn-article-retweet" :class='{collectionActive:articleDetail.collect_bool}'>
+          <i class="iconfont icon-star">&#xe6a7;</i>收藏
+        </a> </li>
+              <!-- <li> <a href="javascript:void(0);"><i class="iconfont icon-fenxiang"></i> 分享</a> </li> -->
+              <!-- <li class="set-choseShang"> <a href="javascript:void(0);"><i class="iconfont icon-dashang"></i> 打赏<span>438</span></a> </li> -->
+              <li>
+                <!-- <div class="dropdown">
+                  <a href="javascript:void(0);" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="iconfont icon-genduo"></i> 更多</a>
+                  <ul class="dropdown-menu">
+                    <li><a href="javascript:void(0);">举报</a></li>
+                    <li><a href="javascript:void(0);">没有帮助</a></li>
+                  </ul>
+                </div> -->
+              </li>
+            </ul>
+          </div>
       </div>
       <div class="meta-info">
-        <span>{{repliesCcount}}</span>评论 · <span>{{articleDetail.is_good}}</span>赞
-        <a href="#" class="btn-report-spam">举报</a>
+        <!--<span>{{repliesCcount}}</span>评论-->
+        <!--<span>{{repliesCcount}}</span>评论 · <span>{{articleDetail.is_good}}</span>赞-->
+        <!--<a href="#" class="btn-report-spam">举报</a>-->
       </div>
       </div>
       <div class="detail-editor-toolbar">
@@ -140,9 +152,10 @@
 </template>
 
 <script>
-import { get } from '../../utils/http'
+import { get, post } from '../../utils/http'
 import MainHeader from '../common/header'
 import BibarReport from '../homePage/bibarReport.vue'
+import { Toast } from 'mint-ui'
 // import PullTo from 'vue-pull-to'
 
 export default {
@@ -174,7 +187,8 @@ export default {
       showReportReplay: false,
       toRId: 0,
       replayId: 0,
-      repliesCcount: 0
+      repliesCcount: 0,
+      showCollection: false
     }
   },
   computed: {
@@ -186,6 +200,7 @@ export default {
     this.did = this.$route.params.id
     // console.log(this.pageCount)
     get(`api/topic/${this.did}/${this.pno}`).then(data => {
+      console.log(data)
       this.articleDetail = data.data.topic
       this.repliesCcount = data.data.replies_count
       this.nowData = data.data.replies
@@ -224,6 +239,38 @@ export default {
         this.noLoading = true
         // this.loadingImg = '../../assets/img/noLoading.png'
         return false
+      }
+    },
+    // 正文点赞吐槽
+    changeNumAriticle (isNum, articleDetail) {
+      if (isNum === 0) {
+        get(`/api/topic/up/${articleDetail.id}`).then(data => {
+          if (data.resultcode === 1) {
+            // $('.comment-item:eq(' + index + ')').find('.set-choseTwo>a:eq(' + isNum + ')').addClass('active')
+            articleDetail.is_good = data.data.is_good
+            articleDetail.is_bad = data.data.is_bad
+            articleDetail.is_bad_bool = data.data.is_bad_bool
+            articleDetail.is_good_bool = data.data.is_good_bool
+          } else if (data.message === '未登录') {
+            this.$router.push('/login')
+          } else {
+            alert(data.message)
+          }
+        })
+      } else if (isNum === 1) {
+        get(`/api/topic/down/${articleDetail.id}`).then(data => {
+          if (data.resultcode === 1) {
+            // $('.comment-item:eq(' + index + ')').find('.set-choseTwo>a:eq(' + isNum + ')').addClass('active')
+            articleDetail.is_good = data.data.is_good
+            articleDetail.is_bad = data.data.is_bad
+            articleDetail.is_bad_bool = data.data.is_bad_bool
+            articleDetail.is_good_bool = data.data.is_good_bool
+          } else if (data.message === '未登录') {
+            this.$router.push('/login')
+          } else {
+            alert(data.message)
+          }
+        })
       }
     },
     // 点赞吐槽
@@ -298,12 +345,36 @@ export default {
         }
         return newTxt
       }
+    },
+    // 收藏
+    collectionTopic (articleDetail) {
+      let instance
+      post(`/api/collect/${articleDetail.id}`).then(data => {
+        if (data.data.collect_bool) {
+          articleDetail.collect_bool = data.data.collect_bool
+          instance = new Toast({
+            message: data.message,
+            iconClass: 'glyphicon glyphicon-ok',
+            duration: 1000
+          })
+        } else {
+          articleDetail.collect_bool = data.data.collect_bool
+          instance = new Toast({
+            message: data.message,
+            duration: 1000
+          })
+        }
+        setTimeout(() => {
+          instance.close()
+        }, 1000)
+      })
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+  .detail-editor-toolbar{text-align: center;}
   /*回复样式*/
 .replyAuthor{
     height: 50px;
@@ -336,6 +407,7 @@ export default {
     margin: 0 auto 20px;
     z-index: 10;
     font-size: 13px;
+    overflow: hidden;
 }
 .meta-share {
     float: right;
@@ -366,7 +438,7 @@ export default {
     color: rgba(0,153,51,.8);
 }
 .meta-handle {
-    float: right;
+    float: left;
 }
 .meta-handle>a {
     color: #666c72;

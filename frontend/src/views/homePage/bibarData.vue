@@ -20,7 +20,7 @@
 .bibarData-box>li{
   width: 15%;
   height: 100px;
-  margin-right: 1%;
+  /*margin-right: 1%;*/
   border: 1px solid #D7D7D7;
   background: #fff;
   margin-bottom: 1%;

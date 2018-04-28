@@ -1,7 +1,8 @@
 
 <template>
   <div class="main">
-    <MainHeader @backLoadMain='toMainLoadFun'></MainHeader>
+    <!--<MainHeader @backLoadMain='toMainLoadFun'></MainHeader>-->
+    <MainHeader></MainHeader>
     <!--主体-->
     <section class="bibar-Main">
     <!-- <div class="pt40"></div> -->
@@ -23,7 +24,7 @@
                 </div>
                  <!-- 币种列表 -->
                  <a data-toggle="collapse" class="panel-tb-hd" data-parent="#accordion" href='#collapseOne'>
-                  <div class="bibar-list-item" @click="chartShow = index">
+                  <div class="bibar-list-item" @click="changeBList(index,item)">
                   <ul>
                     <li :class="{initListSty:initShow}"><a href="javascript:void(0)"><span><img :src="item.picture" alt=""></span> {{item.name_ch}} - {{item.symbol}}</a></li>
                     <li><a href="javascript:void(0)"><i class="iconfont icon-CNY"></i>{{item.price | cnyFun(CNY,2)}}</a></li>
@@ -41,39 +42,40 @@
             <div class="pages">
               <ul class="mo-paging">
               <!-- prev -->
-        <li class="paging-item paging-item--prev" :class="{'paging-item--disabled' : cpno === 1}" @click="prev">prev</li>
         <!-- first -->
-        <li :class="['paging-item', 'paging-item--first', {'paging-item--disabled' : cpno === 1}]" @click="first">first</li>
+        <li :class="['paging-item', 'paging-item--first', {'paging-item--disabled' : cpno === 1}]" @click="first">首页</li>
+        <li class="paging-item paging-item--prev" :class="{'paging-item--disabled' : cpno === 1}" @click="prev">上一页</li>
         <li :class="['paging-item', 'paging-item--more']" v-if="showPrevMore">...</li>
         <li :class="['paging-item', {'paging-item--current' : cpno === tmp}]" :key="index" v-for="(tmp, index) in showPageBtn"  @click="go(tmp)">{{tmp}}</li>
         <li :class="['paging-item', 'paging-item--more']" v-if="showNextMore">...</li>
         <!-- next -->
-        <li :class="['paging-item', 'paging-item--next', {'paging-item--disabled' : cpno === cpageCount}]" @click="next">next</li>
+        <li :class="['paging-item', 'paging-item--next', {'paging-item--disabled' : cpno === cpageCount}]" @click="next">下一页</li>
         <!-- last -->
-        <li :class="['paging-item', 'paging-item--last', {'paging-item--disabled' : cpno === cpageCount}]"  @click="last">last</li>
+        <li :class="['paging-item', 'paging-item--last', {'paging-item--disabled' : cpno === cpageCount}]"  @click="last">尾页</li>
         </ul>
             </div>
           </div>
             <!-- 富文本区 -->
             <div class="mainBibar-editor" :class="{initSty:initShow}" style="margin:auto; background:#fff;">
-              <BibarPostContent @backFtContent = 'BibarContentFun' v-show="initHide"></BibarPostContent>
+              <BibarPostContent :bid='toEditorBid' @backFtContent = 'BibarContentFun' v-show="initHide"></BibarPostContent>
             </div>
             <!--新闻-->
-            <article class="bibar-box bibar-boxindex2" style="margin-top:20px;">
+            <article v-if="initHide" class="bibar-box bibar-boxindex2" style="margin-top:20px;">
                 <div class="bibar-indexNews">
                     <div class="bibar-indexNews-TAB">
                         <ul class="bibar-tabs-listSty2">
-                            <li class="bibar-tabs-item" :key='index' v-for="(tmp,index) in newList" :class="{active:state==index}" @click="changeActive(index)"> <a href="#bibar-newstab1" data-toggle="tab">{{tmp}}</a></li>
+                            <li class="bibar-tabs-item active"> <a href="#bibar-newstab1" data-toggle="tab">全部</a></li>
+                            <!--<li class="bibar-tabs-item" :key='index' v-for="(tmp,index) in newList" :class="{active:state==index}" @click="changeActive(index)"> <a href="#bibar-newstab1" data-toggle="tab">{{tmp}}</a></li>-->
                         </ul>
                     </div>
                     <!--新闻列表-->
-                    <router-view ref="showBibarContent"></router-view>
+                    <!--<router-view ref="showBibarContent"></router-view>-->
                 </div>
             </article>
         </section>
         <!--主体右侧-->
         <section class="bibar-Mainright">
-            <BibarRight></BibarRight>
+            <BibarRight ref="showBrief"></BibarRight>
         </section>
     </section>
     <div class="pt40"></div>
@@ -110,7 +112,8 @@ export default{
       showPrevMore: false,
       showNextMore: false,
       initHide: false,
-      initShow: false
+      initShow: false,
+      toEditorBid: ''
     }
   },
   computed: {
@@ -152,10 +155,11 @@ export default{
     if (this.chartShow === 0) {
       this.chartState = true
     }
-    this.loadShow()
   },
   mounted () {
     $('.mainBibar-editor').find('.wangeditor').css({'width': '790px'})
+    // this.loadShow()
+    // this.$refs.showBrief.briefFun('bitcoin')
   },
   methods: {
     // 文章列表切换事件
@@ -166,18 +170,19 @@ export default{
       }
     },
     BibarContentFun (data) {
+      console.log(data)
       this.$refs.showBibarContent.showBibarContentFun(data)
     },
     // 退登状态
-    loadShow () {
-      if (!this.userInfo.isLogin) {
-        this.initShow = true
-        this.initHide = false
-      } else {
-        this.initShow = false
-        this.initHide = true
-      }
-    },
+    // loadShow () {
+    //   if (!this.userInfo.isLogin) {
+    //     this.initShow = true
+    //     this.initHide = false
+    //   } else {
+    //     this.initShow = false
+    //     this.initHide = true
+    //   }
+    // },
     // 分页
     prev () {
       if (this.cpno > 1) {
@@ -213,10 +218,20 @@ export default{
         this.summaryList = data.data.summaryList
       })
     },
-    // 退登状态----重新加载页面
-    toMainLoadFun () {
-      this.loadShow()
+    // 改变币列表
+    changeBList (index, item) {
+      this.chartShow = index
+      this.$refs.showBrief.briefFun(item.id)
     }
+    // 调chart图
+    // toChart (id) {
+    //   console.log(id)
+    //   this.$refs.showChart.getChart(id)
+    // }
+    // // 退登状态----重新加载页面
+    // toMainLoadFun () {
+    //   this.loadShow()
+    // }
   }
 }
 </script>

@@ -168,9 +168,9 @@ export default {
   right:123px;
   bottom: 5px;
 }
-.bibar-commun {
+/*.bibar-commun {
     margin: -20px auto 0 auto;
-}
+}*/
 .bibar-box {
     background-color: #fff;
     box-shadow: navajowhite;

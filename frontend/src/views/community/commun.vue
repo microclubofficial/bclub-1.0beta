@@ -49,7 +49,7 @@ export default{
 
 <style>
   .bibar-commun{
-    width: 790px;
+    width:1200px;
     margin: 0 auto
   }
   .commun-bibarType{
