@@ -5,6 +5,7 @@ from forums.extension import redis_data
 import requests
 import math
 import json
+import time
 
 class Currency_News(MethodView):
     def get(self, token):
@@ -77,5 +78,8 @@ class SideBar(MethodView):
         # websites:官网  message:论坛  explorers：区块浏览器
         data = {}
         for i in keys:
-            data[i] = details[i]
+            if i == 'publicTime':
+                data[i] = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(details[i]/1000))
+            else:
+                data[i] = details[i]
         return get_json(1, 'success', data)
