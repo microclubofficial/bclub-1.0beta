@@ -84,7 +84,7 @@ h3{
 }
 .bibar-talk-num{
   float: right;
-  width: 850px;
+  width: 950px;
   padding: 20px 10px 20px 20px;
   background: #fff;
   height: 140px;

@@ -64,7 +64,7 @@ export default{
 
 <style>
 .bibarType-main{
-  width: 1100px;
+  width: 1200px;
   margin: auto;
   position: relative;
   display: flex;
@@ -99,7 +99,6 @@ export default{
     width: 360px;
 }
 .bibarType-main > .bibarType-main-box {
-    width: 33%;
-    margin-right: 1%;
+    width: 30%;
 }
 </style>

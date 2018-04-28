@@ -5,7 +5,7 @@
      <div class="bibarType-main-box shadow-box" @click="toBibarData(0,type.id)" :key="index" v-for="(type,index) in bibarType">
        <img :src="type.picture" alt="">
        <div class="bibarType-title">
-         <img :src="type.bpicture" alt="">{{type.symbol}}{{type.name_ch}}
+         <img :src="type.bpicture" alt="">{{type.symbol}}-{{type.name_ch}}
          <span class="bibarType-talk-btn">加入讨论</span>
          </div>
         <ul>
@@ -30,6 +30,7 @@ export default{
   mounted: function () {
     get('/api/bpicture').then(data => {
       this.bibarType = data.data
+      console.log(this.bibarType)
     })
   },
   methods: {
@@ -78,7 +79,6 @@ export default{
     width: 360px;
 }
 .bibarType-main > .bibarType-main-box {
-    width: 33%;
-    margin-right: 1%;
+    width: 30%;
 }
 </style>

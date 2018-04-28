@@ -64,7 +64,8 @@
                     <ul class="bibar-indexYQLlist">
                         <li class="bibar-indexYQLitem" v-for="(tmp, index) in sideList" :key="index">
                             <div class="bibar-author"> <a href="#"><span class="photo"><img :src="tmp.avatar"></span> <span class="name">{{tmp.username}}</span> <span class="time">相关评论{{tmp.reply_count}}条</span> </a></div>
-                            <a href="#" class="btn btn-theme btn-outline">提问</a> </li>
+                            <!--<a href="#" class="btn btn-theme btn-outline">提问</a>-->
+                          </li>
                     </ul>
                 </div>
             </div>
@@ -76,7 +77,8 @@
                     <ul class="bibar-indexYQLlist">
                         <li class="bibar-indexYQLitem" v-for="(tmp,index) in analystList" :key="index">
                             <div class="bibar-author"> <a href="#"><span class="photo"><img :src="tmp.avatar"></span> <span class="name">{{tmp.username}}</span> <span class="time"><i class="iconfont icon-hot"></i> 热度{{tmp.sum_is_good}}</span> </a></div>
-                            <a href="#" class="btn btn-theme btn-outline">提问</a> </li>
+                            <!--<a href="#" class="btn btn-theme btn-outline">提问</a>-->
+                            </li>
                     </ul>
                 </div>
             </div>
@@ -127,7 +129,8 @@ export default{
       hotCount: 8,
       hotList: [],
       hotPageCount: 0,
-      CNY: 0
+      CNY: 0,
+      brief: []
     }
   },
   created: function () {
@@ -145,6 +148,7 @@ export default{
     this.analystFun(this.analystPage)
     // 热门币
     this.bibarHot(this.hotbPage)
+    console.log(this.$route.path.split)
   },
   methods: {
     showText: function () {
@@ -216,6 +220,10 @@ export default{
     // 去币详情
     toBibarDetail (tmp) {
       this.$router.push(`/msgDetail/${tmp.id}`)
+    },
+    // 简介
+    briefFun () {
+      get('/api/side/tokenintroduce/')
     }
   }
 }
