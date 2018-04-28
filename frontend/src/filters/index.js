@@ -126,30 +126,38 @@ export function formatNum (value, num) {
   for (let i = 0; i < l.length; i++) {
     t += l[i] + ((i + 1) % 3 === 0 && (i + 1) !== l.length ? ',' : '')
   }
-  return t.split('').reverse().join('') + '.' + r
+  let str = t.split('').reverse().join('') + '.' + r
+  return str.replace(/(?:\.0*|(\.\d+?)0+)$/, '')
 }
 
 // 人民币转换
 export function cnyFun (value, rate, num) {
-  if (isNaN(value)) {
-    return
-  }
-  let rateNum = (parseFloat(value) * rate).toFixed(num).toString()
-  // let lenCny = rateNum.split('.')[0].length
-  let len = rateNum.split('.')[0]
-  // console.log(len, rate)
-  let lenCny = len.length
-  // console.log(lenCny)
-  if (lenCny <= 3) {
-    return rateNum
-  } else {
-    let r = lenCny % 3
-    if (rateNum.slice(r, lenCny).match(/\d{3}/g) === null) {
+  if (value) {
+    if (isNaN(value)) {
       return
     }
-    return rateNum
-    // return r > 0 ? rateNum.slice(0, r) + ',' + rateNum.slice(r, len).match(/\d{3}/g).join(',') : rateNum.slice(r, len).match(/\d{3}/g).join(',')
+    let rateNum = (parseFloat(value) * rate).toFixed(num).toString()
+    // let lenCny = rateNum.split('.')[0].length
+    let len = rateNum.split('.')[0]
+    // console.log(len, rate)
+    // let lenCny = len.length
+    let cny = ''
+    for (let i = 0; i < len.length; i++) {
+      cny += len[i] + ((i + 1) % 3 === 0 && (i + 1) !== len.length ? ',' : '')
+    }
+    cny = cny.split('').reverse().join('') + '.' + rateNum.split('.')[1]
+    return cny
   }
+  // if (lenCny <= 3) {
+  //   return rateNum
+  // } else {
+  //   let r = lenCny % 3
+  //   if (rateNum.slice(r, lenCny).match(/\d{3}/g) === null) {
+  //     return
+  //   }
+  //   return rateNum
+  //   // return r > 0 ? rateNum.slice(0, r) + ',' + rateNum.slice(r, len).match(/\d{3}/g).join(',') : rateNum.slice(r, len).match(/\d{3}/g).join(',')
+  // }
 }
 
 // 比特币转换

@@ -2,8 +2,8 @@
     <div>
         <div class="avatar"><img :src="userInfo.avatar" alt=""></div>
         <div ref="editor" style="text-align:left" class='editor'></div>
-        <button @click="getContent" v-show="toApi!==3 || toApi!==4" class="report btn">发布</button>
-        <button @click="getContent" v-show="toApi===3 || toApi===4" class="report btn">回复</button>
+        <button @click="getContent" v-show="toApi!==3 || toApi!==4" class="report btnm">发布</button>
+        <button @click="getContent" v-show="toApi===3 || toApi===4" class="report btnm">回复</button>
         <button class="cancel" @click="isHideFun">取消</button>
         <!-- <div>{{backData}}</div> -->
     </div>
@@ -51,12 +51,7 @@ export default {
     },
     getContent: function () {
       this.topicData.content = this.editorContent
-      if (this.toApi !== 0 || this.toApi !== 5) {
-        // 处理回复数据
-        if (this.toApi === 4) {
-          this.topicData.author = this.replyAuthor
-          this.topicData.replyContent = this.replyContent
-        }
+      if (this.toApi !== 0 && this.toApi !== 5 && this.toApi !== 4) {
         // 处理正常内容
         let image = this.topicData.content.match(/<img src="\/static[^>]+>/g)
         let newData = this.topicData.content.split(/<img src="\/static[^>]+>/g)
@@ -70,10 +65,16 @@ export default {
         for (let i = 0; i < newData.length; i++) {
           this.topicData.content += `${newData[i]}`
         }
-        console.log(this.topicData)
+      }
+      // 处理回复数据
+      if (this.toApi === 4) {
+        this.topicData.author = this.replyAuthor
+        this.topicData.replyContent = this.replyContent
+        // 处理正常内容
+        let replyNewData = this.topicData.replyContent.split(/<img src="\/static[^>]+>/g)[0]
+        this.topicData.replyContent = replyNewData
       }
       console.log(this.topicData)
-      console.log(this.toApi)
       if (this.topicData.content.length > 0 || this.topicData.url.length > 0) {
         post(`/api/${this.nowShowApi[this.toApi]}${this.toApi === 1 ? '/question' : this.toApi === 2 ? '/answer' : this.toApi === 3 ? '/comment' : ''}/replies/${this.toApi === 0 ? this.mainCommnet : this.toApi === 2 ? this.talkId : this.toApi === 3 ? this.contentId : this.toApi === 5 ? this.detailId : this.mainReplay}`, this.topicData).then(data => {
           //   评论发送完毕
@@ -201,7 +202,7 @@ export default {
     position: relative;
     float: left;
 }
-.btn{
+.btnm{
     display: inline-block;
     min-width: 48px;
     line-height: 1.25;

@@ -107,7 +107,7 @@
                         <span class="time">{{item.diff_time}}</span>
                       </div>
                       <!-- @ 样式 -->
-                      <p class="replyAuthor" v-if="item.reference !== null">@<span>{{item.author}}:</span><span style="display:inline-block;font-weight: normal;">{{item.reference | needTxt()}}</span></p>
+                      <p class="replyAuthor" v-if="item.reference !== null"><span style="position:absolute;">@{{item.author}}:</span><span class="replyBackConten" style="display:inline-block;margin-left:100px;font-weight: normal;" v-html='item.reference'></span></p>
                       <!-- <p>{{item}}</p> -->
                       <p v-html="item.content">{{item.content}}</p>
                     </div>
@@ -526,6 +526,13 @@ export default{
 </script>
 
 <style>
+  .replyBackConten>p:first-child{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 500px;
+    float: right;
+}
 /*回复样式*/
 .replyAuthor{
     height: 50px;

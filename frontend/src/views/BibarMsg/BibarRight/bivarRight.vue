@@ -1,7 +1,7 @@
 <template>
 <div>
  <!--简介-->
-            <article class="bibar-box bibar-boxindex3" v-if="isBx">
+            <article class="bibar-box bibar-boxindex3" v-if="$route.path !== '/'">
                 <div class="bibar-boxtitle"> <span class="name">简介</span> </div>
                 <div class="bibar-boxbody">
                     <div class="bibar-indexintro">
@@ -34,7 +34,7 @@
             </article>
             <!-- 热门话题 -->
             <!-- tab -->
-      <div class="recommend-tab shadow-box">
+      <div class="recommend-tab shadow-box" v-if="$route.path === '/'">
         <div class="hot_talk">
           <h5>热门话题<span>更多话题>></span></h5>
         </div>
@@ -87,7 +87,7 @@
       <div class="bibar-boxtitle"> <span class="name">热门币</span> <a href="#" class="fr" @click="changeBtb(0)">上一页</a><a href="#" class="fr" @click="changeBtb(1)">下一页</a></div>
       <div class="bibar-boxbody">
         <ul class="bibar-indexRMlist">
-          <li class="bibar-indexRMitem row" v-for="(tmp,index) in hotList" :key="index">
+          <li class="bibar-indexRMitem row" v-for="(tmp,index) in hotList" :key="index" @click='toBibarDetail(tmp)'>
             <div class="col-sm-4"><a href="#">{{tmp.symbol}}</a></div>
             <div class="col-sm-4"><span class="fr">{{tmp.price |  cnyFun(CNY,2)}}</span></div>
             <div class="col-sm-4"><span class="fr" :class="tmp.change_1h >= 0 ? 'text-green' : 'text-red'">{{tmp.change_1h | bfb(2)}}</span></div>
@@ -212,6 +212,10 @@ export default{
           this.bibarHot(this.hotbPage)
         }
       }
+    },
+    // 去币详情
+    toBibarDetail (tmp) {
+      this.$router.push(`/msgDetail/${tmp.id}`)
     }
   }
 }

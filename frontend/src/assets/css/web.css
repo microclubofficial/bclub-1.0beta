@@ -629,16 +629,22 @@ ul.dropdown-menu{height: auto;}
 .bibar-indexDisplay-header .logonameEnglish{float: left; font-size: 24px; font-weight: bold; margin-right: 12px; line-height: 27px; display: inline-block;}
 .bibar-indexDisplay-header .logonameEnglish img{}
 .bibar-indexDisplay-header .logonameChinese{font-size: 24px; vertical-align: middle; float: left; line-height: 26px;}
-.bibar-indexDisplay-header+.btn{margin-left: 22px;}
+.bibar-indexDisplay-header+.btn{
+    margin-left: 22px;
+    line-height: 24px;
+    color: #fff;
+    background: #0195D9;
+    border: none;
+}
 .bibar-indexDisplay-data{float: left; padding: 10px 0 10px;}
 .bibar-indexDisplay-dollar{font-size: 36px; font-weight: bolder;}
 .bibar-indexDisplay-rmb{font-size: 18px; margin-left: 15px;}
 .bibar-indexDisplay-den{margin-left: 15px; font-size: 18px;}
-.bibar-indexDisplay-data i{}
-.bibar-indexDisplay-data i.icon-USD{font-size:36px}
-.bibar-indexDisplay-data i.icon-CNY{font-size:14px}
-.bibar-indexDisplay-data i.icon-yueden{font-size:14px}
-.bibar-indexDisplay-data i.icon-BTC{font-size: 14px;}
+.bibar-indexDisplay-data i{font-size: 16px;}
+i.icon-rmb{font-size:36px}
+i.icon-CNY{font-size:14px; font-weight: normal;}
+i.icon-USD{font-size:14px; font-weight: normal;}
+i.icon-BTC{font-size: 14px; font-weight: normal;}
 .bibar-indexDisplay-trend{float: left; margin-top: 20px; margin-left: 45px;}
 .bibar-indextrend{height: 32px; border: 1px solid #ccc; line-height: 32px; padding: 0px 10px; font-size: 24px; float: left; border: 0px; margin-left: 10px;}
 .bibar-indextrend:first-child{margin-left:0px}

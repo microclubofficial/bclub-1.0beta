@@ -7,9 +7,9 @@
     <!-- <div class="pt40"></div> -->
     <section class="bibar-w1100">
       <!-- left slide -->
-      <BibarLeft v-if="initHide"></BibarLeft>
+      <!--<BibarLeft v-if="initHide"></BibarLeft>-->
         <!--主体左侧-->
-        <section class="bibar-Mainleft" :class="{initSty:initShow}">
+        <section class="bibar-Mainleft bx-mainLeft">
           <div class="chartListBox">
             <!-- chart列表 -->
             <div class="panel-group" id="accordion">
@@ -25,7 +25,7 @@
                  <a data-toggle="collapse" class="panel-tb-hd" data-parent="#accordion" href='#collapseOne'>
                   <div class="bibar-list-item" @click="chartShow = index">
                   <ul>
-                    <li><a href="javascript:void(0)"><span><img :src="item.picture" alt=""></span> {{item.name_ch}} - {{item.symbol}}</a></li>
+                    <li :class="{initListSty:initShow}"><a href="javascript:void(0)"><span><img :src="item.picture" alt=""></span> {{item.name_ch}} - {{item.symbol}}</a></li>
                     <li><a href="javascript:void(0)"><i class="iconfont icon-CNY"></i>{{item.price | cnyFun(CNY,2)}}</a></li>
                     <li><a href="javascript:void(0)">{{item.change_1h}}</a></li>
                     <li><a href="javascript:void(0)"><i class="iconfont icon-CNY"></i>{{item.volume | cnyFunStr(CNY,2)}}</a></li>
@@ -72,7 +72,7 @@
             </article>
         </section>
         <!--主体右侧-->
-        <section class="bibar-Mainright" v-show="initHide">
+        <section class="bibar-Mainright">
             <BibarRight></BibarRight>
         </section>
     </section>
@@ -156,8 +156,6 @@ export default{
   },
   mounted () {
     $('.mainBibar-editor').find('.wangeditor').css({'width': '790px'})
-    let app = document.getElementById('#app')
-    app.scrollTop = 0
   },
   methods: {
     // 文章列表切换事件
@@ -224,6 +222,7 @@ export default{
 </script>
 
 <style>
+  .bibar-Main>.bibar-w1100>.bx-mainLeft{width: 960px;}
 .chartListBox{
   background: #fff;
   padding: 20px;
@@ -243,6 +242,7 @@ export default{
     width: 16%;
     text-align: center;
 }
+.bibar-list-item ul li:first-child{text-align: left;margin-right: 22px;}
 .bibar-list-item ul li a{
     font-size: 16px;
     font-weight: bold;
@@ -326,6 +326,7 @@ export default{
     border-color: #0275d8 !important;
 }
 .initLfSty{width: 1200px !important;}
-.initSty{width: 1200px !important;}
+.initSty{width: 960px !important;}
 .initClass{width: 1200px !important;}
+.initListSty{margin-left: 35px; margin-right: 0px !important;}
 </style>

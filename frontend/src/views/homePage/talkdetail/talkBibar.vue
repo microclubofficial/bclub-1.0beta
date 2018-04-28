@@ -531,6 +531,7 @@ export default{
   background: #fff;
   padding: 20px 25px;
 }
+.talkBibar-article>.bibar-tabitem>.bibar-indexNewsList{width:840px;}
 .bibar-indexNewsItem .set>ul>.set-question{
    padding: 6px 10px;
    text-align: center;
