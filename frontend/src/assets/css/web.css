@@ -75,7 +75,11 @@
     width: 1060px !important;
  }
   /*分页*/
-.pages{float: right;}
+.pages{
+    margin: 10px 0;
+    width: 100%;
+    text-align: center;
+}
 .mo-paging {
     display: inline-block;
     padding: 0;
@@ -124,7 +128,11 @@
     z-index: 1 !important;
     border-color: #0275d8 !important;
 }
-
+/*收藏*/
+.collectionActive{
+  color: #ffa727 !important;
+}
+.btn-article-retweet>i{font-size: 15px;}
 /*placeholder*/input::-webkit-input-placeholder, textarea::-webkit-input-placeholder{color: #ccc !important;}
 input:-moz-placeholder, textarea:-moz-placeholder{color: #ccc !important;}
 input::-moz-placeholder, textarea::-moz-placeholder{color: #ccc !important;}
@@ -616,7 +624,7 @@ ul.dropdown-menu{height: auto;}
 
 /*首页框架*/
 .bibar-Main{margin-top: 80px; position: relative; z-index: 5;}
-.bibar-Mainleft{width: 790px; float: left;}
+.bibar-Mainleft{width: 1200px; float: left;}
 .bibar-Mainright{width: 220px; float: right;}
 .bibar-box{background-color: #fff; box-shadow: 0px 0px 4px 3px #ededed;}
 .bibar-box:after{visibility: hidden;display: block;font-size: 0;content: " ";clear: both;height: 0;}

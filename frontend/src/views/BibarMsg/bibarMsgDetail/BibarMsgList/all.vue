@@ -251,6 +251,9 @@ export default{
     userInfo () {
       return this.$store.state.userInfo.userInfo
     },
+    chartId () {
+      return this.$store.state.chartId.chartId
+    },
     showPageBtn () {
       let pageArr = []
       if (this.cpageCount <= 5) {
@@ -269,7 +272,7 @@ export default{
   created: function () {
     // 文章分页
     this.$store.dispatch('clear_backForNav')
-    get(`/api/topic/${this.tpno}`).then(data => {
+    get(`/api/topic/token/${this.$route.path.split('/')[2]}/${this.tpno}`).then(data => {
       this.articles = data.data.topics
       this.pageCount = data.data.page_count
       if (this.articles.length > 0) {

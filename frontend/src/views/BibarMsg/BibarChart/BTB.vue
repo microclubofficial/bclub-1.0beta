@@ -32,7 +32,7 @@
                         <dl>
                             <dt>占全球总市值</dt>
                             <dd> {{bibarData.global_market_rate}}
-                                <div class="bibar-uipress"><span :style="{width:initmarket + 'px'}"></span></div>
+                                <div class="bibar-uipress"><span :style="{width:market + 'px'}"></span></div>
                             </dd>
                         </dl>
                         <dl>
@@ -56,7 +56,7 @@
                         <dl>
                             <dt>流通率</dt>
                             <dd> {{bibarData.Circulation_rate}}
-                                <div class="bibar-uipress"><span :style="{width:initmarketT + 'px'}"></span></div>
+                                <div class="bibar-uipress"><span :style="{width:rate + 'px'}"></span></div>
                             </dd>
                         </dl>
                     </div>
@@ -118,6 +118,11 @@ export default {
   created () {
     this.loadShow()
   },
+  // watch: {
+  //   bId (val) {
+  //     this.getChartData(val)
+  //   }
+  // },
   mounted () {
     this.getChartData(this.bId)
   },
@@ -146,22 +151,10 @@ export default {
       $.getJSON(`/api/currency_news/${this.nowId}`, function (data) {
         // main数据
         that.bibarData = data.data
-        that.market = parseFloat(that.bibarData.global_market_rate.split(/%/g)[0])
         // 总市值进度条
-        that.timer = setInterval(function () {
-          that.initmarket++
-          if (that.initmarket >= that.market) {
-            clearInterval(that.timer)
-          }
-        }, 30)
+        that.market = parseFloat(that.bibarData.global_market_rate.split(/%/g)[0])      
         // 流通率进度条
         that.rate = parseFloat(that.bibarData.Circulation_rate.split(/%/g)[0])
-        that.timerT = setInterval(function () {
-          that.initmarketT++
-          if (that.initmarketT >= that.rate) {
-            clearInterval(that.timerT)
-          }
-        }, 30)
         // 人民币汇率
         that.CNY_RATE = parseFloat(that.bibarData.CNY_RATE)
         // 比特币汇率
@@ -329,10 +322,17 @@ export default {
         this.initHide = true
       }
     }
+    // 调chart图
+    // getChart (id) {
+    //   this.getChartData(id)
+    // }
   }
 }
 </script>
 <style>
+  .bibar-uipress span{
+    transition: width .5s;
+  }
 .bibar-indexDisplay-data i.icon-USD {
   font-size: 14px !important;
 }

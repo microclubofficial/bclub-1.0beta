@@ -43,6 +43,9 @@ export default {
   computed: {
     userInfo () {
       return this.$store.state.userInfo.userInfo
+    },
+    chartId () {
+      return this.$store.state.chartId.chartId
     }
   },
   methods: {
@@ -54,8 +57,11 @@ export default {
         this.topicData.picture = image[0]
         this.topicData.picture = this.topicData.picture.slice(this.topicData.picture.indexOf('/'), this.topicData.picture.lastIndexOf('=') - 7)
       }
+      if (this.$route.path !== '/') {
+        this.topicData.token = this.chartId
+      }
       if (this.topicData.content.length > 0 || this.topicData.picture.length > 0) {
-        post('/api/topic', this.topicData).then(data => {
+        post(`/api/topic`, this.topicData).then(data => {
           this.editorContent = ''
           if (data.message === '未登录') {
             alert('先去登录')
@@ -86,7 +92,7 @@ export default {
                 this.$emit('backFtContent', backFt)
               }
               $('.w-e-text').html('')
-            // this.$emit('backBibarContent', data.data.content)
+              // this.$emit('backBibarContent', data.data.content)
             }
           }
         })

@@ -5,29 +5,31 @@
                 <div class="bibar-boxtitle"> <span class="name">简介</span> </div>
                 <div class="bibar-boxbody">
                     <div class="bibar-indexintro">
-                        <p>比特币（Bitcoin，简称BTC）是目前使用最为广泛的一种数字货币，它诞生于2009年1月3日，是一种点对点（P2P）传输的数字加密货币，总量2100万枚。比特币（Bitcoin，简称BTC）是目前使用最为广泛的一种数字货币，它诞生于2009年1月3日，是一种点对点（P2P）传输的数字加密货币，总量2100万枚。</p>
+                        <p>{{briefTxt}}</p>
                     </div>
                     <a href="#" class="bibar-indexintromore text-theme" @click="showText">展开 <i class="iconfont icon-quan-arrowdown"></i></a>
                     <div class="bibar-indexinftrList">
                         <dl>
                             <dt>发行时间</dt>
-                            <dd>2008/11/01</dd>
+                            <dd>{{brief.publicTime}}</dd>
                         </dl>
-                        <dl>
+                        <!--<dl>
                             <dt>众筹价格</dt>
                             <dd>--</dd>
-                        </dl>
+                        </dl>-->
                         <dl>
                             <dt>白皮书</dt>
-                            <dd><a href="#" class="text-theme">bitcoin.org/bitbitcoin.org/bit</a></dd>
+                            <dd><a href="#" class="text-theme">{{brief.whitepaper}}</a></dd>
                         </dl>
                         <dl>
                             <dt>官网</dt>
-                            <dd><a href="#" class="text-theme">bitcoin.org/bitbitcoin.org/bit</a></dd>
+                            <dd><a href="#" class="text-theme">{{websites}}</a></dd>
                         </dl>
                         <dl>
                             <dt>区块查询</dt>
-                            <dd><a href="#" class="text-theme">blockchain.info</a></dd>
+                            <dd>
+                              <a href="#" class="text-theme" style="display:block;" v-for='(item,index) in brief.Explorers' :key="index">{{item}}</a>
+                            </dd>
                         </dl>
                     </div>
                 </div>
@@ -58,7 +60,7 @@
       </div>
             <div class="pt20"></div>
             <!--影响力-->
-            <div class="bibar-box bibar-boxindex3">
+            <div class="bibar-box bibar-boxindex3" v-if='needHide'>
                 <div class="bibar-boxtitle"> <span class="name">影响力</span> <span class="fr"><a href="#" @click="changePage(0)">上五位</a> <a href="#" @click="changePage(1)">下五位</a> </span></div>
                 <div class="bibar-boxbody">
                     <ul class="bibar-indexYQLlist">
@@ -69,9 +71,9 @@
                     </ul>
                 </div>
             </div>
-            <div class="pt20"></div>
+            <!--<div class="pt20"></div>-->
             <!--分析师-->
-            <div class="bibar-box bibar-boxindex3">
+            <div class="bibar-box bibar-boxindex3" v-if='needHide'>
                 <div class="bibar-boxtitle"> <span class="name">分析师</span></div>
                 <div class="bibar-boxbody">
                     <ul class="bibar-indexYQLlist">
@@ -82,7 +84,7 @@
                     </ul>
                 </div>
             </div>
-            <div class="pt20"></div>
+            <!--<div class="pt20"></div>-->
   <div class="indexrightscroll-top">
     <!--热门-->
     <div class="bibar-box bibar-boxindex3">
@@ -90,7 +92,7 @@
       <div class="bibar-boxbody">
         <ul class="bibar-indexRMlist">
           <li class="bibar-indexRMitem row" v-for="(tmp,index) in hotList" :key="index" @click='toBibarDetail(tmp)'>
-            <div class="col-sm-4"><a href="#">{{tmp.symbol}}</a></div>
+            <div class="col-sm-4"><a href="javascript:void(0)">{{tmp.symbol}}</a></div>
             <div class="col-sm-4"><span class="fr">{{tmp.price |  cnyFun(CNY,2)}}</span></div>
             <div class="col-sm-4"><span class="fr" :class="tmp.change_1h >= 0 ? 'text-green' : 'text-red'">{{tmp.change_1h | bfb(2)}}</span></div>
           </li>
@@ -115,6 +117,7 @@
 import $ from 'jquery'
 import {get} from '../../../utils/http'
 export default{
+  props: ['bId'],
   data: function () {
     return {
       txt: '',
@@ -130,7 +133,11 @@ export default{
       hotList: [],
       hotPageCount: 0,
       CNY: 0,
-      brief: []
+      // 简介
+      brief: [],
+      needHide: false,
+      briefTxt: '',
+      websites: ''
     }
   },
   created: function () {
@@ -148,7 +155,12 @@ export default{
     this.analystFun(this.analystPage)
     // 热门币
     this.bibarHot(this.hotbPage)
-    console.log(this.$route.path.split)
+    // 简介
+    if (this.bId !== undefined) {
+      this.briefFun(this.$route.path.split('/')[2])
+    } else {
+      this.briefFun('bitcoin')
+    }
   },
   methods: {
     showText: function () {
@@ -219,11 +231,22 @@ export default{
     },
     // 去币详情
     toBibarDetail (tmp) {
+      // 调chart图
+      // this.$emit('toBibarMsg', tmp.id)
+      // 调简介
+      this.briefFun(tmp.id)
       this.$router.push(`/msgDetail/${tmp.id}`)
     },
     // 简介
-    briefFun () {
-      get('/api/side/tokenintroduce/')
+    briefFun (id) {
+      get(`/api/side/tokenintroduce/${id}`).then(data => {
+        if (data.resultcode === 1) {
+          this.brief = data.data
+          console.log(this.brief)
+          this.websites = this.brief.websites[0]
+          this.briefTxt = this.brief.descriptions.zh[0] + this.brief.descriptions.zh[1]
+        }
+      })
     }
   }
 }
