@@ -306,6 +306,9 @@ class ConfirmView(MethodView):
         if request.path.endswith('email'):
             user = request.user
             email = request.data.get('email')
+            if User.query.filter_by(email=email).exists():
+                msg = '邮箱已注册'
+                return get_json(0, msg, {})
             user.email = email
             user.save()
         elif current_user.is_confirmed:
