@@ -179,7 +179,7 @@ class TopicListView(MethodView):
         topic['author'] = user.username
         topic['is_good'] = 0
         topic['is_bad'] = 0
-        topic['diff_time'] = diff_time
+        topic['diff_time'] = '0秒'
         #topic.board.topic_count = 1
         #topic.board.post_count = 1
         #topic.author.topic_count = 1
@@ -301,7 +301,7 @@ class ReplyListView(MethodView):
         replies_data['author'] = user.username
         replies_data['is_good'] = 0
         replies_data['is_bad'] = 0
-        replies_data['diff_time'] = diff_time
+        replies_data['diff_time'] = '0秒'
         # noticetopicId
         #MessageClient.topic(reply)
         # count

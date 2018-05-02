@@ -56,7 +56,6 @@ class BaseMethodView(MethodView):
     def render_template(self, template, **kwargs):
         return render_template(template, **kwargs)
 
-
 class IsAuthMethodView(MethodView):
     decorators = [login_required]
 
