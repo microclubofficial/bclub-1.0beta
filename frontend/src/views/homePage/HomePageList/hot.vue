@@ -24,7 +24,7 @@
             <ul class="bibar-indexNewsItem-infro">
               <li class="set-choseOne"> <a href="javascript:void(0);" class="icon-quan mr15" :class='{active:tmp.is_good_bool}'  @click="changeNum(0,index,tmp.id,0,tmp)" ><i class="iconfont">&#xe603;</i><span class="is-good">{{tmp.is_good}}</span></a> <a href="javascript:void(0);" :class='{active:tmp.is_bad_bool}' class="icon-quan set-choseOne" @click="changeNum(1,index,tmp.id,0,tmp)"><i class="iconfont">&#xe731;</i><span class="is-bad">{{tmp.is_bad}}</span></a> </li>
               <li class="set-discuss">
-                <a href="javascript:void(0);">
+                <a href="javascript:void(0);" @click="goDetail(tmp.id)">
                   <i class="iconfont icon-pinglun"></i> 评论
                   <span>{{tmp.replies_count}}</span>
                 </a>
@@ -268,7 +268,6 @@ export default{
     // 文章分页
     this.$store.dispatch('clear_backForNav')
     get(`/api/topic/${this.tpno}`).then(data => {
-      console.log(data)
       this.articles = data.data.topics
       this.pageCount = data.data.page_count
       if (this.articles.length > 0) {
@@ -494,6 +493,13 @@ export default{
       for (let i = 0; i < newData.length; i++) {
         now += `${newData[i]}`
       }
+      // let reg = /^[\u4E00-\u9FA5]+$/
+      // if (!reg.test(now)) {
+      //   now = $(now).text()
+      // }
+      // console.log(now.replace(/<\/?.+?>/g, '').replace(/ /g, ''))
+      now = now.replace(/<\/?.+?>/g, '').replace(/ /g, '')
+      // console.log(now)
       if (now.length > 300) {
         now = now.substr(0, 300) + '...'
       }
@@ -1015,7 +1021,8 @@ svg:not(:root) {
 }
 .media-left, .media>.pull-left {
     padding-right: 10px;
-    width: 20%;
+    width: 15%;
+    overflow: hidden;
     /* height: 50px; */
     /* position: relative; */
     height: 100px;

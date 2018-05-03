@@ -30,7 +30,6 @@ export default{
   mounted: function () {
     get('/api/bpicture').then(data => {
       this.bibarType = data.data
-      console.log(this.bibarType)
     })
   },
   methods: {

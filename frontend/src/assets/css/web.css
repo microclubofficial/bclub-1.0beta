@@ -58,7 +58,11 @@
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 4;
     max-height: 100px;
+    font-size: 16px;
 }
+/*详情内容*/
+.detail-main-content h1,.detail-main-content h2,.detail-main-content h3,.detail-main-content h4,.detail-main-content h5,
+.detail-main-content h6{line-height: 28px;}
 /* 模态框 */
  .modal-backdrop{z-index: 10000;}
  #myModal{z-index: 10002;}
@@ -702,7 +706,7 @@ i.icon-BTC{font-size: 14px; font-weight: normal;}
 .bibar-indexNewsItem .txt{}
 .bibar-indexNewsItem .txt .imgpic{float:left; margin-right:10px}
 .bibar-indexNewsItem .txt .imgpic img{height:90px;}
-.bibar-indexNewsItem .txt p{line-height: 24px; font-size: 14px;}
+.bibar-indexNewsItem .txt p{line-height: 24px; font-size: 16px;}
 .bibar-indexNewsItem .set{margin-top: 20px;}
 .bibar-indexNewsItem .member{margin-top:5px}
 .bibar-indexNewsItem .set:after{visibility: hidden;display: block;font-size: 0;content: " ";clear: both;height: 0;}

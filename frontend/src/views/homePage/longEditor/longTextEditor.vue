@@ -37,6 +37,11 @@ export default{
       }
     }
   },
+  computed: {
+    longId () {
+      return this.$store.state.longId
+    }
+  },
   mounted () {
     let that = this
     var editor = new E(this.$refs.editor)
@@ -56,9 +61,9 @@ export default{
     // editor.customConfig.uploadImgShowBase64 = true
     editor.customConfig.uploadImgServer = '/api/file'
     editor.customConfig.uploadImgHooks = {
-      // success: function (xhr, editor, result) {
-      //   // console.log(result)
-      // },
+      success: function (xhr, editor, result) {
+        console.log(result)
+      },
       customInsert: function (insertImg, result, editor) {
         that.backLong.url = result.data.file_path
         insertImg(that.backLong.url)
@@ -76,6 +81,9 @@ export default{
         this.topicData.picture = image[0]
         this.topicData.picture = this.topicData.picture.slice(this.topicData.picture.indexOf('/'), this.topicData.picture.lastIndexOf('=') - 7)
       }
+      if (this.longId.hideDilog) {
+        this.topicData.token = this.longId.bId
+      }
       this.topicData.title = this.title
       if (this.topicData.content.length > 0 || this.topicData.picture.length > 0) {
         post('/api/topic', this.topicData).then(data => {
@@ -91,7 +99,11 @@ export default{
               this.backLong.diff_time = data.data.diff_time
               this.backLong.is_good = data.data.is_good
               $('.w-e-text-container').find('p').html('')
-              this.$router.push('/')
+              if (this.longId.hideDilog) {
+                this.$router.push(`/msgDetail/${this.longId.bId}`)
+              } else {
+                this.$router.push('/')
+              }
             }
           }
         })
@@ -140,7 +152,7 @@ export default{
   border-right: none !important;
   background: #fff !important;
   width:100%;
-  position:relative !important;
+  /*position:relative !important;*/
 }
 .long-text-editor>div>.editor> .w-e-text-container{
   border:none !important;

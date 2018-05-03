@@ -18,9 +18,9 @@
       </div>
       <article class="article_bd">
         <h1 class="article_bd_title">{{articleDetail.title}}</h1>
-        <div class="article_bd_from">来自
+        <!--<div class="article_bd_from">来自
           <a href="">金氪投行之家的雪球原创专栏</a>
-        </div>
+        </div>-->
         <p class="detail-main-content" v-html="articleDetail.content">
           <strong>{{articleDetail.diff_time}}:</strong>{{articleDetail.content}}
         </p>
@@ -88,7 +88,7 @@
                   <div class="comment-item" data-index='' data-id=''  :key ='now' v-for="(item,now) in nowData">
                   <div>
                     <a href="#" data-tooltip='' class="avatar">
-                      <img src="../../assets/img/pic-user1.png" alt="">
+                      <img :src="item.avatar" alt="">
                     </a>
                     <div class="comment-item-main">
                       <div class="comment-item-hd">
@@ -96,7 +96,7 @@
                         <span class="time">{{item.created_at}}</span>
                       </div>
                       <!-- @ 样式 -->
-                      <p class="replyAuthor" v-if="item.reference !== null">@<span>{{item.author}}:</span><span style="display:inline-block;font-weight: normal;" v-html='needTxt(item.reference)'></span></p>
+                      <p class="replyAuthor" v-if="item.reference !== null">@<span>{{item.at_user}}:</span><span style="display:inline-block;font-weight: normal;" v-html='needTxt(item.reference)'></span></p>
                       <!-- <p>{{item}}</p> -->
                       <!-- <p>{{item}}</p> -->
                       <p v-html="item.content">{{item.content}}</p>
@@ -312,6 +312,9 @@ export default {
     },
     showDetailContent (data) {
       this.nowData.unshift(data)
+      get(`api/topic/${this.did}/${this.pno}`).then(data => {
+        this.repliesCcount = data.data.replies_count
+      })
     },
     // 评论回复
     replyComment (id, now) {
@@ -330,6 +333,8 @@ export default {
     // 回复返回数据
     showReplyContent (data) {
       this.nowData.unshift(data)
+      this.talkReplayBox = false
+      this.showReportReplay = false
       get(`api/topic/${this.did}/${this.pno}`).then(data => {
         this.repliesCcount = data.data.replies_count
       })
@@ -350,6 +355,7 @@ export default {
     collectionTopic (articleDetail) {
       let instance
       post(`/api/collect/${articleDetail.id}`).then(data => {
+        console.log(data)
         if (data.data.collect_bool) {
           articleDetail.collect_bool = data.data.collect_bool
           instance = new Toast({
@@ -484,69 +490,66 @@ export default {
 .article_author {
   display: flex;
   margin-bottom: 30px;
-  .top_left {
+}
+.article_author .top_left {
     width: 50px;
     height: 50px;
     border-radius: 50%;
     overflow: hidden;
-    img {
-      width: 100%;
-    }
   }
-  .top_right {
+.article_author .top_left img {
+    width: 100%;
+}
+.article_author .top_right{
     flex: 1;
     padding: 4px 0 0 8px;
-    .avatar_name .name {
-      color: #222;
-      font-size: 14px;
-      font-weight: bold;
-    }
-    .avatar_subtitle {
-      color: #999;
-      font-size: 14px;
-      line-height: 24px;
-      .time {
-        color: #999;
-        font-size: 14px;
-      }
-    }
-  }
 }
-
-.article_bd {
-  h1 {
+.article_author .top_right .avatar_name .name {
+    color: #222;
+    font-size: 14px;
+    font-weight: bold;
+  }
+.avatar_subtitle {
+    color: #999;
+    font-size: 14px;
+    line-height: 24px;
+  }
+.avatar_subtitle .time {
+    color: #999;
+    font-size: 14px;
+}
+.article_bd  h1 {
     font-size: 24px;
     color: #222;
     font-family: "Microsoft Yahei";
     font-weight: bold;
     text-align: center;
+    margin: 20px 0;
   }
-  .article_bd_from {
+.article_bd .article_bd_from {
     margin: 16px 0;
     color: #666;
     font-size: 16px;
     text-align: center;
     line-height: 24px;
-    a {
-      color: #0066cc;
-      font-size: 16px;
-    }
   }
-  p {
+.article_bd .article_bd_from a {
+    color: #0066cc;
+    font-size: 16px;
+  }
+.article_bd p {
     font-size: 14px;
     text-indent: 2rem;
     line-height: 28px;
     padding: 0 5px;
   }
-  .image {
+.article_bd .image {
     margin: 30px auto;
     width:600px;
-    img {
-      width: 100%;
-    }
   }
+.article_bd img {
+    width: 100%;
 }
-
 .comment-wrap{
     margin-bottom: 5px;
 }
@@ -849,6 +852,10 @@ svg:not(:root) {
     line-height: 1.6;
     background-color: #fff;
 }
+.editor-textarea>div{
+    line-height: 32px;
+    margin-left: 10px;
+}
 .editor-textarea .comment-placeholder {
     position: absolute;
     width: 100%;
@@ -860,7 +867,8 @@ svg:not(:root) {
 }
 .media-left, .media>.pull-left {
     padding-right: 10px;
-    width: 20%;
+    width: 15%;
+    overflow: hidden;
     /* height: 50px; */
     /* position: relative; */
     height: 100px;

@@ -98,7 +98,6 @@ export default{
     },
     // 退登状态
     loadShow () {
-      console.log(!this.userInfo.isLogin)
       if (!this.userInfo.isLogin) {
         this.initShow = true
         this.initHide = false

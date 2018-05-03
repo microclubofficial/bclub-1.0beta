@@ -86,7 +86,7 @@
                 {{tmp.symbol}}
                 <span><img :src="tmp.picture" alt=""></span>
               </p>
-              <h3>{{tmp.price | cnyFun(CNY,2)}}</h3>
+              <h3><i class="iconfont" style="font-size:24px;margin-left:-5px;">&#xe634;</i>{{tmp.price * CNY | formatNum(2)}}</h3>
               <p style="color:#17B769" :class="tmp.change_1h >= 0 ? 'text-green' : 'text-red'">{{tmp.change_1h | bfb(2)}}</p>
             </a>
           </li>
@@ -100,7 +100,7 @@
                 {{tmp.symbol}}
                 <span><img :src="tmp.picture" alt=""></span>
               </p>
-              <h3>{{tmp.price | cnyFun(CNY,2)}}</h3>
+              <h3><i class="iconfont" style="font-size:24px;margin-left:-5px;">&#xe634;</i>{{tmp.price | cnyFun(CNY,2)}}</h3>
               <p style="color:#17B769" :class="tmp.change_1h >= 0 ? 'text-green' : 'text-red'">{{tmp.change_1h | bfb(2)}}</p>
             </a>
           </li>
@@ -114,7 +114,7 @@
                 {{tmp.symbol}}
                 <span><img :src="tmp.picture" alt=""></span>
               </p>
-              <h3>{{tmp.price | cnyFun(CNY,2)}}</h3>
+              <h3><i class="iconfont" style="font-size:24px;margin-left:-5px;">&#xe634;</i>{{tmp.price | cnyFun(CNY,2)}}</h3>
               <p style="color:#17B769" :class="tmp.change_1h >= 0 ? 'text-green' : 'text-red'">{{tmp.change_1h | bfb(2)}}</p>
             </a>
           </li>
@@ -137,6 +137,7 @@ export default{
       threeList: [],
       pno: 1,
       hotCount: 12,
+      CNY: 0,
       swiperOption: {
         pagination: {
           el: '.swiper-pagination',
@@ -147,8 +148,8 @@ export default{
         },
         autoplay: {
           delay: 3000,
-          stopOnLastSlide: true,
-          disableOnInteraction: false
+          stopOnLastSlide: false,
+          disableOnInteraction: true
         }
       }
     }
