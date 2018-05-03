@@ -46,6 +46,9 @@ export default {
     },
     chartId () {
       return this.$store.state.chartId.chartId
+    },
+    longId () {
+      return this.$store.state.longId
     }
   },
   methods: {
@@ -58,8 +61,12 @@ export default {
         this.topicData.picture = this.topicData.picture.slice(this.topicData.picture.indexOf('/'), this.topicData.picture.lastIndexOf('=') - 7)
       }
       if (this.$route.path !== '/') {
-        this.topicData.token = this.chartId
+        this.topicData.token = this.$route.params.currency
       }
+      this.$store.commit('LONG_ID', {
+        hideDilog: !this.showDilog,
+        bId: this.$route.params.currency
+      })
       if (this.topicData.content.length > 0 || this.topicData.picture.length > 0) {
         post(`/api/topic`, this.topicData).then(data => {
           this.editorContent = ''
@@ -115,6 +122,17 @@ export default {
       $('body').removeClass('modal-open')
       if (this.showDilog) {
         document.body.removeChild(document.querySelector('.modal-backdrop'))
+      }
+      if (this.showDilog) {
+        this.$store.commit('LONG_ID', {
+          hideDilog: !this.showDilog,
+          bId: ''
+        })
+      } else {
+        this.$store.commit('LONG_ID', {
+          hideDilog: !this.showDilog,
+          bId: this.$route.params.currency
+        })
       }
       this.$router.push(`/mainDetail/${router}`)
     },

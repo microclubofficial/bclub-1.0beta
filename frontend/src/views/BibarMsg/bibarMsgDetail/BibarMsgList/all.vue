@@ -29,7 +29,7 @@
                   <span>{{tmp.replies_count}}</span>
                 </a>
               </li>
-              <li class="set-choseStar" @click="collectionTopic(index,tmp.id)"> <a href="javascript:void(0);"><i class="iconfont icon-star">&#xe6a7;</i>收藏</a> </li>
+              <li class="set-choseStar" @click="collectionTopic(index,tmp)"> <a :class='{collectionActive:tmp.collect_bool}' href="javascript:void(0);"><i class="iconfont icon-star">&#xe6a7;</i>收藏</a> </li>
               <!-- <li> <a href="javascript:void(0);"><i class="iconfont icon-fenxiang"></i> 分享</a> </li> -->
               <!-- <li class="set-choseShang"> <a href="javascript:void(0);"><i class="iconfont icon-dashang"></i> 打赏<span>438</span></a> </li> -->
               <li>
@@ -107,7 +107,7 @@
                         <span class="time">{{item.diff_time}}</span>
                       </div>
                       <!-- @ 样式 -->
-                      <p class="replyAuthor" v-if="item.reference !== null"><span style="position:absolute;">@{{item.author}}:</span><span class="replyBackConten" style="display:inline-block;margin-left:100px;font-weight: normal;" v-html='item.reference'></span></p>
+                      <p class="replyAuthor" v-if="item.reference !== null"><span style="position:absolute;">@{{item.at_user}}:</span><span class="replyBackConten" style="display:inline-block;margin-left:100px;font-weight: normal;" v-html='item.reference'></span></p>
                       <!-- <p>{{item}}</p> -->
                       <p v-html="item.content">{{item.content}}</p>
                     </div>
@@ -269,10 +269,19 @@ export default{
       return [1, '···', this.cpno - 1, this.cpno, this.cpno + 1, '···', this.cpageCount]
     }
   },
+  watch: {
+    $route (val) {
+      get(`/api/topic/token/${val.params.currency}/${this.tpno}`).then(data => {
+        console.log(data)
+        this.articles = data.data.topics
+        this.pageCount = data.data.page_count
+      })
+    }
+  },
   created: function () {
     // 文章分页
     this.$store.dispatch('clear_backForNav')
-    get(`/api/topic/token/${this.$route.path.split('/')[2]}/${this.tpno}`).then(data => {
+    get(`/api/topic/token/${this.$route.params.currency}/${this.tpno}`).then(data => {
       this.articles = data.data.topics
       this.pageCount = data.data.page_count
       if (this.articles.length > 0) {
@@ -299,7 +308,7 @@ export default{
       if (this.tpno < this.pageCount) {
         setTimeout(() => {
           this.tpno++
-          get(`/api/topic/${this.tpno}`).then(data => {
+          get(`/api/topic/token/${this.$route.path.split('/')[2]}/${this.tpno}`).then(data => {
             this.articles = this.articles.concat(data.data.topics)
             this.bottomText = '加载中...'
             // this.loadingImg = '../../assets/img/listLoding.png'
@@ -411,6 +420,7 @@ export default{
       }
       this.toId = 0
       this.lid = id
+      this.talkReplayBox = false
       this.showComment = !this.showComment
       this.commentShow = true
       if (this.commentShow) {
@@ -430,7 +440,7 @@ export default{
     // 评论富文本框
     showContent (data) {
       this.nowData.unshift(data)
-      get(`/api/topic/${this.tpno}`).then(data => {
+      get(`/api/topic/token/${this.$route.path.split('/')[2]}/${this.tpno}`).then(data => {
         if (this.tpno === 1) {
           this.articles = data.data.topics
         } else {
@@ -447,6 +457,7 @@ export default{
       if (now !== this.replayId) {
         this.replayId = now
       }
+      this.showReport = false
       this.talkReplayBox = !this.talkReplayBox
       this.talkReplyTxt = !this.talkReplyTxt
       this.toRId = 4
@@ -469,17 +480,23 @@ export default{
       })
     },
     // 收藏
-    collectionTopic (index, id) {
+    collectionTopic (index, tmp) {
       let instance
-      post(`/api/collect/${id}`).then(data => {
-        if (data.message === 'success') {
-          $('.bibar-tabitem:eq(' + index + ')').find('.set-choseStar > a').addClass('collectionActive')
+      post(`/api/collect/${tmp.id}`).then(data => {
+        if (data.message === '未登录') {
+          instance = new Toast({
+            message: data.message,
+            duration: 1000
+          })
+          this.$router.push('/login')
+        } else if (data.message === '收藏成功') {
           this.collection = index
           instance = new Toast({
             message: '收藏成功',
             iconClass: 'glyphicon glyphicon-ok',
             duration: 1000
           })
+          tmp.collect_bool = data.data.collect_bool
         } else {
           instance = new Toast({
             message: '不能重复收藏',
@@ -489,6 +506,7 @@ export default{
         setTimeout(() => {
           instance.close()
         }, 1000)
+        tmp.collect_bool = data.data.collect_bool
       })
     },
     // 处理图片
@@ -498,6 +516,13 @@ export default{
       for (let i = 0; i < newData.length; i++) {
         now += `${newData[i]}`
       }
+      // let reg = /^[\u4E00-\u9FA5]+$/
+      // if (!reg.test(now)) {
+      //   now = $(now).text()
+      // }
+      // console.log(now.replace(/<\/?.+?>/g, '').replace(/ /g, ''))
+      now = now.replace(/<\/?.+?>/g, '').replace(/ /g, '')
+      // console.log(now)
       if (now.length > 300) {
         now = now.substr(0, 300) + '...'
       }
@@ -1023,7 +1048,8 @@ svg:not(:root) {
 }
 .media-left, .media>.pull-left {
     padding-right: 10px;
-    width: 20%;
+    width: 15%;
+    overflow: hidden;
     /* height: 50px; */
     /* position: relative; */
     height: 100px;

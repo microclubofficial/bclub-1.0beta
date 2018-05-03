@@ -27,7 +27,7 @@
                   <div class="bibar-list-item" @click="changeBList(index,item)">
                   <ul>
                     <li :class="{initListSty:initShow}"><a href="javascript:void(0)"><span><img :src="item.picture" alt=""></span> {{item.name_ch}} - {{item.symbol}}</a></li>
-                    <li><a href="javascript:void(0)"><i class="iconfont icon-CNY"></i>{{item.price | cnyFun(CNY,2)}}</a></li>
+                    <li><a href="javascript:void(0)"><i class="iconfont icon-CNY"></i>{{item.price * CNY | formatNum(2)}}</a></li>
                     <li><a href="javascript:void(0)">{{item.change_1h}}</a></li>
                     <li><a href="javascript:void(0)"><i class="iconfont icon-CNY"></i>{{item.volume | cnyFunStr(CNY,2)}}</a></li>
                     <li><a href="javascript:void(0)" :title="item.marketcap"><i class="iconfont icon-CNY"></i>{{item.marketcap | cnyFunStr(CNY,2)}}</a></li>
@@ -101,7 +101,7 @@ export default{
       collapseId: '',
       hrefCollapse: '',
       BTC: null,
-      CNY: null,
+      CNY: 0,
       summaryList: [],
       upSty: false,
       chartShow: 0,

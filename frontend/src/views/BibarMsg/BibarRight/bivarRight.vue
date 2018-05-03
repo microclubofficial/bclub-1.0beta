@@ -19,16 +19,16 @@
                         </dl>-->
                         <dl>
                             <dt>白皮书</dt>
-                            <dd><a href="#" class="text-theme">{{brief.whitepaper}}</a></dd>
+                            <dd><a :href='brief.whitepaper' target="_blank" class="text-theme">{{brief.whitepaper}}</a></dd>
                         </dl>
                         <dl>
                             <dt>官网</dt>
-                            <dd><a href="#" class="text-theme">{{websites}}</a></dd>
+                            <dd><a :href='websites' target="_blank" class="text-theme">{{websites}}</a></dd>
                         </dl>
                         <dl>
                             <dt>区块查询</dt>
                             <dd>
-                              <a href="#" class="text-theme" style="display:block;" v-for='(item,index) in brief.Explorers' :key="index">{{item}}</a>
+                              <a :href='item' class="text-theme" target="_blank" style="display:block;" v-for='(item,index) in brief.Explorers' :key="index">{{item}}</a>
                             </dd>
                         </dl>
                     </div>
@@ -93,7 +93,7 @@
         <ul class="bibar-indexRMlist">
           <li class="bibar-indexRMitem row" v-for="(tmp,index) in hotList" :key="index" @click='toBibarDetail(tmp)'>
             <div class="col-sm-4"><a href="javascript:void(0)">{{tmp.symbol}}</a></div>
-            <div class="col-sm-4"><span class="fr">{{tmp.price |  cnyFun(CNY,2)}}</span></div>
+            <div class="col-sm-4"><span class="fr">{{tmp.price * CNY | formatNum(2)}}</span></div>
             <div class="col-sm-4"><span class="fr" :class="tmp.change_1h >= 0 ? 'text-green' : 'text-red'">{{tmp.change_1h | bfb(2)}}</span></div>
           </li>
         </ul>
@@ -242,7 +242,7 @@ export default{
       get(`/api/side/tokenintroduce/${id}`).then(data => {
         if (data.resultcode === 1) {
           this.brief = data.data
-          console.log(this.brief)
+          // console.log(this.brief)
           this.websites = this.brief.websites[0]
           this.briefTxt = this.brief.descriptions.zh[0] + this.brief.descriptions.zh[1]
         }

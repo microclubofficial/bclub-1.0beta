@@ -23,7 +23,6 @@ export default{
     LongEditor
   },
   mounted: function () {
-    console.log(this.Longtitle)
   },
   methods: {
     autoHeight () {
@@ -62,5 +61,6 @@ export default{
 .w-e-text::-webkit-scrollbar{
   background:snow;
 }
-.long-text-editor>div>.report{float: right;}
+.long-text-editor>div>.report{right: 0; bottom: 20px; padding: 0;}
+.long-text-editor>div>.editor{width: 100%;}
 </style>

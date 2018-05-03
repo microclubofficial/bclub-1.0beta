@@ -1018,10 +1018,11 @@ svg:not(:root) {
 }
 .media-left, .media>.pull-left {
     padding-right: 10px;
-    width: 20%;
+    width: 15%;
     /* height: 50px; */
     /* position: relative; */
     height: 100px;
+    overflow:hidden;
 }
 .pull-left > img{width: 100%; height: 100%;}
 /*评论默认框*/

@@ -112,18 +112,20 @@ export default {
       rate: 0,
       initmarketT: 0,
       timer: null,
-      timerT: null
+      timerT: null,
+      routerId: ''
     }
   },
   created () {
     this.loadShow()
   },
-  // watch: {
-  //   bId (val) {
-  //     this.getChartData(val)
-  //   }
-  // },
+  watch: {
+    $route (val) {
+      this.getChartData(val.params.currency)
+    }
+  },
   mounted () {
+    this.routerId = this.$route.params.currency
     this.getChartData(this.bId)
   },
   computed: {
@@ -152,7 +154,7 @@ export default {
         // main数据
         that.bibarData = data.data
         // 总市值进度条
-        that.market = parseFloat(that.bibarData.global_market_rate.split(/%/g)[0])      
+        that.market = parseFloat(that.bibarData.global_market_rate.split(/%/g)[0])
         // 流通率进度条
         that.rate = parseFloat(that.bibarData.Circulation_rate.split(/%/g)[0])
         // 人民币汇率
@@ -177,12 +179,14 @@ export default {
     klineChart (id) {
       let that = this
       get(`/api/kline/${id}`).then(data => {
+        that.volumeData = []
         for (var j = 0; j < data.data.volume_usd.length; j++) {
           that.volumeData.push([
             data.data.volume_usd[j][0], // the date
             data.data.volume_usd[j][1] * that.CNY_RATE // the volume
           ])
         }
+        that.ohlc = []
         for (var i = 0; i < data.data.price_usd.length; i++) {
           that.ohlc.push([
             data.data.price_usd[i][0], // the date
