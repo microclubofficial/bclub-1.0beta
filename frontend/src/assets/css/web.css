@@ -634,11 +634,11 @@ ul.dropdown-menu{height: auto;}
 .bibar-box:after{visibility: hidden;display: block;font-size: 0;content: " ";clear: both;height: 0;}
 /*首页显示*/
 .bibar-boxindex1{padding:24px 40px;}
-.bibar-indexDisplay{}
+.bibar-indexDisplay{overflow: hidden;}
 .bibar-indexDisplay-header{height: 24px; line-height: 24px; float: left;}
 .bibar-indexDisplay-header .logopic{float: left; margin-right: 10px;}
 .bibar-indexDisplay-header .logopic img{height: 24px; vertical-align: middle;}
-.bibar-indexDisplay-header .logonameEnglish{float: left; font-size: 24px; font-weight: bold; margin-right: 12px; line-height: 27px; display: inline-block;}
+.bibar-indexDisplay-header .logonameEnglish{float: left; font-size: 24px; font-weight: bold; margin-right: 12px;display: inline-block;}
 .bibar-indexDisplay-header .logonameEnglish img{}
 .bibar-indexDisplay-header .logonameChinese{font-size: 24px; vertical-align: middle; float: left; line-height: 26px;}
 .bibar-indexDisplay-header+.btn{
@@ -656,7 +656,7 @@ ul.dropdown-menu{height: auto;}
 i.icon-rmb{font-size:36px}
 i.icon-CNY{font-size:14px; font-weight: normal;}
 i.icon-USD{font-size:14px; font-weight: normal;}
-i.icon-BTC{font-size: 14px; font-weight: normal;}
+i.icon-BTC{font-size: 14px; font-weight: bold;}
 .bibar-indexDisplay-trend{float: left; margin-top: 20px; margin-left: 45px;}
 .bibar-indextrend{height: 32px; border: 1px solid #ccc; line-height: 32px; padding: 0px 10px; font-size: 24px; float: left; border: 0px; margin-left: 10px;}
 .bibar-indextrend:first-child{margin-left:0px}
@@ -694,6 +694,8 @@ i.icon-BTC{font-size: 14px; font-weight: normal;}
 .bibar-indexNewsItem .user{
     overflow: hidden;
 }
+/*toast*/
+.mint-toast{z-index: 10003 !important;}
 .bibar-indexNewsItem .user .bibar-author{width: 250px;}
 .bibar-author{overflow: hidden;}
 .bibar-author .photo{margin-right: 10px; float: left;}

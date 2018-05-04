@@ -355,7 +355,6 @@ export default {
     collectionTopic (articleDetail) {
       let instance
       post(`/api/collect/${articleDetail.id}`).then(data => {
-        console.log(data)
         if (data.data.collect_bool) {
           articleDetail.collect_bool = data.data.collect_bool
           instance = new Toast({
@@ -381,6 +380,7 @@ export default {
 
 <style lang="scss" scoped>
   .detail-editor-toolbar{text-align: center;}
+  .detail-editor-toolbar>.wangeditor>.report{padding: 0;}
   /*回复样式*/
 .replyAuthor{
     height: 50px;

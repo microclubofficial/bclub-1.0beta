@@ -469,7 +469,7 @@ export default{
           })
         } else {
           instance = new Toast({
-            message: '不能重复收藏',
+            message: '取消收藏',
             duration: 1000
           })
         }

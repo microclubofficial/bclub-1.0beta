@@ -34,6 +34,10 @@ export default{
         'content': '',
         'title': '',
         'picture': ''
+      },
+      imgArr: [],
+      imgObj: {
+        imgName: []
       }
     }
   },
@@ -52,19 +56,30 @@ export default{
     editor.customConfig.menus = [
       'head',
       'bold',
+      'fontSize',
+      'fontName',
       'italic',
+      'underline',
+      'strikeThrough',
+      'foreColor',
+      'backColor',
+      'link',
+      'list',
+      'justify',
+      'quote',
       'emoticon',
       'image',
-      'link'
+      'table'
     ]
     // 上传图片
     // editor.customConfig.uploadImgShowBase64 = true
     editor.customConfig.uploadImgServer = '/api/file'
     editor.customConfig.uploadImgHooks = {
       success: function (xhr, editor, result) {
-        console.log(result)
+        // console.log(result)
       },
       customInsert: function (insertImg, result, editor) {
+        // console.log(result)
         that.backLong.url = result.data.file_path
         insertImg(that.backLong.url)
       }
@@ -75,18 +90,33 @@ export default{
   methods: {
     getContent: function () {
       this.topicData.content = this.editorContent
-      let image = this.topicData.content.match(/<img src="\/static[^>]+>/g)
+      this.imgArr = []
+      // let image = this.topicData.content.match(/<img src="\/static[^>]+>/g)
+      let image = this.topicData.content.match(/<img[^>]*?(src="(?!\/static\/avatar)[^"]*?")(?!data-w-e)[^>]*?>/g)
+      console.log(image)
       this.topicData.picture = ''
-      if (image !== null) {
-        this.topicData.picture = image[0]
-        this.topicData.picture = this.topicData.picture.slice(this.topicData.picture.indexOf('/'), this.topicData.picture.lastIndexOf('=') - 7)
-      }
       if (this.longId.hideDilog) {
         this.topicData.token = this.longId.bId
       }
       this.topicData.title = this.title
+      this.imgObj.imgName = this.imgArr
+      if (image !== null) {
+        console.log(image)
+        for (let i = 0; i < image.length; i++) {
+          this.imgArr.push(image[i].match(/(?<=(src="))[^"]*?(?=")/ig)[0])
+        }
+        post('/api/photo', this.imgObj).then(data => {
+          console.log(data)
+        })
+      }
+      if (image !== null) {
+        this.topicData.picture = this.topicData.content.match(/<img[^>]*?(src="[^"]*?")(?!data-w-e)[^>]*?>/g)[0]
+      }
+      //  && this.topicData.picture.indexOf(/static/gi) > 0
+      console.log(this.topicData)
       if (this.topicData.content.length > 0 || this.topicData.picture.length > 0) {
         post('/api/topic', this.topicData).then(data => {
+          console.log(data)
           if (data.message === '未登录') {
             alert('先去登录')
             this.$router.push('/login')
@@ -100,9 +130,9 @@ export default{
               this.backLong.is_good = data.data.is_good
               $('.w-e-text-container').find('p').html('')
               if (this.longId.hideDilog) {
-                this.$router.push(`/msgDetail/${this.longId.bId}`)
+                // this.$router.push(`/msgDetail/${this.longId.bId}`)
               } else {
-                this.$router.push('/')
+                // this.$router.push('/')
               }
             }
           }

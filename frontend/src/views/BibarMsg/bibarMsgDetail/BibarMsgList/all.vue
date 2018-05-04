@@ -132,7 +132,7 @@
            <svg version='1.1' xmlns='http://www.w3.org/2000/svg' class="editor-triangle">
             <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
            </svg>
-           <div class="editor-textarea"  v-show="talkReplyTxt" @click="talkReplyEditor">
+           <div class="editor-textarea"  v-show="talkReplyTxt">
              <div class="editor-placeholder">回复...</div>
            </div>
            <div class="editor-toolbar">
@@ -151,16 +151,16 @@
             <div class="pages" v-if='showPage'>
               <ul class="mo-paging">
               <!-- prev -->
-        <li class="paging-item paging-item--prev" :class="{'paging-item--disabled' : cpno === 1}" @click="prev">prev</li>
+        <li class="paging-item paging-item--prev" :class="{'paging-item--disabled' : cpno === 1}" @click="prev">上一页</li>
         <!-- first -->
-        <li :class="['paging-item', 'paging-item--first', {'paging-item--disabled' : cpno === 1}]" @click="first">first</li>
+        <li :class="['paging-item', 'paging-item--first', {'paging-item--disabled' : cpno === 1}]" @click="first">首页</li>
         <li :class="['paging-item', 'paging-item--more']" v-if="showPrevMore">...</li>
         <li :class="['paging-item', {'paging-item--current' : cpno === tmp}]" :key="index" v-for="(tmp, index) in showPageBtn"  @click="go(tmp)">{{tmp}}</li>
         <li :class="['paging-item', 'paging-item--more']" v-if="showNextMore">...</li>
         <!-- next -->
-        <li :class="['paging-item', 'paging-item--next', {'paging-item--disabled' : cpno === cpageCount}]" @click="next">next</li>
+        <li :class="['paging-item', 'paging-item--next', {'paging-item--disabled' : cpno === cpageCount}]" @click="next">下一页</li>
         <!-- last -->
-        <li :class="['paging-item', 'paging-item--last', {'paging-item--disabled' : cpno === cpageCount}]"  @click="last">last</li>
+        <li :class="['paging-item', 'paging-item--last', {'paging-item--disabled' : cpno === cpageCount}]"  @click="last">尾页</li>
         </ul>
             </div>
             </div>
@@ -271,9 +271,13 @@ export default{
   },
   watch: {
     $route (val) {
-      get(`/api/topic/token/${val.params.currency}/${this.tpno}`).then(data => {
-        console.log(data)
+      get(`/api/topic/token/${val.params.currency}/1`).then(data => {
         this.articles = data.data.topics
+        console.log(this.articles.length > 0)
+        console.log(this.articles)
+        if (this.articles.length > 0) {
+          this.loadingShow = true
+        }
         this.pageCount = data.data.page_count
       })
     }
@@ -283,6 +287,7 @@ export default{
     this.$store.dispatch('clear_backForNav')
     get(`/api/topic/token/${this.$route.params.currency}/${this.tpno}`).then(data => {
       this.articles = data.data.topics
+      console.log(this.articles)
       this.pageCount = data.data.page_count
       if (this.articles.length > 0) {
         this.loadingShow = true
@@ -440,13 +445,14 @@ export default{
     // 评论富文本框
     showContent (data) {
       this.nowData.unshift(data)
-      get(`/api/topic/token/${this.$route.path.split('/')[2]}/${this.tpno}`).then(data => {
+      get(`/api/topic/token/${this.$route.path.split('/')[2]}/1`).then(data => {
         if (this.tpno === 1) {
           this.articles = data.data.topics
         } else {
           let oldArr = this.articles.slice(0, -5)
           this.articles = oldArr.concat(data.data.topics)
         }
+        console.log(this.articles)
       })
     },
     showBibarContentFun (ftData) {
@@ -458,19 +464,24 @@ export default{
         this.replayId = now
       }
       this.showReport = false
-      this.talkReplayBox = !this.talkReplayBox
-      this.talkReplyTxt = !this.talkReplyTxt
+      if (!this.talkReplayBox) {
+        this.talkReplayBox = true
+        this.showReportReplay = true
+      }
+      // this.talkReplayBox = !this.talkReplayBox
+      // this.talkReplyTxt = !this.talkReplyTxt
+      // this.showReportReplay = !this.showReportReplay
       this.toRId = 4
     },
     // 显示回复富文本框
-    talkReplyEditor () {
-      this.talkReplyTxt = !this.talkReplyTxt
-      this.showReportReplay = !this.showReportReplay
-    },
+    // talkReplyEditor () {
+    //   // this.talkReplyTxt = !this.talkReplyTxt
+    // },
     // 回复返回数据
     showReplyContent (data) {
       this.nowData.unshift(data)
-      get(`/api/topic/${this.tpno}`).then(data => {
+      get(`/api/topic/token/${this.$route.path.split('/')[2]}/1`).then(data => {
+        console.log('bug在回复框')
         if (this.tpno === 1) {
           this.articles = data.data.topics
         } else {
@@ -499,7 +510,7 @@ export default{
           tmp.collect_bool = data.data.collect_bool
         } else {
           instance = new Toast({
-            message: '不能重复收藏',
+            message: '取消收藏',
             duration: 1000
           })
         }
@@ -511,22 +522,8 @@ export default{
     },
     // 处理图片
     EditorContent (val) {
-      let newData = val.split(/<img src="\/static[^>]+>/g)
-      let now = ''
-      for (let i = 0; i < newData.length; i++) {
-        now += `${newData[i]}`
-      }
-      // let reg = /^[\u4E00-\u9FA5]+$/
-      // if (!reg.test(now)) {
-      //   now = $(now).text()
-      // }
-      // console.log(now.replace(/<\/?.+?>/g, '').replace(/ /g, ''))
-      now = now.replace(/<\/?.+?>/g, '').replace(/ /g, '')
-      // console.log(now)
-      if (now.length > 300) {
-        now = now.substr(0, 300) + '...'
-      }
-      return now
+      let now = `<div>${val}</div>`
+      return $(now).text()
     },
     // 分页
     prev () {
