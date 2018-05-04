@@ -50,6 +50,6 @@ class CommonUserMixin(CommonTimeMixin):
         return db.relationship(
             'User',
             backref=db.backref(
-                name, cascade='all,delete', lazy='dynamic'),
+                name, cascade='all,delete-orphan', lazy='dynamic'),
             uselist=False,
             lazy='joined')

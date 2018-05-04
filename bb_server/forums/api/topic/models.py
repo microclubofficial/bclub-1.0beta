@@ -150,7 +150,7 @@ class Reply(db.Model, ModelMixin):
     reference = db.Column(db.String(512))
     at_user = db.Column(db.String(81))
 
-    author_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    author_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete="CASCADE"))
     author = db.relationship(
         User, backref=db.backref(
             'replies', cascade='all,delete-orphan', lazy='dynamic'), lazy='joined')

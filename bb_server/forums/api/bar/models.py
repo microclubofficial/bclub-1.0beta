@@ -72,10 +72,10 @@ class Answers(db.Model, ModelMixin):
         db.DateTime, default=datetime.now, onupdate=datetime.now)
     questions_id = db.Column(db.Integer)
     is_reply = db.Column(db.SmallInteger, default=0)
-    author_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    author_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete="CASCADE"))
     author = db.relationship(
         User, backref=db.backref(
-            'bar_replies', lazy='dynamic'), lazy='joined')
+            'bar_replies', cascade='all,delete-orphan',lazy='dynamic'), lazy='joined')
   
 class Comments(db.Model, ModelMixin):
     __tablename__ = 'comments'
