@@ -14,7 +14,7 @@ from flask import (request, current_app, flash, redirect, url_for,
                    render_template)
 from flask.views import MethodView
 from flask_login import login_required, current_user
-from forums.permission import confirm_permission
+from forums.permission import confirm_permission, is_confirmed
 from forums.extension import cache
 from forums.func import get_json
 
@@ -25,14 +25,14 @@ def cache_key():
     return 'view:{}'.format(request.url)
 
 
-def is_confirmed(func):
+'''def is_confirmed(func):
     def _is_confirmed(*args, **kwargs):
         if confirm_permission.can():
             ret = func(*args, **kwargs)
             return ret
         return get_json(1, '', {})
 
-    return _is_confirmed
+    return _is_confirmed'''
 
 
 class BaseMethodView(MethodView):
@@ -57,8 +57,8 @@ class BaseMethodView(MethodView):
         return render_template(template, **kwargs)
 
 class IsAuthMethodView(MethodView):
-    decorators = [login_required]
+    decorators = [is_confirmed]
 
 
 class IsConfirmedMethodView(MethodView):
-    decorators = [login_required]
+    decorators = [is_confirmed]

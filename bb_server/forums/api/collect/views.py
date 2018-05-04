@@ -28,6 +28,7 @@ from forums.common.utils import gen_filter_dict, gen_order_by
 from forums.common.views import IsAuthMethodView as MethodView
 from forums.api.message.models import MessageClient
 from forums.func import get_json, FindAndCount, Count, object_as_dict, Avatar, time_diff
+from forums.api.topic.views import collect_bool
 import json
 import math
 
@@ -141,9 +142,15 @@ class CollectView(MethodView):
             topics = []
             for i in topiclist[-start-1:-start-per_page-1:-1]:
                 topic = Topic.query.filter_by(id=i).first()
+                if not topic:
+                    topiclist.remove(i)
+                    collect.topic_id = json.dumps(topiclist)
+                    collect.save()
+                    continue
                 user = User.query.filter_by(id = topic.author_id).first()
                 reply_count = FindAndCount(Reply, topic_id = topic.id)
                 diff_time = time_diff(topic.updated_at)
+                collect = collect_bool(i)
                 topics_data = object_as_dict(topic)
                 topics_data['created_at'] = str(topics_data['created_at'])
                 topics_data['updated_at'] = str(topics_data['created_at'])
@@ -152,6 +159,7 @@ class CollectView(MethodView):
                 topics_data['replies_count'] = reply_count
                 topics_data['is_good'], topics_data['is_good_bool'] = Count(topic.is_good)
                 topics_data['is_bad'], topics_data['is_bad_bool'] = Count(topic.is_bad)
+                topics_data['collect_bool'] = collect
                 #a, topics_data['collect_bool'] = Count(Collect.topic_id)
                 Avatar(topics_data, user)
                 topics.append(topics_data)

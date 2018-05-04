@@ -13,4 +13,5 @@ fabfile.py
 *config.py
 Dockerfile
 static/
-gunicorn.conf
+gunicorn.*
+logs

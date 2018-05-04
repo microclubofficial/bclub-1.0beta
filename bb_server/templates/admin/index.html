@@ -1,0 +1,276 @@
+{% extends 'admin/master.html' %}
+
+{% block head %}
+	<link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<!--icons-css-->
+	<link href="https://cdn.bootcss.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
+	
+	<style>
+		.page-container{
+			/*background: #f3f3f3;*/
+			padding:30px 0;
+		}
+		.inner-block{
+		}
+		.market-update-gd{
+			padding:20px;
+			cursor: pointer;
+		}
+		.market-update-gd a{
+			text-decoration: none;
+			color:#111;
+		}
+		.market-update-gd:hover{
+			opacity: 0.6;
+		}
+		.market-update-block{
+			padding:10px;
+		}
+		.clr-block-1{
+			background: #5cb85c;
+		}
+		.clr-block-2{
+			background: #f0ad4e;
+		}
+		.clr-block-3{
+			background: #5bc0de;
+		}
+		.market-update-right{
+			margin-top:20px;
+			width:64px;
+			height:64px;
+			border-radius:50%;
+			background: #fff;
+		}
+		.market-update-right i{
+			font-size:36px;
+			text-align: center;
+			line-height: 64px;
+		}
+		.market-update-right i.fa-users{
+			color:#5cb85c;
+		}
+		.market-update-right i.fa-bars{
+			color:#f0ad4e;
+		}
+		.market-update-right i.fa-commenting-o{
+			color:#5bc0de;
+		}
+		.chit-chat-layer1{
+			padding:20px;
+		}
+		.chit-chat-heading h2{
+			color:#111;
+		}
+	</style>
+{% endblock %}
+
+{% block body %}
+
+	<div class="page-container">
+			<!--inner block start here-->
+			<div class="inner-block">
+				<!--market updates updates-->
+				<div class="market-updates">
+					<div class="col-md-4 market-update-gd">
+						<a href="/admin/admin_user">
+						<div class="market-update-block clr-block-1">
+							<div class="col-md-8 market-update-left">
+								<h3>83</h3>
+								<h4>用户管理</h4>
+								<p>Other hand, we denounce</p>
+							</div>
+							<div class="col-md-4 market-update-right">
+								<i class="fa fa-users"> </i>
+							</div>
+							<div class="clearfix"> </div>
+						</div>
+						</a>
+					</div>
+					<div class="col-md-4 market-update-gd">
+						<a href="/admin/admin_topic">
+						<div class="market-update-block clr-block-2">
+							<div class="col-md-8 market-update-left">
+								<h3>135</h3>
+								<h4>文章管理</h4>
+								<p>Other hand, we denounce</p>
+							</div>
+							<div class="col-md-4 market-update-right">
+								<i class="fa fa-bars"> </i>
+							</div>
+							<div class="clearfix"> </div>
+						</div>
+						</a>
+					</div>
+					<div class="col-md-4 market-update-gd">
+						<a href="/admin/admin_reply">
+						<div class="market-update-block clr-block-3">
+							<div class="col-md-8 market-update-left">
+								<h3>23</h3>
+								<h4>评论管理</h4>
+								<p>Other hand, we denounce</p>
+							</div>
+							<div class="col-md-4 market-update-right">
+								<i class="fa fa-commenting-o"> </i>
+							</div>
+							<div class="clearfix"> </div>
+						</div>
+						<a/>
+					</div>
+					<div class="clearfix"> </div>
+				</div>
+				<!--market updates end here-->
+				<!--mainpage chit-chating-->
+				<div class="chit-chat-layer1">
+					<div class="col-md-6 chit-chat-layer1-left">
+						<div class="work-progres">
+							<div class="chit-chat-heading">
+								<h2>置顶文章</h2>
+							</div>
+							<div class="table-responsive">
+								<table class="table table-hover">
+									<thead>
+										<tr>
+											<th>#</th>
+											<th>标题</th>
+											<th>作者</th>
+
+											<th>状态</th>
+											<th>发表时间</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>1</td>
+											<td>Face book</td>
+											<td>Malorum</td>
+
+											<td><span class="label label-danger">in progress</span></td>
+											<td><span class="badge badge-info">50%</span></td>
+										</tr>
+										<tr>
+											<td>2</td>
+											<td>Twitter</td>
+											<td>Evan</td>
+
+											<td><span class="label label-success">completed</span></td>
+											<td><span class="badge badge-success">100%</span></td>
+										</tr>
+										<tr>
+											<td>3</td>
+											<td>Google</td>
+											<td>John</td>
+
+											<td><span class="label label-warning">in progress</span></td>
+											<td><span class="badge badge-warning">75%</span></td>
+										</tr>
+										<tr>
+											<td>4</td>
+											<td>LinkedIn</td>
+											<td>Danial</td>
+
+											<td><span class="label label-info">in progress</span></td>
+											<td><span class="badge badge-info">65%</span></td>
+										</tr>
+										<tr>
+											<td>5</td>
+											<td>Tumblr</td>
+											<td>David</td>
+
+											<td><span class="label label-warning">in progress</span></td>
+											<td><span class="badge badge-danger">95%</span></td>
+										</tr>
+										<tr>
+											<td>6</td>
+											<td>Tesla</td>
+											<td>Mickey</td>
+
+											<td><span class="label label-info">in progress</span></td>
+											<td><span class="badge badge-success">95%</span></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6 chit-chat-layer1-rit">
+						<div class="work-progres">
+							<div class="chit-chat-heading">
+								<h2>推荐文章</h2>
+							</div>
+							<div class="table-responsive">
+								<table class="table table-hover">
+									<thead>
+										<tr>
+											<th>#</th>
+											<th>标题</th>
+											<th>作者</th>
+
+											<th>状态</th>
+											<th>发表时间</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>1</td>
+											<td>Face book</td>
+											<td>Malorum</td>
+
+											<td><span class="label label-danger">in progress</span></td>
+											<td><span class="badge badge-info">50%</span></td>
+										</tr>
+										<tr>
+											<td>2</td>
+											<td>Twitter</td>
+											<td>Evan</td>
+
+											<td><span class="label label-success">completed</span></td>
+											<td><span class="badge badge-success">100%</span></td>
+										</tr>
+										<tr>
+											<td>3</td>
+											<td>Google</td>
+											<td>John</td>
+
+											<td><span class="label label-warning">in progress</span></td>
+											<td><span class="badge badge-warning">75%</span></td>
+										</tr>
+										<tr>
+											<td>4</td>
+											<td>LinkedIn</td>
+											<td>Danial</td>
+
+											<td><span class="label label-info">in progress</span></td>
+											<td><span class="badge badge-info">65%</span></td>
+										</tr>
+										<tr>
+											<td>5</td>
+											<td>Tumblr</td>
+											<td>David</td>
+
+											<td><span class="label label-warning">in progress</span></td>
+											<td><span class="badge badge-danger">95%</span></td>
+										</tr>
+										<tr>
+											<td>6</td>
+											<td>Tesla</td>
+											<td>Mickey</td>
+
+											<td><span class="label label-info">in progress</span></td>
+											<td><span class="badge badge-success">95%</span></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					<div class="clearfix"> </div>
+				</div>
+				<!--main page chit chating end here-->
+
+
+			</div>
+			<!--inner block end here-->
+	</div>
+
+{% endblock %}

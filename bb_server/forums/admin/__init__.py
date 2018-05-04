@@ -20,11 +20,14 @@ from flask.views import MethodView
 from flask import Blueprint
 
 class MyAdminIndexView(AdminIndexView):  
-    @expose('/admin')
+    @expose()
     def index(self):
-        if not current_user.is_authenticated():
-            return redirect(url_for('.login_view'))
-        return super(MyAdminIndexView, self).index()
+        if not current_user.is_authenticated:
+            return redirect(url_for('login.login'))
+        user = request.user
+        if user.is_superuser:
+            return super(MyAdminIndexView, self).index()
+        return redirect(url_for('login.login'))
 
 class LoginView(MethodView):
     def get(self):
@@ -40,9 +43,9 @@ class LoginView(MethodView):
         if not user.is_superuser:
             return redirect('/admin/login')
         user.login()
-        return redirect('/admin/')
+        return redirect('/admin')
 
-admin = Admin(name='Bclub', index_view=AdminIndexView(name='导航栏',template='admin/welcome.html'))
+admin = Admin(name='Bclub', index_view=MyAdminIndexView(name='导航栏', template='admin/index.html', url='/admin'))
 #admin = Admin(name='Bclub', index_view=MyAdminIndexView(),template_mode='bootstrap3')
 site = Blueprint('login', __name__)
 site.add_url_rule('/admin/login', view_func=LoginView.as_view('login'))
