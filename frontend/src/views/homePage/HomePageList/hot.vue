@@ -43,7 +43,7 @@
               </li>
             </ul>
           </div>
-            <div class="bibar-hot"  v-show="showComment&&index==i">
+            <div class="bibar-hot"  v-show="showComment&&index==i&&!changeIndex">
        <!-- 评论框 -->
        <div class="editor-comment">
          <img :src="userInfo.avatar" alt="" class="avatar"  v-show="commentShow">
@@ -107,7 +107,7 @@
                         <span class="time">{{item.diff_time}}前发布</span>
                       </div>
                       <!-- @ 样式 -->
-                      <p class="replyAuthor" v-if="item.reference !== null"><span style="position:absolute;">@{{item.at_user}}:</span><span class="replyBackConten" style="display:inline-block;margin-left:100px;font-weight: normal;" v-html='item.reference'></span></p>
+                      <p class="replyAuthor" v-if="item.reference !== ''"><span style="position:absolute;">@{{item.at_user}}:</span><span class="replyBackConten" style="display:inline-block;margin-left:100px;font-weight: normal;" v-html='item.reference'></span></p>
                       <!-- <p>{{item}}</p> -->
                       <p v-html="item.content">{{item.content}}</p>
                     </div>
@@ -236,7 +236,9 @@ export default{
       cpageCount: 0,
       showPrevMore: false,
       showNextMore: false,
-      showPage: false
+      showPage: false,
+      // 发帖
+      changeIndex: false
     }
   },
   components: {
@@ -285,7 +287,7 @@ export default{
   },
   watch: {
     getNavaVal (val) {
-      console.log(val)
+      this.changeIndex = true
     }
   },
   methods: {
@@ -390,6 +392,7 @@ export default{
     },
     // 评论
     showDiscuss (index, id) {
+      this.changeIndex = false
       this.replyId = id
       get(`/api/topic/${id}/${this.cpno}`).then(data => {
         this.nowData = data.data.replies
@@ -406,7 +409,10 @@ export default{
       }
       this.toId = 0
       this.lid = id
-      this.showComment = !this.showComment
+      if (!this.showComment) {
+        this.showComment = true
+        this.commentShow = true
+      }
       this.commentShow = true
       if (this.commentShow) {
         this.showReport = false

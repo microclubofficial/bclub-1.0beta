@@ -4,7 +4,7 @@
     <div class="article_container">
       <div class="article_author">
         <div class="top_left">
-          <a href="javascript:void(0)" class="avatar"><img src='articleDetail.avatar'></a>
+          <a href="javascript:void(0)" class="avatar"><img :src='articleDetail.avatar'></a>
         </div>
         <div class="top_right">
           <div class="avatar_name">
@@ -96,7 +96,7 @@
                         <span class="time">{{item.diff_time}}前发布</span>
                       </div>
                       <!-- @ 样式 -->
-                      <p class="replyAuthor" v-if="item.reference !== null">@<span>{{item.at_user}}:</span><span style="display:inline-block;font-weight: normal;" v-html='needTxt(item.reference)'></span></p>
+                      <p class="replyAuthor" v-if="item.reference !== ''">@<span>{{item.at_user}}:</span><span style="display:inline-block;font-weight: normal;" v-html='needTxt(item.reference)'></span></p>
                       <!-- <p>{{item}}</p> -->
                       <!-- <p>{{item}}</p> -->
                       <p v-html="item.content">{{item.content}}</p>
@@ -112,7 +112,7 @@
                       </ul>
                     </div>
                     <!-- 回复 -->
-        <div class="comment-reply" v-show="talkReplayBox && now === replayId">
+        <div class="comment-reply" v-show="talkReplayBox && now === replayId && !changeIndex">
                 <!-- 回复文本框 -->
         <div class="editor-comment">
          <img :src="userInfo.avatar" alt="" class="avatar" v-show="talkReplyTxt">
@@ -188,7 +188,9 @@ export default {
       toRId: 0,
       replayId: 0,
       repliesCcount: 0,
-      showCollection: false
+      showCollection: false,
+      // 发评论
+      changeIndex: false
     }
   },
   computed: {
@@ -310,6 +312,7 @@ export default {
       }
     },
     showDetailContent (data) {
+      this.changeIndex = true
       this.nowData.unshift(data)
       get(`api/topic/${this.did}/${this.pno}`).then(data => {
         console.log(data)
@@ -318,6 +321,7 @@ export default {
     },
     // 评论回复
     replyComment (id, now) {
+      this.changeIndex = false
       if (now !== this.replayId) {
         this.replayId = now
       }
