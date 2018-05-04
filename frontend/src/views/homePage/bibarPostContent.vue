@@ -2,10 +2,10 @@
     <div>
         <div class="avatar"><img :src="userInfo.avatar" alt=""></div>
         <div ref="editor" style="text-align:left" class='editor'></div>
-        <span class="toLongText"  @click="toBibarData(4)"><img src="../../assets/img/longText.png">长文</span>
-        <button @click="getContent" class="report btnm" data-dismiss="modal">发布</button>
-        <button class="cancel" @click="isHideFun"  v-if="!showDilog">取消</button>
-        <button class="cancel"  data-dismiss="modal" @click="isHideFun" v-if="showDilog">取消</button>
+        <span class="toLongText" @click="toBibarData(4)"><img src="../../assets/img/longText.png">长文</span>
+        <button @click="getContent()" class="report btnm">发布</button>
+        <button class="cancel" @click="isHideFun" v-if="!showDilog">取消</button>
+        <button class="cancel" @click="isHideFun" v-if="showDilog">取消</button>
         <!-- <div>{{backData}}</div> -->
     </div>
 </template>
@@ -95,6 +95,10 @@ export default {
               if (this.showDilog) {
                 this.$emit('backFtNav', backFt)
                 this.showDilog = false
+                $('.hmodal').removeClass('in')
+                $('.hmodal').css({'display': 'none'})
+                $('.modal-backdrop').css({'display': 'none'})
+                // document.body.removeChild(document.querySelector('.modal-backdrop'))
               } else {
                 this.$emit('backFtContent', backFt)
               }
@@ -114,7 +118,6 @@ export default {
       }
     },
     isHideFun () {
-      alert(1)
       $('.w-e-text').html('')
     },
     toBibarData (router) {

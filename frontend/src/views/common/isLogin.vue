@@ -30,7 +30,7 @@
           <ul>
             <li><a href="javascript:void(0)" @click.stop.prevent><img :src="useravatar" alt=""><span class="user-name"><router-link :to="{path:'/memberCenter'}">{{userInfo.username}}</router-link></span></a></li>
             <li><a href="javascript:void(0)" @click.stop.prevent><img src="../../assets/img/set.png" alt=""><span><router-link :to="{path:'/memberCenter'}">个人设置</router-link></span></a></li>
-            <li><a href="javascript:void(0)" @click.stop.prevent><img src="../../assets/img/share.png" alt=""><span>股票设置</span></a></li>
+            <!--<li><a href="javascript:void(0)" @click.stop.prevent><img src="../../assets/img/share.png" alt=""><span>股票设置</span></a></li>-->
             <li><a href="#" @click="outlogin"><i class="iconfont">&#xe629;</i><span>退出</span></a></li>
           </ul>
         </div>
@@ -130,6 +130,10 @@ export default{
     // 发帖
     postModel () {
       this.Showdialog = true
+      $('.hmodal').addClass('in')
+      $('.hmodal').css({'display': 'block'})
+      $('.modal-backdrop').css({'display': 'block'})
+      // document.body.removeChild(document.querySelector('.modal-backdrop'))
       this.$refs.headerChild.ftDilog()
       $('#myModal').modal({
         keyboard: true

@@ -8,9 +8,10 @@
                         <div class="logonameEnglish">{{bibarData.zhName}}</div>
                         <div class="logonameChinese">{{bibarData.symbol}}</div>
                     </div>
-                    <a href="#" class="btn btn-default"><i class="iconfont icon-add-sm"></i> 关注</a> </div>
+                    <!--<a href="#" class="btn btn-default"><i class="iconfont icon-add-sm"></i> 关注</a>-->
+                    </div>
                 <!--数-->
-                <div class="bibar-indexDisplay-data"> <i class="iconfont icon-rmb">&#xe634;</i> <span class="bibar-indexDisplay-dollar">{{cny_price | formatNum(2)}}</span><span class="bibar-indexDisplay-rmb"><i class="iconfont">&#xe6ca;</i><i class="iconfont icon-CNY">&#xe736;</i>{{bibarData.price | formatNum(2)}}</span> <span class="bibar-indexDisplay-den"><i class="iconfont icon-denyu">=</i> <i class="iconfont icon-BTC">&#xe63a;</i> {{bibarData.price | bitcoinFun(BTC_RATE,0)}}</span> </div>
+                <div class="bibar-indexDisplay-data"> <i class="iconfont icon-rmb">&#xe634;</i> <span class="bibar-indexDisplay-dollar">{{cny_price | formatNum(2)}}</span><span class="bibar-indexDisplay-rmb"><i class="iconfont">&#xe6ca;</i><i class="iconfont icon-CNY">&#xe736;</i>{{bibarData.price | formatNum(2)}}</span> <span class="bibar-indexDisplay-den"><i class="iconfont icon-denyu">=</i> <i class="iconfont icon-BTC">&#xe63a;</i> {{bibarData.price | bitcoin(BTC_RATE, nowId)}}</span> </div>
                 <!--涨跌-->
                 <div class="bibar-indexDisplay-trend">
                     <div v-show="!isDown" class="bibar-indextrend green"> <span class="num">{{change1h}}</span> <i class="iconfont icon-angleup-bold"></i> </div>
@@ -37,7 +38,7 @@
                         </dl>
                         <dl>
                             <dt>总发行量</dt>
-                            <dd> <i class="iconfont icon-btb icon-BTC"></i> {{bibarData.supple | formatNum(2)}} </dd>
+                            <dd> <i class="iconfont icon-btb icon-BTC">&#xe63a;</i> {{bibarData.supple | formatNum(2)}} </dd>
                         </dl>
                     </div>
                     <div class="col-sm-6">
@@ -47,11 +48,11 @@
                                 <div class="sprit-12 bg-green ml10">第{{bibarData.volume_level}}名</div>
                             </dd>
                             <dd> <i class="iconfont icon-yueden">&#xe6ca;</i><i class="iconfont icon-CNY">&#xe736;</i> {{bibarData.volume_ex | formatNum(2)}}</dd>
-                            <dd> <i class="iconfont icon-yueden"></i><i class="iconfont icon-btb icon-BTC">&#xe63a;</i>{{bibarData.volume_ex | bitcoinFun(BTC_RATE)}} </dd>
+                            <dd> <i class="iconfont icon-yueden">&#xe6ca;</i><i class="iconfont icon-btb icon-BTC">&#xe63a;</i>{{bibarData.volume_ex | bitcoinFun(BTC_RATE)}} </dd>
                         </dl>
                         <dl>
                             <dt>流通数量</dt>
-                            <dd> <i class="iconfont icon-btb icon-BTC"></i> {{bibarData.available_supply | formatNum(2)}} </dd>
+                            <dd> <i class="iconfont icon-btb icon-BTC">&#xe63a;</i> {{bibarData.available_supply | formatNum(2)}} </dd>
                         </dl>
                         <dl>
                             <dt>流通率</dt>

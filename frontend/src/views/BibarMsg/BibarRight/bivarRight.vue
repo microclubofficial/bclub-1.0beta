@@ -88,7 +88,7 @@
   <div class="indexrightscroll-top">
     <!--热门-->
     <div class="bibar-box bibar-boxindex3">
-      <div class="bibar-boxtitle"> <span class="name">热门币</span> <a href="#" class="fr" @click="changeBtb(0)">上一页</a><a href="#" class="fr" @click="changeBtb(1)">下一页</a></div>
+      <div class="bibar-boxtitle"> <span class="name">热门币</span> <a href="javascript:void(0)" class="fr" @click="changeBtb(0)">上一页</a><a href="javascript:void(0)" class="fr" @click="changeBtb(1)">下一页</a></div>
       <div class="bibar-boxbody">
         <ul class="bibar-indexRMlist">
           <li class="bibar-indexRMitem row" v-for="(tmp,index) in hotList" :key="index" @click='toBibarDetail(tmp)'>

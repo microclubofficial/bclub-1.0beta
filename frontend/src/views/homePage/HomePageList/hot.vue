@@ -24,7 +24,7 @@
             <ul class="bibar-indexNewsItem-infro">
               <li class="set-choseOne"> <a href="javascript:void(0);" class="icon-quan mr15" :class='{active:tmp.is_good_bool}'  @click="changeNum(0,index,tmp.id,0,tmp)" ><i class="iconfont">&#xe603;</i><span class="is-good">{{tmp.is_good}}</span></a> <a href="javascript:void(0);" :class='{active:tmp.is_bad_bool}' class="icon-quan set-choseOne" @click="changeNum(1,index,tmp.id,0,tmp)"><i class="iconfont">&#xe731;</i><span class="is-bad">{{tmp.is_bad}}</span></a> </li>
               <li class="set-discuss">
-                <a href="javascript:void(0);" @click="goDetail(tmp.id)">
+                <a href="javascript:void(0);" @click="showDiscuss(index,tmp.id)">
                   <i class="iconfont icon-pinglun"></i> 评论
                   <span>{{tmp.replies_count}}</span>
                 </a>
@@ -52,7 +52,7 @@
            <svg version='1.1' xmlns='http://www.w3.org/2000/svg' class="editor-triangle">
             <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
            </svg>
-           <div class="editor-textarea" v-show="commentShow">
+           <div class="editor-textarea" v-show="commentShow" @click="commentShowFun">
              <div class="editor-placeholder">评论...</div>
            </div>
            <div class="editor-toolbar">
@@ -411,8 +411,8 @@ export default{
       if (this.commentShow) {
         this.showReport = false
       }
-      $('.editor-toolbar').find('.wangeditor').css({'margin': '0 0 0 -39px', 'padding': '0'})
-      $('.editor-toolbar').find('.wangeditor>.report').css('bottom', '0')
+      $('.editor-toolbar').find('.wangeditor').css({'margin': '0 auto', 'padding': '0', 'width': '698px'})
+      $('.editor-toolbar').find('.wangeditor>.report').css({'bottom': '0', 'padding': '0'})
       $('.editor-toolbar').find('.wangeditor>.cancel').css('bottom', '4px')
       $('.editor-toolbar').find('.wangeditor>.editor').css({'min-height': '130px', 'padding-bottom': '37px'})
       $('.editor-toolbar').find('.wangeditor>div:eq(2)').css('display', 'none')
@@ -442,8 +442,13 @@ export default{
       if (now !== this.replayId) {
         this.replayId = now
       }
-      this.talkReplayBox = !this.talkReplayBox
-      this.talkReplyTxt = !this.talkReplyTxt
+      this.showReport = false
+      if (!this.talkReplayBox) {
+        this.talkReplayBox = true
+        this.showReportReplay = true
+      }
+      // this.talkReplayBox = !this.talkReplayBox
+      // this.talkReplyTxt = !this.talkReplyTxt
       this.toRId = 4
     },
     // 显示回复富文本框
@@ -488,22 +493,8 @@ export default{
     },
     // 处理图片
     EditorContent (val) {
-      let newData = val.split(/<img src="\/static[^>]+>/g)
-      let now = ''
-      for (let i = 0; i < newData.length; i++) {
-        now += `${newData[i]}`
-      }
-      // let reg = /^[\u4E00-\u9FA5]+$/
-      // if (!reg.test(now)) {
-      //   now = $(now).text()
-      // }
-      // console.log(now.replace(/<\/?.+?>/g, '').replace(/ /g, ''))
-      now = now.replace(/<\/?.+?>/g, '').replace(/ /g, '')
-      // console.log(now)
-      if (now.length > 300) {
-        now = now.substr(0, 300) + '...'
-      }
-      return now
+      let now = `<div>${val}</div>`
+      return $(now).text()
     },
     // 分页
     prev () {

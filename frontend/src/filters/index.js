@@ -175,6 +175,19 @@ export function bitcoinFun (value, rate, num) {
   }
 }
 
+// one 币
+export function bitcoin (value, rate, nowId) {
+  if (value === undefined) {
+    return
+  }
+  if (nowId === 'bitcoin') {
+    return 1
+  } else {
+    let rateNum = (value * rate).toPrecision(4).toString()
+    return rateNum
+  }
+}
+
 export function lengthFun (value, num) {
   if (value.length > num) {
     value = value.substring(0, num) + '...'
