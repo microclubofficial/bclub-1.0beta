@@ -31,10 +31,11 @@ class BaseView(ModelView):
     form_base_class = BaseForm
 
     def is_accessible(self):
-        user = request.user
-        if not user:
-            return False
-        return user.is_superuser
+        if current_user.is_authenticated:
+            user = request.user
+            return user.is_superuser
+        return False
+        
 
     def inaccessible_callback(self, name, **kwargs):
         abort(404)

@@ -26,6 +26,7 @@ from forums.common.serializer import Serializer
 from forums.common.utils import gen_filter_dict, gen_order_by
 from flask.views import MethodView
 from forums.common.views import IsAuthMethodView, IsConfirmedMethodView
+
 from forums.jinja import safe_markdown
 
 from .models import Reply, Topic
@@ -379,9 +380,8 @@ class LikeView(MethodView):
         return HTTPResponse(
             HTTPResponse.NORMAL_STATUS, data=serializer.data).to_response()
 
-class ThumbView(MethodView):
-
-    decorators = (thumd_permission, )
+class ThumbView(IsAuthMethodView):
+    #decorators = (thumd_permission, )
 
     def get(self, id, thumb):
         user = request.user

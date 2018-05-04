@@ -51,7 +51,7 @@ class Topic(db.Model, ModelMixin):
         db.DateTime, default=datetime.now, onupdate=datetime.now)
     is_good = db.Column(db.String(512), nullable=False, default='[]')
     is_bad = db.Column(db.String(512), default='[]')
-    picture = db.Column(db.String(81))
+    picture = db.Column(db.String(512))
     author_id = db.Column(
         db.Integer, db.ForeignKey(
             'user.id', ondelete="CASCADE"))
@@ -118,7 +118,9 @@ class Topic(db.Model, ModelMixin):
         return Count.topic_read_count(self.id, value)
 
     def __str__(self):
-        return self.title
+        if self.title:
+            return self.title
+        return ''
 
     def __repr__(self):
         return "<Topic %r>" % self.title
@@ -140,14 +142,18 @@ class Reply(db.Model, ModelMixin):
         db.DateTime, default=datetime.now, onupdate=datetime.now)
     is_good = db.Column(db.String(512), default='[]')
     is_bad = db.Column(db.String(512), default='[]')
-    topic_id = db.Column(db.Integer)
+    topic_id = db.Column(db.Integer, db.ForeignKey(
+            'topics.id', ondelete="CASCADE"))
+    topic = db.relationship(
+        Topic, backref=db.backref(
+            'topic', cascade='all,delete-orphan', lazy='dynamic'), lazy='joined')
     reference = db.Column(db.String(512))
     at_user = db.Column(db.String(81))
 
     author_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     author = db.relationship(
         User, backref=db.backref(
-            'replies', lazy='dynamic'), lazy='joined')
+            'replies', cascade='all,delete-orphan', lazy='dynamic'), lazy='joined')
 
     likers = db.relationship(
         User,

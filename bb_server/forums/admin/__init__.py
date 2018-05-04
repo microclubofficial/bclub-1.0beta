@@ -42,7 +42,7 @@ class LoginView(MethodView):
         user.login()
         return redirect('/admin/')
 
-admin = Admin(name='Bclub', index_view=AdminIndexView(name='导航栏',template='admin/welcome.html'))
+admin = Admin(name='Bclub', index_view=AdminIndexView(name='导航栏',template='admin/index.html'))
 #admin = Admin(name='Bclub', index_view=MyAdminIndexView(),template_mode='bootstrap3')
 site = Blueprint('login', __name__)
 site.add_url_rule('/admin/login', view_func=LoginView.as_view('login'))

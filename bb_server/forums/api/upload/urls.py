@@ -11,15 +11,19 @@
 # Description:
 # **************************************************************************
 from flask import Blueprint
-from .views import AvatarView, AvatarFileView, GetFileView
+from .views import AvatarView, AvatarFileView, GetFileView, PhotoView
 
 site = Blueprint('upload', __name__, url_prefix='/api')
 avatar_file_view = AvatarFileView.as_view('avatar_file')
 avatar_view = AvatarView.as_view('avatar')
-file_view = GetFileView.as_view('photo')
+file_view = GetFileView.as_view('file')
+photo_view = PhotoView.as_view('photo')
+
+site.add_url_rule('/photo', view_func=photo_view)
 
 site.add_url_rule('/avatar', view_func=avatar_view)
 site.add_url_rule('/file', view_func=file_view)
+site.add_url_rule('/avatars/<filename>', view_func=avatar_file_view)
 site.add_url_rule('/avatars/<filename>', view_func=avatar_file_view)
 
 

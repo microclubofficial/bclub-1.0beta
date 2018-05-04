@@ -39,7 +39,7 @@ class CollectView(BaseView):
 class ReplyView(BaseView):
     column_searchable_list = ['topic.title', 'content']
     column_filters = ['author.username', 'created_at']
-    form_excluded_columns = ['likers']
+    #form_excluded_columns = ['likers']
     form_widget_args = {'content': {'rows': 10}}
 
 
@@ -57,4 +57,11 @@ def init_admin(admin):
             db.session,
             name='管理收藏',
             endpoint='admin_collect',
+            category='管理主题'))
+    admin.add_view(
+        ReplyView(
+            Reply,
+            db.session,
+            name='管理评论',
+            endpoint='admin_reply',
             category='管理主题'))

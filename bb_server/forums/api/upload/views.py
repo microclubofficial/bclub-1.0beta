@@ -23,6 +23,10 @@ from PIL import Image
 import os
 from .models import File
 from forums.func import get_json, object_as_dict
+import requests
+from io import BytesIO
+from random import sample
+from string import digits
 
 def check_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in current_app.config['ALLOWED_EXTENSIONS']
@@ -91,3 +95,37 @@ class GetFileView(MethodView):
             else:
                 return get_json(0, '格式错误', {})
         return get_json(1, '上传成功', object_as_dict(files))
+
+class PhotoView(MethodView):
+    def post(self):
+        photolist = request.data.get('imgName')
+        file_dict = {}
+        for i in photolist:
+            response = requests.get(i)
+            try:
+                image = Image.open(BytesIO(response.content))
+                file_dict[i] = image
+            except:
+                return get_json(0, '格式错误', {})
+        data = {}
+        for filename in file_dict:
+            Files = file_dict[filename]
+            if Files:
+                n_filename = ''.join(sample(digits, 6))
+                fix = filename.rsplit('.')[-1]
+                newfilename = "%s%s%s%s%s%s"%(n_filename, '_', str(int(time())), str(
+                        randint(1000, 9999)), '.', fix)
+                file_path = current_app.config['PICTURE_FOLDER']
+                file = os.path.join(file_path, newfilename)
+                if not os.path.exists(file_path):
+                    os.makedirs(file_path)
+                files = File(
+                    front_file = filename,
+                    file_path = '/' + file_path + '/' + newfilename)
+                files.save()
+                files.file_path = '/' + file_path + '/' + newfilename
+                Files.save(file)
+                data[filename] = '/' + file_path + '/' + newfilename
+            else:
+                return get_json(0, '格式错误', {})
+        return get_json(1, '上传成功', data)
