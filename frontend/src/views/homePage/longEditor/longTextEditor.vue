@@ -89,34 +89,42 @@ export default{
   },
   methods: {
     getContent: function () {
+      let that = this
       this.topicData.content = this.editorContent
       this.imgArr = []
-      // let image = this.topicData.content.match(/<img src="\/static[^>]+>/g)
-      let image = this.topicData.content.match(/<img[^>]*?(src="(?!\/static\/avatar)[^"]*?")(?!data-w-e)[^>]*?>/g)
-      console.log(image)
+      let image = this.topicData.content.match(/<img[^>]*?(src="(?!\/static\/avatar)[^"]*?")(?![^<>]*?data-w-e[^<>]*?>)[^>]*?>/g)
       this.topicData.picture = ''
       if (this.longId.hideDilog) {
         this.topicData.token = this.longId.bId
       }
       this.topicData.title = this.title
-      this.imgObj.imgName = this.imgArr
       if (image !== null) {
-        console.log(image)
         for (let i = 0; i < image.length; i++) {
           this.imgArr.push(image[i].match(/(?<=(src="))[^"]*?(?=")/ig)[0])
         }
+        this.imgObj.imgName = this.imgArr
         post('/api/photo', this.imgObj).then(data => {
-          console.log(data)
+          for (let key in data.data) {
+            let reg = new RegExp(key, 'g')
+            let content = that.topicData.content.replace(reg, data.data[key])
+            that.topicData.content = content
+          }
+          // 请求
+          this.topicData.picture = this.topicData.content.match(/<img(?![^<>]*?data-w-e[^<>]*?>).*?>/g)[0].match(/(?<=(src="))[^"]*?(?=")/ig)[0]
+          this.postEditor()
         })
+      } else {
+        // 首图
+        if (/<img[^>]+>/g.test(this.topicData.content)) {
+          this.topicData.picture = this.topicData.content.match(/<img(?![^<>]*?data-w-e[^<>]*?>).*?>/g)[0].match(/(?<=(src="))[^"]*?(?=")/ig)[0]
+        }
+        this.postEditor()
       }
-      if (image !== null) {
-        this.topicData.picture = this.topicData.content.match(/<img[^>]*?(src="[^"]*?")(?!data-w-e)[^>]*?>/g)[0]
-      }
-      //  && this.topicData.picture.indexOf(/static/gi) > 0
-      console.log(this.topicData)
+    },
+    postEditor () {
+      // 首图
       if (this.topicData.content.length > 0 || this.topicData.picture.length > 0) {
         post('/api/topic', this.topicData).then(data => {
-          console.log(data)
           if (data.message === '未登录') {
             alert('先去登录')
             this.$router.push('/login')
@@ -130,9 +138,9 @@ export default{
               this.backLong.is_good = data.data.is_good
               $('.w-e-text-container').find('p').html('')
               if (this.longId.hideDilog) {
-                // this.$router.push(`/msgDetail/${this.longId.bId}`)
+                this.$router.push(`/msgDetail/${this.longId.bId}`)
               } else {
-                // this.$router.push('/')
+                this.$router.push('/')
               }
             }
           }

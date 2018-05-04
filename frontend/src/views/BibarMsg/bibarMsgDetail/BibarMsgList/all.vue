@@ -444,6 +444,8 @@ export default{
     },
     // 评论富文本框
     showContent (data) {
+      this.commentShow = true
+      this.showReport = false
       this.nowData.unshift(data)
       get(`/api/topic/token/${this.$route.path.split('/')[2]}/1`).then(data => {
         if (this.tpno === 1) {
@@ -479,6 +481,7 @@ export default{
     // },
     // 回复返回数据
     showReplyContent (data) {
+      this.talkReplayBox = false
       this.nowData.unshift(data)
       get(`/api/topic/token/${this.$route.path.split('/')[2]}/1`).then(data => {
         console.log('bug在回复框')

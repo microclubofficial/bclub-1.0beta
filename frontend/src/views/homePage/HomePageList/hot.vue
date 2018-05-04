@@ -104,10 +104,10 @@
                     <div class="comment-item-main">
                       <div class="comment-item-hd">
                         <a href="#" class="user-name">{{item.author}}</a>
-                        <span class="time">{{item.diff_time}}</span>
+                        <span class="time">{{item.diff_time}}前发布</span>
                       </div>
                       <!-- @ 样式 -->
-                      <p class="replyAuthor" v-if="item.reference !== null"><span style="position:absolute;">@{{item.author}}:</span><span class="replyBackConten" style="display:inline-block;margin-left:100px;font-weight: normal;" v-html='item.reference'></span></p>
+                      <p class="replyAuthor" v-if="item.reference !== null"><span style="position:absolute;">@{{item.at_user}}:</span><span class="replyBackConten" style="display:inline-block;margin-left:100px;font-weight: normal;" v-html='item.reference'></span></p>
                       <!-- <p>{{item}}</p> -->
                       <p v-html="item.content">{{item.content}}</p>
                     </div>
@@ -283,11 +283,11 @@ export default{
   },
   mounted () {
   },
-  // watch: {
-  //   getNavaVal (val) {
-  //     console.log(val)
-  //   }
-  // },
+  watch: {
+    getNavaVal (val) {
+      console.log(val)
+    }
+  },
   methods: {
     // 分页
     loadTopicPage () {
@@ -424,6 +424,8 @@ export default{
     },
     // 评论富文本框
     showContent (data) {
+      this.commentShow = true
+      this.showReport = false
       this.nowData.unshift(data)
       get(`/api/topic/${this.tpno}`).then(data => {
         if (this.tpno === 1) {
@@ -458,6 +460,7 @@ export default{
     },
     // 回复返回数据
     showReplyContent (data) {
+      this.talkReplayBox = false
       this.nowData.unshift(data)
       get(`/api/topic/${this.tpno}`).then(data => {
         if (this.tpno === 1) {

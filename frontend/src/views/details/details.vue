@@ -4,11 +4,11 @@
     <div class="article_container">
       <div class="article_author">
         <div class="top_left">
-          <a href="/5900650325" target="_blank" class="avatar"><img :src='articleDetail.avatar'></a>
+          <a href="javascript:void(0)" class="avatar"><img src='articleDetail.avatar'></a>
         </div>
         <div class="top_right">
           <div class="avatar_name">
-            <a href="/5900650325" target="_blank" class="name">{{articleDetail.author}}</a>
+            <a href="javascript:void(0)" class="name">{{articleDetail.author}}</a>
           </div>
           <div class="avatar_subtitle">
             <span class="source">来自币吧</span>
@@ -93,7 +93,7 @@
                     <div class="comment-item-main">
                       <div class="comment-item-hd">
                         <a href="#" class="user-name">{{item.author}}</a>
-                        <span class="time">{{item.created_at}}</span>
+                        <span class="time">{{item.diff_time}}前发布</span>
                       </div>
                       <!-- @ 样式 -->
                       <p class="replyAuthor" v-if="item.reference !== null">@<span>{{item.at_user}}:</span><span style="display:inline-block;font-weight: normal;" v-html='needTxt(item.reference)'></span></p>
@@ -200,7 +200,6 @@ export default {
     this.did = this.$route.params.id
     // console.log(this.pageCount)
     get(`api/topic/${this.did}/${this.pno}`).then(data => {
-      console.log(data)
       this.articleDetail = data.data.topic
       this.repliesCcount = data.data.replies_count
       this.nowData = data.data.replies
@@ -313,6 +312,7 @@ export default {
     showDetailContent (data) {
       this.nowData.unshift(data)
       get(`api/topic/${this.did}/${this.pno}`).then(data => {
+        console.log(data)
         this.repliesCcount = data.data.replies_count
       })
     },
@@ -321,8 +321,11 @@ export default {
       if (now !== this.replayId) {
         this.replayId = now
       }
-      this.talkReplayBox = !this.talkReplayBox
-      this.talkReplyTxt = !this.talkReplyTxt
+      this.showReport = false
+      if (!this.talkReplayBox) {
+        this.talkReplayBox = true
+        this.showReportReplay = true
+      }
       this.toRId = 4
     },
     // 显示回复富文本框
@@ -332,6 +335,7 @@ export default {
     },
     // 回复返回数据
     showReplyContent (data) {
+      this.talkReplayBox = false
       this.nowData.unshift(data)
       this.talkReplayBox = false
       this.showReportReplay = false
@@ -608,8 +612,8 @@ export default {
 }
 .comment-item .avatar {
     float: left;
-    width: 32px;
-    height: 32px;
+    width: 48px;
+    height: 48px;
 }
 a.avatar {
     display: inline-block;
