@@ -183,7 +183,7 @@ class Reply(db.Model, ModelMixin):
 
     def __str__(self):
         if self.content:
-            return self.content[:10]
+            return self.content
         if self.at_user:
             return self.at_user
         if self.reference:
