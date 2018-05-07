@@ -38,7 +38,7 @@
                         </dl>
                         <dl>
                             <dt>总发行量</dt>
-                            <dd> <i class="iconfont icon-btb icon-BTC">&#xe63a;</i> {{bibarData.supple | formatNum(2)}} </dd>
+                            <dd>{{bibarData.supple | formatNum(2)}}&nbsp;&nbsp;<span class="logonameChinese">{{bibarData.symbol}}</span></dd>
                         </dl>
                     </div>
                     <div class="col-sm-6">
@@ -52,7 +52,7 @@
                         </dl>
                         <dl>
                             <dt>流通数量</dt>
-                            <dd> <i class="iconfont icon-btb icon-BTC">&#xe63a;</i> {{bibarData.available_supply | formatNum(2)}} </dd>
+                            <dd>{{bibarData.available_supply | formatNum(2)}}&nbsp;&nbsp;<span class="logonameChinese">{{bibarData.symbol}}</span></dd>
                         </dl>
                         <dl>
                             <dt>流通率</dt>

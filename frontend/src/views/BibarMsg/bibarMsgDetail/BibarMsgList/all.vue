@@ -43,7 +43,7 @@
               </li>
             </ul>
           </div>
-            <div class="bibar-hot"  v-show="showComment&&index==i">
+            <div class="bibar-hot"  v-show="showComment&&index==i&&!changeIndex">
        <!-- 评论框 -->
        <div class="editor-comment">
          <img :src="userInfo.avatar" alt="" class="avatar"  v-show="commentShow">
@@ -107,7 +107,7 @@
                         <span class="time">{{item.diff_time}}</span>
                       </div>
                       <!-- @ 样式 -->
-                      <p class="replyAuthor" v-if="item.reference !== null"><span style="position:absolute;">@{{item.at_user}}:</span><span class="replyBackConten" style="display:inline-block;margin-left:100px;font-weight: normal;" v-html='item.reference'></span></p>
+                      <p class="replyAuthor" v-if="item.reference !== ''"><span style="position:absolute;">@{{item.at_user}}:</span><span class="replyBackConten" style="display:inline-block;margin-left:100px;font-weight: normal;" v-html='item.reference'></span></p>
                       <!-- <p>{{item}}</p> -->
                       <p v-html="item.content">{{item.content}}</p>
                     </div>
@@ -238,7 +238,9 @@ export default{
       showNextMore: false,
       showPage: false,
       // 收藏
-      collectionAct: false
+      collectionAct: false,
+      // 发帖
+      changeIndex: false
     }
   },
   components: {
@@ -287,7 +289,6 @@ export default{
     this.$store.dispatch('clear_backForNav')
     get(`/api/topic/token/${this.$route.params.currency}/${this.tpno}`).then(data => {
       this.articles = data.data.topics
-      console.log(this.articles)
       this.pageCount = data.data.page_count
       if (this.articles.length > 0) {
         this.loadingShow = true
@@ -409,6 +410,7 @@ export default{
     },
     // 评论
     showDiscuss (index, id) {
+      this.changeIndex = false
       this.replyId = id
       get(`/api/topic/${id}/${this.cpno}`).then(data => {
         this.nowData = data.data.replies
@@ -423,10 +425,14 @@ export default{
         this.i = index
         this.lid = id
       }
+      if (!this.showComment) {
+        this.showComment = true
+        this.commentShow = true
+      }
+      // this.showComment = !this.showComment
       this.toId = 0
       this.lid = id
       this.talkReplayBox = false
-      this.showComment = !this.showComment
       this.commentShow = true
       if (this.commentShow) {
         this.showReport = false
@@ -444,6 +450,8 @@ export default{
     },
     // 评论富文本框
     showContent (data) {
+      this.commentShow = true
+      this.showReport = false
       this.nowData.unshift(data)
       get(`/api/topic/token/${this.$route.path.split('/')[2]}/1`).then(data => {
         if (this.tpno === 1) {
@@ -452,11 +460,11 @@ export default{
           let oldArr = this.articles.slice(0, -5)
           this.articles = oldArr.concat(data.data.topics)
         }
-        console.log(this.articles)
       })
     },
     showBibarContentFun (ftData) {
       this.articles = [ftData, ...this.articles]
+      this.changeIndex = true
     },
     // 评论回复
     replyComment (id, now) {
@@ -479,6 +487,7 @@ export default{
     // },
     // 回复返回数据
     showReplyContent (data) {
+      this.talkReplayBox = false
       this.nowData.unshift(data)
       get(`/api/topic/token/${this.$route.path.split('/')[2]}/1`).then(data => {
         console.log('bug在回复框')

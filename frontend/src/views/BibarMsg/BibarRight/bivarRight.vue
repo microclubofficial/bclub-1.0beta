@@ -61,7 +61,7 @@
             <div class="pt20"></div>
             <!--影响力-->
             <div class="bibar-box bibar-boxindex3" v-if='needHide'>
-                <div class="bibar-boxtitle"> <span class="name">影响力</span> <span class="fr"><a href="#" @click="changePage(0)">上五位</a> <a href="#" @click="changePage(1)">下五位</a> </span></div>
+                <div class="bibar-boxtitle"> <span class="name">影响力</span><a href="#" @click="changePage(0)">上五位</a><a href="#" @click="changePage(1)">下五位</a></div>
                 <div class="bibar-boxbody">
                     <ul class="bibar-indexYQLlist">
                         <li class="bibar-indexYQLitem" v-for="(tmp, index) in sideList" :key="index">
@@ -88,13 +88,13 @@
   <div class="indexrightscroll-top">
     <!--热门-->
     <div class="bibar-box bibar-boxindex3">
-      <div class="bibar-boxtitle"> <span class="name">热门币</span> <a href="javascript:void(0)" class="fr" @click="changeBtb(0)">上一页</a><a href="javascript:void(0)" class="fr" @click="changeBtb(1)">下一页</a></div>
+      <div class="bibar-boxtitle"> <span class="name">热门币</span><div style="display:inline-block;float:right;"><a href="javascript:void(0)" v-if='showNext' class="fr" @click="changeBtb(1)">下十位</a><a href="javascript:void(0)" class="fr" v-if='showPre' @click="changeBtb(0)">上十位</a></div></div>
       <div class="bibar-boxbody">
         <ul class="bibar-indexRMlist">
           <li class="bibar-indexRMitem row" v-for="(tmp,index) in hotList" :key="index" @click='toBibarDetail(tmp)'>
-            <div class="col-sm-4"><a href="javascript:void(0)">{{tmp.symbol}}</a></div>
-            <div class="col-sm-4"><span class="fr">{{tmp.price * CNY | formatNum(2)}}</span></div>
-            <div class="col-sm-4"><span class="fr" :class="tmp.change_1h >= 0 ? 'text-green' : 'text-red'">{{tmp.change_1h | bfb(2)}}</span></div>
+            <div class="col-sm-3"><a href="javascript:void(0)">{{tmp.symbol}}</a></div>
+            <div class="col-sm-6"><span class="fr"><i class="iconfont">&#xe634;</i>{{tmp.price * CNY | formatNum(2)}}</span></div>
+            <div class="col-sm-3"><span class="fr" :class="tmp.change_1h >= 0 ? 'text-green' : 'text-red'">{{tmp.change_1h | bfb(2)}}</span></div>
           </li>
         </ul>
       </div>
@@ -129,7 +129,7 @@ export default{
       analystPage: 1,
       analystList: [],
       hotbPage: 1,
-      hotCount: 8,
+      hotCount: 10,
       hotList: [],
       hotPageCount: 0,
       CNY: 0,
@@ -137,7 +137,10 @@ export default{
       brief: [],
       needHide: false,
       briefTxt: '',
-      websites: ''
+      websites: '',
+      // 上下一页
+      showPre: false,
+      showNext: true
     }
   },
   created: function () {
@@ -221,12 +224,23 @@ export default{
         if (this.hotbPage > 1 && this.hotbPage < this.hotPageCount) {
           this.hotbPage--
           this.bibarHot(this.hotbPage)
+          this.showPre = true
+        } else {
+          this.showPre = false
         }
+        console.log(this.showPre + '上一页')
       } else if (id === 1) {
         if (this.hotbPage < this.hotPageCount) {
           this.hotbPage++
           this.bibarHot(this.hotbPage)
+          this.showNext = true
+          if (this.hotbPage > 1) {
+            this.showPre = true
+          }
+        } else {
+          this.showNext = false
         }
+        console.log(this.showNext + '下一页')
       }
     },
     // 去币详情
