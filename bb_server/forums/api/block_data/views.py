@@ -9,11 +9,13 @@ import time
 
 class Currency_News(MethodView):
     def get(self, token):
-        headers = {'Content-Type':'application/json'}
+        headers = {'Content-Type':'application/json; charset=utf-8'}
         details = requests.get('https://block.cc/api/v1/coin/get?coin=%s'%(token), headers = headers)
-        total_market_cap_usd = requests.get('https://block.cc/api/v1/getBaseTotalInfo')
-        total_market_cap_usd = total_market_cap_usd.json()['data']["total_market_cap_usd"]
-        details = details.json()['data']
+        total_market_cap_usd = requests.get('https://block.cc/api/v1/getBaseTotalInfo', headers = headers)
+        total_market_cap_usd = total_market_cap_usd.json()
+        total_market_cap_usd = total_market_cap_usd['data']["total_market_cap_usd"]
+        details = details.json()
+        details = details['data']
         keys = ['id','name', 'symbol','price', 'volume_ex', "supple", "available_supply", 'marketCap', 'level',
          'change1h', 'change7d', 'zhName', 'volume_level', 'low1d', 'high1d', 'CNY_RATE', 'BTC_RATE', 'ETH_RATE']
         data = {}
@@ -23,7 +25,10 @@ class Currency_News(MethodView):
             except:
                 data[i] = 0
         data['global_market_rate'] = ('%.2f%%' % (data['marketCap']/total_market_cap_usd * 100))
-        data['Circulation_rate'] = ('%.2f%%' % (data['available_supply']/data['supple'] * 100))
+        if data['supple'] == 0:
+            data['Circulation_rate'] = 0
+        else:
+            data['Circulation_rate'] = ('%.2f%%' % (data['available_supply']/data['supple'] * 100))
         data['picture'] = 'https://blockchains.oss-cn-shanghai.aliyuncs.com/static/coinInfo/%s.png'%(token)
         return get_json(1, 'success', data)
 

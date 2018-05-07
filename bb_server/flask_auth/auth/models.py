@@ -125,7 +125,15 @@ class UserMixin(PermUserMixin, _UserMixin, MailMixin, ModelMixin):
         logout_user()
 
     def __str__(self):
-        return self.username
+        if self.username:
+            return self.username
+        if self.email:
+            return self.email
+        if self.recommender_code:
+            return self.recommender_code
+        if self.avatar:
+            return self.avatar
+        return ''
 
     def __repr__(self):
         return '<User %r>' % self.username

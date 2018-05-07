@@ -101,8 +101,8 @@ class PhotoView(MethodView):
         photolist = request.data.get('imgName')
         file_dict = {}
         for i in photolist:
-            response = requests.get(i)
             try:
+                response = requests.get(i)
                 image = Image.open(BytesIO(response.content))
                 file_dict[i] = image
             except:

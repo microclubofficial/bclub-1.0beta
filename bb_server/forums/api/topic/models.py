@@ -120,6 +120,10 @@ class Topic(db.Model, ModelMixin):
     def __str__(self):
         if self.title:
             return self.title
+        if self.token:
+            return self.token
+        if self.picture:
+            return self.picture
         return ''
 
     def __repr__(self):
@@ -178,7 +182,13 @@ class Reply(db.Model, ModelMixin):
         return Count.reply_liker_count(self.id, value)
 
     def __str__(self):
-        return self.content[:10]
+        if self.content:
+            return self.content[:10]
+        if self.at_user:
+            return self.at_user
+        if self.reference:
+            return self.reference
+        return ''
 
     def __repr__(self):
         return "<Topic %r>" % self.content[:10]
