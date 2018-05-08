@@ -186,6 +186,7 @@ export default {
 </script>
 
 <style scoped>
+.w-e-panel-tab-title>.w-e-item:nth-child(2){display: none;}
 .toLongText{
     cursor: pointer;
     position: absolute;

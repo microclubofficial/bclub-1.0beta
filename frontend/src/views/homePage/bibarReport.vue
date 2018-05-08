@@ -1,6 +1,9 @@
 <template>
     <div>
         <div class="avatar"><img :src="userInfo.avatar" alt=""></div>
+        <svg version='1.1' xmlns='http://www.w3.org/2000/svg' class="editor-svg">
+          <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
+        </svg>
         <div ref="editor" style="text-align:left" class='editor'></div>
         <button @click="getContent" v-show="toApi!==3 || toApi!==4" class="report btnm">发布</button>
         <button @click="getContent" v-show="toApi===3 || toApi===4" class="report btnm">回复</button>
@@ -70,11 +73,14 @@ export default {
       if (this.toApi === 4) {
         this.topicData.author = this.replyAuthor
         this.topicData.replyContent = this.replyContent
-        // 处理正常内容
-        let replyNewData = this.topicData.replyContent.split(/<img src="\/static[^>]+>/g)[0]
-        this.topicData.replyContent = replyNewData
+        if (!/^<img.*>$/gi.test(this.replyContent)) {
+          // 处理正常内容
+          let replyNewData = this.topicData.replyContent.split(/<img src="\/static[^>]+>/g)[0]
+          this.topicData.replyContent = replyNewData
+        } else {
+          this.topicData.replyContent = this.topicData.replyContent.match(/(?<=(src="))[^"]*?(?=")/ig)[0]
+        }
       }
-      console.log(this.topicData)
       if (this.topicData.content.length > 0 || this.topicData.url.length > 0) {
         post(`/api/${this.nowShowApi[this.toApi]}${this.toApi === 1 ? '/question' : this.toApi === 2 ? '/answer' : this.toApi === 3 ? '/comment' : ''}/replies/${this.toApi === 0 ? this.mainCommnet : this.toApi === 2 ? this.talkId : this.toApi === 3 ? this.contentId : this.toApi === 5 ? this.detailId : this.mainReplay}`, this.topicData).then(data => {
           //   评论发送完毕
@@ -144,28 +150,47 @@ export default {
     editor.create()
     var div = $('.avatar').parent('div')
     div.addClass('wangeditor')
-    $('.w-e-text-container').css({'min-height': '87px', 'height': 'auto', 'border': '1px solid rgb(204, 204, 204)'})
+    $('.w-e-text-container').css({'min-height': '87px', 'height': 'auto', 'border': '1px solid #F3F2F2'})
     $('.w-e-text-container').find('div').css('min-height', '87px')
-    $('.w-e-toolbar').css({'position': 'absolute', 'bottom': '0', 'border': '0', 'background-color': '#fff'})
+    $('.w-e-toolbar').css({'position': 'absolute', 'background': '#F8F8F8', 'bottom': '0', 'border': '0'})
+    $('.comment-reply').find('.w-e-text-container').css({'border': '1px solid rgb(237, 242, 249)'})
+    $('.comment-reply').find('.w-e-toolbar').css({'background': '#EDF5FE'})
+    $('.comment-reply').find('.editor-svg').css({'left': '38px'})
+    $('.bibar-hot').find('.cancel').css({'background': '#F8F8F8'})
   }
 }
 </script>
 
 <style>
+  .editor-svg{
+    position: absolute;
+    top: 22px;
+    left: 41px;
+    width: 5px;
+    height: 10px;
+    z-index: 10001;
+  }
+  .editor-svg>.arrow {
+    stroke: #F3F2F2;
+    fill: #f9fcfe;
+}
+  .w-e-text-container{background: #fff;}
+.w-e-panel-tab-title>.w-e-item:nth-child(2){display: none;}
 .comment-reply .wangeditor{
   /*padding-left: 7% !important;*/
-  width: 643px;
+  width: 100%;
+  background: #EDF5FE;
 }
 .comment-reply .wangeditor .editor{
   padding-bottom: 33px;
 }
 .comment-reply .wangeditor .report{
-  right: 60px;
-  bottom: 0;
+  /*right: 60px;*/
+  bottom: 1px;
 }
 .comment-reply .wangeditor .cancel{
-  right:123px;
-  bottom: 5px;
+  background: #EDF5FE !important;
+  bottom: 4px;
 }
 /*.bibar-commun {
     margin: -20px auto 0 auto;
@@ -177,7 +202,7 @@ export default {
 .wangeditor{
     /* width: 1020px; */
     /* margin: 20px auto 0 auto; */
-    background-color: #fff;
+    /*background-color: #fff;*/
     /* padding: 20px 0; */
     position: relative;
     overflow: hidden;
@@ -196,7 +221,7 @@ export default {
     border-radius: 50%;
 }
 .editor{
-    width: 540px;
+    width: 85%;
     margin: auto;
     position: relative;
     float: left;
