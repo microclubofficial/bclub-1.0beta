@@ -2,9 +2,11 @@
   <div class="commun-bibarType">
     <h4>热门币种</h4>
    <div class="bibarType-main">
-     <div class="bibarType-main-box shadow-box" @click="toBibarData(type.id,type.id)" :key="index" v-for="(type,index) in bibarType">
-       <img :src="type.picture" alt="">
-       <div class="bibarType-title">
+     <div v-bind:style="{backgroundImage: 'url(' + type.picture + ')'}" class="bibarType-main-box shadow-box" @click="toBibarData(type.id,type.id)" :key="index" v-for="(type,index) in bibarType">
+       <!--<img :src="type.picture" alt="">-->
+       <!--<img src="../../assets/img/pic-news02.png" alt="">-->
+       <div class="bibarType-bot">
+        <div class="bibarType-title">
          <img :src="type.bpicture" alt=""><img style="width:18px; height:18px;" :src="type.b_picture" alt="">{{type.symbol}}-{{type.name_ch}}
          <!--<span class="bibarType-talk-btn">加入讨论</span>-->
          </div>
@@ -14,6 +16,7 @@
           <li>热度<span>7343</span></li>
           <!--<li>创建管理员</li>-->
         </ul>
+       </div>
      </div>
    </div>
   </div>
@@ -55,14 +58,26 @@ export default{
   margin: 20px auto;
   text-align: center;
 }
-.bibarType-main-box{background: #fff; padding-bottom: 20px; cursor: pointer;}
+.bibarType-main-box{background: #fff; position: relative; padding-bottom: 20px; cursor: pointer;}
+.bibarType-bot{
+  padding: 5px 0;
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  background-image: linear-gradient(rgba(255, 255, 255, 0.4),rgba(255,255,255,0.7),rgba(255,255,255,0.85),rgba(255,255,255,0.93),rgba(255,255,255,0.95),rgba(255,255,255,0.97),rgba(255,255,255,1));
+}
 .bibarType-main-box>img{width: 240px;}
-.bibarType-main-box>ul{overflow: hidden; padding: 0 10px;}
-.bibarType-main-box>ul>li{
+.bibarType-main-box>.bibarType-bot>ul{overflow: hidden; padding: 0 10px;}
+.bibarType-main-box>.bibarType-bot>ul>li{
   float: left;
   margin-right: 10px;
 }
-.bibarType-title{margin: 10px 0; padding: 0 10px;}
+.bibarType-main-box>.bibarType-bot>ul>li>span{font-weight: bold;}
+.bibarType-title{
+  margin: 10px 0;
+  font-size: 14px;
+  font-weight: bold;
+}
 .bibarType-title>img{margin-right: 10px;}
 .bibarType-title>.bibarType-talk-btn{
     width: 70px;
@@ -79,5 +94,6 @@ export default{
 }
 .bibarType-main > .bibarType-main-box {
     width: 30%;
+    height: 220px;
 }
 </style>

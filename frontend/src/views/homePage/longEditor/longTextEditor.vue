@@ -68,8 +68,7 @@ export default{
       'justify',
       'quote',
       'emoticon',
-      'image',
-      'table'
+      'image'
     ]
     // 上传图片
     // editor.customConfig.uploadImgShowBase64 = true
@@ -197,4 +196,5 @@ export default{
 }
 .w-e-text-container{z-index: 9999 !important;}
 .w-e-toolbar{z-index: 9998 !important;}
+.w-e-panel-tab-title>.w-e-item:nth-child(2){display: none;}
 </style>

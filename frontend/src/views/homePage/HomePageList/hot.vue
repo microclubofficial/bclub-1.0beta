@@ -7,17 +7,18 @@
         <div class="bibar-indexNewsItem">
           <div class="speech" v-if="tmp.reply_user !== null"> <span>{{tmp.reply_user}}<span class="time">{{tmp.reply_time}}</span>前评论了讨论</span><i class="iconfont icon-dot"></i></div>
           <div class="user">
-            <div class="bibar-author"> <a href="#"> <span class="photo"><img :src="tmp.avatar"></span> <span class="name">{{tmp.author}}</span> <span class="time">{{tmp.diff_time}}前发布</span> </a> </div>
-          </div>
-          <div class="tit"><a href="javascript:void(0)" @click="goDetail(tmp.id)">{{tmp.title}}</a></div>
+            <!--<img :src="tmp.avatar">-->
+            <div class="bibar-author"> <a href="#"> <span class="photo"><img src="../../../assets/img/pic-user1.png"></span> <span class="name">{{tmp.author}}</span> <span class="time">{{tmp.diff_time}}前·来自币吧</span> </a> </div>
+            <div class="bibar-list">
+              <div class="tit"><a href="javascript:void(0)" @click="goDetail(tmp.id)">{{tmp.title}}</a></div>
           <div class="txt indexNewslimitHeight" @click="goDetail(tmp.id)">
             <div class="media">
-              <a class="pull-left" href="javascript:void(0)" v-if="tmp.picture">
-              <img class="media-object" :src="tmp.picture">
-            </a>
             <div class="media-body">
               <div v-html="EditorContent(tmp.content)"></div>
             </div>
+            <a class="pull-left" href="javascript:void(0)" v-if="tmp.picture">
+              <img class="media-object" :src="tmp.picture">
+            </a>
             </div>
           </div>
           <div class="set">
@@ -167,6 +168,8 @@
           </div>
        </div>
        </div>
+            </div>
+          </div>
      <!-- <div class='backContent' :key ='now' v-for="(item,now) in nowData">{{item}}</div> -->
         </div>
       </div>
@@ -503,7 +506,11 @@ export default{
     // 处理图片
     EditorContent (val) {
       let now = `<div>${val}</div>`
-      return $(now).text()
+      now = $(now).text()
+      if (now.length > 128) {
+        return now.substring(0, 128) + '...'
+      }
+      return now
     },
     // 分页
     prev () {
