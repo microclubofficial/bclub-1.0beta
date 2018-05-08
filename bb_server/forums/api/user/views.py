@@ -101,9 +101,11 @@ class UserReplyListView(MethodView):
         page_count = int(math.ceil(sum_count/per_page))
         topics = []
         for i in replies:
-            topic = Topic.query.filter_by(id=i.topic_id).first()
+            topic = i.topic
+            #topic = Topic.query.filter_by(id=i.topic_id).first()
             if topic.id not in [i['id'] for i in topics]:
-                topic_user = User.query.filter_by(id = topic.author_id).first()
+                topic_user = topic.author
+                #topic_user = User.query.filter_by(id = topic.author_id).first()
                 reply_count = FindAndCount(Reply, topic_id = topic.id)
                 diff_time = time_diff(topic.updated_at)
                 topics_data = object_as_dict(topic)

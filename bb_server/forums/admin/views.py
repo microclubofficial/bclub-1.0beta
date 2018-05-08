@@ -38,6 +38,5 @@ class BaseView(ModelView):
             return user.is_superuser
         return False
         
-
     def inaccessible_callback(self, name, **kwargs):
         abort(404)

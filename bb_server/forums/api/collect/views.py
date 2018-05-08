@@ -147,7 +147,8 @@ class CollectView(MethodView):
                     collect.topic_id = json.dumps(topiclist)
                     collect.save()
                     continue
-                user = User.query.filter_by(id = topic.author_id).first()
+                user = topic.author
+                #user = User.query.filter_by(id = topic.author_id).first()
                 reply_count = FindAndCount(Reply, topic_id = topic.id)
                 diff_time = time_diff(topic.updated_at)
                 collect = collect_bool(i)

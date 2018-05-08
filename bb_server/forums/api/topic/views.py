@@ -20,6 +20,7 @@ from forums.api.forms import (CollectForm, ReplyForm, TopicForm,
                               collect_error_callback, error_callback,
                               form_board)
 from forums.api.forums.models import Board
+from forums.api.bar.models import Questions, Answers, Comments
 from forums.api.tag.models import Tags
 from forums.api.utils import gen_topic_filter, gen_topic_orderby
 from forums.common.serializer import Serializer
@@ -111,11 +112,13 @@ class TopicListView(MethodView):
         page_count = int(math.ceil(topic_count/per_page))
         topic = []
         for i in topics:
-            user = User.query.filter_by(id = i.author_id).first()
+            user = i.author
+            #user = User.query.filter_by(id = i.author_id).first()
             reply = Reply.query.filter_by(topic_id = i.id).order_by('-id').first()
             if reply:
-                reply_id = reply.author_id
-                reply_user = User.query.filter_by(id = reply_id).first().username
+                reply_user = reply.author.username
+                #reply_id = reply.author_id
+                #reply_user = User.query.filter_by(id = reply_id).first().username
                 reply_time = time_diff(reply.updated_at)
             else:
                 reply_user = None
@@ -124,9 +127,7 @@ class TopicListView(MethodView):
             diff_time = time_diff(i.updated_at)
             i.created_at = str(i.created_at)
             i.updated_at = str(i.updated_at)
-
             collect = collect_bool(i.id)
-
             topics_data = object_as_dict(i)
             topics_data['reply_time'] = reply_time
             topics_data['reply_user'] = reply_user
@@ -207,7 +208,8 @@ class TopicView(MethodView):
         page_count = int(math.ceil(reply_count/per_page))
         replies = []
         for i in reply: 
-            user = User.query.filter_by(id = i.author_id).first()
+            user = i.author
+            #user = User.query.filter_by(id = i.author_id).first()
             diff_time = time_diff(i.updated_at)
             i.created_at = str(i.created_at)
             i.updated_at = str(i.updated_at)
@@ -218,8 +220,9 @@ class TopicView(MethodView):
             replies_data['is_bad'], replies_data['is_bad_bool'] = Count(i.is_bad)
             Avatar(replies_data, user)
             replies.append(replies_data)
+        topic_user = topic.author   
         topic_data = object_as_dict(topic)
-        topic_user = User.query.filter_by(id=topic_data['author_id']).first()
+        #topic_user = User.query.filter_by(id=topic_data['author_id']).first()
         topic_data['author'] = topic_user.username
         topic_data['diff_time'] = diff_time
         topic_data['is_good'], topic_data['is_good_bool'] = Count(topic.is_good)
@@ -267,7 +270,8 @@ class ReplyListView(MethodView):
         page_count = int(math.ceil(reply_count/per_page))
         data = []
         for i in reply: 
-            user = User.query.filter_by(id = i.author_id).first()
+            user = i.author
+            #user = User.query.filter_by(id = i.author_id).first()
             diff_time = time_diff(i.updated_at)
             i.created_at = str(i.created_at)
             i.updated_at = str(i.updated_at)
@@ -284,17 +288,16 @@ class ReplyListView(MethodView):
     decorators = (reply_list_permission, )
     #@form_validate(ReplyForm, error=error_callback, f='')
     def post(self, topicId):
-        topic = Topic.query.filter_by(id=topicId).first_or_404()
+        #topic = Topic.query.filter_by(id=topicId).first_or_404()
         post_data = request.data
         user = request.user
         content = post_data.pop('content', None)
         reference = post_data.pop('replyContent', None)
         at_user = post_data.pop('author', None)
-        reply = Reply(content=content, reference = reference, topic_id = topic.id, at_user = at_user)
+        reply = Reply(content=content, reference = reference, topic_id = topicId, at_user = at_user)
         #user = User.query.filter_by(id=1).first()
         reply.author_id = user.id
         reply.save()
-        diff_time = time_diff(reply.updated_at)
         reply.created_at = str(reply.created_at)
         reply.updated_at = str(reply.updated_at)
         replies_data = object_as_dict(reply)
@@ -389,6 +392,12 @@ class ThumbView(IsAuthMethodView):
             session = Topic.query.filter_by(id = id).first()
         elif 'reply' in request.path:
             session = Reply.query.filter_by(id = id).first()
+        elif 'question' in request.path:
+            session = Questions.query.filter_by(id = id).first()
+        elif 'answer' in request.path:
+            session = Answers.query.filter_by(id = id).first()
+        elif 'comment' in request.path:
+            session = Comments.query.filter_by(id = id).first() 
         userlist_good = json.loads(session.is_good)
         userlist_bad = json.loads(session.is_bad)
         if thumb == 'up':

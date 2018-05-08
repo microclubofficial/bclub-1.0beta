@@ -52,4 +52,3 @@ class SideAnalyst(MethodView):
             data.append(thumb)
         analyst_data = {'analyst':data, 'sum_count': sum_count, 'page_count': page_count}
         return get_json(1, '分析师', analyst_data)
-
