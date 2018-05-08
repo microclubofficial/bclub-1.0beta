@@ -127,6 +127,7 @@ class TopicListView(MethodView):
             diff_time = time_diff(i.updated_at)
             i.created_at = str(i.created_at)
             i.updated_at = str(i.updated_at)
+            i.content = json.loads(i.content)
             collect = collect_bool(i.id)
             topics_data = object_as_dict(i)
             topics_data['reply_time'] = reply_time
@@ -157,7 +158,7 @@ class TopicListView(MethodView):
         #board = post_data.pop('category', None)
         topic = Topic(
             title=title,
-            content=content,
+            content=json.dumps(content),
             content_type=content_type,
             token = token,
             picture = picture)
@@ -176,6 +177,7 @@ class TopicListView(MethodView):
         topic.author = user
         topic.save()
         diff_time = time_diff(topic.updated_at)
+        topic.content = json.loads(topic.content)
         topic = object_as_dict(topic)
         Avatar(topic, user)
         topic['author'] = user.username
@@ -200,6 +202,7 @@ class TopicView(MethodView):
         diff_time = time_diff(topic.updated_at)
         topic.created_at = str(topic.created_at)
         topic.updated_at = str(topic.updated_at)
+        topic.content = json.loads(topic.content)
         #page, number = self.page_info
         #order_by = gen_order_by(query_dict, keys)
         #filter_dict = gen_filter_dict(query_dict, keys)
@@ -213,6 +216,7 @@ class TopicView(MethodView):
             diff_time = time_diff(i.updated_at)
             i.created_at = str(i.created_at)
             i.updated_at = str(i.updated_at)
+            i.content = json.loads(i.content)
             replies_data = object_as_dict(i)
             replies_data['author'] = user.username
             replies_data['diff_time'] = diff_time
@@ -275,6 +279,7 @@ class ReplyListView(MethodView):
             diff_time = time_diff(i.updated_at)
             i.created_at = str(i.created_at)
             i.updated_at = str(i.updated_at)
+            i.content = json.loads(i.content)
             replies_data = object_as_dict(i)
             replies_data['author'] = user.username
             replies_data['diff_time'] = diff_time
@@ -300,6 +305,7 @@ class ReplyListView(MethodView):
         reply.save()
         reply.created_at = str(reply.created_at)
         reply.updated_at = str(reply.updated_at)
+        reply.content = json.dumps(reply.content)
         replies_data = object_as_dict(reply)
         Avatar(replies_data, user)
         replies_data['author'] = user.username
@@ -310,7 +316,7 @@ class ReplyListView(MethodView):
         #MessageClient.topic(reply)
         # count
         #topic.board.post_count = 1
-        #reply.author.reply_count = 1
+        #reply.author.reply_count = 1Topic.query
         return get_json(1, '评论成功', replies_data)
         #return redirect(url_for('topic.topic', topicId=topic.id))
 

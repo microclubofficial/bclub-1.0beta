@@ -28,6 +28,7 @@ class BarListView(MethodView):
         for i in barlists:
             user = i.author
             picture = i.picture
+            i.content = json.loads(i.content)
             bar_data = object_as_dict(i)
             bar_data['author'] = user.username  
             bar_data['picture'] = picture
@@ -52,6 +53,7 @@ class BarView(MethodView):
             diff_time = time_diff(i.updated_at)
             i.created_at = str(i.created_at)
             i.updated_at = str(i.updated_at)
+            i.content = json.loads(i.content)
             questions_data = object_as_dict(i)
             questions_data['author'] = user.username
             questions_data['diff_time'] = diff_time
@@ -77,6 +79,7 @@ class BarQuestionView(MethodView):
         diff_time = time_diff(bar_question.updated_at)
         bar_question.created_at = str(bar_question.created_at)
         bar_question.updated_at = str(bar_question.updated_at)
+        bar_question.content = json.loads(bar_question.content)
         questions_data = object_as_dict(bar_question)
         questions_data['diff_time'] = diff_time
         questions_data['author'] = question_user.username
@@ -87,6 +90,7 @@ class BarQuestionView(MethodView):
             diff_time = time_diff(i.updated_at)
             i.created_at = str(i.created_at)
             i.updated_at = str(i.updated_at)
+            i.content = json.loads(i.content)
             answers_data = object_as_dict(i)
             answers_data['author'] = answer_user.username
             answers_data['diff_time'] = diff_time
@@ -102,11 +106,12 @@ class BarQuestionView(MethodView):
         post_data = request.data
         user = request.user
         content = post_data.pop('content', None)
-        bar_answer = Answers(content = content, questions_id = id, is_reply = 0)
+        bar_answer = Answers(content = json.dumps(content), questions_id = id, is_reply = 0)
         bar_answer.author_id = user.id
         bar_answer.save()
         bar_answer.created_at = str(bar_answer.created_at)
         bar_answer.updated_at = str(bar_answer.updated_at)
+        bar_answer.content = json.loads(bar_answer.content)
         answers_data = object_as_dict(bar_answer)
         answers_data['author'] = user.username
         answers_data['diff_time'] = '0秒'
@@ -130,6 +135,7 @@ class BarAnswerView(MethodView):
             diff_time = time_diff(i.updated_at)
             i.created_at = str(i.created_at)
             i.updated_at = str(i.updated_at)
+            i.content = json.loads(i.content)
             comments_data = object_as_dict(i)
             comments_data['diff_time'] = diff_time
             comments_data['author'] = comment_user.username
@@ -146,11 +152,12 @@ class BarAnswerView(MethodView):
         content = post_data.pop('content', None)
         reference = post_data.pop('replyContent', None)
         at_user = post_data.pop('author', None)
-        answer_comment = Comments(content = content, answers_id = id, reference = reference, at_user = at_user)
+        answer_comment = Comments(content = json.dumps(content), answers_id = id, reference = reference, at_user = at_user)
         answer_comment.author_id = user.id
         answer_comment.save()
         answer_comment.created_at = str(answer_comment.created_at)
         answer_comment.updated_at = str(answer_comment.updated_at)
+        answer_comment.content = json.loads(answer_comment.content)
         comments_data = object_as_dict(answer_comment)
         comments_data['author'] = user.username
         comments_data['diff_time'] = '0秒'
@@ -174,6 +181,7 @@ class BarQuestionreplyView(MethodView):
             diff_time = time_diff(i.updated_at)
             i.created_at = str(i.created_at)
             i.updated_at = str(i.updated_at)
+            i.content = json.loads(i.content)
             replies_data = object_as_dict(i)
             replies_data['author'] = user.username
             replies_data['diff_time'] = diff_time
@@ -188,12 +196,13 @@ class BarQuestionreplyView(MethodView):
         post_data = request.data
         user = request.user
         content = post_data.pop('content', None)
-        bar_reply = Answers(content = content, questions_id = id, is_reply = 1)
+        bar_reply = Answers(content = json.dumps(content), questions_id = id, is_reply = 1)
         bar_reply.author_id = user.id
         bar_reply.save()
         diff_time = time_diff(bar_reply.updated_at)
         bar_reply.created_at = str(bar_reply.created_at)
         bar_reply.updated_at = str(bar_reply.updated_at)
+        bar_reply.content = json.loads(bar_reply.content)
         replies_data = object_as_dict(bar_reply)
         replies_data['author'] = user.username
         replies_data['diff_time'] = diff_time
