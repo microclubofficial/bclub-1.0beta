@@ -28,8 +28,8 @@ class BarListView(MethodView):
         for i in barlists:
             user = i.author
             picture = i.picture
-            i.content = json.loads(i.content)
             bar_data = object_as_dict(i)
+            bar_data['content'] = json.loads(bar_data['content'])
             bar_data['author'] = user.username  
             bar_data['picture'] = picture
             barlist.append(bar_data)
@@ -53,8 +53,8 @@ class BarView(MethodView):
             diff_time = time_diff(i.updated_at)
             i.created_at = str(i.created_at)
             i.updated_at = str(i.updated_at)
-            i.content = json.loads(i.content)
             questions_data = object_as_dict(i)
+            questions_data['content'] = json.loads(questions_data['content'])
             questions_data['author'] = user.username
             questions_data['diff_time'] = diff_time
             questions_data['answers_count'] = answers_count
@@ -79,8 +79,8 @@ class BarQuestionView(MethodView):
         diff_time = time_diff(bar_question.updated_at)
         bar_question.created_at = str(bar_question.created_at)
         bar_question.updated_at = str(bar_question.updated_at)
-        bar_question.content = json.loads(bar_question.content)
         questions_data = object_as_dict(bar_question)
+        questions_data['content'] = json.loads(questions_data['content'])
         questions_data['diff_time'] = diff_time
         questions_data['author'] = question_user.username
         Avatar(questions_data, question_user)
@@ -90,8 +90,8 @@ class BarQuestionView(MethodView):
             diff_time = time_diff(i.updated_at)
             i.created_at = str(i.created_at)
             i.updated_at = str(i.updated_at)
-            i.content = json.loads(i.content)
             answers_data = object_as_dict(i)
+            answers_data['content'] = json.loads(answers_data['content'])
             answers_data['author'] = answer_user.username
             answers_data['diff_time'] = diff_time
             answers_data['is_good'], answers_data['is_good_bool'] = Count(i.is_good)
@@ -111,8 +111,8 @@ class BarQuestionView(MethodView):
         bar_answer.save()
         bar_answer.created_at = str(bar_answer.created_at)
         bar_answer.updated_at = str(bar_answer.updated_at)
-        bar_answer.content = json.loads(bar_answer.content)
         answers_data = object_as_dict(bar_answer)
+        answers_data['content'] = json.loads(answers_data['content'])
         answers_data['author'] = user.username
         answers_data['diff_time'] = '0秒'
         answers_data['is_good'] = 0
@@ -135,8 +135,8 @@ class BarAnswerView(MethodView):
             diff_time = time_diff(i.updated_at)
             i.created_at = str(i.created_at)
             i.updated_at = str(i.updated_at)
-            i.content = json.loads(i.content)
             comments_data = object_as_dict(i)
+            comments_data['content'] = json.loads(comments_data['content'])
             comments_data['diff_time'] = diff_time
             comments_data['author'] = comment_user.username
             comments_data['is_good'], comments_data['is_good_bool'] = Count(i.is_good)
@@ -157,8 +157,8 @@ class BarAnswerView(MethodView):
         answer_comment.save()
         answer_comment.created_at = str(answer_comment.created_at)
         answer_comment.updated_at = str(answer_comment.updated_at)
-        answer_comment.content = json.loads(answer_comment.content)
         comments_data = object_as_dict(answer_comment)
+        comments_data['content'] = json.loads(comments_data['content'])
         comments_data['author'] = user.username
         comments_data['diff_time'] = '0秒'
         comments_data['is_good'] = 0
@@ -181,8 +181,8 @@ class BarQuestionreplyView(MethodView):
             diff_time = time_diff(i.updated_at)
             i.created_at = str(i.created_at)
             i.updated_at = str(i.updated_at)
-            i.content = json.loads(i.content)
             replies_data = object_as_dict(i)
+            replies_data['content'] = json.loads(replies_data['content'])
             replies_data['author'] = user.username
             replies_data['diff_time'] = diff_time
             replies_data['is_good'], replies_data['is_good_bool'] = Count(i.is_good)
@@ -202,8 +202,8 @@ class BarQuestionreplyView(MethodView):
         diff_time = time_diff(bar_reply.updated_at)
         bar_reply.created_at = str(bar_reply.created_at)
         bar_reply.updated_at = str(bar_reply.updated_at)
-        bar_reply.content = json.loads(bar_reply.content)
         replies_data = object_as_dict(bar_reply)
+        replies_data['content'] = json.loads(replies_data['content'])
         replies_data['author'] = user.username
         replies_data['diff_time'] = diff_time
         replies_data['is_good'] = 0
