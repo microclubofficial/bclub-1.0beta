@@ -8,7 +8,7 @@
           <div class="speech" v-if="tmp.reply_user !== null"> <span>{{tmp.reply_user}}<span class="time">{{tmp.reply_time}}</span>前评论了讨论</span><i class="iconfont icon-dot"></i></div>
           <div class="user">
             <!--<img :src="tmp.avatar">-->
-            <div class="bibar-author"> <a href="#"> <span class="photo"><img src="../../../assets/img/pic-user1.png"></span> <span class="name">{{tmp.author}}</span> <span class="time">{{tmp.diff_time}}前·来自币吧</span> </a> </div>
+            <div class="bibar-author"> <a href="#"> <span class="photo"><img :src="tmp.avatar"></span> <span class="name">{{tmp.author}}</span> <span class="time">{{tmp.diff_time}}前·来自币吧</span> </a> </div>
             <div class="bibar-list">
               <div class="tit"><a href="javascript:void(0)" @click="goDetail(tmp.id)">{{tmp.title}}</a></div>
           <div class="txt indexNewslimitHeight" @click="goDetail(tmp.id)">
@@ -33,7 +33,7 @@
               <li class="set-choseStar" @click="collectionTopic(tmp)"> <a :class='{collectionActive:tmp.collect_bool}' href="javascript:void(0);"><i class="iconfont icon-star">&#xe6a7;</i>收藏</a> </li>
               <!-- <li> <a href="javascript:void(0);"><i class="iconfont icon-fenxiang"></i> 分享</a> </li> -->
               <!-- <li class="set-choseShang"> <a href="javascript:void(0);"><i class="iconfont icon-dashang"></i> 打赏<span>438</span></a> </li> -->
-              <li>
+              <!--<li>-->
                 <!-- <div class="dropdown">
                   <a href="javascript:void(0);" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="iconfont icon-genduo"></i> 更多</a>
                   <ul class="dropdown-menu">
@@ -41,16 +41,16 @@
                     <li><a href="javascript:void(0);">没有帮助</a></li>
                   </ul>
                 </div> -->
-              </li>
+              <!--</li>-->
             </ul>
           </div>
             <div class="bibar-hot"  v-show="showComment&&index==i&&!changeIndex">
        <!-- 评论框 -->
        <div class="editor-comment">
-         <img :src="userInfo.avatar" alt="" class="avatar"  v-show="commentShow">
+         <img :src="userInfo.avatar" alt="" class="avatar" v-show="commentShow">
          <div class="editor-bd">
            <span class="comment-img-delete"></span>
-           <svg version='1.1' xmlns='http://www.w3.org/2000/svg' class="editor-triangle">
+           <svg v-show="commentShow" version='1.1' xmlns='http://www.w3.org/2000/svg' class="editor-triangle">
             <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
            </svg>
            <div class="editor-textarea" v-show="commentShow" @click="commentShowFun">
@@ -105,10 +105,10 @@
                     <div class="comment-item-main">
                       <div class="comment-item-hd">
                         <a href="#" class="user-name">{{item.author}}</a>
-                        <span class="time">{{item.diff_time}}前发布</span>
+                        <span class="time">{{item.diff_time !== '0秒' ? item.diff_time + '前' : '刚刚'}}发布</span>
                       </div>
                       <!-- @ 样式 -->
-                      <p class="replyAuthor" v-if="item.reference !== ''"><span style="position:absolute;">@{{item.at_user}}:</span><span class="replyBackConten" style="display:inline-block;margin-left:100px;font-weight: normal;" v-html='item.reference'></span></p>
+                      <p class="replyAuthor" v-if="item.at_user !== ''"><span style="position:absolute;">@{{item.at_user}}:</span><span class="replyBackConten" style="display:inline-block;margin-left:70px;font-weight: normal;" v-html="replyFun(item.reference)"></span></p>
                       <!-- <p>{{item}}</p> -->
                       <p v-html="item.content">{{item.content}}</p>
                     </div>
@@ -130,7 +130,7 @@
          <img :src="userInfo.avatar" alt="" class="avatar" v-show="talkReplyTxt">
          <div class="editor-bd">
            <span class="comment-img-delete"></span>
-           <svg version='1.1' xmlns='http://www.w3.org/2000/svg' class="editor-triangle">
+           <svg version='1.1' v-show="talkReplyTxt" xmlns='http://www.w3.org/2000/svg' class="editor-triangle">
             <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
            </svg>
            <div class="editor-textarea"  v-show="talkReplyTxt" @click="talkReplyEditor">
@@ -286,8 +286,7 @@ export default{
       })
     })
   },
-  mounted () {
-  },
+  mounted () {},
   watch: {
     getNavaVal (val) {
       this.changeIndex = true
@@ -405,6 +404,20 @@ export default{
         } else {
           this.showPage = false
         }
+        this.$nextTick(() => {
+          $('.comment-item-main').find('img').addClass('zoom-in')
+          $('.comment-item-main').on('click', 'img', function () {
+            if (!$(this).hasClass('zoom-out')) {
+              if ($(this).hasClass('zoom-in')) {
+                $(this).removeClass('zoom-in')
+              }
+              $(this).addClass('zoom-out')
+            } else if ($(this).hasClass('zoom-out')) {
+              $(this).removeClass('zoom-out')
+              $(this).addClass('zoom-in')
+            }
+          })
+        })
       })
       if (index !== this.i) {
         this.i = index
@@ -420,7 +433,7 @@ export default{
       if (this.commentShow) {
         this.showReport = false
       }
-      $('.editor-toolbar').find('.wangeditor').css({'margin': '0 auto', 'padding': '0', 'width': '698px'})
+      $('.editor-toolbar').find('.wangeditor').css({'padding': '0', 'width': '100%'})
       $('.editor-toolbar').find('.wangeditor>.report').css({'bottom': '0', 'padding': '0'})
       $('.editor-toolbar').find('.wangeditor>.cancel').css('bottom', '4px')
       $('.editor-toolbar').find('.wangeditor>.editor').css({'min-height': '130px', 'padding-bottom': '37px'})
@@ -443,6 +456,20 @@ export default{
           let oldArr = this.articles.slice(0, -5)
           this.articles = oldArr.concat(data.data.topics)
         }
+        this.$nextTick(() => {
+          $('.comment-item-main').find('img').addClass('zoom-in')
+          $('.comment-item-main').on('click', 'img', function () {
+            if (!$(this).hasClass('zoom-out')) {
+              if ($(this).hasClass('zoom-in')) {
+                $(this).removeClass('zoom-in')
+              }
+              $(this).addClass('zoom-out')
+            } else if ($(this).hasClass('zoom-out')) {
+              $(this).removeClass('zoom-out')
+              $(this).addClass('zoom-in')
+            }
+          })
+        })
       })
     },
     showFtContentFun (ftData) {
@@ -453,6 +480,7 @@ export default{
       if (now !== this.replayId) {
         this.replayId = now
       }
+      this.commentShow = true
       this.showReport = false
       if (!this.talkReplayBox) {
         this.talkReplayBox = true
@@ -511,6 +539,13 @@ export default{
         return now.substring(0, 128) + '...'
       }
       return now
+    },
+    replyFun (val) {
+      let reply = val.replace(/<p>|<\/p>/g, '')
+      if (/^\/static.*/ig.test(reply)) {
+        return '图片评论' + `<a style='color:#0181FF' href='${reply}'><i class='iconfont'>&#xe694;</i>查看图片</a>`
+      }
+      return reply
     },
     // 分页
     prev () {
@@ -625,7 +660,7 @@ export default{
 /*回复样式*/
 .replyAuthor{
     height: 50px;
-    background: #F2F2F2;
+    background: #F8F8F8;
     line-height: 50px !important;
     padding-left: 20px !important;
     font-weight: 700;
@@ -644,9 +679,10 @@ export default{
 }
 .editor-comment{
     margin-top: 5px;
-    background-color: #f9f9f9;
+    background-color: #F8F8F8;
     /* padding: 20px; */
     padding-left: 10px;
+    padding: 10px 10px 10px 0;
 }
 .editor-comment>.avatar{
     width: 32px;
@@ -669,7 +705,7 @@ svg:not(:root) {
 }
 .editor-triangle{
     position: absolute;
-    top: 10px;
+    top: 18px;
     left: -4px;
     width: 5px;
     height: 10px;
@@ -812,6 +848,21 @@ a.avatar img {
     overflow: hidden;
     margin: 10px 0;
 }
+.comment-item-main img{
+    display: block;
+    cursor: zoom-in;
+    max-width: 200px;
+}
+.zoom-in{
+  cursor: zoom-in;
+  max-width: 200px !important;
+  overflow: hidden;
+}
+.zoom-out{
+  cursor: zoom-out !important;
+  max-width: 100%;
+  margin: 10px auto;
+}
 .bibar-indexNewsItem-infro>li{
     float: left;
     margin-right: 25px;
@@ -839,12 +890,14 @@ a.avatar img {
 .comment-reply{
   border-top: 1px solid #edf0f5;
   margin-top: 20px;
+  background: #EDF5FE;
+  margin-left: 42px;
 }
 .comment-reply>.comment-item{
   margin: 15px 0;
 }
 .comment-reply>.editor-comment{
-  margin-top: 15px;
+  /*margin-top: 15px;*/
 }
 .talkCommentEditor>.wangeditor>.editor{
   padding-bottom: 30px;
@@ -922,7 +975,7 @@ a.avatar img {
   background: #fff;
   position: relative;
 }
-.avatar{margin-bottom: 15px;}
+/*.avatar{margin-bottom: 15px;}*/
 .avatar>span{
   font-size: 16px;
   margin-left: 15px;
@@ -973,7 +1026,6 @@ a.avatar img {
 }
 .editor-comment{
     margin-top: 5px;
-    background-color: #f9f9f9;
     /* padding: 20px; */
     padding-left: 10px;
 }
@@ -992,13 +1044,14 @@ img.avatar{
     margin-left: 42px;
     position: relative;
     z-index: 1;
+    padding: 8px 0;
 }
 svg:not(:root) {
     overflow: hidden;
 }
 .editor-triangle{
     position: absolute;
-    top: 10px;
+    top: 18px;
     left: -4px;
     width: 5px;
     height: 10px;

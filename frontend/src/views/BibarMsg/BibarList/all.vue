@@ -107,7 +107,7 @@
                         <span class="time">{{item.diff_time}}</span>
                       </div>
                       <!-- @ 样式 -->
-                      <p class="replyAuthor" v-if="item.reference !== null"><span style="position:absolute;">@{{item.author}}:</span><span class="replyBackConten" style="display:inline-block;margin-left:100px;font-weight: normal;" v-html='item.reference'></span></p>
+                      <p class="replyAuthor" v-if="item.reference !== null"><span style="position:absolute;">@{{item.author}}:</span><span class="replyBackConten" style="display:inline-block;margin-left:70px;font-weight: normal;" v-html='item.reference'></span></p>
                       <!-- <p>{{item}}</p> -->
                       <p v-html="item.content">{{item.content}}</p>
                     </div>
@@ -634,7 +634,7 @@ export default{
 }
 .editor-comment{
     margin-top: 5px;
-    background-color: #f9f9f9;
+    background-color: #f8f8f8;
     /* padding: 20px; */
     padding-left: 10px;
 }

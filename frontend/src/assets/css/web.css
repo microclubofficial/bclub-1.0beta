@@ -717,7 +717,35 @@ i.icon-BTC{font-size: 14px; font-weight: bold;}
 .bibar-indexNewsItem .bibar-list .member{margin-top:5px}
 .bibar-indexNewsItem .bibar-list .set:after{visibility: hidden;display: block;font-size: 0;content: " ";clear: both;height: 0;}
 .bibar-indexNewsItem .bibar-list .set>ul{margin: 0px; padding: 0px;}
-.bibar-indexNewsItem .bibar-list .set>ul>li{float: left; margin-right: 25px;}
+.bibar-indexNewsItem .bibar-list .set>ul>li:first-child{padding-left: 0;}
+.bibar-indexNewsItem .bibar-list .set>ul>li{float: left; padding:0 20px; position: relative;}
+.bibar-indexNewsItem .bibar-list .set>ul>li:after{
+    position: absolute;
+    content: '';
+    right: -15px;
+    top: 2px;
+    height: 12px;
+    width: 2px;
+    background-color: #F6F5F5;
+}
+.bibar-indexNewsItem .bibar-list .set>ul>li:last-child:after{
+    position: absolute;
+    content: '';
+    right: -15px;
+    top: 2px;
+    height: 0px;
+    width: 0px;
+    background-color: #F6F5F5;
+}
+.bibar-indexNewsItem .bibar-list .set>ul>li:first-child a:first-child::after{
+    position: absolute;
+    content: '';
+    left: 43px;
+    top: 2px;
+    height: 12px;
+    width: 2px;
+    background-color: #F6F5F5;
+}
 .bibar-indexNewsItem .bibar-list .set>ul>li a{color: #999;}
 .bibar-indexNewsItem .bibar-list .set>ul>li a:hover{color:#333;}
 .bibar-indexNewsItem .bibar-list .set>ul>li a span{}
@@ -736,7 +764,13 @@ i.icon-BTC{font-size: 14px; font-weight: bold;}
 .bibar-indexNewsItem .bibar-list .set>ul>li .dropdown-menu li:hover a{background-color: #efefef;color: #333}
 .bibar-indexNewsItem .bibar-list .set>ul>li .dropdown-menu li:hover i{color: #333;}
 .bibar-indexNewsItem .bibar-list .set>ul>li .dropdown-menu li a i{margin-right: 5px;vertical-align: middle;color: #999;font-size: 15px}
-.bibar-indexNewsItem .bibar-list {margin-left: 55px;}
+.bibar-indexNewsItem .bibar-list {
+    margin: 0 55px;
+    border-bottom: 1px solid #F6F5F5;
+    padding-bottom: 20px;
+}
+/*富文本样式*/
+.bibar-hot{margin-top: 20px;}
 /*列表图片*/
 .media-left, .media>.pull-left{margin: 10px 0;}
 .indexNewslimitHeight{overflow: hidden;}

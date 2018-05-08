@@ -642,7 +642,7 @@ export default{
 }
 .editor-comment{
     margin-top: 5px;
-    background-color: #f9f9f9;
+    background-color: #f8f8f8;
     /* padding: 20px; */
     padding-left: 10px;
 }
