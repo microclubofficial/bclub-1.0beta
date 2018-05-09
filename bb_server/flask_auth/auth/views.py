@@ -132,7 +132,7 @@ class PhoneLoginView(MethodView):
 class LogoutView(MethodView):
     decorators = [login_required]
 
-    def delete(self):
+    def post(self):
         current_user.logout()
         #return redirect(request.args.get('next') or '/')
         return get_json(1, '登出成功', {})
