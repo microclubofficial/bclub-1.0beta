@@ -87,7 +87,7 @@ class SideBar(MethodView):
         data = {}
         for i in keys:
             if i == 'publicTime':
-                data[i] = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(details[i]/1000))
+                data[i] = time.strftime('%Y-%m-%d',time.localtime(details[i]/1000))
             else:
                 data[i] = details[i]
         return get_json(1, 'success', data)

@@ -40,8 +40,8 @@ class Questions(db.Model, ModelMixin):
         db.DateTime, default=datetime.now, nullable=False)
     updated_at = db.Column(
         db.DateTime, default=datetime.now, onupdate=datetime.now)
-    is_good = db.Column(db.Integer, default=0, nullable=False)
-    is_bad = db.Column(db.Integer, default=0, nullable=False)
+    is_good = db.Column(db.String(512), default='[]')
+    is_bad = db.Column(db.String(512), default='[]')
     bar_id = db.Column(db.Integer, 
                 db.ForeignKey('bar.id', ondelete="CASCADE"), nullable=False, default=0,)
     bar = db.relationship(
@@ -64,33 +64,47 @@ class Answers(db.Model, ModelMixin):
     __tablename__ = 'answers'
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.Text, nullable=False)
-    is_good = db.Column(db.Integer, default=0, nullable=False)
-    is_bad = db.Column(db.Integer, default=0, nullable=False)
+    is_good = db.Column(db.String(512), default='[]')
+    is_bad = db.Column(db.String(512), default='[]')
     created_at = db.Column(
         db.DateTime, default=datetime.now, nullable=False)
     updated_at = db.Column(
         db.DateTime, default=datetime.now, onupdate=datetime.now)
-    questions_id = db.Column(db.Integer)
+    questions_id = db.Column(db.Integer, db.ForeignKey('questions.id', ondelete="CASCADE"))
+    question = db.relationship(
+        Questions, backref=db.backref(
+            'question', cascade='all,delete-orphan',lazy='dynamic'), lazy='joined')
     is_reply = db.Column(db.SmallInteger, default=0)
     author_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete="CASCADE"))
     author = db.relationship(
         User, backref=db.backref(
-            'bar_replies', cascade='all,delete-orphan',lazy='dynamic'), lazy='joined')
+            'answers', cascade='all,delete-orphan',lazy='dynamic'), lazy='joined')
   
 class Comments(db.Model, ModelMixin):
     __tablename__ = 'comments'
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.Text, nullable=False)
-    is_good = db.Column(db.Integer, default=0, nullable=False)
-    is_bad = db.Column(db.Integer, default=0, nullable=False)
+    is_good = db.Column(db.String(512), default='[]')
+    is_bad = db.Column(db.String(512), default='[]')
     created_at = db.Column(
         db.DateTime, default=datetime.now, nullable=False)
     updated_at = db.Column(
         db.DateTime, default=datetime.now, onupdate=datetime.now)
-    answers_id = db.Column(db.Integer)
-    author_id = db.Column(db.Integer)
+    answers_id = db.Column(db.Integer, db.ForeignKey(
+            'answers.id', ondelete="CASCADE"))
+    answer = db.relationship(
+        Answers, backref=db.backref(
+            'answer', cascade='all,delete-orphan', lazy='dynamic'), lazy='joined')
+    author_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete="CASCADE"))
+    author = db.relationship(
+        User, backref=db.backref(
+            'comments', cascade='all,delete-orphan', lazy='dynamic'), lazy='joined')
 
-class Replys(db.Model, ModelMixin):
+    reference = db.Column(db.String(512))
+    at_user = db.Column(db.String(81))
+
+
+'''class Replys(db.Model, ModelMixin):
     __tablename__ = 'comment_replies'
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.Text, nullable=False)
@@ -102,4 +116,4 @@ class Replys(db.Model, ModelMixin):
         db.DateTime, default=datetime.now, onupdate=datetime.now)
     comments_id = db.Column(db.Integer, nullable=False)
     author_id = db.Column(db.Integer, nullable=False)
-        
+        '''

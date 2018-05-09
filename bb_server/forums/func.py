@@ -60,3 +60,11 @@ def Count(Sql, data=False):
         else:
             return False
     return False'''
+
+def json_loads(data, list):
+    for i in list:
+        try:
+            data[i] = json.loads(data[i])
+        except:
+            data[i] = data[i]
+    return

@@ -49,7 +49,7 @@ class Topic(db.Model, ModelMixin):
     token = db.Column(db.String(24))
     updated_at = db.Column(
         db.DateTime, default=datetime.now, onupdate=datetime.now)
-    is_good = db.Column(db.String(512), nullable=False, default='[]')
+    is_good = db.Column(db.String(512), default='[]')
     is_bad = db.Column(db.String(512), default='[]')
     picture = db.Column(db.String(512))
     author_id = db.Column(
@@ -151,8 +151,8 @@ class Reply(db.Model, ModelMixin):
     topic = db.relationship(
         Topic, backref=db.backref(
             'topic', cascade='all,delete-orphan', lazy='dynamic'), lazy='joined')
-    reference = db.Column(db.String(512))
-    at_user = db.Column(db.String(81))
+    reference = db.Column(db.String(512), default='')
+    at_user = db.Column(db.String(81), default='')
 
     author_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete="CASCADE"))
     author = db.relationship(

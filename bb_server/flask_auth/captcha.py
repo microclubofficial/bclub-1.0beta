@@ -10,10 +10,11 @@
 #          By: jianglin
 # Description: use pillow generate captcha
 # **************************************************************************
-from random import sample, randint
+from random import sample, randint, seed
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 from flask import session, make_response
 from io import BytesIO
+from time import time
 
 class Captcha(object):
     def __init__(self, app=None, font=None):
@@ -107,6 +108,7 @@ class GenCaptcha(object):
 
     def create_strs(self, draw, chars, length, font_type, font_size, width,
                     height, fg_color):
+        seed(time())
         c_chars = sample(chars, length)
         strs = ' %s ' % ' '.join(c_chars)  # 每个字符前后以空格隔开
 

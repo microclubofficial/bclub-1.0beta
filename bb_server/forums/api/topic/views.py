@@ -20,6 +20,7 @@ from forums.api.forms import (CollectForm, ReplyForm, TopicForm,
                               collect_error_callback, error_callback,
                               form_board)
 from forums.api.forums.models import Board
+from forums.api.bar.models import Questions, Answers, Comments
 from forums.api.tag.models import Tags
 from forums.api.utils import gen_topic_filter, gen_topic_orderby
 from forums.common.serializer import Serializer
@@ -34,7 +35,7 @@ from .permissions import (like_permission, reply_list_permission,
                           reply_permission, topic_list_permission,
                           topic_permission, edit_permission, thumd_permission)
 from forums.api.message.models import MessageClient
-from forums.func import get_json, object_as_dict, time_diff, FindAndCount, Avatar, Count
+from forums.func import get_json, object_as_dict, time_diff, FindAndCount, Avatar, Count, json_loads
 from forums.api.user.models import User
 from forums.api.collect.models import Collect
 from sqlalchemy import func
@@ -96,12 +97,10 @@ class TopicListView(MethodView):
         start = (page-1)*per_page
         query_dict = request.data
         keys = ['title']
-        #order_by = gen_topic_orderby(query_dict, keys)
-        #filter_dict = gen_topic_filter(query_dict, keys)
         filter_dict = {}
         title = _('All Topics') 
         if 'token' in request.path:
-            filter_dict.update(token=token)
+            filter_dict['token'] = token
             title = _(token+'Topics')
         #elif request.path.endswith('top'):
         #    filter_dict.update(is_bad=True)
@@ -111,11 +110,10 @@ class TopicListView(MethodView):
         page_count = int(math.ceil(topic_count/per_page))
         topic = []
         for i in topics:
-            user = User.query.filter_by(id = i.author_id).first()
+            user = i.author
             reply = Reply.query.filter_by(topic_id = i.id).order_by('-id').first()
             if reply:
-                reply_id = reply.author_id
-                reply_user = User.query.filter_by(id = reply_id).first().username
+                reply_user = reply.author.username
                 reply_time = time_diff(reply.updated_at)
             else:
                 reply_user = None
@@ -124,10 +122,10 @@ class TopicListView(MethodView):
             diff_time = time_diff(i.updated_at)
             i.created_at = str(i.created_at)
             i.updated_at = str(i.updated_at)
-
             collect = collect_bool(i.id)
-
             topics_data = object_as_dict(i)
+            #topics_data['content'] = json.loads(topics_data['content'])
+            json_loads(topics_data, ['content', 'title'])
             topics_data['reply_time'] = reply_time
             topics_data['reply_user'] = reply_user
             topics_data['author'] = user.username
@@ -155,8 +153,8 @@ class TopicListView(MethodView):
         picture = post_data.pop('picture', None)
         #board = post_data.pop('category', None)
         topic = Topic(
-            title=title,
-            content=content,
+            title=json.dumps(title),
+            content=json.dumps(content),
             content_type=content_type,
             token = token,
             picture = picture)
@@ -177,6 +175,8 @@ class TopicListView(MethodView):
         diff_time = time_diff(topic.updated_at)
         topic = object_as_dict(topic)
         Avatar(topic, user)
+        #topic['content'] = json.loads(topic['content'])
+        json_loads(topic, ['content', 'title'])
         topic['author'] = user.username
         topic['is_good'] = 0
         topic['is_bad'] = 0
@@ -199,27 +199,29 @@ class TopicView(MethodView):
         diff_time = time_diff(topic.updated_at)
         topic.created_at = str(topic.created_at)
         topic.updated_at = str(topic.updated_at)
-        #page, number = self.page_info
-        #order_by = gen_order_by(query_dict, keys)
-        #filter_dict = gen_filter_dict(query_dict, keys)
         reply = Reply.query.filter_by(topic_id = topicId).order_by(('-id')).limit(per_page).offset(start)
         reply_count = FindAndCount(Reply, topic_id = topicId)
         page_count = int(math.ceil(reply_count/per_page))
         replies = []
         for i in reply: 
-            user = User.query.filter_by(id = i.author_id).first()
+            user = i.author
+            #user = User.query.filter_by(id = i.author_id).first()
             diff_time = time_diff(i.updated_at)
             i.created_at = str(i.created_at)
             i.updated_at = str(i.updated_at)
             replies_data = object_as_dict(i)
+            #replies_data['content'] = json.loads(replies_data['content'])
+            json_loads(replies_data, ['content', 'reference'])
             replies_data['author'] = user.username
             replies_data['diff_time'] = diff_time
             replies_data['is_good'], replies_data['is_good_bool'] = Count(i.is_good)
             replies_data['is_bad'], replies_data['is_bad_bool'] = Count(i.is_bad)
             Avatar(replies_data, user)
             replies.append(replies_data)
+        topic_user = topic.author   
         topic_data = object_as_dict(topic)
-        topic_user = User.query.filter_by(id=topic_data['author_id']).first()
+        #topic_data['content'] = json.loads(topic_data['content'])
+        json_loads(topic_data, ['content', 'title'])
         topic_data['author'] = topic_user.username
         topic_data['diff_time'] = diff_time
         topic_data['is_good'], topic_data['is_good_bool'] = Count(topic.is_good)
@@ -267,11 +269,14 @@ class ReplyListView(MethodView):
         page_count = int(math.ceil(reply_count/per_page))
         data = []
         for i in reply: 
-            user = User.query.filter_by(id = i.author_id).first()
+            user = i.author
+            #user = User.query.filter_by(id = i.author_id).first()
             diff_time = time_diff(i.updated_at)
             i.created_at = str(i.created_at)
             i.updated_at = str(i.updated_at)
             replies_data = object_as_dict(i)
+            #replies_data['content'] = json.loads(replies_data['content'])
+            json_loads(replies_data, ['content', 'reference'])
             replies_data['author'] = user.username
             replies_data['diff_time'] = diff_time
             replies_data['is_good'], replies_data['is_good_bool'] = Count(i.is_good)
@@ -284,30 +289,31 @@ class ReplyListView(MethodView):
     decorators = (reply_list_permission, )
     #@form_validate(ReplyForm, error=error_callback, f='')
     def post(self, topicId):
-        topic = Topic.query.filter_by(id=topicId).first_or_404()
+        #topic = Topic.query.filter_by(id=topicId).first_or_404()
         post_data = request.data
         user = request.user
         content = post_data.pop('content', None)
         reference = post_data.pop('replyContent', None)
         at_user = post_data.pop('author', None)
-        reply = Reply(content=content, reference = reference, topic_id = topic.id, at_user = at_user)
+        reply = Reply(content=json.dumps(content), reference = json.dumps(reference), topic_id = topicId, at_user = at_user)
         #user = User.query.filter_by(id=1).first()
         reply.author_id = user.id
         reply.save()
-        diff_time = time_diff(reply.updated_at)
         reply.created_at = str(reply.created_at)
         reply.updated_at = str(reply.updated_at)
         replies_data = object_as_dict(reply)
         Avatar(replies_data, user)
+        #replies_data['content'] = json.loads(replies_data['content'])
+        json_loads(replies_data, ['content', 'reference'])
         replies_data['author'] = user.username
-        replies_data['is_good'] = 0
+        replies_data['is_good'] = 0 
         replies_data['is_bad'] = 0
         replies_data['diff_time'] = '0秒'
         # noticetopicId
         #MessageClient.topic(reply)
         # count
         #topic.board.post_count = 1
-        #reply.author.reply_count = 1
+        #reply.author.reply_count = 1Topic.query
         return get_json(1, '评论成功', replies_data)
         #return redirect(url_for('topic.topic', topicId=topic.id))
 
@@ -389,6 +395,12 @@ class ThumbView(IsAuthMethodView):
             session = Topic.query.filter_by(id = id).first()
         elif 'reply' in request.path:
             session = Reply.query.filter_by(id = id).first()
+        elif 'question' in request.path:
+            session = Questions.query.filter_by(id = id).first()
+        elif 'answer' in request.path:
+            session = Answers.query.filter_by(id = id).first()
+        elif 'comment' in request.path:
+            session = Comments.query.filter_by(id = id).first() 
         userlist_good = json.loads(session.is_good)
         userlist_bad = json.loads(session.is_bad)
         if thumb == 'up':
