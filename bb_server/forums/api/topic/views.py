@@ -35,7 +35,7 @@ from .permissions import (like_permission, reply_list_permission,
                           reply_permission, topic_list_permission,
                           topic_permission, edit_permission, thumd_permission)
 from forums.api.message.models import MessageClient
-from forums.func import get_json, object_as_dict, time_diff, FindAndCount, Avatar, Count
+from forums.func import get_json, object_as_dict, time_diff, FindAndCount, Avatar, Count, json_loads
 from forums.api.user.models import User
 from forums.api.collect.models import Collect
 from sqlalchemy import func
@@ -124,7 +124,8 @@ class TopicListView(MethodView):
             i.updated_at = str(i.updated_at)
             collect = collect_bool(i.id)
             topics_data = object_as_dict(i)
-            topics_data['content'] = json.loads(topics_data['content'])
+            #topics_data['content'] = json.loads(topics_data['content'])
+            json_loads(topics_data, ['content', 'title'])
             topics_data['reply_time'] = reply_time
             topics_data['reply_user'] = reply_user
             topics_data['author'] = user.username
@@ -152,7 +153,7 @@ class TopicListView(MethodView):
         picture = post_data.pop('picture', None)
         #board = post_data.pop('category', None)
         topic = Topic(
-            title=title,
+            title=json.dumps(title),
             content=json.dumps(content),
             content_type=content_type,
             token = token,
@@ -174,7 +175,8 @@ class TopicListView(MethodView):
         diff_time = time_diff(topic.updated_at)
         topic = object_as_dict(topic)
         Avatar(topic, user)
-        topic['content'] = json.loads(topic['content'])
+        #topic['content'] = json.loads(topic['content'])
+        json_loads(topic, ['content', 'title'])
         topic['author'] = user.username
         topic['is_good'] = 0
         topic['is_bad'] = 0
@@ -208,7 +210,8 @@ class TopicView(MethodView):
             i.created_at = str(i.created_at)
             i.updated_at = str(i.updated_at)
             replies_data = object_as_dict(i)
-            replies_data['content'] = json.loads(replies_data['content'])
+            #replies_data['content'] = json.loads(replies_data['content'])
+            json_loads(replies_data, ['content', 'reference'])
             replies_data['author'] = user.username
             replies_data['diff_time'] = diff_time
             replies_data['is_good'], replies_data['is_good_bool'] = Count(i.is_good)
@@ -217,7 +220,8 @@ class TopicView(MethodView):
             replies.append(replies_data)
         topic_user = topic.author   
         topic_data = object_as_dict(topic)
-        topic_data['content'] = json.loads(topic_data['content'])
+        #topic_data['content'] = json.loads(topic_data['content'])
+        json_loads(topic_data, ['content', 'title'])
         topic_data['author'] = topic_user.username
         topic_data['diff_time'] = diff_time
         topic_data['is_good'], topic_data['is_good_bool'] = Count(topic.is_good)
@@ -271,7 +275,8 @@ class ReplyListView(MethodView):
             i.created_at = str(i.created_at)
             i.updated_at = str(i.updated_at)
             replies_data = object_as_dict(i)
-            replies_data['content'] = json.loads(replies_data['content'])
+            #replies_data['content'] = json.loads(replies_data['content'])
+            json_loads(replies_data, ['content', 'reference'])
             replies_data['author'] = user.username
             replies_data['diff_time'] = diff_time
             replies_data['is_good'], replies_data['is_good_bool'] = Count(i.is_good)
@@ -290,7 +295,7 @@ class ReplyListView(MethodView):
         content = post_data.pop('content', None)
         reference = post_data.pop('replyContent', None)
         at_user = post_data.pop('author', None)
-        reply = Reply(content=content, reference = reference, topic_id = topicId, at_user = at_user)
+        reply = Reply(content=json.dumps(content), reference = json.dumps(reference), topic_id = topicId, at_user = at_user)
         #user = User.query.filter_by(id=1).first()
         reply.author_id = user.id
         reply.save()
@@ -298,7 +303,8 @@ class ReplyListView(MethodView):
         reply.updated_at = str(reply.updated_at)
         replies_data = object_as_dict(reply)
         Avatar(replies_data, user)
-        replies_data['content'] = json.loads(replies_data['content'])
+        #replies_data['content'] = json.loads(replies_data['content'])
+        json_loads(replies_data, ['content', 'reference'])
         replies_data['author'] = user.username
         replies_data['is_good'] = 0 
         replies_data['is_bad'] = 0
