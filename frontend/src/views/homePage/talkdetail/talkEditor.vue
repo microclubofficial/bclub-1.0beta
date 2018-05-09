@@ -95,7 +95,7 @@ export default{
 }
 .set{
   color: #1E8FFF;
-  background: snow;
+  /*background: snow;*/
 }
 .avatar{
     float: left;

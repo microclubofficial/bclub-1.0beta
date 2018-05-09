@@ -2,13 +2,16 @@
   <div>
   <div class="bibar-tabAll">
     <!-- {{[articles]}} -->
-    <div class="bibar-tabitem fade in active" :key="index" id="bibar-newstab1" v-for="(tmp,index) in [...getNavaVal, ...articles]">
+    <div class="loading" v-if='articles.length === 0'>
+      <img src="../../../assets/img/loading.png" alt="" class="icon-loading">
+    </div>
+    <div class="bibar-tabitem fade in active" v-if='articles.length > 0 || getNavaVal.length > 0' :key="index" id="bibar-newstab1" v-for="(tmp,index) in [...getNavaVal, ...articles]">
       <div class="bibar-indexNewsList">
         <div class="bibar-indexNewsItem">
           <div class="speech" v-if="tmp.reply_user !== null"> <span>{{tmp.reply_user}}<span class="time">{{tmp.reply_time}}</span>前评论了讨论</span><i class="iconfont icon-dot"></i></div>
           <div class="user">
             <!--<img :src="tmp.avatar">-->
-            <div class="bibar-author"> <a href="#"> <span class="photo"><img :src="tmp.avatar"></span> <span class="name">{{tmp.author}}</span> <span class="time">{{tmp.diff_time}}前·来自币吧</span> </a> </div>
+            <div class="bibar-author"> <a href="#"> <span class="photo"><img :src="tmp.avatar"></span> <span class="name">{{tmp.author}}</span> <span class="time">{{tmp.diff_time !== '0秒' ? tmp.diff_time + '前' : '刚刚发布'}}·来自币吧</span> </a> </div>
             <div class="bibar-list">
               <div class="tit"><a href="javascript:void(0)" @click="goDetail(tmp.id)">{{tmp.title}}</a></div>
           <div class="txt indexNewslimitHeight" @click="goDetail(tmp.id)">
@@ -44,11 +47,11 @@
               <!--</li>-->
             </ul>
           </div>
-            <div class="bibar-hot"  v-show="showComment&&index==i&&!changeIndex">
+            <div class="bibar-hot" v-show="index===i">
        <!-- 评论框 -->
-       <div class="editor-comment">
+       <div class="editor-comment clearfloat">
          <img :src="userInfo.avatar" alt="" class="avatar" v-show="commentShow">
-         <div class="editor-bd">
+         <div class="editor-bd clearfloat">
            <span class="comment-img-delete"></span>
            <svg v-show="commentShow" version='1.1' xmlns='http://www.w3.org/2000/svg' class="editor-triangle">
             <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
@@ -56,7 +59,7 @@
            <div class="editor-textarea" v-show="commentShow" @click="commentShowFun">
              <div class="editor-placeholder">评论...</div>
            </div>
-           <div class="editor-toolbar">
+           <div class="editor-toolbar clearfloat">
               <BibarReport :toApi='toId' :mainCommnet='lid' v-show="showReport" @backList = 'showContent' ></BibarReport>
           </div>
          <span class="img-upload-delete">
@@ -68,10 +71,10 @@
        <div class="comment-wrap">
           <div class="hook-comment"></div>
           <div class="comment-container">
-            <div class="loading">
-              <img src="../../../assets/img/loading.png" alt="">
+            <div class="loading" v-if='nowData.length === 0 && tmp.replies_count !== 0'>
+              <img src="../../../assets/img/loading.png" alt="" class="icon-loading">
             </div>
-            <div class="comment-all">
+            <div class="comment-all" v-if='nowData.length > 0'>
               <h3>全部评论({{tmp.replies_count}})</h3>
               <!-- <div class="comment-sort">
                 <a href="#" class="active">最近</a>
@@ -97,18 +100,17 @@
                 </div> -->
                 <!-- 评论 -->
               <div class="comment-list">
-                <div class="comment-item" data-index='' data-id=''  :key ='now' v-for="(item,now) in nowData">
+                <div class="comment-item" data-index='' data-id='' :key ='now' v-for="(item,now) in nowData">
                   <div>
                     <a href="#" data-tooltip='' class="avatar">
                       <img :src="item.avatar" alt="">
                     </a>
                     <div class="comment-item-main">
                       <div class="comment-item-hd">
-                        <a href="#" class="user-name">{{item.author}}</a>
-                        <span class="time">{{item.diff_time !== '0秒' ? item.diff_time + '前' : '刚刚'}}发布</span>
+                        <p href="#" class="user-name">{{item.author}}<span class="time">{{item.diff_time !== '0秒' ? item.diff_time + '前' : '刚刚'}}发布</span></p>
                       </div>
                       <!-- @ 样式 -->
-                      <p class="replyAuthor" v-if="item.at_user !== ''"><span style="position:absolute;">@{{item.at_user}}:</span><span class="replyBackConten" style="display:inline-block;margin-left:70px;font-weight: normal;" v-html="replyFun(item.reference)"></span></p>
+                      <p class="replyAuthor" v-if="item.at_user !== ''">@{{item.at_user}}:&nbsp;<span class="replyBackConten" style="display:inline-block;font-weight: normal;" v-html="replyFun(item.reference)"></span></p>
                       <!-- <p>{{item}}</p> -->
                       <p v-html="item.content">{{item.content}}</p>
                     </div>
@@ -126,9 +128,9 @@
                      <!-- 回复 -->
         <div class="comment-reply"  v-show="talkReplayBox && now === replayId">
                 <!-- 回复文本框 -->
-        <div class="editor-comment">
+        <div class="editor-comment clearfloat">
          <img :src="userInfo.avatar" alt="" class="avatar" v-show="talkReplyTxt">
-         <div class="editor-bd">
+         <div class="editor-bd clearfloat">
            <span class="comment-img-delete"></span>
            <svg version='1.1' v-show="talkReplyTxt" xmlns='http://www.w3.org/2000/svg' class="editor-triangle">
             <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
@@ -136,7 +138,7 @@
            <div class="editor-textarea"  v-show="talkReplyTxt" @click="talkReplyEditor">
              <div class="editor-placeholder">回复...</div>
            </div>
-           <div class="editor-toolbar">
+           <div class="editor-toolbar clearfloat">
               <BibarReport ref='childShowApi' :toApi='toRId' :replyAuthor='item.author' :replyContent='item.content' :mainReplay='tmp.id' v-show="showReportReplay" @backhotReplies = 'showReplyContent'></BibarReport>
           </div>
          <span class="img-upload-delete">
@@ -196,7 +198,7 @@ export default{
       articles: [],
       isClick: 0,
       lid: '',
-      i: 0,
+      i: '',
       showComment: false,
       showReport: false,
       nowData: [],
@@ -289,6 +291,7 @@ export default{
   mounted () {},
   watch: {
     getNavaVal (val) {
+      this.i = ''
       this.changeIndex = true
     }
   },
@@ -341,7 +344,6 @@ export default{
               // $('.bibar-tabitem:eq(' + index + ')').find('.set-choseOne>a:eq(' + isNum + ')').addClass('active')
               item.is_good = data.data.is_good
               item.is_bad = data.data.is_bad
-              console.log(data.data.is_good_bool)
               item.is_bad_bool = data.data.is_bad_bool
               item.is_good_bool = data.data.is_good_bool
             } else if (data.message === '未登录') {
@@ -422,12 +424,17 @@ export default{
       if (index !== this.i) {
         this.i = index
         this.lid = id
+      } else {
+        this.i = ''
       }
       this.toId = 0
       this.lid = id
       if (!this.showComment) {
         this.showComment = true
         this.commentShow = true
+      } else {
+        this.showComment = false
+        this.commentShow = false
       }
       this.commentShow = true
       if (this.commentShow) {
@@ -456,20 +463,6 @@ export default{
           let oldArr = this.articles.slice(0, -5)
           this.articles = oldArr.concat(data.data.topics)
         }
-        this.$nextTick(() => {
-          $('.comment-item-main').find('img').addClass('zoom-in')
-          $('.comment-item-main').on('click', 'img', function () {
-            if (!$(this).hasClass('zoom-out')) {
-              if ($(this).hasClass('zoom-in')) {
-                $(this).removeClass('zoom-in')
-              }
-              $(this).addClass('zoom-out')
-            } else if ($(this).hasClass('zoom-out')) {
-              $(this).removeClass('zoom-out')
-              $(this).addClass('zoom-in')
-            }
-          })
-        })
       })
     },
     showFtContentFun (ftData) {
@@ -608,7 +601,7 @@ export default{
     float: right;
 }
 /*分页*/
-.pages{float: right;}
+/*.pages{float: right;}*/
 .mo-paging {
     display: inline-block;
     padding: 0;
@@ -757,10 +750,6 @@ svg:not(:root) {
 .comment-container{
     padding: 0 8px;
 }
-.loading{
-    margin-top: 60px;
-    display: none;
-}
 .comment-all{
   position: relative;
 }
@@ -840,6 +829,7 @@ a.avatar img {
     float: right;
     font-size: 12px;
     color: #909499;
+    font-weight: normal;
 }
 .comment-item-main>p {
     font-size: 15px;
@@ -848,44 +838,19 @@ a.avatar img {
     overflow: hidden;
     margin: 10px 0;
 }
+.comment-item-main a{color: #0181ff;}
 .comment-item-main img{
     display: block;
     cursor: zoom-in;
     max-width: 200px;
 }
-.zoom-in{
-  cursor: zoom-in;
-  max-width: 200px !important;
-  overflow: hidden;
-}
-.zoom-out{
-  cursor: zoom-out !important;
-  max-width: 100%;
-  margin: 10px auto;
-}
 .bibar-indexNewsItem-infro>li{
     float: left;
-    margin-right: 25px;
+    /*margin-right: 25px;*/
 }
 .bibar-indexNewsItem-infro>li i {
     margin-right: 3px;
 }
-.loading-bar{text-align: center;}
-.icon-loading {
-    transform: rotate(0deg);
-    animation-name: loading;
-    animation-duration: 3s;
-    animation-iteration-count: infinite;
-    animation-direction: alternate;
-    width: 28px;
-    height: 28px;
-    margin-right: 20px;
-  }
-  @keyframes loading
-  {
-    from {transform: rotate(0deg);}
-    to {transform: rotate(360deg);}
-  }
   /*回复*/
 .comment-reply{
   border-top: 1px solid #edf0f5;
@@ -1000,9 +965,6 @@ a.avatar img {
 .talkBibar-editor>.editor>.w-e-toolbar .w-e-menu{padding: 7px 10px;}
 .talkBibar-editor>.set{right: 135px;}
 .talkBibar-editor>.report{right: 50px; bottom: 10px;}
-.w-e-text::-webkit-scrollbar{
-  background:snow;
-}
 .w-e-text-container .w-e-panel-container{
   margin-left: 0 !important;
   left: 10% !important;

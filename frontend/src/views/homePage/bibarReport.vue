@@ -72,8 +72,8 @@ export default {
       // 处理回复数据
       if (this.toApi === 4) {
         this.topicData.author = this.replyAuthor
-        this.topicData.replyContent = this.replyContent
-        if (!/^<img.*>$/gi.test(this.replyContent)) {
+        this.topicData.replyContent = this.replyContent.replace(/<p>|<\/p>|<br>/g, '')
+        if (!/^<img.*>$/gi.test(this.topicData.replyContent)) {
           // 处理正常内容
           let replyNewData = this.topicData.replyContent.split(/<img src="\/static[^>]+>/g)[0]
           this.topicData.replyContent = replyNewData
@@ -150,6 +150,7 @@ export default {
     editor.create()
     var div = $('.avatar').parent('div')
     div.addClass('wangeditor')
+    div.addClass('clearfloat')
     $('.w-e-text-container').css({'min-height': '87px', 'height': 'auto', 'border': '1px solid #F3F2F2'})
     $('.w-e-text-container').find('div').css('min-height', '87px')
     $('.w-e-toolbar').css({'position': 'absolute', 'background': '#F8F8F8', 'bottom': '0', 'border': '0'})
@@ -200,13 +201,7 @@ export default {
     box-shadow: navajowhite;
 }
 .wangeditor{
-    /* width: 1020px; */
-    /* margin: 20px auto 0 auto; */
-    /*background-color: #fff;*/
-    /* padding: 20px 0; */
     position: relative;
-    overflow: hidden;
-    /* padding-left: 16%; */
 }
 .avatar{
     float: left;

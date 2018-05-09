@@ -2,7 +2,7 @@
 <div>
  <!--简介-->
             <article class="bibar-box bibar-boxindex3" v-if="$route.path !== '/'">
-                <div class="bibar-boxtitle" style="margin-bottom:10px;"> <span class="name">简介</span> </div>
+                <div class="bibar-boxtitle"> <span class="name">简介</span> </div>
                 <div class="bibar-boxbody">
                     <div class="bibar-indexintro">
                         <p>{{briefTxt}}</p>
@@ -19,16 +19,16 @@
                         </dl>-->
                         <dl>
                             <dt>白皮书</dt>
-                            <dd><a :href='brief.whitepaper' :title="brief.whitepaper" target="_blank" class="text-theme">{{brief.whitepaper ? brief.whitepaper : '--'}}</a></dd>
+                            <dd><a :href='brief.whitepaper' target="_blank" class="text-theme">{{brief.whitepaper}}</a></dd>
                         </dl>
                         <dl>
                             <dt>官网</dt>
-                            <dd><a :href='websites' :title="websites" target="_blank" class="text-theme">{{websites}}</a></dd>
+                            <dd><a :href='websites' target="_blank" class="text-theme">{{websites}}</a></dd>
                         </dl>
                         <dl>
                             <dt>区块查询</dt>
                             <dd>
-                              <a :href='item' :title="item" class="text-theme" target="_blank" style="display:block;" v-for='(item,index) in brief.Explorers' :key="index">{{item}}</a>
+                              <a :href='item' class="text-theme" target="_blank" style="display:block;" v-for='(item,index) in brief.Explorers' :key="index">{{item}}</a>
                             </dd>
                         </dl>
                     </div>
@@ -266,7 +266,7 @@ export default{
 }
 </script>
 
-<style scoped>
+<style>
 .nav>li>a {
     padding: 8px 12px !important;
 }
@@ -296,10 +296,4 @@ export default{
     padding: 0px 5px !important;
 }
 .text-red{color:red;}
-.bibar-boxbody .bibar-indexRMlist li{
-  cursor: pointer;
-}
-.bibar-boxbody .bibar-indexRMlist li:hover{
-  background-color: #f3f3f3;
-}
 </style>

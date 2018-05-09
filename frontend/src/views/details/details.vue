@@ -11,8 +11,8 @@
             <a href="javascript:void(0)" class="name">{{articleDetail.author}}</a>
           </div>
           <div class="avatar_subtitle">
-            <span class="source">来自币吧</span>
-            <a href="" target="_blank" class="time">&ensp;发布于{{articleDetail.diff_time}}</a>
+            <a href="" target="_blank" class="time">{{articleDetail.diff_time}}前</a>
+            <span class="source">·&nbsp;来自币吧</span>
           </div>
         </div>
       </div>
@@ -21,9 +21,12 @@
         <!--<div class="article_bd_from">来自
           <a href="">金氪投行之家的雪球原创专栏</a>
         </div>-->
-        <p class="detail-main-content" v-html="articleDetail.content">
-          <strong>{{articleDetail.diff_time}}:</strong>{{articleDetail.content}}
-        </p>
+        <div class="loading" v-if='articleDetail.content === undefined'>
+          <img src="../../assets/img/loading.png" alt="" class="icon-loading">
+        </div>
+        <div class="detail-main-content" v-if='articleDetail.content !== undefined' v-html="detailFun(articleDetail.content)">
+          <strong>{{articleDetail.diff_time}}:</strong>
+        </div>
         <div class="image">
           <!-- <img src="https://xqimg.imedao.com/16223abc082299293fe913f6.png!custom660.jpg" alt=""> -->
         </div>
@@ -42,7 +45,7 @@
       <div class="meta-handle">
         <div class="set">
             <ul class="bibar-indexNewsItem-infro">
-              <li class="set-choseOne"> <a href="javascript:void(0);" class="icon-quan mr15" :class='{active:articleDetail.is_good_bool}'  @click="changeNumAriticle(0,articleDetail)" ><i class="iconfont">&#xe603;</i><span class="is-good">{{articleDetail.is_good}}</span></a> <a href="javascript:void(0);" :class='{active:articleDetail.is_bad_bool}' class="icon-quan set-choseOne" @click="changeNumAriticle(1,articleDetail)"><i class="iconfont">&#xe731;</i><span class="is-bad">{{articleDetail.is_bad}}</span></a> </li>
+              <li class="set-choseOne" style="margin-top: 3px"> <a href="javascript:void(0);" class="icon-quan mr15" :class='{active:articleDetail.is_good_bool}'  @click="changeNumAriticle(0,articleDetail)" ><i class="iconfont">&#xe603;</i><span class="is-good">{{articleDetail.is_good}}</span></a> <a href="javascript:void(0);" :class='{active:articleDetail.is_bad_bool}' class="icon-quan set-choseOne" @click="changeNumAriticle(1,articleDetail)"><i class="iconfont">&#xe731;</i><span class="is-bad">{{articleDetail.is_bad}}</span></a> </li>
               <li class="set-choseStar" @click="collectionTopic(articleDetail)"> <a href="javascript:void(0)" class="btn-article-retweet" :class='{collectionActive:articleDetail.collect_bool}'>
           <i class="iconfont icon-star">&#xe6a7;</i>收藏
         </a> </li>
@@ -73,10 +76,10 @@
        <div class="comment-wrap">
           <div class="hook-comment"></div>
           <div class="comment-container">
-            <div class="loading">
+            <div class="loading" v-if='nowData.length === 0 && repliesCcount !== 0'>
               <img src="../../assets/img/loading.png" alt="">
             </div>
-            <div class="comment-all">
+            <div class="comment-all" v-if='nowData.length > 0'>
               <h3>全部评论({{repliesCcount}})</h3>
               <!-- <div class="comment-sort">
                 <a href="#" class="active">最近</a>
@@ -93,15 +96,17 @@
                     <div class="comment-item-main">
                       <div class="comment-item-hd">
                         <a href="#" class="user-name">{{item.author}}</a>
-                        <span class="time">{{item.diff_time}}前发布</span>
+                        <!--<span class="time">{{item.diff_time}}前发布</span>-->
+                        <span class="time">{{item.diff_time !== '0秒' ? item.diff_time + '前' : '刚刚'}}发布</span>
                       </div>
                       <!-- @ 样式 -->
-                      <p class="replyAuthor" v-if="item.reference !== ''">@<span>{{item.at_user}}:</span><span style="display:inline-block;font-weight: normal;" v-html='needTxt(item.reference)'></span></p>
+                      <!--<p class="replyAuthor" v-if="item.at_user !== ''"><span style="position:absolute;">@{{item.at_user}}:</span><span class="replyBackConten" style="display:inline-block;margin-left:70px;font-weight: normal;" v-html="replyFun(item.reference)"></span></p>-->
+                      <p class="replyAuthor" v-if="item.at_user !== ''">@{{item.at_user}}:&nbsp;<span class="replyBackConten" style="display:inline-block;font-weight: normal;" v-html="replyFun(item.reference)"></span></p>
                       <!-- <p>{{item}}</p> -->
                       <!-- <p>{{item}}</p> -->
-                      <p v-html="item.content">{{item.content}}</p>
+                      <div class="detailContent" v-html="item.content">{{item.content}}</div>
                     </div>
-                    <div class="set">
+                    <div class="set" style="margin-left: 57px;">
                       <ul class="bibar-indexNewsItem-infro">
                         <li class="set-choseOne"> <a href="javascript:void(0);" class="icon-quan mr15" :class='{active:item.is_good_bool}'  @click="changeNum(0,now,item.id,item)"><i class="iconfont">&#xe603;</i><span class="is-good">{{item.is_good}}</span></a><a href="javascript:void(0);" :class='{active:item.is_bad_bool}' class="icon-quan" @click="changeNum(1,now,item.id,item)"><i class="iconfont">&#xe731;</i><span class="is-bad">{{item.is_bad}}</span></a> </li>
                         <li class="set-discuss" @click="replyComment(item.id,now)">
@@ -118,10 +123,10 @@
          <img :src="userInfo.avatar" alt="" class="avatar" v-show="talkReplyTxt">
          <div class="editor-bd">
            <span class="comment-img-delete"></span>
-           <svg version='1.1' xmlns='http://www.w3.org/2000/svg' class="editor-triangle">
+           <svg version='1.1' xmlns='http://www.w3.org/2000/svg' v-show="talkReplyTxt" class="editor-triangle">
             <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
            </svg>
-           <div class="editor-textarea"  v-show="talkReplyTxt" @click="talkReplyEditor">
+           <div class="editor-textarea" v-show="talkReplyTxt" @click="talkReplyEditor">
              <div class="editor-placeholder">回复...</div>
            </div>
            <div class="editor-toolbar">
@@ -209,6 +214,10 @@ export default {
         this.loadingShow = false
       }
       this.pageCount = data.data.page_count
+      this.$nextTick(() => {
+        $('.article_bd').find('img').css({'margin': '10px auto', 'display': 'block', 'text-align': 'center'})
+        $('[data-w-e]').css({'display': 'inline'})
+      })
       var that = this
       document.querySelector('#app').addEventListener('scroll', function () {
         if (this.scrollHeight - this.scrollTop === this.clientHeight) {
@@ -359,6 +368,20 @@ export default {
         return newTxt
       }
     },
+    replyFun (val) {
+      let reply = val.replace(/<p>|<\/p>/g, '')
+      if (/^\/static.*/ig.test(reply)) {
+        return '图片评论' + `<a style='color:#0181FF' href='${reply}'><i class='iconfont'>&#xe694;</i>查看图片</a>`
+      }
+      return reply
+    },
+    // 处理正文
+    detailFun (val) {
+      if (/<img.*>/gi.test(val)) {
+        return val.replace(/(?<=(alt="))[^"]*?(?=")/ig, '')
+      }
+      return val
+    },
     // 收藏
     collectionTopic (articleDetail) {
       let instance
@@ -387,7 +410,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .detail-editor-toolbar{text-align: center;}
+  /*正文内容*/
+  .detailContent{
+    margin: 15px 0 15px 15px;
+    font-size: 16px;
+  }
+  /*正文点赞样式*/
+  .detail-editor-toolbar{
+    text-align: center;
+    background: #F8F8F8;
+    padding: 30px 0 10px 0px;
+  }
   .detail-editor-toolbar>.wangeditor>.report{padding: 0;}
   /*回复样式*/
 .replyAuthor{
@@ -399,8 +432,8 @@ export default {
     margin-right: 2px;
 }
 .detail-editor-toolbar>.wangeditor{
-    width: 697px;
-    margin: 0 auto;
+    width: 90%;
+    margin: 0 auto 0 10%;
 }
 /*.editor-toolbar>.wangeditor{
   padding-left: 18%;
@@ -514,7 +547,7 @@ export default {
 }
 .article_author .top_right .avatar_name .name {
     color: #222;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: bold;
   }
 .avatar_subtitle {
@@ -657,10 +690,20 @@ a.avatar img {
 }
 .bibar-indexNewsItem-infro>li{
     float: left;
-    margin-right: 25px;
+    margin-right: 40px;
 }
+.bibar-indexNewsItem-infro>li>a{position: relative;}
 .bibar-indexNewsItem-infro>li i {
     margin-right: 3px;
+}
+.bibar-indexNewsItem-infro>.set-choseOne>a:after{
+    position: absolute;
+    content: '';
+    right: -23px;
+    top: 2px;
+    height: 12px;
+    width: 2px;
+    background-color: #F6F5F5;
 }
 .loading-bar{text-align: center;}
 .icon-loading {
@@ -682,13 +725,17 @@ a.avatar img {
    /*回复*/
 .comment-reply{
   border-top: 1px solid #edf0f5;
-  margin-top: 50px;
+  margin-top: 20px;
+  width: 94%;
+  float: right;
 }
 .comment-reply>.comment-item{
   margin: 15px 0;
 }
 .comment-reply>.editor-comment{
   margin-top: 15px;
+  padding: 20px 0;
+  background: #EDF5FE;
 }
 .talkCommentEditor>.wangeditor>.editor{
   padding-bottom: 30px;
@@ -712,7 +759,7 @@ a.avatar img {
   background: #fff;
   padding: 20px 25px;
 }
-.bibar-indexNewsItem .set>ul>.set-question{
+/*.bibar-indexNewsItem .set>ul>.set-question{
    padding: 6px 10px;
    text-align: center;
    background: #1E8FFF;
@@ -724,7 +771,7 @@ a.avatar img {
   border: 1px solid #1E8FFF;
   border-radius: 3px;
 }
-.bibar-indexNewsItem .set>ul>.set-answer>a{color: #1E8FFF;}
+.bibar-indexNewsItem .set>ul>.set-answer>a{color: #1E8FFF;}*/
 .comment-item{
   overflow: hidden;
 }
@@ -832,7 +879,7 @@ img.avatar{
     vertical-align: middle;
 }
 .editor-bd{
-    margin-left: 42px;
+    /*margin-left: 42px;*/
     position: relative;
     z-index: 1;
 }

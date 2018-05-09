@@ -840,7 +840,7 @@ a.avatar img {
 }
 .bibar-indexNewsItem-infro>li{
     float: left;
-    margin-right: 25px;
+    /*margin-right: 25px;*/
 }
 .bibar-indexNewsItem-infro>li i {
     margin-right: 3px;

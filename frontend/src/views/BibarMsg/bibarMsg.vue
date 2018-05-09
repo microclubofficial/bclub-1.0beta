@@ -1,3 +1,39 @@
+<style lang='scss' scoped>
+.bibar-list-header {
+  table {
+    text-align: left;
+    margin-bottom: 0;
+    thead {
+      // background-color: #e7f4ff;
+      th {
+        font-size: 16px;
+        font-weight: bold;
+        padding: 16px 0;
+      }
+    }
+    tbody {
+      border: none;
+      tr {
+        cursor: pointer;
+        // border: none;
+        td {
+          // border: none;
+          font-size: 15px;
+          padding: 16px 0;
+          a {
+            font-weight: 600;
+            img {
+              width: 20px;
+              height: 20px;
+              margin-right: 6px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+</style>
 
 <template>
   <div class="main">
@@ -5,80 +41,104 @@
     <MainHeader></MainHeader>
     <!--主体-->
     <section class="bibar-Main">
-    <!-- <div class="pt40"></div> -->
-    <section class="bibar-w1100">
-      <!-- left slide -->
-      <!--<BibarLeft v-if="initHide"></BibarLeft>-->
+      <!-- <div class="pt40"></div> -->
+      <section class="bibar-w1100">
+        <!-- left slide -->
+        <!--<BibarLeft v-if="initHide"></BibarLeft>-->
         <!--主体左侧-->
         <section class="bibar-Mainleft bx-mainLeft">
           <div class="chartListBox">
             <!-- chart列表 -->
-            <div class="panel-group" id="accordion">
-              <div class="panel panel-default" v-for="(item,index) in summaryList" :key='index'>
-                <!-- <div id='collapseOne' class="panel-collapse collapse" :class="{in:chartShow === index}"> -->
-                <div id='collapseOne' class="panel-collapse collapse in" v-if="chartShow === index">
-                  <div class="panel-body">
-                    <!--BTB信息框-->
-                    <btb ref="toNowChild" :bId="item.id"></btb>
-                  </div>
-                </div>
-                 <!-- 币种列表 -->
-                 <a data-toggle="collapse" class="panel-tb-hd" data-parent="#accordion" href='#collapseOne'>
-                  <div class="bibar-list-item" @click="changeBList(index,item)">
-                  <ul>
-                    <li :class="{initListSty:initShow}"><a href="javascript:void(0)"><span><img :src="item.picture" alt=""></span> {{item.name_ch}} - {{item.symbol}}</a></li>
-                    <li><a href="javascript:void(0)"><i class="iconfont icon-CNY"></i>{{item.price * CNY | formatNum(2)}}</a></li>
-                    <li><a href="javascript:void(0)">{{item.change_1h}}</a></li>
-                    <li><a href="javascript:void(0)"><i class="iconfont icon-CNY"></i>{{item.volume | cnyFunStr(CNY,2)}}</a></li>
-                    <li><a href="javascript:void(0)" :title="item.marketcap"><i class="iconfont icon-CNY"></i>{{item.marketcap | cnyFunStr(CNY,2)}}</a></li>
-                    <li><a href="javascript:void(0)"><i style="font-size:16px; color:#909499;" class="iconfont">&#xe604;</i>···</a></li>
-                  </ul>
-                </div>
-                 </a>
-                <!-- <div class="pt20"></div> -->
-              </div>
+            <div class="bibar-list-header">
+              <table class="table table-hover">
+                <!--<caption>Optional table caption.</caption>-->
+                <thead>
+                  <tr>
+                    <th style="padding-left:30px;">名称</th>
+                    <th>价格</th>
+                    <th>涨跌幅</th>
+                    <th>交易量</th>
+                    <th>流通市值</th>
+                    <th>流通数量</th>
+                    <!--<th></th>-->
+                  </tr>
+                </thead>
+                <tbody v-for="(item,index) in summaryList" :key='index'>
+                  <!--<tr v-if="chartShow === index">
+                    <td colspan="7">
+                      <btb ref="toNowChild" :bId="item.id"></btb>
+                    </td>
+                  </tr>-->
+                  <tr @click='toBibarDetail(item)'>
+                    <td>
+                      <a href="javascript:void(0)" @click='toBibarDetail(item)'>
+                        <span><img :src="item.picture" alt=""></span> {{item.name_ch}} - {{item.symbol}}
+                      </a>
+                    </td>
+                    <td>
+                      <a href="javascript:void(0)" @click='toBibarDetail(item)'>
+                        <i class="iconfont icon-CNY"></i>￥ {{item.price * CNY | formatNum(2)}}
+                      </a>
+                    </td>
+                    <td :class="item.change_1h >= 0 ? 'text-green' : 'text-red'">{{item.change_1h | bfb(2)}}</td>
+                    <td>
+                      <i class="iconfont icon-CNY"></i>￥ {{item.volume | cnyFunStr(CNY,2)}}</td>
+                    <td :title="item.marketcap">
+                      <i class="iconfont icon-CNY"></i>￥ {{item.marketcap | cnyFunStr(CNY,2)}}</td>
+                    <td>{{item.available_supply | cnyFunStr(CNY,2)}}</td>
+                    <!--<td @click="toggleChart(index)">
+                      <i style="font-size:16px; color:#909499; cursor:pointer;" class="iconfont">&#xe604;</i>
+                    </td>-->
+                  </tr>
+                </tbody>
+              </table>
             </div>
+           
+            <div style="border-bottom:1px solid #e8e8e8;margin-bottom:20px;"></div> 
+             
             <!-- 分页条 -->
             <div class="pages">
               <ul class="mo-paging">
-              <!-- prev -->
-        <!-- first -->
-        <li :class="['paging-item', 'paging-item--first', {'paging-item--disabled' : cpno === 1}]" @click="first">首页</li>
-        <li class="paging-item paging-item--prev" :class="{'paging-item--disabled' : cpno === 1}" @click="prev">上一页</li>
-        <li :class="['paging-item', 'paging-item--more']" v-if="showPrevMore">...</li>
-        <li :class="['paging-item', {'paging-item--current' : cpno === tmp}]" :key="index" v-for="(tmp, index) in showPageBtn"  @click="go(tmp)">{{tmp}}</li>
-        <li :class="['paging-item', 'paging-item--more']" v-if="showNextMore">...</li>
-        <!-- next -->
-        <li :class="['paging-item', 'paging-item--next', {'paging-item--disabled' : cpno === cpageCount}]" @click="next">下一页</li>
-        <!-- last -->
-        <li :class="['paging-item', 'paging-item--last', {'paging-item--disabled' : cpno === cpageCount}]"  @click="last">尾页</li>
-        </ul>
+                <!-- prev -->
+                <!-- first -->
+                <li :class="['paging-item', 'paging-item--first', {'paging-item--disabled' : cpno === 1}]" @click="first">首页</li>
+                <li class="paging-item paging-item--prev" :class="{'paging-item--disabled' : cpno === 1}" @click="prev">上一页</li>
+                <li :class="['paging-item', 'paging-item--more']" v-if="showPrevMore">...</li>
+                <li :class="['paging-item', {'paging-item--current' : cpno === tmp}]" :key="index" v-for="(tmp, index) in showPageBtn" @click="go(tmp)">{{tmp}}</li>
+                <li :class="['paging-item', 'paging-item--more']" v-if="showNextMore">...</li>
+                <!-- next -->
+                <li :class="['paging-item', 'paging-item--next', {'paging-item--disabled' : cpno === cpageCount}]" @click="next">下一页</li>
+                <!-- last -->
+                <li :class="['paging-item', 'paging-item--last', {'paging-item--disabled' : cpno === cpageCount}]" @click="last">尾页</li>
+              </ul>
             </div>
           </div>
-            <!-- 富文本区 -->
-            <div class="mainBibar-editor" :class="{initSty:initShow}" style="margin:auto; background:#fff;">
-              <BibarPostContent :bid='toEditorBid' @backFtContent = 'BibarContentFun' v-show="initHide"></BibarPostContent>
+          <!-- 富文本区 -->
+          <div class="mainBibar-editor" :class="{initSty:initShow}" style="margin:auto; background:#fff;">
+            <BibarPostContent :bid='toEditorBid' @backFtContent='BibarContentFun' v-show="initHide"></BibarPostContent>
+          </div>
+          <!--新闻-->
+          <article v-if="initHide" class="bibar-box bibar-boxindex2" style="margin-top:20px;">
+            <div class="bibar-indexNews">
+              <div class="bibar-indexNews-TAB">
+                <ul class="bibar-tabs-listSty2">
+                  <li class="bibar-tabs-item active">
+                    <a href="#bibar-newstab1" data-toggle="tab">全部</a>
+                  </li>
+                  <!--<li class="bibar-tabs-item" :key='index' v-for="(tmp,index) in newList" :class="{active:state==index}" @click="changeActive(index)"> <a href="#bibar-newstab1" data-toggle="tab">{{tmp}}</a></li>-->
+                </ul>
+              </div>
+              <!--新闻列表-->
+              <!--<router-view ref="showBibarContent"></router-view>-->
             </div>
-            <!--新闻-->
-            <article v-if="initHide" class="bibar-box bibar-boxindex2" style="margin-top:20px;">
-                <div class="bibar-indexNews">
-                    <div class="bibar-indexNews-TAB">
-                        <ul class="bibar-tabs-listSty2">
-                            <li class="bibar-tabs-item active"> <a href="#bibar-newstab1" data-toggle="tab">全部</a></li>
-                            <!--<li class="bibar-tabs-item" :key='index' v-for="(tmp,index) in newList" :class="{active:state==index}" @click="changeActive(index)"> <a href="#bibar-newstab1" data-toggle="tab">{{tmp}}</a></li>-->
-                        </ul>
-                    </div>
-                    <!--新闻列表-->
-                    <!--<router-view ref="showBibarContent"></router-view>-->
-                </div>
-            </article>
+          </article>
         </section>
         <!--主体右侧-->
         <section class="bibar-Mainright">
-            <BibarRight ref="showBrief"></BibarRight>
+          <BibarRight ref="showBrief"></BibarRight>
         </section>
-    </section>
-    <div class="pt40"></div>
+      </section>
+      <div class="pt40"></div>
     </section>
   </div>
 </template>
@@ -89,10 +149,10 @@ import btb from './BibarChart/BTB.vue'
 import BibarLeft from '../homePage/bibarLeft/bibarSideLeft.vue'
 import BibarRight from './BibarRight/bivarRight.vue'
 import BibarPostContent from '../homePage/bibarPostContent.vue'
-import {get} from '../../utils/http'
+import { get } from '../../utils/http'
 
-export default{
-  data: function () {
+export default {
+  data: function() {
     return {
       newList: ['全部', '讨论', '文章', '新闻', '交易'],
       newRouter: ['all', 'talk', 'works', 'news', 'trade'],
@@ -107,7 +167,7 @@ export default{
       chartShow: 0,
       chartState: false,
       cpno: 1,
-      cpageLimit: 10,
+      cpageLimit: 20,
       cpageCount: 0,
       showPrevMore: false,
       showNextMore: false,
@@ -117,10 +177,10 @@ export default{
     }
   },
   computed: {
-    userInfo () {
+    userInfo() {
       return this.$store.state.userInfo.userInfo
     },
-    showPageBtn () {
+    showPageBtn() {
       let pageArr = []
       if (this.cpageCount <= 5) {
         for (let i = 1; i <= this.cpageCount; i++) {
@@ -142,7 +202,7 @@ export default{
     BibarPostContent,
     BibarLeft
   },
-  created () {
+  created() {
     this.collapseId = `collapse${this.i++}`
     this.hrefCollapse = `#${this.collapseId}`
     get(`/api/blist/${this.cpno}/${this.cpageLimit}`).then((data) => {
@@ -156,20 +216,20 @@ export default{
       this.chartState = true
     }
   },
-  mounted () {
-    $('.mainBibar-editor').find('.wangeditor').css({'width': '790px'})
+  mounted() {
+    $('.mainBibar-editor').find('.wangeditor').css({ 'width': '790px' })
     // this.loadShow()
     // this.$refs.showBrief.briefFun('bitcoin')
   },
   methods: {
     // 文章列表切换事件
-    changeActive: function (index) {
+    changeActive: function(index) {
       if (index !== this.state) {
         this.state = index
         this.$router.push(`/bibarLayout/${this.newRouter[this.state]}`)
       }
     },
-    BibarContentFun (data) {
+    BibarContentFun(data) {
       console.log(data)
       this.$refs.showBibarContent.showBibarContentFun(data)
     },
@@ -184,27 +244,27 @@ export default{
     //   }
     // },
     // 分页
-    prev () {
+    prev() {
       if (this.cpno > 1) {
         this.go(this.cpno - 1)
       }
     },
-    next () {
+    next() {
       if (this.cpno < this.cpageCount) {
         this.go(this.cpno + 1)
       }
     },
-    first () {
+    first() {
       if (this.cpno !== 1) {
         this.go(1)
       }
     },
-    last () {
+    last() {
       if (this.cpno !== this.cpageCount) {
         this.go(this.cpageCount)
       }
     },
-    go (page) {
+    go(page) {
       this.chartShow = 0
       this.summaryList = []
       if (this.cpno !== page) {
@@ -219,10 +279,18 @@ export default{
       })
     },
     // 改变币列表
-    changeBList (index, item) {
+    changeBList(index, item) {
       this.chartShow = index
       this.$refs.showBrief.briefFun(item.id)
+    },
+    // 去币详情
+    toBibarDetail(tmp) {
+      this.$router.push(`/msgDetail/${tmp.id}`)
     }
+    // // 展开折叠chart图
+    // toggleChart(index) {
+    //   this.chartShow = index
+    // }
     // 调chart图
     // toChart (id) {
     //   console.log(id)
@@ -237,111 +305,189 @@ export default{
 </script>
 
 <style>
-  .bibar-Main>.bibar-w1100>.bx-mainLeft{width: 960px;}
-.chartListBox{
+.bibar-Main>.bibar-w1100>.bx-mainLeft {
+  width: 960px;
+}
+
+.chartListBox {
   background: #fff;
-  padding: 20px;
+  padding: 30px 60px;
   position: relative;
   overflow: hidden;
 }
-.bibarMainGzList{background: #fff}
-.bibar-list-item{
+
+.bibarMainGzList {
+  background: #fff
+}
+
+.bibar-list-item {
   /* padding: 0 40px; */
   overflow: hidden;
   position: relative;
 }
-.bibar-box{box-shadow: none;}
-.bibar-list-item ul li{
-    float: left;
-    margin: 10px 0;
-    width: 16%;
-    text-align: center;
+
+.bibar-box {
+  box-shadow: none;
 }
-.bibar-list-item ul li:first-child{text-align: left;margin-right: 22px;}
-.bibar-list-item ul li a{
-    font-size: 16px;
-    font-weight: bold;
+
+.bibar-list-item ul li {
+  float: left;
+  margin: 10px 0;
+  width: 16%;
+  text-align: center;
 }
-.bibar-list-item ul li:first-child a span img{
-    width: 20px;
-    height: 20px;
-    margin-top: -3px;
+
+.bibar-list-item ul li:first-child {
+  text-align: left;
+  margin-right: 22px;
 }
-.panel-tb-hd{
+
+.bibar-list-item ul li a {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.bibar-list-item ul li:first-child a span img {
+  width: 20px;
+  height: 20px;
+  margin-top: -3px;
+}
+
+.panel-tb-hd {
   display: block;
   padding-top: 10px;
-  margin:  0 40px;
+  margin: 0 40px;
 }
-.down-avtive{color: #009525 !important;}
-.up-active{color:#D70508 !important;}
+
+.down-avtive {
+  color: #009525 !important;
+}
+
+.up-active {
+  color: #D70508 !important;
+}
+
 .panel-group .panel+.panel {
-    margin-top: 0 !important;
+  margin-top: 0 !important;
 }
-.panel-group .panel{
+
+.panel-group .panel {
   border-radius: 0 !important;
-  border:none !important;
+  border: none !important;
 }
-.panel-body, .bibar-boxindex1{padding-bottom: 0 !important;}
-.panel-collapse{height: auto !important;}
-.bibar-list-item ul li a{
-    width: 16%;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    -o-text-overflow: ellipsis;
-    overflow: hidden;
+
+.panel-body,
+.bibar-boxindex1 {
+  padding-bottom: 0 !important;
 }
+
+.panel-collapse {
+  height: auto !important;
+}
+
+.bibar-list-item ul li a {
+  width: 16%;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+  overflow: hidden;
+}
+
 /*分页*/
-.pages{float: right;}
+
+.pages {
+  float: right;
+}
+
 .mo-paging {
-    display: inline-block;
-    padding: 0;
-    margin: 1rem 0;
-    font-size: 0;
-    list-style: none;
-    user-select: none;
+  display: inline-block;
+  padding: 0;
+  margin: 1rem 0;
+  font-size: 0;
+  list-style: none;
+  user-select: none;
 }
+
 .mo-paging>.paging-item {
-    display: inline;
-    font-size: 14px;
-    position: relative;
-    padding: 6px 12px;
-    line-height: 1.42857143;
-    text-decoration: none;
-    border: 1px solid #ccc;
-    background-color: #fff;
-    margin-left: -1px;
-    cursor: pointer;
-    color: #0275d8;
+  display: inline;
+  font-size: 14px;
+  position: relative;
+  padding: 6px 12px;
+  line-height: 1.42857143;
+  text-decoration: none;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  margin-left: -1px;
+  cursor: pointer;
+  color: #0275d8;
 }
+
 .mo-paging>.paging-item:first-child {
-    margin-left: 0;
+  margin-left: 0;
 }
+
 .mo-paging>.paging-item:hover {
-    background-color: #f0f0f0;
-    color: #0275d8;
+  background-color: #f0f0f0;
+  color: #0275d8;
 }
-.paging-item--disabled,.paging-item--more{
-    background-color: #fff !important;
-    color: #505050 !important;
+
+.paging-item--disabled,
+.paging-item--more {
+  background-color: #fff !important;
+  color: #505050 !important;
 }
+
 /*禁用*/
+
 .paging-item--disabled {
-    cursor: not-allowed;
-    opacity: .75;
+  cursor: not-allowed;
+  opacity: .75;
 }
-.paging-item--more,.paging-item--current {
-    cursor: default !important;
-}
-/*选中*/
+
+.paging-item--more,
 .paging-item--current {
-    background-color: #0275d8 !important;
-    color:#fff !important;
-    position: relative !important;
-    z-index: 1 !important;
-    border-color: #0275d8 !important;
+  cursor: default !important;
 }
-.initLfSty{width: 1200px !important;}
-.initSty{width: 960px !important;}
-.initClass{width: 1200px !important;}
-.initListSty{margin-left: 35px; margin-right: 0px !important;}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*选中*/
+
+.paging-item--current {
+  background-color: #0275d8 !important;
+  color: #fff !important;
+  position: relative !important;
+  z-index: 1 !important;
+  border-color: #0275d8 !important;
+}
+
+.initLfSty {
+  width: 1200px !important;
+}
+
+.initSty {
+  width: 960px !important;
+}
+
+.initClass {
+  width: 1200px !important;
+}
+
+.initListSty {
+  margin-left: 35px;
+  margin-right: 0px !important;
+}
 </style>
