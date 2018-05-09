@@ -27,7 +27,7 @@ from forums.common.serializer import Serializer
 from forums.common.utils import gen_filter_dict, gen_order_by
 from forums.common.views import IsAuthMethodView as MethodView
 from forums.api.message.models import MessageClient
-from forums.func import get_json, FindAndCount, Count, object_as_dict, Avatar, time_diff
+from forums.func import get_json, FindAndCount, Count, object_as_dict, Avatar, time_diff, json_loads
 from forums.api.topic.views import collect_bool
 import json
 import math
@@ -153,6 +153,7 @@ class CollectView(MethodView):
                 diff_time = time_diff(topic.updated_at)
                 collect = collect_bool(i)
                 topics_data = object_as_dict(topic)
+                json_loads(topics_data, ['title', 'content'])
                 topics_data['created_at'] = str(topics_data['created_at'])
                 topics_data['updated_at'] = str(topics_data['created_at'])
                 topics_data['author'] = user.username
