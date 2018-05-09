@@ -393,21 +393,6 @@ export default {
   overflow: hidden;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /*分页*/
 
 .pages {
@@ -451,21 +436,6 @@ export default {
   background-color: #fff !important;
   color: #505050 !important;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /*禁用*/
 

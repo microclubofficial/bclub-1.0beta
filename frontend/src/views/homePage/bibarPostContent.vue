@@ -177,6 +177,7 @@ export default {
     // })
     var div = $('.avatar').parent('div')
     div.addClass('wangeditor')
+    div.addClass('clearfloat')
     $('.editor').css({'height': 'auto', 'padding-bottom': '37px'})
     $('.w-e-text-container').css({'min-height': '87px', 'height': 'auto', 'border': '1px solid rgb(204, 204, 204)'})
     $('.w-e-text-container').find('div').css('min-height', '87px')

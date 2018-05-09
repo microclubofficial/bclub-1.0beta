@@ -60,6 +60,10 @@
     max-height: 100px;
     font-size: 16px;
 }
+/*富文本滚动条*/
+.w-e-text::-webkit-scrollbar{
+  background:snow;
+}
 /*详情内容*/
 .detail-main-content h1,.detail-main-content h2,.detail-main-content h3,.detail-main-content h4,.detail-main-content h5,
 .detail-main-content h6{line-height: 28px;}
@@ -78,6 +82,17 @@
  .container{
     width: 1060px !important;
  }
+ /*放大缩小图片*/
+ .zoom-in{
+  cursor: zoom-in;
+  max-width: 200px !important;
+  overflow: hidden;
+}
+.zoom-out{
+  cursor: zoom-out !important;
+  max-width: 100%;
+  margin: 10px auto;
+}
   /*分页*/
 .pages{
     margin: 10px 0;
@@ -136,6 +151,29 @@
 .collectionActive{
   color: #ffa727 !important;
 }
+/*数据加载loading样式*/
+.loading-bar{text-align: center;}
+.icon-loading {
+    transform: rotate(0deg);
+    animation-name: loading;
+    animation-duration: 3s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+    width: 28px;
+    height: 28px;
+    margin-right: 20px;
+  }
+  @keyframes loading
+  {
+    from {transform: rotate(0deg);}
+    to {transform: rotate(360deg);}
+  }
+/*数据加载*/
+.loading{
+    margin-top: 60px;
+    text-align: center;
+    /*display: none;*/
+}
 .btn-article-retweet>i{font-size: 15px;}
 /*placeholder*/input::-webkit-input-placeholder, textarea::-webkit-input-placeholder{color: #ccc !important;}
 input:-moz-placeholder, textarea:-moz-placeholder{color: #ccc !important;}
@@ -153,7 +191,7 @@ body{font-family: PingFang SC, Lantinghei SC, Helvetica Neue, Helvetica, Microso
 .btn .icon-add{top: 0px;transform: scale(0.5);}
 .btn.btn-lg .iconfont{font-size: 14px;}
 a, a:link, a:visited{color: #333;transition: all .2s ease-in-out;-webkit-transition: all .2s ease-in-out;-moz-transition: all .2s ease-in-out;-o-transition: all .2s ease-in-out;-ms-transition: all .2s ease-in-out;}
-a:focus, a:active, a:hover{outline: none;color: #ccc;text-decoration: none}
+a:focus, a:active, a:hover{outline: none;color: #333;text-decoration: none}
 i{transition: all .2s ease-in-out;-webkit-transition: all .2s ease-in-out;-moz-transition: all .2s ease-in-out;-o-transition: all .2s ease-in-out;-ms-transition: all .2s ease-in-out;}
 .bibar-line{border-bottom: 1px solid #dedede;margin-bottom: 1px;height: 1px;}
 .bibar-dotline{border-bottom: 1px dashed #dedede;margin-bottom: 1px;height: 1px;}
@@ -166,7 +204,6 @@ i{transition: all .2s ease-in-out;-webkit-transition: all .2s ease-in-out;-moz-t
 
 /* 阴影样式 */
 .shadow-box{box-shadow:2px 2px 5px #9c9999;}
-
 /*按钮*/
 .label-radius, .btn-radius{border-radius: 4px;}
 .btn-icon{border: 1px solid #fff;padding-top: 12px;position: relative;display: inline-block;font-family: 'socicon';font-style: normal;font-weight: normal;line-height: 1;-webkit-font-smoothing: antialiased;text-align: center;width: 26px;height: 26px;padding-top: 2px;color: #3f444a;transition: background, color 0.3s;}
@@ -630,6 +667,8 @@ ul.dropdown-menu{height: auto;}
 .pagTop i{color: #efefef; font-size: 40px; padding: 10px 10px; background-color: #fff;}
 .pagTop:hover i{color:#999;}
 
+/*清除浮动*/
+.clearfloat::after{display:block;clear:both;content:"";visibility:hidden;height:0}
 /*首页框架*/
 .bibar-Main{margin-top: 80px; position: relative; z-index: 5;}
 .bibar-Mainleft{width: 1200px; float: left;}
@@ -722,7 +761,7 @@ i.icon-BTC{font-size: 14px; font-weight: bold;}
 .bibar-indexNewsItem .bibar-list .set>ul>li:after{
     position: absolute;
     content: '';
-    right: -15px;
+    right: -2px;
     top: 2px;
     height: 12px;
     width: 2px;
@@ -825,7 +864,7 @@ i.icon-BTC{font-size: 14px; font-weight: bold;}
 .bibar-indexfootitem a:first-child{margin-left:0px}
 /*--------------------------------------------------------------换肤--------------------------------------------------------------------------*/
 /*背景色：#f8fafe; 响应色：#e5edff; 间色：#1e98ff; 主色：#0181ff; 字色：#5381b1; */
-a:focus, a:active, a:hover{color:#0181ff}
+a:focus, a:active, a:hover{color:#333}
 .text-theme,.text-theme:link,.text-theme:visited{color: #5381b1;}
 .text-theme:hover,.text-theme:focus{color:#0181ff !Important}
 .btn:hover, .btn:focus, .btn.focus{color: #0181ff; text-decoration: none; background-color:#fff; border-color:#1e98ff}

@@ -731,7 +731,7 @@ svg:not(:root) {
 .comment-all>h3::after {
     content: '';
     position: absolute;
-    width: 784px;
+    width: 100%;
     height: 1px;
     background-color: #edf0f5;
     left: 0;
@@ -833,7 +833,7 @@ a.avatar img {
 }
 .bibar-indexNewsItem-infro>li{
     float: left;
-    margin-right: 25px;
+    /*margin-right: 25px;*/
 }
 .bibar-indexNewsItem-infro>li i {
     margin-right: 3px;
