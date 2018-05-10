@@ -119,7 +119,7 @@ export default {
         var unamereg = /^[a-zA-Z0-9_\u4e00-\u9fa5]{3,16}$/
         if (!unamereg.test(input) && input !== undefined && input.length > 0) {
           this.unamePrompt = '用户名在3-16位之间(数字、大小写字母、下划线、中文)'
-          console.log(input.length)
+          // console.log(input.length)
           return false
         } else if (input === undefined || input.length === 0) {
           this.unamePrompt = '用户名不能为空'

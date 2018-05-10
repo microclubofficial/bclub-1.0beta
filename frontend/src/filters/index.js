@@ -113,10 +113,10 @@ export function toFixFun (value, num) {
 
 // 逗号分隔数字
 export function formatNum (value, num) {
-  // debugger
   if (value === undefined) {
     return
   }
+  // console.log(value)
   num = num > 0 && num <= 20 ? num : 0
   value = parseFloat((value + '').replace(/[^\d.-]/g, '')).toFixed(num) + ''
   let l = value.split('.')[0].split('').reverse()

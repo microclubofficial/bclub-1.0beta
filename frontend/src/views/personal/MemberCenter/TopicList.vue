@@ -5,19 +5,19 @@
     <div class="bibar-tabitem fade in active" :key="index" id="bibar-newstab1" v-for="(tmp,index) in articles">
       <div class="bibar-indexNewsList">
         <div class="bibar-indexNewsItem">
-          <div class="speech" v-if="tmp.reply_user !== null"> <span>{{tmp.reply_user}}<span class="time">{{tmp.reply_time}}</span>前评论了讨论</span><i class="iconfont icon-dot"></i></div>
+          <div class="speech" v-if="tmp.reply_user !== null"> <span><span class="time">{{tmp.reply_time}}</span>前{{tmp.reply_user}}发表了评论</span><i class="iconfont icon-dot"></i></div>
           <div class="user">
-            <div class="bibar-author"> <a href="#"> <span class="photo"><img :src="tmp.avatar"></span> <span class="name">{{tmp.author}}</span> <span class="time">{{tmp.diff_time}}前发布</span> </a> </div>
-          </div>
-          <div class="tit"><a href="javascript:void(0)" @click="goDetail(tmp.id)">{{tmp.title}}</a></div>
+            <div class="bibar-author"> <a href="#"> <span class="photo"><img :src="tmp.avatar"></span> <span class="name">{{tmp.author}}</span> <span class="time">{{tmp.diff_time !== '0秒' ? tmp.diff_time + '前' : '刚刚发布'}}·来自币吧</span> </a> </div>
+            <div class="bibar-list">
+              <div class="tit"><a href="javascript:void(0)" @click="goDetail(tmp.id)">{{tmp.title}}</a></div>
           <div class="txt indexNewslimitHeight" @click="goDetail(tmp.id)">
             <div class="media">
-              <a class="pull-left" href="javascript:void(0)" v-if="tmp.picture">
-              <img class="media-object" :src="tmp.picture">
-            </a>
             <div class="media-body">
               <div v-html="EditorContent(tmp.content)"></div>
             </div>
+            <a class="pull-left" href="javascript:void(0)" v-if="tmp.picture">
+              <img class="media-object" :src="tmp.picture">
+            </a>
             </div>
           </div>
           <div class="set">
@@ -46,10 +46,10 @@
             <div class="bibar-hot"  v-show="showComment&&index==i">
        <!-- 评论框 -->
        <div class="editor-comment">
-         <img :src="userInfo.avatar" alt="" class="avatar"  v-show="commentShow">
+         <img :src="userInfo.avatar" alt="" class="avatar" v-show="commentShow">
          <div class="editor-bd">
            <span class="comment-img-delete"></span>
-           <svg version='1.1' xmlns='http://www.w3.org/2000/svg' class="editor-triangle">
+           <svg version='1.1' xmlns='http://www.w3.org/2000/svg' v-show="commentShow" class="editor-triangle">
             <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
            </svg>
            <div class="editor-textarea" v-show="commentShow" @click="commentShowFun">
@@ -167,6 +167,8 @@
           </div>
        </div>
        </div>
+            </div>
+          </div>
      <!-- <div class='backContent' :key ='now' v-for="(item,now) in nowData">{{item}}</div> -->
         </div>
       </div>
@@ -404,9 +406,8 @@ export default{
       if (this.commentShow) {
         this.showReport = false
       }
-      $('.editor-toolbar').find('.wangeditor').css({'margin': '0 0 0 -39px', 'padding-left': '16%'})
-      $('.editor-toolbar').find('.wangeditor>.report').css({'bottom': '0', 'right': '242px'})
-      $('.editor-toolbar').find('.wangeditor>.cancel').css({'bottom': '4px', 'right': '296px'})
+      $('.editor-toolbar').find('.wangeditor>.report').css({'bottom': '0'})
+      $('.editor-toolbar').find('.wangeditor>.cancel').css({'bottom': '4px'})
       $('.editor-toolbar').find('.wangeditor>.editor').css({'min-height': '130px', 'padding-bottom': '37px'})
       $('.editor-toolbar').find('.wangeditor>div:eq(2)').css('display', 'none')
     },
@@ -894,7 +895,7 @@ a.avatar img {
     margin-top: 5px;
     background-color: #f8f8f8;
     /* padding: 20px; */
-    padding-left: 10px;
+   padding: 15px 10px 0 0;
 }
 .editor-comment>.avatar{
     width: 32px;

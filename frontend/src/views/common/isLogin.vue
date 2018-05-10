@@ -5,11 +5,11 @@
         <div class="username_info">
           <a href="javascript:;">
             <div class="user-info" @click="handlePersonal">
-              <img class="user-avatar" :src="useravatar" alt="">
-              <span class="user-name">{{userInfo.username}}</span>
+              <img class="user-avatar" :src="user_token.avatar" alt="">
+              <span class="user-name">{{user_token.username}}</span>
             </div>
             <div class="nav-info-msg">
-              <a href="#"  @click="handleMsg">
+              <a href="#" @click="handleMsg">
                 <img src="../../assets/img/bell.png" alt="">
                 <i class="count" v-show="hasCount">0</i>
               </a>
@@ -28,25 +28,50 @@
         </div>
         <div class="user_info_dropdown" v-show="showPersonal">
           <ul>
-            <li><a href="javascript:void(0)" @click.stop.prevent><img :src="useravatar" alt=""><span class="user-name"><router-link :to="{path:'/memberCenter'}">{{userInfo.username}}</router-link></span></a></li>
-            <li><a href="javascript:void(0)" @click.stop.prevent><img src="../../assets/img/set.png" alt=""><span><router-link :to="{path:'/memberCenter'}">个人设置</router-link></span></a></li>
+            <li>
+              <a href="javascript:void(0)" @click.stop.prevent><img :src="user_token.avatar" alt="">
+                <span class="user-name">
+                  <router-link :to="{path:'/memberCenter'}">{{user_token.username}}</router-link>
+                </span>
+              </a>
+            </li>
+            <li>
+              <a href="javascript:void(0)" @click.stop.prevent><img src="../../assets/img/personal.png" alt="">
+                <span>
+                  <router-link :to="{path:'/memberCenter'}">个人中心</router-link>
+                </span>
+              </a>
+            </li>
+            <li>
+              <a href="javascript:void(0)" @click.stop.prevent><img src="../../assets/img/set.png" alt="">
+                <span>
+                  <router-link :to="{path:'/personalInfo'}">编辑资料</router-link>
+                </span>
+              </a>
+            </li>
             <!--<li><a href="javascript:void(0)" @click.stop.prevent><img src="../../assets/img/share.png" alt=""><span>股票设置</span></a></li>-->
-            <li><a href="#" @click="outlogin"><i class="iconfont">&#xe629;</i><span>退出</span></a></li>
+            <li>
+              <a href="#" @click="outlogin"><img src="../../assets/img/outlogin.png" alt="">
+                <span>退出</span>
+              </a>
+            </li>
           </ul>
         </div>
       </div>
-      <a href="javascript:void(0)" v-show="isShowft" class="nav_btn_longtext" @click="postModel">发帖</a>
+      <a href="javascript:void(0)" class="nav_btn_longtext" @click="postModel">发帖</a>
     </div>
     <vdialog ref="headerChild" v-show="Showdialog" :toDialog='postEditor'></vdialog>
   </div>
 </template>
 
 <script>
-// import {get} from '../../utils/http.js'
+import { get, post } from '../../utils/http.js'
 import vdialog from './dialog.vue'
-export default{
-  data: function () {
+import { getToken, removeToken } from '../../utils/auth'
+export default {
+  data: function() {
     return {
+      user_token: {},
       hasCount: false,
       showMsg: false,
       showPersonal: false,
@@ -57,243 +82,261 @@ export default{
         'title': '有什么消息告诉大家',
         'id': 1
       },
-      isShowft: false
+      // isShowft: false
     }
   },
   components: {
     vdialog
   },
   computed: {
-    userInfo () {
+    userInfo() {
       return this.$store.state.userInfo.userInfo
     }
   },
-  mounted () {
-    this.outloginSty()
+  created() {
+    if(!this.user_token) {
+      this.user_token = JSON.parse(getToken())
+    }
+    console.log(this.user_token)
+  },
+  mounted() {
+    // this.outloginSty()
+  },
+  watch: {
+    $route (val) {
+      this.Showdialog = false
+    }
+  },
+  beforeRouteLeave () {
+    this.Showdialog = false
   },
   methods: {
-    toRegister () {
+    toRegister() {
       this.$router.push('/register')
     },
-    toLogin () {
+    toLogin() {
       this.$router.push('/login')
     },
     // 查看消息
-    handleMsg (e) {
+    handleMsg(e) {
       this.showMsg = !this.showMsg
     },
     // 查看个人中心
-    handlePersonal () {
+    handlePersonal() {
       this.showPersonal = !this.showPersonal
     },
     // 退出登录
-    outlogin () {
-      let that = this
-      $.ajax({
-        url: '/api/logout',
-        type: 'DELETE',
-        success (data) {
-          console.log(data)
-          if (data.isLogin) {
-            that.$store.commit('USER_INFO', {
-              'username': '',
-              'avatar': '',
-              'isLogin': false
-            })
-            that.outloginSty()
-            that.$emit('backLoadContent')
-          } else {
-            if (data.message === '登出成功') {
-              that.$store.commit('USER_INFO', {
-                'username': '',
-                'avatar': '',
-                'isLogin': false
-              })
-              that.outloginSty()
-              that.$emit('backLoadContent')
-            }
-          }
+    outlogin() {
+      post('api/logout').then(data => {
+        if (data.message === '登出成功') {
+          this.$store.commit('USER_INFO', {
+            'username': '',
+            'avatar': '',
+            // 'isLogin': false
+          })
+          removeToken()
+          // this.outloginSty()
+          // this.$emit('backLoadContent')
         }
+      }).catch(err => {
+        console.log(err)
       })
-      // get('/api/logout').then((data) => {
-      //   if (data.message === '登出成功') {
-      //     this.$store.commit('USER_INFO', {
-      //       'username': '',
-      //       'avatar': '',
-      //       'isLogin': false
-      //     })
-      //     this.outloginSty()
-      //     this.$emit('backLoadContent')
-      //   }
-      // })
     },
     // 发帖
-    postModel () {
+    postModel() {
       this.Showdialog = true
       $('.hmodal').addClass('in')
-      $('.hmodal').css({'display': 'block'})
-      $('.modal-backdrop').css({'display': 'block'})
+      $('.hmodal').css({ 'display': 'block' })
+      $('.modal-backdrop').css({ 'display': 'block' })
       // document.body.removeChild(document.querySelector('.modal-backdrop'))
       this.$refs.headerChild.ftDilog()
       $('#myModal').modal({
         keyboard: true
       })
     },
-    // 退登样式
-    outloginSty () {
-      if (!this.userInfo.isLogin) {
-        this.userName = ''
-        this.useravatar = '../../assets/img/login.png'
-        this.isShowft = false
-      } else {
-        this.userName = this.userInfo.username
-        this.useravatar = this.userInfo.avatar
-        this.isShowft = true
-      }
-    }
+    // // 退登样式
+    // outloginSty() {
+    //   if (!this.userInfo.isLogin) {
+    //     this.userName = ''
+    //     this.useravatar = '../../assets/img/login.png'
+    //     this.isShowft = false
+    //   } else {
+    //     this.userName = this.userInfo.username
+    //     this.useravatar = this.userInfo.avatar
+    //     this.isShowft = true
+    //   }
+    // }
   }
 }
 </script>
 
-<style>
-.user_info_dropdown>ul>li>a{display: inline-block;}
-.is_Login{float: right;margin-left: 48px;}
-.nav_user_info{
-    display: inline-block;
-    height: 60px;
-    position: relative;
-    z-index: 101;
-    vertical-align: middle;
-    font-size: 15px;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
+<style scoped>
+.user_info_dropdown>ul>li>a {
+  display: inline-block;
 }
-.username_info{
-    position: relative;
-    display: table;
-    z-index: 3;
-    text-align: right;
+
+.is_Login {
+  float: right;
+  margin-left: 48px;
 }
-.username_info>a>.user-info>span.user-name{
-    display: inline-block;
-    max-width: 8em;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-    vertical-align: middle;
+
+.nav_user_info {
+  display: inline-block;
+  height: 60px;
+  position: relative;
+  z-index: 101;
+  vertical-align: middle;
+  font-size: 15px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
-.username_info>a>.user-info>img.user-avatar{
-    width: 22px;
-    height: 22px;
-    margin-left: 22px;
+
+.username_info {
+  position: relative;
+  display: table;
+  z-index: 3;
+  text-align: right;
 }
-.nav-info-msg{
-    -webkit-box-sizing: content-box;
-    box-sizing: content-box;
-    position: absolute;
-    width: 22px;
-    height: 100%;
-    padding-right: 24px;
-    top: 0;
-    right: 100%;
-    cursor: default;
-    /* left: -15px; */
+
+.username_info>a>.user-info>span.user-name {
+  display: inline-block;
+  max-width: 8em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  vertical-align: middle;
 }
+
+.username_info>a>.user-info>img.user-avatar {
+  width: 22px;
+  height: 22px;
+  margin-left: 22px;
+}
+
+.nav-info-msg {
+  -webkit-box-sizing: content-box;
+  box-sizing: content-box;
+  position: absolute;
+  width: 22px;
+  height: 100%;
+  padding-right: 24px;
+  top: 0;
+  right: 100%;
+  cursor: default;
+  /* left: -15px; */
+}
+
 .nav-info-msg:before {
-    position: absolute;
-    right: 0;
-    top: 50%;
-    -webkit-transform: translateY(-50%);
-    transform: translateY(-50%);
-    height: 24px;
-    width: 1px;
-    background-color: #cecece;
-    content: '';
+  position: absolute;
+  right: 0;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
+  height: 24px;
+  width: 1px;
+  background-color: #cecece;
+  content: '';
 }
+
 .nav-info-msg>a {
-    position: absolute;
-    left: 0;
-    top: 50%;
-    -webkit-transform: translateY(-50%);
-    -ms-transform: translateY(-50%);
-    transform: translateY(-50%);
+  position: absolute;
+  left: 0;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
 }
-.nav-info-msg>a>img{
+
+.nav-info-msg>a>img {
   width: 28px;
   height: 28px;
 }
+
 .nav-info-msg .count {
-    position: absolute;
-    top: 13px;
-    line-height: 14px;
-    left: 15px;
-    font-size: 12px;
-    background-color: #f70;
-    padding: 1px 3.5px;
-    min-width: 14px;
-    text-align: center;
-    border-radius: 14px;
-    font-style: normal;
+  position: absolute;
+  top: 13px;
+  line-height: 14px;
+  left: 15px;
+  font-size: 12px;
+  background-color: #f70;
+  padding: 1px 3.5px;
+  min-width: 14px;
+  text-align: center;
+  border-radius: 14px;
+  font-style: normal;
 }
 
-.nav_msg_dropdown,.user_info_dropdown{
-    -webkit-animation-duration: .2s;
-    animation-duration: .2s;
-    position: absolute;
-    z-index: 1;
-    top: 100%;
-    font-size: 14px;
-    color: #33353c;
-    cursor: default;
-    width: 120px;
-    left: 0;
+.nav_msg_dropdown,
+.user_info_dropdown {
+  -webkit-animation-duration: .2s;
+  animation-duration: .2s;
+  position: absolute;
+  z-index: 1;
+  top: 100%;
+  font-size: 14px;
+  color: #33353c;
+  cursor: default;
+  width: 120px;
+  left: 0;
 }
+
 .nav_msg_dropdown {
-    right: 0;
-    width: 140px;
+  right: 0;
+  width: 140px;
 }
-.nav_msg_dropdown ul, .user_info_dropdown ul {
-    overflow: hidden;
-    background-color: #fff;
-    box-shadow: 0 1px 3px 0 rgba(0,0,0,.2);
+
+.nav_msg_dropdown ul,
+.user_info_dropdown ul {
+  overflow: hidden;
+  background-color: #fff;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .2);
 }
-.nav_msg_dropdown li, .user_info_dropdown li {
-    margin-left: 0 !important;
-    height: 40px;
-    line-height: 40px;
-    width: 100%;
-    padding-left: 10px;
+
+.nav_msg_dropdown li,
+.user_info_dropdown li {
+  margin-left: 0 !important;
+  height: 40px;
+  line-height: 40px;
+  width: 100%;
+  padding-left: 10px;
 }
+
 .user_info_dropdown li img {
-    width: 20px;
-    height: 20px;
-    margin-right: 10px;
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
 }
+
 .nav_msg_empty {
-    text-align: center;
-    padding: 3px 0;
-    color: #909499;
+  text-align: center;
+  padding: 3px 0;
+  color: #909499;
 }
+
 .nav_msg_set {
-    border-top: 1px solid #edf0f5;
-    text-align: center;
-    /* padding-top: 10px; */
+  border-top: 1px solid #edf0f5;
+  text-align: center;
+  /* padding-top: 10px; */
 }
-.nav_msg_set>a>span>img{margin-left: -30px;}
-a.nav_btn_longtext{
-    display: inline-block;
-    width: 58px;
-    text-align: center;
-    margin-left: 12px;
-    vertical-align: middle;
-    color: #0094D9;
-    font-size: 13px;
-    border: 1px solid #0094D9;
-    padding: 4px 0;
-    border-radius: 30px;
-    height: 35px;
-    line-height: 28px;
+
+.nav_msg_set>a>span>img {
+  margin-left: -30px;
+}
+
+a.nav_btn_longtext {
+  display: inline-block;
+  width: 58px;
+  text-align: center;
+  margin-left: 12px;
+  vertical-align: middle;
+  color: #0094D9;
+  font-size: 13px;
+  border: 1px solid #0094D9;
+  padding: 4px 0;
+  border-radius: 30px;
+  height: 35px;
+  line-height: 28px;
 }
 </style>

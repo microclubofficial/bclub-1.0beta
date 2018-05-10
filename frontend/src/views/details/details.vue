@@ -17,19 +17,24 @@
         </div>
       </div>
       <article class="article_bd">
+        <div class="loader" v-if='showLoader'>
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+        </div>
         <h1 class="article_bd_title">{{articleDetail.title}}</h1>
         <!--<div class="article_bd_from">来自
           <a href="">金氪投行之家的雪球原创专栏</a>
         </div>-->
-        <div class="loading" v-if='articleDetail.content === undefined'>
-          <img src="../../assets/img/loading.png" alt="" class="icon-loading">
-        </div>
         <div class="detail-main-content" v-if='articleDetail.content !== undefined' v-html="detailFun(articleDetail.content)">
           <strong>{{articleDetail.diff_time}}:</strong>
         </div>
         <div class="image">
           <!-- <img src="https://xqimg.imedao.com/16223abc082299293fe913f6.png!custom660.jpg" alt=""> -->
         </div>
+        <!--loading-->
       </article>
       <div class="meta-container">
         <!-- <a href="#" class="reward-btn">赞</a> -->
@@ -74,6 +79,9 @@
       </div>
       <!-- 评论内容 -->
        <div class="comment-wrap">
+         <div class="loading" v-if='showLoaderComment'>
+          <img src="../../assets/img/loading.png" alt="" class="icon-loading">
+        </div>
           <div class="hook-comment"></div>
           <div class="comment-container">
             <div class="loading" v-if='nowData.length === 0 && repliesCcount !== 0'>
@@ -117,7 +125,7 @@
                       </ul>
                     </div>
                     <!-- 回复 -->
-        <div class="comment-reply" v-show="talkReplayBox && now === replayId && !changeIndex">
+        <div class="comment-reply" v-show="now === replayId">
                 <!-- 回复文本框 -->
         <div class="editor-comment">
          <img :src="userInfo.avatar" alt="" class="avatar" v-show="talkReplyTxt">
@@ -191,11 +199,14 @@ export default {
       talkReplyTxt: false,
       showReportReplay: false,
       toRId: 0,
-      replayId: 0,
+      replayId: '',
       repliesCcount: 0,
       showCollection: false,
       // 发评论
-      changeIndex: false
+      changeIndex: false,
+      // 加载
+      showLoader: false,
+      showLoaderComment: false
     }
   },
   computed: {
@@ -206,7 +217,9 @@ export default {
   mounted () {
     this.did = this.$route.params.id
     // console.log(this.pageCount)
+    this.showLoader = true
     get(`api/topic/${this.did}/${this.pno}`).then(data => {
+      this.showLoader = false
       this.articleDetail = data.data.topic
       this.repliesCcount = data.data.replies_count
       this.nowData = data.data.replies
@@ -216,7 +229,21 @@ export default {
       this.pageCount = data.data.page_count
       this.$nextTick(() => {
         $('.article_bd').find('img').css({'margin': '10px auto', 'display': 'block', 'text-align': 'center'})
-        $('[data-w-e]').css({'display': 'inline'})
+        // $('.article_bd').find('p').css({'font-size': '16px', 'margin': '25px 0', 'text-align': 'justify', 'line-height': '1.8'})
+        $('.detailContent').find('img').addClass('zoom-in')
+        $('.detailContent').on('click', 'img', function () {
+          if (!$(this)[0].hasAttribute('data-w-e')) {
+            if (!$(this).hasClass('zoom-out')) {
+              if ($(this).hasClass('zoom-in')) {
+                $(this).removeClass('zoom-in')
+              }
+              $(this).addClass('zoom-out')
+            } else if ($(this).hasClass('zoom-out')) {
+              $(this).removeClass('zoom-out')
+              $(this).addClass('zoom-in')
+            }
+          }
+        })
       })
       var that = this
       document.querySelector('#app').addEventListener('scroll', function () {
@@ -228,7 +255,6 @@ export default {
     $('.editor').css({'padding-bottom': '35px'})
     $('.editor-toolbar').find('.report ').css({'right': '260px', 'bottom': '2px'})
     $('.editor-toolbar').find('.cancel ').css({'right': '315px', 'bottom': '6px'})
-    $('.article_bd').find('img').css({'display': 'block', 'text-align': 'center', 'margin': '10px auto'})
     $('.detail-editor-toolbar').find('.editor').css({'padding-bottom': '45px'})
   },
   methods: {
@@ -236,7 +262,9 @@ export default {
       // console.log(this.pno < this.pageCount)
       if (this.pno < this.pageCount) {
         setTimeout(() => {
+          this.showLoaderComment = true
           get(`api/topic/${this.did}/${this.pno}`).then(data => {
+            this.showLoaderComment = false
             this.nowData = this.nowData.concat(data.data.replies)
             this.pno++
             this.bottomText = '加载中...'
@@ -321,10 +349,12 @@ export default {
       }
     },
     showDetailContent (data) {
-      this.changeIndex = true
+      // this.changeIndex = true
+      this.replayId = ''
       this.nowData.unshift(data)
+      this.showLoaderComment = true
       get(`api/topic/${this.did}/${this.pno}`).then(data => {
-        console.log(data)
+        this.showLoaderComment = false
         this.repliesCcount = data.data.replies_count
       })
     },
@@ -333,6 +363,8 @@ export default {
       this.changeIndex = false
       if (now !== this.replayId) {
         this.replayId = now
+      } else {
+        this.replayId = ''
       }
       this.showReport = false
       if (!this.talkReplayBox) {
@@ -410,6 +442,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  /*图片放大效果*/
+  .detail-main-content img{
+    display: block;
+    cursor: zoom-in;
+    max-width: 200px;
+  }
   /*正文内容*/
   .detailContent{
     margin: 15px 0 15px 15px;
@@ -524,7 +562,7 @@ export default {
     /* margin: 80px auto 20px auto; */
     background: #fff;
     margin: auto;
-    padding: 20px 35px;
+    padding: 35px 55px;
     margin-top: 60px;
 }
 
@@ -733,7 +771,7 @@ a.avatar img {
   margin: 15px 0;
 }
 .comment-reply>.editor-comment{
-  margin-top: 15px;
+  /*margin-top: 15px;*/
   padding: 20px 0;
   background: #EDF5FE;
 }

@@ -53,9 +53,9 @@ export default{
     }
   },
   created () {
-    get('/api/bar').then((data) => {
-      this.talkList = data.data
-    })
+    // get('/api/bar').then((data) => {
+    //   this.talkList = data.data
+    // })
   },
   mounted: function () {
   },

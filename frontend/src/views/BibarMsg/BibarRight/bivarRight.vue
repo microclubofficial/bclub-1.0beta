@@ -5,9 +5,9 @@
                 <div class="bibar-boxtitle" style="margin-bottom:10px;"> <span class="name">简介</span> </div>
                 <div class="bibar-boxbody">
                     <div class="bibar-indexintro">
-                        <p>{{briefTxt}}</p>
+                        <p>{{briefTxt.length > 0 ? briefTxt : '暂无简介'}}</p>
                     </div>
-                    <a href="#" class="bibar-indexintromore text-theme" @click="showText">展开 <i class="iconfont icon-quan-arrowdown"></i></a>
+                    <a href="#" v-if='briefTxt.length > 0' class="bibar-indexintromore text-theme" @click="showText">展开 <i class="iconfont icon-quan-arrowdown"></i></a>
                     <div class="bibar-indexinftrList">
                         <dl>
                             <dt>发行时间</dt>

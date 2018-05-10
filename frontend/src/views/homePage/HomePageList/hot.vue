@@ -2,13 +2,13 @@
   <div>
   <div class="bibar-tabAll">
     <!-- {{[articles]}} -->
-    <div class="loading" v-if='articles.length === 0'>
+    <div class="loading" v-if='showLoader'>
       <img src="../../../assets/img/loading.png" alt="" class="icon-loading">
     </div>
-    <div class="bibar-tabitem fade in active" v-if='articles.length > 0 || getNavaVal.length > 0' :key="index" id="bibar-newstab1" v-for="(tmp,index) in [...getNavaVal, ...articles]">
+    <div class="bibar-tabitem fade in active" :key="index" id="bibar-newstab1" v-for="(tmp,index) in [...getNavaVal, ...articles]">
       <div class="bibar-indexNewsList">
         <div class="bibar-indexNewsItem">
-          <div class="speech" v-if="tmp.reply_user !== null"> <span>{{tmp.reply_user}}<span class="time">{{tmp.reply_time}}</span>前评论了讨论</span><i class="iconfont icon-dot"></i></div>
+          <div class="speech" v-if="tmp.reply_user !== null"> <span><span class="time">{{tmp.reply_time}}</span>前{{tmp.reply_user}}发表了评论</span><i class="iconfont icon-dot"></i></div>
           <div class="user">
             <!--<img :src="tmp.avatar">-->
             <div class="bibar-author"> <a href="#"> <span class="photo"><img :src="tmp.avatar"></span> <span class="name">{{tmp.author}}</span> <span class="time">{{tmp.diff_time !== '0秒' ? tmp.diff_time + '前' : '刚刚发布'}}·来自币吧</span> </a> </div>
@@ -71,10 +71,10 @@
        <div class="comment-wrap">
           <div class="hook-comment"></div>
           <div class="comment-container">
-            <div class="loading" v-if='nowData.length === 0 && tmp.replies_count !== 0'>
+            <div class="loading" v-if='showLoaderComment'>
               <img src="../../../assets/img/loading.png" alt="" class="icon-loading">
             </div>
-            <div class="comment-all" v-if='nowData.length > 0'>
+            <div class="comment-all">
               <h3>全部评论({{tmp.replies_count}})</h3>
               <!-- <div class="comment-sort">
                 <a href="#" class="active">最近</a>
@@ -114,7 +114,7 @@
                       <!-- <p>{{item}}</p> -->
                       <p v-html="item.content">{{item.content}}</p>
                     </div>
-                    <div class="set">
+                    <div class="set" style="margin-left:42px">
                       <ul class="bibar-indexNewsItem-infro">
                         <li class="set-choseTwo"> <a href="javascript:void(0);" class="icon-quan mr15"  @click="changeNum(0,now,item.id,1,item)" :class='{active:item.is_good_bool}'><i class="iconfont">&#xe603;</i><span class="is-good-t">{{item.is_good}}</span></a><a href="javascript:void(0);"  :class='{active:item.is_bad_bool}' class="icon-quan set-choseTwo" @click="changeNum(1,now,item.id,1,item)"><i class="iconfont">&#xe731;</i><span class="is-bad-t">{{item.is_bad}}</span></a></li>
                         <!-- <li class="set-choseShang"> <a href="javascript:void(0);"><i class="iconfont icon-dashang"></i> 打赏<span>438</span></a> </li> -->
@@ -126,7 +126,7 @@
                       </ul>
                     </div>
                      <!-- 回复 -->
-        <div class="comment-reply"  v-show="talkReplayBox && now === replayId">
+        <div class="comment-reply" v-show="now===replayId">
                 <!-- 回复文本框 -->
         <div class="editor-comment clearfloat">
          <img :src="userInfo.avatar" alt="" class="avatar" v-show="talkReplyTxt">
@@ -151,20 +151,19 @@
                 </div>
               </div>
               <!-- 分页条 -->
-            <div class="pages" v-if='showPage'>
+            <div class="pages" v-if='showPage && nowData.length > 0'>
               <ul class="mo-paging">
-              <!-- prev -->
-        <li class="paging-item paging-item--prev" :class="{'paging-item--disabled' : cpno === 1}" @click="prev">prev</li>
-        <!-- first -->
-        <li :class="['paging-item', 'paging-item--first', {'paging-item--disabled' : cpno === 1}]" @click="first">first</li>
-        <li :class="['paging-item', 'paging-item--more']" v-if="showPrevMore">...</li>
-        <li :class="['paging-item', {'paging-item--current' : cpno === tmp}]" :key="index" v-for="(tmp, index) in showPageBtn"  @click="go(tmp)">{{tmp}}</li>
-        <li :class="['paging-item', 'paging-item--more']" v-if="showNextMore">...</li>
-        <!-- next -->
-        <li :class="['paging-item', 'paging-item--next', {'paging-item--disabled' : cpno === cpageCount}]" @click="next">next</li>
-        <!-- last -->
-        <li :class="['paging-item', 'paging-item--last', {'paging-item--disabled' : cpno === cpageCount}]"  @click="last">last</li>
-        </ul>
+                <!-- prev -->
+                <!-- first -->
+                <li :class="['paging-item', 'paging-item--first', {'paging-item--disabled' : cpno === 1}]" @click="first">首页</li>
+                <li class="paging-item paging-item--prev" :class="{'paging-item--disabled' : cpno === 1}" @click="prev">上一页</li>
+                <li :class="['paging-item', {'paging-item--current' : cpno === tmp}]" :key="index" v-for="(tmp, index) in showPageBtn" @click="go(tmp)">{{tmp}}</li>
+                <!--<li :class="['paging-item', 'paging-item--more']" @click="next" v-if="showNextMore">...</li>-->
+                <!-- next -->
+                <li :class="['paging-item', 'paging-item--next', {'paging-item--disabled' : cpno === cpageCount}]" @click="next">下一页</li>
+                <!-- last -->
+                <li :class="['paging-item', 'paging-item--last', {'paging-item--disabled' : cpno === cpageCount}]" @click="last">尾页</li>
+              </ul>
             </div>
             </div>
           </div>
@@ -227,7 +226,7 @@ export default{
       talkReplayBox: false,
       replyContent: [],
       talkReplyTxt: false,
-      replayId: 0,
+      replayId: '',
       showReportReplay: false,
       collection: null,
       hasImg: false,
@@ -235,7 +234,7 @@ export default{
       isGood: 0,
       isBad: 0,
       // 分页
-      replyId: 0,
+      replyId: '',
       cpno: 1,
       cpageLimit: 10,
       cpageCount: 0,
@@ -243,7 +242,11 @@ export default{
       showNextMore: false,
       showPage: false,
       // 发帖
-      changeIndex: false
+      changeIndex: false,
+      // 加载
+      showLoader: false,
+      // 评论加载
+      showLoaderComment: false
     }
   },
   components: {
@@ -274,8 +277,10 @@ export default{
   created: function () {
     // 文章分页
     this.$store.dispatch('clear_backForNav')
+    this.showLoader = true
     get(`/api/topic/${this.tpno}`).then(data => {
       this.articles = data.data.topics
+      this.showLoader = false
       this.pageCount = data.data.page_count
       if (this.articles.length > 0) {
         this.loadingShow = true
@@ -288,7 +293,8 @@ export default{
       })
     })
   },
-  mounted () {},
+  mounted () {
+  },
   watch: {
     getNavaVal (val) {
       this.i = ''
@@ -298,11 +304,13 @@ export default{
   methods: {
     // 分页
     loadTopicPage () {
-      if (this.tpno < this.pageCount) {
+      if (this.tpno <= this.pageCount) {
         setTimeout(() => {
+          this.showLoader = true
           this.tpno++
           get(`/api/topic/${this.tpno}`).then(data => {
             this.articles = this.articles.concat(data.data.topics)
+            this.showLoader = false
             this.bottomText = '加载中...'
             // this.loadingImg = '../../assets/img/listLoding.png'
           })
@@ -398,8 +406,10 @@ export default{
     showDiscuss (index, id) {
       this.changeIndex = false
       this.replyId = id
+      this.showLoaderComment = true
       get(`/api/topic/${id}/${this.cpno}`).then(data => {
         this.nowData = data.data.replies
+        this.showLoaderComment = false
         this.cpageCount = data.data.page_count
         if (this.cpageCount > 1) {
           this.showPage = true
@@ -408,15 +418,19 @@ export default{
         }
         this.$nextTick(() => {
           $('.comment-item-main').find('img').addClass('zoom-in')
+          $('[data-w-e]').removeClass('zoom-in')
           $('.comment-item-main').on('click', 'img', function () {
-            if (!$(this).hasClass('zoom-out')) {
-              if ($(this).hasClass('zoom-in')) {
-                $(this).removeClass('zoom-in')
+            // console.log($(this)).not('[data-w-e]')
+            if (!$(this)[0].hasAttribute('data-w-e')) {
+              if (!$(this).hasClass('zoom-out')) {
+                if ($(this).hasClass('zoom-in')) {
+                  $(this).removeClass('zoom-in')
+                }
+                $(this).addClass('zoom-out')
+              } else if ($(this).hasClass('zoom-out')) {
+                $(this).removeClass('zoom-out')
+                $(this).addClass('zoom-in')
               }
-              $(this).addClass('zoom-out')
-            } else if ($(this).hasClass('zoom-out')) {
-              $(this).removeClass('zoom-out')
-              $(this).addClass('zoom-in')
             }
           })
         })
@@ -426,16 +440,19 @@ export default{
         this.lid = id
       } else {
         this.i = ''
-      }
-      this.toId = 0
-      this.lid = id
-      if (!this.showComment) {
-        this.showComment = true
-        this.commentShow = true
-      } else {
+        this.talkReplayBox = false
         this.showComment = false
         this.commentShow = false
       }
+      this.toId = 0
+      this.lid = id
+      // if (!this.showComment) {
+      //   this.showComment = true
+      //   this.commentShow = true
+      // } else {
+      //   this.showComment = false
+      //   this.commentShow = false
+      // }
       this.commentShow = true
       if (this.commentShow) {
         this.showReport = false
@@ -450,20 +467,24 @@ export default{
     commentShowFun () {
       this.showReport = true
       this.commentShow = false
+      this.replayId = ''
     },
     // 评论富文本框
     showContent (data) {
       this.commentShow = true
       this.showReport = false
       this.nowData.unshift(data)
-      get(`/api/topic/${this.tpno}`).then(data => {
-        if (this.tpno === 1) {
-          this.articles = data.data.topics
-        } else {
-          let oldArr = this.articles.slice(0, -5)
-          this.articles = oldArr.concat(data.data.topics)
-        }
-      })
+      this.articles[this.i].replies_count = data.replies_count
+      // get(`/api/topic/${this.tpno}`).then(data => {
+      //   // this.showLoader = false
+      //   if (this.tpno === 1) {
+      //     this.articles = data.data.topics
+      //   } else {
+      //     if () {
+
+      //     }
+      //   }
+      // })
     },
     showFtContentFun (ftData) {
       this.articles = [ftData, ...this.articles]
@@ -472,6 +493,8 @@ export default{
     replyComment (id, now) {
       if (now !== this.replayId) {
         this.replayId = now
+      } else {
+        this.replayId = ''
       }
       this.commentShow = true
       this.showReport = false
@@ -492,14 +515,17 @@ export default{
     showReplyContent (data) {
       this.talkReplayBox = false
       this.nowData.unshift(data)
-      get(`/api/topic/${this.tpno}`).then(data => {
-        if (this.tpno === 1) {
-          this.articles = data.data.topics
-        } else {
-          let oldArr = this.articles.slice(0, -5)
-          this.articles = oldArr.concat(data.data.topics)
-        }
-      })
+      this.articles[this.i].replies_count = data.replies_count
+      this.replayId = ''
+      // get(`/api/topic/${this.tpno}`).then(data => {
+      //   this.showLoaderComment = false
+      //   if (this.tpno === 1) {
+      //     this.articles = data.data.topics
+      //   } else {
+      //     let oldArr = this.articles.slice(0, -5)
+      //     this.articles = oldArr.concat(data.data.topics)
+      //   }
+      // })
     },
     // 收藏
     collectionTopic (tmp) {
@@ -562,6 +588,9 @@ export default{
       }
     },
     go (page) {
+      if (page === '···') {
+        return
+      }
       this.chartShow = 0
       this.summaryList = []
       if (this.cpno !== page) {
@@ -838,7 +867,7 @@ a.avatar img {
     overflow: hidden;
     margin: 10px 0;
 }
-.comment-item-main a{color: #0181ff;}
+/*.comment-item-main a{color: #0181ff;}*/
 .comment-item-main img{
     display: block;
     cursor: zoom-in;
@@ -1049,7 +1078,5 @@ svg:not(:root) {
     /* position: relative; */
     height: 100px;
 }
-.pull-left > img{width: 100%; height: 100%;}
-/*评论默认框*/
-.editor-placeholder{margin: 6px;}
+.pull-left > img{max-width: 200px; overflow: hidden; height: 100%;}
 </style>

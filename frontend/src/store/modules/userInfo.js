@@ -9,6 +9,7 @@ const userInfo = {
   },
   mutations: {
     USER_INFO (state, payload) {
+      // console.log(payload)
       state.userInfo = payload
     }
   }

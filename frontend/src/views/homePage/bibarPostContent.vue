@@ -192,7 +192,7 @@ export default {
     cursor: pointer;
     position: absolute;
     bottom: 26px;
-    right: 400px;
+    right: 497px;
 }
 .toLongText img{
   margin-right: 5px;
@@ -261,7 +261,7 @@ export default {
     border-radius: 2px;
     position: absolute;
     bottom: 20px;
-    right: 125px;
+    right: 75px;
 }
 .cancel{
     font-size: 14px;
@@ -270,7 +270,7 @@ export default {
     background: #fff;
     position: absolute;
     bottom: 25px;
-    right: 192px;
+    right: 138px;
 }
 .w-e-toolbar{z-index: 9998 !important;}
 </style>
