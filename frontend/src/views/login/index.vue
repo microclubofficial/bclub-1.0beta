@@ -190,7 +190,7 @@ export default {
         return
       }
       post(this.formUrl, this.userForm).then(data => {
-        // console.log(data.data)
+        console.log(data.data)
         // console.log(this.userForm)
         // alert(data.message)
         this.controlPrompt = data.message

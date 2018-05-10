@@ -74,7 +74,7 @@ export default {
     }
   },
   created() {
-    if(!this.user_token) {
+    if(getToken()) {
       this.user_token = JSON.parse(getToken())
     }
     // console.log(this.user_token)

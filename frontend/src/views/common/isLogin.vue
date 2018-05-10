@@ -94,20 +94,20 @@ export default {
     }
   },
   created() {
-    if(!this.user_token) {
+    if(getToken()) {
       this.user_token = JSON.parse(getToken())
     }
-    console.log(this.user_token)
+    // console.log(this.user_token)
   },
   mounted() {
     // this.outloginSty()
   },
   watch: {
-    $route (val) {
+    $route(val) {
       this.Showdialog = false
     }
   },
-  beforeRouteLeave () {
+  beforeRouteLeave() {
     this.Showdialog = false
   },
   methods: {
