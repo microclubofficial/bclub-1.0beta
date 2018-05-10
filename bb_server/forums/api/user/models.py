@@ -12,7 +12,7 @@
 # **************************************************************************
 from datetime import datetime, timedelta
 
-from flask import current_app
+from flask import current_app, session
 from flask_babelex import lazy_gettext as _
 from flask_login import current_user, login_user, logout_user
 from flask_principal import Identity, identity_changed, AnonymousIdentity

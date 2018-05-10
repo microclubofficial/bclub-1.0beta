@@ -25,7 +25,7 @@ def user_loader(id):
 
 def init_app(app):
     login_manager.login_view = "auth.login"
-    login_manager.session_protection = "strong"
+    login_manager.session_protection = "basic"
     login_manager.login_message = _("Please login to access this page.")
     # login_manager.anonymous_user = Anonymous
     login_manager.init_app(app)
