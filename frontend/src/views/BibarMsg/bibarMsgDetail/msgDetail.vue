@@ -7,9 +7,9 @@
     <section class="bibar-w1100">
         <!--主体左侧-->
         <section class="bibar-Mainleft bx-mainLeft">
-            <btb :bId="bitId"></btb>
+            <btb @btbFun='frombtb' :bId="bitId"></btb>
             <!-- 富文本区 -->
-            <div class="mainBibar-editor" v-if='initHide' style="width:960px; margin:auto; background:#fff;">
+            <div class="mainBibar-editor" v-if='initHide'>
               <BibarPostContent @backFtContent = 'BibarContentFun' ></BibarPostContent>
             </div>
             <!--新闻-->
@@ -52,7 +52,8 @@ export default{
       hrefCollapse: '',
       bitId: '',
       initHide: false,
-      initShow: false
+      initShow: false,
+      showLoader: true
     }
   },
   components: {
@@ -105,12 +106,29 @@ export default{
         this.initShow = false
         this.initHide = true
       }
+    },
+    frombtb (data) {
+      console.log(data)
     }
   }
 }
 </script>
 
 <style>
+  /*币讯富文本样式*/
+  .mainBibar-editor{
+    width: 960px;
+    margin: auto;
+    background: rgb(255, 255, 255);
+    padding: 20px 40px;
+  }
+  .mainBibar-editor .wangeditor{
+    width: 100% !important;
+    background: #F8F8F8 !important;
+  }
+  .mainBibar-editor .wangeditor .editor{
+    width: 85%;
+  }
  .bibar-Main>.bibar-w1100>.bx-mainLeft{width: 960px;}
 .bibarMainGzList{background: #fff}
 .bibar-list-item{

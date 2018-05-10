@@ -28,6 +28,9 @@ import 'src/icons'
 
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 
+// bootstrap-vue
+// import BootstrapVue from 'bootstrap-vue'
+
 // css  js
 import './assets/css/bootstrap.css'
 import './assets/css/bootstrap.min.css'
@@ -35,6 +38,9 @@ import './assets/iconfont/iconfont.css'
 import './assets/fonts/iconfont.css'
 import './assets/css/reset.pack.css'
 import './assets/css/web.css'
+
+// import 'bootstrap/dist/css/bootstrap.css'
+// import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 import './assets/js/jquery.min.js'
 import './assets/js/bootstrap.min.js'
@@ -51,6 +57,7 @@ import './assets/js/jquery.cookie.js'
 // import Validator from 'vue-validator'
 
 import * as filters from './filters' // global filters
+// Vue.use(BootstrapVue)
 Vue.use(VueAwesomeSwiper)
 
 // Vue.use(VueAxios, axios, Validator)

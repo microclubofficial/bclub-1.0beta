@@ -54,8 +54,7 @@
                 <!--<caption>Optional table caption.</caption>-->
                 <thead>
                   <tr>
-                    <th style="padding-left:50px;">#</th>
-                    <th>名称</th>
+                    <th style="padding-left:30px;">名称</th>
                     <th>价格</th>
                     <th>涨跌幅</th>
                     <th>交易量</th>
@@ -64,16 +63,13 @@
                     <!--<th></th>-->
                   </tr>
                 </thead>
-                <tbody>
+                <tbody v-for="(item,index) in summaryList" :key='index'>
                   <!--<tr v-if="chartShow === index">
                     <td colspan="7">
                       <btb ref="toNowChild" :bId="item.id"></btb>
                     </td>
                   </tr>-->
-                  <tr @click='toBibarDetail(item)' v-for="(item,index) in summaryList" :key='index'>
-                    <td>
-                      <a href="javascript:void(0)" @click='toBibarDetail(item)'>{{index + 1}}</a>
-                    </td>
+                  <tr @click='toBibarDetail(item)'>
                     <td>
                       <a href="javascript:void(0)" @click='toBibarDetail(item)'>
                         <span><img :src="item.picture" alt=""></span> {{item.name_ch}} - {{item.symbol}}
@@ -326,44 +322,11 @@ export default {
 
 .chartListBox {
   background: #fff;
-  /*padding: 30px 60px;*/
+  padding: 30px 60px;
   position: relative;
   overflow: hidden;
 }
-/*table样式*/
-.bibar-list-header table thead{
-  background: #E7F4FF;
-  border:none;
-}
-.bibar-list-header table thead tr{
-  border:none;
-}
-.bibar-list-header table thead tr th{
-  border:none;
-}
-.bibar-list-header table thead tr th{
-    color: #000;
-    font-size: 16px;
-    font-weight: 400;
-    min-width: 15px;
-    max-width: 150px;
-    padding: 0 5px;
-    white-space: nowrap;
-}
-.bibar-list-header table thead tr th:nth-child(2){
-    width: 200px;
-}
-.bibar-list-header table tbody tr td{
-  border-top:none;
-  border-top: 1px solid #f3f3f3;
-  padding: 20px 0;
-}
-.bibar-list-header table tbody tr:first-child td{
-  border:none;
-}
-.bibar-list-header table tbody tr td:first-child{
-  padding-left: 50px;
-}
+
 .bibarMainGzList {
   background: #fff
 }
