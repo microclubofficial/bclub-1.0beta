@@ -71,7 +71,7 @@ import { getToken, removeToken } from '../../utils/auth'
 export default {
   data: function() {
     return {
-      user_token: {},
+      user_token: '',
       hasCount: false,
       showMsg: false,
       showPersonal: false,
@@ -94,10 +94,10 @@ export default {
     }
   },
   created() {
-    if(!this.user_token) {
+    if(getToken()) {
       this.user_token = JSON.parse(getToken())
     }
-    console.log(this.user_token)
+    // console.log(this.user_token)
   },
   mounted() {
     // this.outloginSty()

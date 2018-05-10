@@ -60,7 +60,7 @@ export default {
   },
   data: function() {
     return {
-      user_token: {},
+      user_token: '',
       remember_token: ''
     }
   },
@@ -74,12 +74,10 @@ export default {
     }
   },
   created() {
-    if(!this.user_token) {
+    if(getToken()) {
       this.user_token = JSON.parse(getToken())
     }
-    // console.log(this.user_token)
     // this.remember_token = rememberToken('remember_token')
-    // console.log(this.remember_token)
   },
   methods: {
     // toLoadMain () {
