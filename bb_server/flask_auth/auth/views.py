@@ -100,7 +100,7 @@ class LoginView(MethodView):
         data = {"username":user.username}
         Avatar(data, user)
         #serializer = user.serializer if hasattr(
-        #    user, 'serializer') else Serializer(user, depth=1)
+            #    user, 'serializer') else Serializer(user, depth=1)
         #return HTTPResponse(HTTPResponse.NORMAL_STATUS, data=serializer.data).to_response()
         return get_json(1, '登录成功', data)
 
@@ -132,7 +132,7 @@ class PhoneLoginView(MethodView):
 class LogoutView(MethodView):
     decorators = [login_required]
 
-    def delete(self):
+    def post(self):
         current_user.logout()
         #return redirect(request.args.get('next') or '/')
         return get_json(1, '登出成功', {})

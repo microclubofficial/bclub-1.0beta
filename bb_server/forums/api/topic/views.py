@@ -299,6 +299,7 @@ class ReplyListView(MethodView):
         #user = User.query.filter_by(id=1).first()
         reply.author_id = user.id
         reply.save()
+        reply_count = FindAndCount(Reply, topic_id = topicId)
         reply.created_at = str(reply.created_at)
         reply.updated_at = str(reply.updated_at)
         replies_data = object_as_dict(reply)
@@ -309,13 +310,13 @@ class ReplyListView(MethodView):
         replies_data['is_good'] = 0 
         replies_data['is_bad'] = 0
         replies_data['diff_time'] = '0秒'
+        replies_data['replies_count'] = reply_count
         # noticetopicId
         #MessageClient.topic(reply)
         # count
         #topic.board.post_count = 1
         #reply.author.reply_count = 1Topic.query
         return get_json(1, '评论成功', replies_data)
-        #return redirect(url_for('topic.topic', topicId=topic.id))
 
 '''   
 class ReplyView(MethodView):

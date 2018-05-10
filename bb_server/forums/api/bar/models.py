@@ -15,8 +15,8 @@ class Bar(db.Model, ModelMixin):
         backref=db.backref(
             'bars', cascade='all,delete-orphan', lazy='dynamic'),
         lazy='joined')
-    title = db.Column(db.String(81), nullable=False)
-    subtitle = db.Column(db.String(81))
+    title = db.Column(db.String(255), nullable=False)
+    subtitle = db.Column(db.String(255))
     picture = db.Column(db.String(512), nullable=False)
 
     def __repr__(self):
@@ -32,7 +32,7 @@ class Questions(db.Model, ModelMixin):
     CONTENT_TYPE = (('0', 'text'), ('1', 'markdown'), ('2', 'org-mode'))
 
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(81), nullable=False)
+    title = db.Column(db.String(255), nullable=False)
     content = db.Column(db.Text, nullable=False)
     content_type = db.Column(
         db.String(10), nullable=False, default=CONTENT_TYPE_MARKDOWN)
@@ -116,4 +116,4 @@ class Comments(db.Model, ModelMixin):
         db.DateTime, default=datetime.now, onupdate=datetime.now)
     comments_id = db.Column(db.Integer, nullable=False)
     author_id = db.Column(db.Integer, nullable=False)
-        '''
+'''
