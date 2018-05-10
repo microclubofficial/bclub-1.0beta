@@ -60,12 +60,21 @@ class UserTopicView(MethodView):
         page_count = int(math.ceil(topic_count/per_page))
         topic = []
         for i in topics:
+            reply = Reply.query.filter_by(topic_id = i.id).order_by('-id').first()
+            if reply:
+                reply_user = reply.author.username
+                reply_time = time_diff(reply.updated_at)
+            else:
+                reply_user = None
+                reply_time = None
             reply_count = FindAndCount(Reply, topic_id = i.id)
             diff_time = time_diff(i.updated_at)
             i.created_at = str(i.created_at)
             i.updated_at = str(i.updated_at)
             topics_data = object_as_dict(i)
             json_loads(topics_data, ['title', 'content'])
+            topics_data['reply_time'] = reply_time
+            topics_data['reply_user'] = reply_user
             topics_data['author'] = user.username
             topics_data['diff_time'] = diff_time
             topics_data['replies_count'] = reply_count

@@ -96,11 +96,12 @@ class LoginView(MethodView):
         if captcha.lower() != session_captcha.lower():
             msg = _('The captcha is error')
             return get_json(0, msg, {})  
+        session.permanent = True
         user.login(remember)
         data = {"username":user.username}
         Avatar(data, user)
         #serializer = user.serializer if hasattr(
-        #    user, 'serializer') else Serializer(user, depth=1)
+            #    user, 'serializer') else Serializer(user, depth=1)
         #return HTTPResponse(HTTPResponse.NORMAL_STATUS, data=serializer.data).to_response()
         return get_json(1, '登录成功', data)
 
@@ -122,6 +123,7 @@ class PhoneLoginView(MethodView):
             return get_json(0, '手机号未注册', {})
         if not check_captcha(phone, captcha):
             return get_json(0, '验证码错误', {})
+        session.permanent = True
         user.login(remember)
         data = {"username":user.username}
         Avatar(data, user)
