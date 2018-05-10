@@ -190,13 +190,10 @@ export default {
         return
       }
       post(this.formUrl, this.userForm).then(data => {
-<<<<<<< HEAD
-        console.log(data.data)
-        console.log(this.userForm)
-=======
+        // console.log(data.data)
+        // console.log(this.userForm)
         alert(data.message)
         this.controlPrompt = data.message
->>>>>>> 0c16b3c89e286aaf837dd9cf7dc7d22f075bcc1d
         if (data.message === '验证码错误') {
           this.controlPrompt = data.message
           this.phoneControlPrompt = data.message

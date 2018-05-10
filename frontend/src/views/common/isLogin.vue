@@ -93,14 +93,13 @@ export default {
       return this.$store.state.userInfo.userInfo
     }
   },
-<<<<<<< HEAD
   created() {
     this.user_token = getToken()
     // console.log(this.user_token)
   },
   mounted() {
     // this.outloginSty()
-=======
+  },
   watch: {
     $route (val) {
       this.Showdialog = false
@@ -108,10 +107,6 @@ export default {
   },
   beforeRouteLeave () {
     this.Showdialog = false
-  },
-  mounted () {
-    this.outloginSty()
->>>>>>> 0c16b3c89e286aaf837dd9cf7dc7d22f075bcc1d
   },
   methods: {
     toRegister() {
@@ -148,15 +143,9 @@ export default {
     // 发帖
     postModel() {
       this.Showdialog = true
-<<<<<<< HEAD
       $('.hmodal').addClass('in')
       $('.hmodal').css({ 'display': 'block' })
       $('.modal-backdrop').css({ 'display': 'block' })
-=======
-      // $('.hmodal').addClass('in')
-      // $('.hmodal').css({'display': 'block'})
-      // $('.modal-backdrop').css({'display': 'block'})
->>>>>>> 0c16b3c89e286aaf837dd9cf7dc7d22f075bcc1d
       // document.body.removeChild(document.querySelector('.modal-backdrop'))
       this.$refs.headerChild.ftDilog()
       $('#myModal').modal({
