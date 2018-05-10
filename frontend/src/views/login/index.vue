@@ -75,7 +75,7 @@
                   <input type="text" @blur='showRegisterMsg(phoneForm.phonecaptcha, 4)' class="form-control" v-model="phoneForm.phonecaptcha" id="inputCaptcha3" placeholder="请输入验证码">
                 </div>
                 <button type="button" class="col-md-3 btnm getcontrol" style=" padding: 0 !important;height: 34px;line-height: 34px;
-      " @click="getPhoneControl" v-bind:disabled="hasphone" :class="{disable:hasphone}">
+        " @click="getPhoneControl" v-bind:disabled="hasphone" :class="{disable:hasphone}">
                   <span v-show="hasControl">{{countdown}}</span>{{getcontroltxt}}</button>
                 <p class="prompt col-sm-9">
                   <label class="col-md-3 control-label"></label>{{phoneControlPrompt}}</p>
@@ -131,7 +131,7 @@ export default {
   },
   mounted() {
     $('#myTab li:eq(0) a').tab('show')
-    document.body.removeChild(document.querySelector('.modal-backdrop'))
+    // document.body.removeChild(document.querySelector('.modal-backdrop'))
   },
   methods: {
     // 失去焦点验证
@@ -192,7 +192,7 @@ export default {
       post(this.formUrl, this.userForm).then(data => {
         // console.log(data.data)
         // console.log(this.userForm)
-        alert(data.message)
+        // alert(data.message)
         this.controlPrompt = data.message
         if (data.message === '验证码错误') {
           this.controlPrompt = data.message
@@ -204,16 +204,20 @@ export default {
         if (data.message === '用户名或密码错误') {
           alert(data.message)
         }
+        if (data.message === '你已经登陆，不能重复登陆') {
+          alert(data.message)
+          this.$router.push('/')
+        }
         if (data.resultcode === 1) {
           this.$store.commit('USER_INFO', {
             'username': data.data.username,
             'avatar': data.data.avatar,
-            // 'isLogin': true
+            'isLogin': true
           })
-          if ( this.userForm.remember ) {
-            setToken(data.data.username, {expires: 7})
-          }else{
-            setToken(data.data.username)
+          if (this.userForm.remember) {
+            setToken(data.data, { expires: 7 })
+          } else {
+            setToken(data.data)
           }
           this.$router.push('/')
         }
@@ -233,13 +237,8 @@ export default {
       post(this.phoneUrl, this.phoneForm).then(data => {
         // console.log(data.message)
         if (data.resultcode === 0) {
-          alert(data.message)
           if (data.message === '你已经登陆，不能重复登陆') {
-            this.$store.commit('USER_INFO', {
-              'username': data.data.username,
-              'avatar': data.data.avatar,
-              'isLogin': true
-            })
+            alert(data.message)
             this.$router.push('/')
           } else {
             this.controlPrompt = data.message
@@ -254,7 +253,11 @@ export default {
             'avatar': data.data.avatar,
             'isLogin': true
           })
-          // this.$store.state.isLogin = true
+          if (this.userForm.remember) {
+            setToken(data.data, { expires: 7 })
+          } else {
+            setToken(data.data)
+          }
           this.$router.push('/')
         }
       }).catch(error => {

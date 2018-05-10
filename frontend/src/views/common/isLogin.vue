@@ -5,8 +5,8 @@
         <div class="username_info">
           <a href="javascript:;">
             <div class="user-info" @click="handlePersonal">
-              <img class="user-avatar" :src="userInfo.avatar" alt="">
-              <span class="user-name">{{userInfo.username}}</span>
+              <img class="user-avatar" :src="user_token.avatar" alt="">
+              <span class="user-name">{{user_token.username}}</span>
             </div>
             <div class="nav-info-msg">
               <a href="#" @click="handleMsg">
@@ -29,9 +29,9 @@
         <div class="user_info_dropdown" v-show="showPersonal">
           <ul>
             <li>
-              <a href="javascript:void(0)" @click.stop.prevent><img :src="useravatar" alt="">
+              <a href="javascript:void(0)" @click.stop.prevent><img :src="user_token.avatar" alt="">
                 <span class="user-name">
-                  <router-link :to="{path:'/memberCenter'}">{{userInfo.username}}</router-link>
+                  <router-link :to="{path:'/memberCenter'}">{{user_token.username}}</router-link>
                 </span>
               </a>
             </li>
@@ -71,7 +71,7 @@ import { getToken, removeToken } from '../../utils/auth'
 export default {
   data: function() {
     return {
-      user_token: '',
+      user_token: {},
       hasCount: false,
       showMsg: false,
       showPersonal: false,
@@ -94,8 +94,10 @@ export default {
     }
   },
   created() {
-    this.user_token = getToken()
-    // console.log(this.user_token)
+    if(!this.user_token) {
+      this.user_token = JSON.parse(getToken())
+    }
+    console.log(this.user_token)
   },
   mounted() {
     // this.outloginSty()
@@ -152,18 +154,18 @@ export default {
         keyboard: true
       })
     },
-    // 退登样式
-    outloginSty() {
-      if (!this.userInfo.isLogin) {
-        this.userName = ''
-        this.useravatar = '../../assets/img/login.png'
-        this.isShowft = false
-      } else {
-        this.userName = this.userInfo.username
-        this.useravatar = this.userInfo.avatar
-        this.isShowft = true
-      }
-    }
+    // // 退登样式
+    // outloginSty() {
+    //   if (!this.userInfo.isLogin) {
+    //     this.userName = ''
+    //     this.useravatar = '../../assets/img/login.png'
+    //     this.isShowft = false
+    //   } else {
+    //     this.userName = this.userInfo.username
+    //     this.useravatar = this.userInfo.avatar
+    //     this.isShowft = true
+    //   }
+    // }
   }
 }
 </script>

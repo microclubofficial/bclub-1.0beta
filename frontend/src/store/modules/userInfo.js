@@ -3,8 +3,8 @@ const userInfo = {
   state: {
     userInfo: {
       'username': '',
-      'avatar': ''
-      // 'isLogin': false
+      'avatar': '',
+      'isLogin': false
     }
   },
   mutations: {
