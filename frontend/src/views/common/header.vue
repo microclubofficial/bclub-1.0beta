@@ -9,8 +9,8 @@
         <nav class="bibar-headernav">
             <ul class="bibar-headernavlist">
                 <li class="bibar-headernavitem"> <a href="javascript:void(0)"><router-link :class="{headerActive: routerSelect('')}" :to="{path:'/'}">首页</router-link></a> </li>
-                <!--<li class="bibar-headernavitem"> <a href="javascript:void(0)"><router-link :class="{headerActive: routerSelect('community')}" :to="{path:'/community'}">社区</router-link></a> </li>-->
                 <li class="bibar-headernavitem"> <a href="javascript:void(0)"><router-link :class="{headerActive: routerSelect('bibarLayout')}" :to="{path:'/bibarLayout'}">币讯</router-link></a> </li>
+                <!--<li class="bibar-headernavitem"> <a href="javascript:void(0)"><router-link :class="{headerActive: routerSelect('community')}" :to="{path:'/community'}">社区</router-link></a> </li>-->
                 <!--<li class="bibar-headernavitem"> <a href="javascript:void(0)"><router-link :class="{headerActive: routerSelect('maintalk')}" :to="{path:'/maintalk'}">讨论</router-link></a> </li>-->
                 <!--<li class="bibar-headernavitem"> <a href="javascript:void(0)"><router-link :class="{headerActive: routerSelect('cream')}" :to="{path:'/cream'}">精华</router-link></a> </li>-->
             </ul>
@@ -26,9 +26,9 @@
                 </li>-->
                 <li class="bibar-headerSearchitem">
                     <!-- 未登录 -->
-                    <NavLogin v-show="!userInfo.isLogin"></NavLogin>
+                    <NavLogin v-if="!user_token || !userInfo.username"></NavLogin>
                     <!-- 已登录 -->
-                    <isLogin @backLoadContent = 'toLoadMain' v-show="userInfo.isLogin"></isLogin>
+                    <isLogin v-if="user_token && userInfo.username"></isLogin>
                 </li>
             </ul>
         </div>
@@ -43,12 +43,14 @@
 <script>
 import NavLogin from './navlogin.vue'
 import isLogin from './isLogin.vue'
+import { getToken } from '../../utils/auth'
 export default{
   props: {
     message: Boolean
   },
   data: function () {
     return {
+      user_token: ''
     }
   },
   components: {
@@ -61,6 +63,8 @@ export default{
     }
   },
   mounted () {
+    this.user_token = getToken()
+    // console.log(this.user_token)
   },
   methods: {
     toLoadMain () {

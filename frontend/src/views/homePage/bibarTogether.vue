@@ -54,10 +54,10 @@ export default{
     }
   },
   created () {
-    get('/api/bar').then((data) => {
-      this.talkList = data.data.barlist
-      this.subList = data.data.barquestion
-    })
+    // get('/api/bar').then((data) => {
+    //   this.talkList = data.data.barlist
+    //   this.subList = data.data.barquestion
+    // })
   },
   mounted: function () {
   },
