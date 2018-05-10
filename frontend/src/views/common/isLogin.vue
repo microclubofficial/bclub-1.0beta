@@ -68,6 +68,14 @@ export default{
       return this.$store.state.userInfo.userInfo
     }
   },
+  watch: {
+    $route (val) {
+      this.Showdialog = false
+    }
+  },
+  beforeRouteLeave () {
+    this.Showdialog = false
+  },
   mounted () {
     this.outloginSty()
   },
@@ -130,9 +138,9 @@ export default{
     // 发帖
     postModel () {
       this.Showdialog = true
-      $('.hmodal').addClass('in')
-      $('.hmodal').css({'display': 'block'})
-      $('.modal-backdrop').css({'display': 'block'})
+      // $('.hmodal').addClass('in')
+      // $('.hmodal').css({'display': 'block'})
+      // $('.modal-backdrop').css({'display': 'block'})
       // document.body.removeChild(document.querySelector('.modal-backdrop'))
       this.$refs.headerChild.ftDilog()
       $('#myModal').modal({

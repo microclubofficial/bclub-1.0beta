@@ -93,7 +93,19 @@
   max-width: 100%;
   margin: 10px auto;
 }
-  /*分页*/
+/*表情样式*/
+img[data-w-e]{
+    display: inline !important;
+    cursor: default !important;
+}
+/*详情正文样式*/
+.detail-main-content p{
+    font-size: 16px;
+    margin: 25px 0;
+    text-align: justify;
+    line-height: 1.8;
+}
+ /*分页*/
 .pages{
     margin: 10px 0;
     width: 100%;
@@ -174,6 +186,90 @@
     text-align: center;
     /*display: none;*/
 }
+/*loading*/
+.loader {
+  position: absolute;
+  top: 80%;
+  left: 38%;
+  margin-left: 10%;
+  transform: translate3d(-50%, -50%, 0);
+}
+.dot {
+  width: 24px;
+  height: 24px;
+  background: #3ac;
+  border-radius: 100%;
+  display: inline-block;
+  animation: slide 1s infinite;
+}
+.dot:nth-child(1) {
+  animation-delay: 0.1s;
+  background: #32aacc;
+}
+.dot:nth-child(2) {
+  animation-delay: 0.2s;
+  background: #64aacc;
+}
+.dot:nth-child(3) {
+  animation-delay: 0.3s;
+  background: #96aacc;
+}
+.dot:nth-child(4) {
+  animation-delay: 0.4s;
+  background: #c8aacc;
+}
+.dot:nth-child(5) {
+  animation-delay: 0.5s;
+  background: #faaacc;
+}
+@-moz-keyframes slide {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.3;
+    transform: scale(2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@-webkit-keyframes slide {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.3;
+    transform: scale(2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@-o-keyframes slide {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.3;
+    transform: scale(2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes slide {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.3;
+    transform: scale(2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
 .btn-article-retweet>i{font-size: 15px;}
 /*placeholder*/input::-webkit-input-placeholder, textarea::-webkit-input-placeholder{color: #ccc !important;}
 input:-moz-placeholder, textarea:-moz-placeholder{color: #ccc !important;}
@@ -204,6 +300,8 @@ i{transition: all .2s ease-in-out;-webkit-transition: all .2s ease-in-out;-moz-t
 
 /* 阴影样式 */
 .shadow-box{box-shadow:2px 2px 5px #9c9999;}
+/*评论默认框*/
+.editor-placeholder{margin: 6px;}
 /*按钮*/
 .label-radius, .btn-radius{border-radius: 4px;}
 .btn-icon{border: 1px solid #fff;padding-top: 12px;position: relative;display: inline-block;font-family: 'socicon';font-style: normal;font-weight: normal;line-height: 1;-webkit-font-smoothing: antialiased;text-align: center;width: 26px;height: 26px;padding-top: 2px;color: #3f444a;transition: background, color 0.3s;}
@@ -704,7 +802,7 @@ i.icon-BTC{font-size: 14px; font-weight: bold;}
 .bibar-indextrend{height: 32px; border: 1px solid #ccc; line-height: 32px; padding: 0px 10px; font-size: 24px; float: left; border: 0px; margin-left: 10px;}
 .bibar-indextrend:first-child{margin-left:0px}
 .bibar-indextrend .num{}
-.bibar-indextrend i{}
+.bibar-indextrend i{font-size: 20px;}
 .bibar-indextrend.green{background: linear-gradient(to right,#00dc7c,#08b784); color: #fff;}
 .bibar-indextrend.red{background: linear-gradient(to right,#ff0022,#da001b); color: #fff;}
 .bibar-indexDisplay-datamore{padding: 10px; overflow: hidden;}
@@ -737,6 +835,7 @@ i.icon-BTC{font-size: 14px; font-weight: bold;}
 .bibar-indexNewsItem .user{
     overflow: hidden;
 }
+.w-e-text p{line-height: 1 !important;}
 /*toast*/
 .mint-toast{z-index: 10003 !important;}
 .bibar-indexNewsItem .user .bibar-author{width: 250px;}

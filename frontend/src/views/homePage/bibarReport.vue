@@ -103,6 +103,7 @@ export default {
               backData.picture = data.data.picture
               backData.url = data.data.url
               backData.reference = data.data.reference
+              backData.replies_count = data.data.replies_count
               let hotreplies = {}
               hotreplies = data.data
               // 热门回复
@@ -250,7 +251,7 @@ export default {
     border-radius: 2px;
     position: absolute;
     bottom: 10px;
-    right: 112px;
+    right: 98px;
 }
 .cancel{
     font-size: 14px;
@@ -259,7 +260,7 @@ export default {
     background: #fff;
     position: absolute;
     bottom: 15px;
-    right: 172px;
+    right: 150px;
 }
 .w-e-toolbar{z-index: 9998 !important;}
 </style>

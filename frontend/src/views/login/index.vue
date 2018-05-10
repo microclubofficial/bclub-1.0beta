@@ -120,6 +120,7 @@ export default {
   },
   mounted () {
     $('#myTab li:eq(0) a').tab('show')
+    document.body.removeChild(document.querySelector('.modal-backdrop'))
   },
   methods: {
     // 失去焦点验证
@@ -177,9 +178,9 @@ export default {
         alert('验证码不能为空')
         return
       }
-      console.log(this.userForm)
       post(this.formUrl, this.userForm).then(data => {
         alert(data.message)
+        this.controlPrompt = data.message
         if (data.message === '验证码错误') {
           this.controlPrompt = data.message
           this.phoneControlPrompt = data.message

@@ -1,7 +1,14 @@
 <template>
 <div>
    <article class="bibar-box bibar-boxindex1">
-                <div class="bibarTop"  @click="toMsgDetail(bibarData.id)">
+          <div class="loader" style="top:20%; left:33%; z-index:10004;" v-if='showLoader'>
+                      <div class="dot"></div>
+                      <div class="dot"></div>
+                      <div class="dot"></div>
+                      <div class="dot"></div>
+                      <div class="dot"></div>
+                    </div>
+                <div class="bibarTop"  @click="toMsgDetail(bibarData.id)" v-if='!showLoader'>
                   <div class="bibar-indexDisplay">
                     <div class="bibar-indexDisplay-header">
                         <div class="logopic"><img :src="bibarData.picture"></div>
@@ -14,8 +21,8 @@
                 <div class="bibar-indexDisplay-data"> <i class="iconfont icon-rmb">&#xe634;</i> <span class="bibar-indexDisplay-dollar">{{cny_price | formatNum(2)}}</span><span class="bibar-indexDisplay-rmb"><i class="iconfont">&#xe6ca;</i><i class="iconfont icon-CNY">&#xe736;</i>{{bibarData.price | formatNum(2)}}</span> <span class="bibar-indexDisplay-den"><i class="iconfont icon-denyu">=</i> <i class="iconfont icon-BTC">&#xe63a;</i> {{bibarData.price | bitcoin(BTC_RATE, nowId)}}</span> </div>
                 <!--涨跌-->
                 <div class="bibar-indexDisplay-trend">
-                    <div v-show="!isDown" class="bibar-indextrend green"> <span class="num">{{change1h}}</span> <i class="iconfont icon-angleup-bold"></i> </div>
-                    <div v-show="isDown" class="bibar-indextrend red"> <span class="num">{{change1h}}</span> <i class="iconfont icon-angledown-bold"></i> </div>
+                    <div v-show="!isDown" class="bibar-indextrend green"> <span class="num">{{change1h}}</span> <i class="iconfont">&#xe618;</i> </div>
+                    <div v-show="isDown" class="bibar-indextrend red"> <span class="num">{{change1h}}</span> <i class="iconfont">&#xe617;</i> </div>
                 </div>
                 <div class="clear hline"></div>
                 <!--比值-->
@@ -67,7 +74,7 @@
                 <article class="bibar-indexDisplay-chart">
                     <div class="bibar-indexDisplay-chartTAB">
                     </div>
-                    <div class="clear hline"></div>
+                    <div class="clear hline" v-if='!showLoader'></div>
                     <!--chart-->
                     <div ref="chat" :style="{width:'810px',height:'450px',margin: '0 auto'}" :class="{initChart:initShow}"></div>
                 </article>
@@ -114,7 +121,8 @@ export default {
       initmarketT: 0,
       timer: null,
       timerT: null,
-      routerId: ''
+      routerId: '',
+      showLoader: false
     }
   },
   created () {
@@ -151,6 +159,7 @@ export default {
       } else {
         this.nowId = this.chartId
       }
+      this.showLoader = true
       $.getJSON(`/api/currency_news/${this.nowId}`, function (data) {
         // main数据
         that.bibarData = data.data
@@ -159,11 +168,13 @@ export default {
         // 流通率进度条
         that.rate = parseFloat(that.bibarData.Circulation_rate.split(/%/g)[0])
         // 人民币汇率
+        console.log(that.bibarData.CNY_RATE)
         that.CNY_RATE = parseFloat(that.bibarData.CNY_RATE)
         // 比特币汇率
         that.BTC_RATE = parseFloat(that.bibarData.BTC_RATE)
         // 人民币转换
         that.cny_price = that.bibarData.price * that.CNY_RATE
+        console.log(that.CNY_RATE)
         // 涨幅
         that.change1h = that.bibarData.change1h
         var change1hStr = that.change1h.toString()
@@ -180,6 +191,7 @@ export default {
     klineChart (id) {
       let that = this
       get(`/api/kline/${id}`).then(data => {
+        that.showLoader = false
         that.volumeData = []
         for (var j = 0; j < data.data.volume_usd.length; j++) {
           that.volumeData.push([
@@ -335,6 +347,11 @@ export default {
 }
 </script>
 <style>
+  /*.bibar-indexDisplay-chart .loader{
+      top: 50%;
+      left: 30%;
+      z-index: 10004;
+  }*/
   .bibar-uipress span{
     transition: width .5s;
   }
