@@ -1,6 +1,9 @@
 <template>
   <div>
   <div class="personal-topiclist">
+    <div class="loading" v-if='showLoader'>
+      <img src='../../../assets/img/loading.png' alt='' class="icon-loading">
+    </div>
     <!-- {{[articles]}} -->
     <div class="bibar-tabitem fade in active" :key="index" id="bibar-newstab1" v-for="(tmp,index) in articles">
       <div class="bibar-indexNewsList">
@@ -43,7 +46,7 @@
               </li>
             </ul>
           </div>
-            <div class="bibar-hot"  v-show="showComment&&index==i">
+            <div class="bibar-hot" v-show="index===i">
        <!-- 评论框 -->
        <div class="editor-comment">
          <img :src="userInfo.avatar" alt="" class="avatar" v-show="commentShow">
@@ -67,8 +70,8 @@
        <div class="comment-wrap">
           <div class="hook-comment"></div>
           <div class="comment-container">
-            <div class="loading">
-              <img src="../../../assets/img/loading.png" alt="">
+            <div class="loading" v-if='showLoaderComment'>
+              <img src="../../../assets/img/loading.png" alt="" class="icon-loading">
             </div>
             <div class="comment-all">
               <h3>全部评论({{tmp.replies_count}})</h3>
@@ -103,11 +106,10 @@
                     </a>
                     <div class="comment-item-main">
                       <div class="comment-item-hd">
-                        <a href="#" class="user-name">{{item.author}}</a>
-                        <span class="time">{{item.diff_time}}</span>
+                        <p href="#" class="user-name">{{item.author}}<span class="time">{{item.diff_time !== '0秒' ? item.diff_time + '前' : '刚刚'}}发布</span></p>
                       </div>
                       <!-- @ 样式 -->
-                      <p class="replyAuthor" v-if="item.reference !== null"><span style="position:absolute;">@{{item.author}}:</span><span class="replyBackConten" style="display:inline-block;margin-left:70px;font-weight: normal;" v-html='item.reference'></span></p>
+                      <p class="replyAuthor" v-if="item.at_user !== ''">@{{item.at_user}}:&nbsp;<span class="replyBackConten" style="display:inline-block;font-weight: normal;" v-html="replyFun(item.reference)"></span></p>
                       <!-- <p>{{item}}</p> -->
                       <p v-html="item.content">{{item.content}}</p>
                     </div>
@@ -123,13 +125,13 @@
                       </ul>
                     </div>
                      <!-- 回复 -->
-        <div class="comment-reply"  v-show="talkReplayBox && now === replayId">
+        <div class="comment-reply"  v-show="now === replayId">
                 <!-- 回复文本框 -->
         <div class="editor-comment">
          <img :src="userInfo.avatar" alt="" class="avatar" v-show="talkReplyTxt">
          <div class="editor-bd">
            <span class="comment-img-delete"></span>
-           <svg version='1.1' xmlns='http://www.w3.org/2000/svg' class="editor-triangle">
+           <svg version='1.1' xmlns='http://www.w3.org/2000/svg' v-show="talkReplyTxt" class="editor-triangle">
             <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
            </svg>
            <div class="editor-textarea"  v-show="talkReplyTxt" @click="talkReplyEditor">
@@ -195,7 +197,7 @@ export default{
       ishandbad: 0,
       isClick: 0,
       lid: '',
-      i: 0,
+      i: '',
       showComment: false,
       showReport: false,
       nowData: [],
@@ -224,7 +226,7 @@ export default{
       talkReplayBox: false,
       replyContent: [],
       talkReplyTxt: false,
-      replayId: 0,
+      replayId: '',
       showReportReplay: false,
       collection: 0,
       hasImg: false,
@@ -238,7 +240,10 @@ export default{
       cpageCount: 0,
       showPrevMore: false,
       showNextMore: false,
-      showPage: false
+      showPage: false,
+      // loading
+      showLoader: false,
+      showLoaderComment: false
     }
   },
   components: {
@@ -247,8 +252,10 @@ export default{
   created: function () {
     // 文章分页
     this.$store.dispatch('clear_backForNav')
+    this.showLoader = true
     get(`/api/u/topic/${this.userInfo.username}/${this.tpno}`).then(data => {
       this.articles = data.data.topics
+      this.showLoader = false
       this.pageCount = data.data.page_count
       if (this.articles.length > 0) {
         this.loadingShow = true
@@ -287,9 +294,11 @@ export default{
     loadTopicPage () {
       if (this.tpno < this.pageCount) {
         setTimeout(() => {
+          this.showLoader = true
           this.tpno++
           get(`/api/u/topic/${this.userInfo.username}/${this.tpno}`).then(data => {
             this.articles = this.articles.concat(data.data.topics)
+            this.showLoader = false
             this.bottomText = '加载中...'
             // this.loadingImg = '../../assets/img/listLoding.png'
           })
@@ -386,22 +395,45 @@ export default{
     // 评论
     showDiscuss (index, id) {
       this.replyId = id
+      this.showLoaderComment = true
       get(`/api/topic/${id}/${this.cpno}`).then(data => {
         this.nowData = data.data.replies
+        this.showLoaderComment = false
         this.cpageCount = data.data.page_count
         if (this.cpageCount > 1) {
           this.showPage = true
         } else {
           this.showPage = false
         }
+        this.$nextTick(() => {
+          $('.comment-item-main').find('img').addClass('zoom-in')
+          $('[data-w-e]').removeClass('zoom-in')
+          $('.comment-item-main').on('click', 'img', function () {
+            // console.log($(this)).not('[data-w-e]')
+            if (!$(this)[0].hasAttribute('data-w-e')) {
+              if (!$(this).hasClass('zoom-out')) {
+                if ($(this).hasClass('zoom-in')) {
+                  $(this).removeClass('zoom-in')
+                }
+                $(this).addClass('zoom-out')
+              } else if ($(this).hasClass('zoom-out')) {
+                $(this).removeClass('zoom-out')
+                $(this).addClass('zoom-in')
+              }
+            }
+          })
+        })
       })
       if (index !== this.i) {
         this.i = index
         this.lid = id
+      } else {
+        this.i = ''
       }
+      this.replayId = ''
       this.toId = 0
       this.lid = id
-      this.showComment = !this.showComment
+      // this.showComment = !this.showComment
       this.commentShow = true
       if (this.commentShow) {
         this.showReport = false
@@ -415,18 +447,15 @@ export default{
     commentShowFun () {
       this.showReport = true
       this.commentShow = false
+      this.replayId = ''
     },
     // 评论富文本框
     showContent (data) {
+      this.commentShow = true
+      this.showReport = false
+      // this.showLoaderComment = true
       this.nowData.unshift(data)
-      get(`/api/u/topic/${this.userInfo.username}/${this.tpno}`).then(data => {
-        if (this.tpno === 1) {
-          this.articles = data.data.topics
-        } else {
-          let oldArr = this.articles.slice(0, -5)
-          this.articles = oldArr.concat(data.data.topics)
-        }
-      })
+      this.articles[this.i].replies_count = data.replies_count
     },
     showFtContentFun (ftData) {
       this.articles = [ftData, ...this.articles]
@@ -435,9 +464,17 @@ export default{
     replyComment (id, now) {
       if (now !== this.replayId) {
         this.replayId = now
+      } else {
+        this.replayId = ''
       }
-      this.talkReplayBox = !this.talkReplayBox
-      this.talkReplyTxt = !this.talkReplyTxt
+      this.commentShow = true
+      this.showReport = false
+      if (!this.talkReplayBox) {
+        this.talkReplayBox = true
+        this.showReportReplay = true
+      }
+      // this.talkReplayBox = !this.talkReplayBox
+      // this.talkReplyTxt = !this.talkReplyTxt
       this.toRId = 4
     },
     // 显示回复富文本框
@@ -448,14 +485,9 @@ export default{
     // 回复返回数据
     showReplyContent (data) {
       this.nowData.unshift(data)
-      get(`/api/topic/${this.tpno}`).then(data => {
-        if (this.tpno === 1) {
-          this.articles = data.data.topics
-        } else {
-          let oldArr = this.articles.slice(0, -5)
-          this.articles = oldArr.concat(data.data.topics)
-        }
-      })
+      // this.showLoaderComment = true
+      this.articles[this.i].replies_count = data.replies_count
+      this.replayId = ''
     },
     // 收藏
     collectionTopic (index, id) {
@@ -481,15 +513,19 @@ export default{
     },
     // 处理图片
     EditorContent (val) {
-      let newData = val.split(/<img src="\/static[^>]+>/g)
-      let now = ''
-      for (let i = 0; i < newData.length; i++) {
-        now += `${newData[i]}`
-      }
-      if (now.length > 300) {
-        now = now.substr(0, 300) + '...'
+      let now = `<div>${val}</div>`
+      now = $(now).text()
+      if (now.length > 128) {
+        return now.substring(0, 128) + '...'
       }
       return now
+    },
+    replyFun (val) {
+      let reply = val.replace(/<p>|<\/p>/g, '')
+      if (/^\/static.*/ig.test(reply)) {
+        return '图片评论' + `<a style='color:#0181FF' href='${reply}'><i class='iconfont'>&#xe694;</i>查看图片</a>`
+      }
+      return reply
     },
     // 分页
     prev () {
@@ -513,6 +549,9 @@ export default{
       }
     },
     go (page) {
+      if (page === '···') {
+        return
+      }
       this.chartShow = 0
       this.summaryList = []
       if (this.cpno !== page) {
@@ -640,10 +679,6 @@ svg:not(:root) {
 .comment-container{
     padding: 0 8px;
 }
-.loading{
-    margin-top: 60px;
-    display: none;
-}
 .comment-all{
   position: relative;
 }
@@ -730,6 +765,11 @@ a.avatar img {
     word-break: break-all;
     overflow: hidden;
     margin: 10px 0;
+}
+.comment-item-main img{
+    display: block;
+    cursor: zoom-in;
+    max-width: 200px;
 }
 .bibar-indexNewsItem-infro>li{
     float: left;
@@ -842,7 +882,7 @@ a.avatar img {
   background: #fff;
   position: relative;
 }
-.avatar{margin-bottom: 15px;}
+/*.avatar{margin-bottom: 15px;}*/
 .avatar>span{
   font-size: 16px;
   margin-left: 15px;
@@ -895,7 +935,7 @@ a.avatar img {
     margin-top: 5px;
     background-color: #f8f8f8;
     /* padding: 20px; */
-   padding: 15px 10px 0 0;
+   padding: 15px 10px 15px 0;
 }
 .editor-comment>.avatar{
     width: 32px;

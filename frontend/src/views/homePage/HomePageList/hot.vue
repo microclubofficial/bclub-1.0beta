@@ -444,6 +444,7 @@ export default{
         this.showComment = false
         this.commentShow = false
       }
+      this.replayId = ''
       this.toId = 0
       this.lid = id
       // if (!this.showComment) {

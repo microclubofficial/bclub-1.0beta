@@ -163,6 +163,13 @@ img[data-w-e]{
 .collectionActive{
   color: #ffa727 !important;
 }
+/*淡出*/
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s
+}
+.fade-enter, .fade-leave-active {
+  opacity: 0
+}
 /*数据加载loading样式*/
 .loading-bar{text-align: center;}
 .icon-loading {

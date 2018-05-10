@@ -228,7 +228,7 @@ export default {
       }
       this.pageCount = data.data.page_count
       this.$nextTick(() => {
-        $('.article_bd').find('img').css({'margin': '10px auto', 'display': 'block', 'text-align': 'center'})
+        $('.article_bd').find('img').css({'margin': '10px auto', 'display': 'block', 'text-align': 'center', 'max-width': '60%'})
         // $('.article_bd').find('p').css({'font-size': '16px', 'margin': '25px 0', 'text-align': 'justify', 'line-height': '1.8'})
         $('.detailContent').find('img').addClass('zoom-in')
         $('.detailContent').on('click', 'img', function () {

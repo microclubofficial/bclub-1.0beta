@@ -120,7 +120,9 @@ export default {
   },
   mounted () {
     $('#myTab li:eq(0) a').tab('show')
-    document.body.removeChild(document.querySelector('.modal-backdrop'))
+    if ($('div').hasClass('modal-backdrop')) {
+      document.body.removeChild(document.querySelector('.modal-backdrop'))
+    }
   },
   methods: {
     // 失去焦点验证
@@ -159,7 +161,9 @@ export default {
         }
       } else if (id === 4) {
         if (input === undefined || input.length === 0) {
-          this.phoneControlPrompt = '验证码不能为空'
+          if (this.hasphone) {
+            this.phoneControlPrompt = '验证码不能为空'
+          }
           return false
         } else {
           this.phoneControlPrompt = ''
@@ -214,7 +218,7 @@ export default {
         return
       }
       post(this.phoneUrl, this.phoneForm).then(data => {
-        alert(data.message)
+        // alert(data.message)
         if (data.resultcode === 0) {
           alert(data.message)
           if (data.message === '你已经登陆，不能重复登陆') {
@@ -224,13 +228,15 @@ export default {
               'isLogin': true
             })
             this.$router.push('/')
+          } if (data.message === 'failed') {
+            alert('手机号未注册')
+            return
           } else {
             this.controlPrompt = data.message
             // this.changeControl()
             return
           }
         }
-        console.log(data)
         if (data.resultcode === 1) {
           this.$store.commit('USER_INFO', {
             'username': data.data.username,
@@ -257,7 +263,7 @@ export default {
       let phone = parseFloat(this.phoneForm.phone)
       post('/api/phoneCaptcha/login', {'phone': phone}).then((data) => {
         if (data.resultcode === 0) {
-          alert(data.message)
+          alert('手机号未注册')
           return
         }
         if (data.resultcode === 1) {
