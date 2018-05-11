@@ -104,6 +104,7 @@ export default {
               }
               $('.w-e-text').html('')
               // this.$emit('backBibarContent', data.data.content)
+              // this.$router.push('/')
             }
           }
         })

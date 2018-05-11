@@ -135,6 +135,7 @@ export default {
             // 'isLogin': false
           })
           removeToken()
+          this.$router.push('/')
           // this.outloginSty()
           // this.$emit('backLoadContent')
         }
