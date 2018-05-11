@@ -17,7 +17,7 @@ from forums.api.tag.models import Tags
 from forums.api.topic.models import Topic, Reply
 from forums.api.collect.models import Collect
 from forums.common.utils import gen_filter_dict, gen_order_by
-from forums.common.views import BaseMethodView as MethodView
+from forums.common.views import IsAuthMethodView as MethodView
 from forums.func import get_json, object_as_dict, Avatar, Count, FindAndCount, time_diff, json_loads
 from datetime import datetime
 import math
@@ -27,7 +27,6 @@ from .models import User
 per_page = 5
 
 class UserListView(MethodView):
-    @login_required
     def get(self):
         query_dict = request.data
         #page, number = self.page_info
@@ -43,7 +42,6 @@ class UserListView(MethodView):
 
 
 class UserTopicView(MethodView):
-    @login_required
 
     def get(self, username, page):
         start = (page-1)*per_page
@@ -97,7 +95,6 @@ class UserTopicView(MethodView):
 
 
 class UserReplyListView(MethodView):
-    @login_required
 
     def get(self, username, page):
         start = (page-1)*per_page
@@ -136,8 +133,7 @@ class UserReplyListView(MethodView):
 
 
 class UserFollowerListView(MethodView):
-    @login_required
-    
+
     def get(self, username):
         user = User.query.filter_by(username=username).first_or_404()
         page, number = self.page_info
@@ -146,7 +142,6 @@ class UserFollowerListView(MethodView):
         return render_template('user/followers.html', **data)
 
 class UserView(MethodView):
-    @login_required
 
     def get(self, username):
         user = User.query.filter_by(username=username).first_or_404()

@@ -26,10 +26,8 @@ from forums.api.utils import gen_topic_filter, gen_topic_orderby
 from forums.common.serializer import Serializer
 from forums.common.utils import gen_filter_dict, gen_order_by
 from flask.views import MethodView
-from forums.common.views import IsAuthMethodView, IsConfirmedMethodView
-
+from forums.common.views import IsAuthMethodView
 from forums.jinja import safe_markdown
-
 from .models import Reply, Topic
 from .permissions import (like_permission, reply_list_permission,
                           reply_permission, topic_list_permission,
@@ -55,7 +53,7 @@ def collect_bool(topicid):
             return False
     return False
 
-class TopicAskView(IsConfirmedMethodView):
+class TopicAskView(IsAuthMethodView):
     def get(self):
         boardId = request.args.get('boardId', type=int)
         form = form_board()
@@ -65,7 +63,7 @@ class TopicAskView(IsConfirmedMethodView):
         return render_template('topic/ask.html', **data)
 
 
-class TopicEditView(IsConfirmedMethodView):
+class TopicEditView(IsAuthMethodView):
     decorators = (edit_permission, )
 
     def get(self, topicId):
@@ -79,7 +77,7 @@ class TopicEditView(IsConfirmedMethodView):
         return render_template('topic/edit.html', **data)
 
 
-class TopicPreviewView(IsConfirmedMethodView):
+class TopicPreviewView(IsAuthMethodView):
     @login_required
     def post(self):
         post_data = request.data

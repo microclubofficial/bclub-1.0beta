@@ -115,7 +115,7 @@ class PhotoView(MethodView):
             if Files:
                 n_filename = ''.join(sample(digits, 6))
                 fix = filename.rsplit('.')[-1]
-                newfilename = "%s%s%s%s%s%s"%(n_filename, '_', str(int(time())), str(
+                newfilename = "%s%s%s%s"%(str(int(time())), str(
                         randint(1000, 9999)), '.', fix)
                 file_path = current_app.config['PICTURE_FOLDER']
                 file = os.path.join(file_path, newfilename)

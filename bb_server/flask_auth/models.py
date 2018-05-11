@@ -279,6 +279,6 @@ class ModelUserMixin(ModelTimeMixin):
         return db.relationship(
             'User',
             backref=db.backref(
-                name, cascade='all,delete-orphan', lazy='dynamic'),
+                name, cascade='all,delete-orphan', lazy='dynamic', passive_deletes=True),
             uselist=False,
             lazy='joined')

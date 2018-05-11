@@ -13,7 +13,7 @@ class Bar(db.Model, ModelMixin):
     author = db.relationship(
         User,
         backref=db.backref(
-            'bars', cascade='all,delete-orphan', lazy='dynamic'),
+            'bars', cascade='all,delete-orphan', lazy='dynamic', passive_deletes=True),
         lazy='joined')
     title = db.Column(db.String(255), nullable=False)
     subtitle = db.Column(db.String(255))
@@ -47,7 +47,7 @@ class Questions(db.Model, ModelMixin):
     bar = db.relationship(
         Bar,
         backref=db.backref(
-            'bar-questions', cascade='all,delete-orphan', lazy='dynamic'),
+            'bar-questions', cascade='all,delete-orphan', lazy='dynamic', passive_deletes=True),
         lazy='joined')
 
     is_bar = db.Column(db.SmallInteger,  default=0)
@@ -57,7 +57,7 @@ class Questions(db.Model, ModelMixin):
     author = db.relationship(
         User,
         backref=db.backref(
-            'questions', cascade='all,delete-orphan', lazy='dynamic'),
+            'questions', cascade='all,delete-orphan', lazy='dynamic', passive_deletes=True),
         lazy='joined')
 
 class Answers(db.Model, ModelMixin):
@@ -73,12 +73,12 @@ class Answers(db.Model, ModelMixin):
     questions_id = db.Column(db.Integer, db.ForeignKey('questions.id', ondelete="CASCADE"))
     question = db.relationship(
         Questions, backref=db.backref(
-            'question', cascade='all,delete-orphan',lazy='dynamic'), lazy='joined')
+            'question', cascade='all,delete-orphan',lazy='dynamic', passive_deletes=True), lazy='joined')
     is_reply = db.Column(db.SmallInteger, default=0)
     author_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete="CASCADE"))
     author = db.relationship(
         User, backref=db.backref(
-            'answers', cascade='all,delete-orphan',lazy='dynamic'), lazy='joined')
+            'answers', cascade='all,delete-orphan',lazy='dynamic', passive_deletes=True), lazy='joined')
   
 class Comments(db.Model, ModelMixin):
     __tablename__ = 'comments'
@@ -98,7 +98,7 @@ class Comments(db.Model, ModelMixin):
     author_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete="CASCADE"))
     author = db.relationship(
         User, backref=db.backref(
-            'comments', cascade='all,delete-orphan', lazy='dynamic'), lazy='joined')
+            'comments', cascade='all,delete-orphan', lazy='dynamic' ), lazy='joined')
 
     reference = db.Column(db.String(512))
     at_user = db.Column(db.String(81))

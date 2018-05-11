@@ -14,7 +14,7 @@ from flask import render_template, redirect, url_for, flash, request
 from flask_login import current_user, logout_user, login_user
 from forums.api.forms import (ProfileForm, PasswordForm, PrivacyForm,
                               AvatarForm, BabelForm)
-from forums.common.views import IsConfirmedMethodView as MethodView
+from forums.common.views import IsAuthMethodView as MethodView
 from flask_auth.form import form_validate
 from flask_auth.auth.views import check_captcha, check_phone
 from forums.func import get_json, Avatar

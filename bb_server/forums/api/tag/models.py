@@ -38,7 +38,7 @@ class Tags(db.Model, ModelMixin):
             'children',
             remote_side=[parent_id],
             cascade='all,delete-orphan',
-            lazy='dynamic'),
+            lazy='dynamic', passive_deletes=True),
         lazy='joined',
         uselist=False)
     topics = db.relationship(
