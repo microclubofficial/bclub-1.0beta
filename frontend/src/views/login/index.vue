@@ -109,7 +109,7 @@ import { post } from 'src/utils/http'
 import { setToken } from '../../utils/auth'
 export default {
   name: 'login',
-  data() {
+  data () {
     return {
       userForm: {},
       phoneForm: {},
@@ -129,13 +129,15 @@ export default {
       getcontroltxt: '获取验证码'
     }
   },
-  mounted() {
+  mounted () {
     $('#myTab li:eq(0) a').tab('show')
-    // document.body.removeChild(document.querySelector('.modal-backdrop'))
+    if ($('div').hasClass('modal-backdrop')) {
+      document.body.removeChild(document.querySelector('.modal-backdrop'))
+    }
   },
   methods: {
     // 失去焦点验证
-    showRegisterMsg(input, id) {
+    showRegisterMsg (input, id) {
       if (id === 0) {
         if (input === undefined || input.length === 0) {
           this.unamePrompt = '用户名不能为空'
@@ -170,7 +172,9 @@ export default {
         }
       } else if (id === 4) {
         if (input === undefined || input.length === 0) {
-          this.phoneControlPrompt = '验证码不能为空'
+          if (this.hasphone) {
+            this.phoneControlPrompt = '验证码不能为空'
+          }
           return false
         } else {
           this.phoneControlPrompt = ''
@@ -178,7 +182,7 @@ export default {
       }
     },
     // 用户名登录
-    handleLogin() {
+    handleLogin () {
       if (this.userForm.username === undefined) {
         alert('用户名不能为空')
         return
@@ -226,7 +230,7 @@ export default {
       })
     },
     // 手机登录
-    handlePhoneLogin() {
+    handlePhoneLogin () {
       if (this.phoneForm.phone === undefined) {
         alert('手机号码不能为空')
         return
@@ -235,18 +239,19 @@ export default {
         return
       }
       post(this.phoneUrl, this.phoneForm).then(data => {
-        // console.log(data.message)
         if (data.resultcode === 0) {
           if (data.message === '你已经登陆，不能重复登陆') {
             alert(data.message)
             this.$router.push('/')
+          } if (data.message === 'failed') {
+            alert('手机号未注册')
+            return
           } else {
             this.controlPrompt = data.message
             // this.changeControl()
             return
           }
         }
-        // console.log(data)
         if (data.resultcode === 1) {
           this.$store.commit('USER_INFO', {
             'username': data.data.username,
@@ -265,25 +270,25 @@ export default {
       })
     },
     // 切换验证码
-    changeControl() {
+    changeControl () {
       this.controlImg = this.controlImg + '?d=' + Date.now()
     },
     // 去忘记密码
-    toForgetPwd() {
+    toForgetPwd () {
       this.$router.push('/forgetPwd')
     },
     // 获取手机验证码
-    getPhoneControl() {
+    getPhoneControl () {
       let phone = parseFloat(this.phoneForm.phone)
       post('/api/phoneCaptcha/login', { 'phone': phone }).then((data) => {
         if (data.resultcode === 0) {
-          alert(data.message)
+          alert('手机号未注册')
           return
         }
         if (data.resultcode === 1) {
           this.hasphone = true
           let that = this
-          this.timer = setInterval(function() {
+          this.timer = setInterval(function () {
             that.countdown--
             that.hasControl = true
             that.getcontroltxt = '重新获取'
@@ -304,7 +309,7 @@ export default {
       })
     },
     // 显示当前tab
-    changeTab(now) {
+    changeTab (now) {
       if (now === 0) {
         this.showTab = true
       } else {
@@ -317,7 +322,8 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss">
 .prompt {
-  float: left; // margin-left: 20%;
+  float: left;
+  margin-left: 20%;
   display: block;
   margin-top: 10px;
   color: red;
@@ -337,10 +343,10 @@ export default {
   border: none !important;
 }
 
-// .disable:hover{
-//     background: #BCBCBC;
-//     color: #797979;
-// }
+.disable:hover{
+  background: #BCBCBC;
+  olor: #797979;
+}
 .getcontrol {
   border-radius: 4px;
   color: #fff;

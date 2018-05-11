@@ -194,6 +194,7 @@ export default {
             this.personalUser(this.userInfo.username)
             $('.modal').css({'display': 'none'})
             $('.modal').removeClass('in')
+            $('#myModal').css({'display': 'none'})
             document.body.removeChild(document.querySelector('.modal-backdrop'))
           }
         })
@@ -204,26 +205,27 @@ export default {
       let phone = parseFloat(this.setForm.phone)
       this.hasphone = true
       let that = this
-      this.timer = setInterval(function () {
-        that.countdown--
-        that.hasControl = true
-        that.getcontroltxt = '重新获取'
-        this.kaiguan = false
-        if (that.countdown < 1) {
-          that.getcontroltxt = '获取验证码'
-          that.hasphone = false
-          that.countdown = 30
-          that.hasControl = false
-          clearInterval(that.timer)
-        }
-      }, 1000)
-      console.log(phone)
       post('/api/phoneCaptcha', {'phone': phone}).then((data) => {
-        console.log(data)
         if (data.resultcode === 0) {
           if (data.message === 'failed') {
             alert('手机号已注册')
+            this.hasphone = false
+            return false
           }
+        } else {
+          this.timer = setInterval(function () {
+            that.countdown--
+            that.hasControl = true
+            that.getcontroltxt = '重新获取'
+            this.kaiguan = false
+            if (that.countdown < 1) {
+              that.getcontroltxt = '获取验证码'
+              that.hasphone = false
+              that.countdown = 30
+              that.hasControl = false
+              clearInterval(that.timer)
+            }
+          }, 1000)
         }
       }).catch(error => {
         console.log(error)
