@@ -82,16 +82,16 @@
               </div>
               <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-9">
-                  <button type="button" style="width: 100%; border-radius: 5px;background: #286090; color:#fff;" class="btnm btnm-primary btnm-block" @click="handlePhoneLogin">登陆</button>
-                </div>
-              </div>
-              <div class="form-group">
-                <div class="col-sm-offset-2 col-sm-9">
                   <input id="rememberPhone" v-model="phoneForm.remember" type="checkbox" value="p">
                   <label for="rememberPhone">记住我</label>
                   <a class="pull-right" @click="toForgetPwd">忘记密码?</a>
                 </div>
               </div>
+              <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-9">
+                  <button type="button" style="width: 100%; border-radius: 5px;background: #286090; color:#fff;" class="btnm btnm-primary btnm-block" @click="handlePhoneLogin">登陆</button>
+                </div>
+              </div> 
               <h5 style='text-align:center;cursor: pointer'>没有账号？
                 <router-link :to="{path:'/register'}">注册</router-link>
               </h5>
@@ -253,7 +253,7 @@ export default {
             'avatar': data.data.avatar,
             'isLogin': true
           })
-          if (this.userForm.remember) {
+          if (this.phoneForm.remember) {
             setToken(data.data, { expires: 7 })
           } else {
             setToken(data.data)
