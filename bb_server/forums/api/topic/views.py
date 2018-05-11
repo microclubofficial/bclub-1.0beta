@@ -406,27 +406,23 @@ class ThumbView(IsAuthMethodView):
         userlist_bad = json.loads(session.is_bad)
         if thumb == 'up':
             if user.id in userlist_good:
-                return get_json(0, '不能重复点赞', len(userlist_good))
+                userlist_good.remove(user.id)
             elif user.id in userlist_bad:
                 userlist_bad.remove(user.id)
-            userlist_good.append(user.id)
-            #good_count = len(userlist_good)
-            #bad_count = len(userlist_bad)
-            session.is_good = json.dumps(userlist_good)
-            session.is_bad = json.dumps(userlist_bad)
+            else:
+                userlist_good.append(user.id)
         elif thumb == 'down':
             if user.id in userlist_bad:
-                return get_json(0, '不能重复吐槽', len(userlist_bad))
+                userlist_bad.remove(user.id)
             elif user.id in userlist_good:
                 userlist_good.remove(user.id)
-            userlist_bad.append(user.id)
-            #good_count = len(userlist_good)
-            #bad_count = len(userlist_bad)
-            session.is_good = json.dumps(userlist_good)
-            session.is_bad = json.dumps(userlist_bad)
+            else:
+                userlist_bad.append(user.id)
+        session.is_good = json.dumps(userlist_good)
+        session.is_bad = json.dumps(userlist_bad)
         session.save()
-        #data = {'good_count':good_count, 'bad_count':bad_count}
         data = {}
         data['is_good'], data['is_good_bool'] = Count(session.is_good)
         data['is_bad'], data['is_bad_bool'] = Count(session.is_bad)
         return get_json(1, '成功', data)
+

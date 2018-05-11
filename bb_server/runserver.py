@@ -164,7 +164,7 @@ def create_user(username, email, password):
     if password is None:
         password = getpass('Password:')
     user = User(
-        username=username, email=email, is_superuser=True, is_confirmed=True)
+        username=username, email=email, is_superuser=True)
     user.set_password(password)
     user.save()
 

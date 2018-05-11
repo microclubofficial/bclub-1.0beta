@@ -86,8 +86,6 @@ class UserTopicView(MethodView):
         Avatar(user_data, user)
         user_data['username'] = user.username
         user = object_as_dict(user)
-        if user.pop('is_confirmed'):
-            user_data['is_confirm'] = '邮箱未认证'
         if user.pop('is_superuser'):
             user_data['Authority'] = '管理员'
         else:
@@ -153,8 +151,6 @@ class UserView(MethodView):
         keys = ['password']
         for i in keys:
             user_data.pop(i)
-        if user_data.pop('is_confirmed'):
-            user_data['is_confirm'] = '邮箱未认证'
         if user_data.pop('is_superuser'):
             user_data['Authority'] = '管理员'
         else:
