@@ -49,7 +49,16 @@ def check_params(keys):
             post_data = request.json
             for key in keys:
                 if not post_data.get(key):
-                    msg = _('The %s is required'%key)
+                    babel = {
+                        'username': _("Username"),
+                        'password': _("Password"),
+                        'phone': _("Phone"),
+                        'phonecaptcha': _("PhoneCaptcha"),
+                        'captcha': _("Captcha"),
+                        'confirm_password': _("Confirm_password"),
+                    }
+                    msg = _('The %(key)s is required', key=babel[key])
+                    #msg = '请输入%s'%key
                     return get_json(0, msg, {}) 
             return func(*args, **kwargs)
 
