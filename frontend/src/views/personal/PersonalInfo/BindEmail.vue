@@ -42,6 +42,7 @@ export default {
     }
   },
   mounted () {
+    $('.emaiModal').modal('show')
   },
   methods: {
     // 验证
