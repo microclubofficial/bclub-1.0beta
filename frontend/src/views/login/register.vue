@@ -87,7 +87,7 @@
 
 <script>
 import {post} from 'src/utils/http'
-
+import { setToken } from '../../utils/auth'
 export default {
   name: 'login',
   data () {
@@ -183,6 +183,7 @@ export default {
             'avatar': data.data.avatar,
             'isLogin': true
           })
+          setToken(data.data)
           this.$router.push('/')
         }
       }).catch(error => {

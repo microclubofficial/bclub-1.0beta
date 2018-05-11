@@ -36,6 +36,7 @@
 <script>
 import 'babel-polyfill'
 import myUpload from '../uploadImg/upload.vue'
+import { setToken, rememberToken } from '../../../utils/auth'
 export default {
   data () {
     return {
@@ -74,6 +75,13 @@ export default {
         'avatar': data.data.avatar,
         'isLogin': true
       })
+      if (rememberToken('remember_token')) {
+        setToken(data.data, { expires: 7 })
+        // console.log(setToken(data.data, { expires: 7 }))
+      } else {
+        setToken(data.data)
+        // console.log(setToken(data.data))
+      }
       this.$router.push('/memberCenter')
     },
     cropUploadFailFun (status, field) {

@@ -218,6 +218,7 @@ export default {
             'avatar': data.data.avatar,
             'isLogin': true
           })
+          
           if (this.userForm.remember) {
             setToken(data.data, { expires: 7 })
           } else {
