@@ -59,10 +59,7 @@ class MailMixin(object):
             return False
         except BadSignature:
             return False
-        user = cls.query.filter_by(email=email).first()
-        if user is None:
-            return False
-        return user
+        return email
 
     # def send_email(self, *args, **kwargs):
     #     kwargs.update(recipients=[self.email])

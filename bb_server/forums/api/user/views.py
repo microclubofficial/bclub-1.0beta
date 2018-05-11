@@ -43,6 +43,8 @@ class UserListView(MethodView):
 
 
 class UserTopicView(MethodView):
+    @login_required
+
     def get(self, username, page):
         start = (page-1)*per_page
         query_dict = request.data
@@ -95,6 +97,8 @@ class UserTopicView(MethodView):
 
 
 class UserReplyListView(MethodView):
+    @login_required
+
     def get(self, username, page):
         start = (page-1)*per_page
         query_dict = request.data
@@ -133,6 +137,7 @@ class UserReplyListView(MethodView):
 
 class UserFollowerListView(MethodView):
     @login_required
+    
     def get(self, username):
         user = User.query.filter_by(username=username).first_or_404()
         page, number = self.page_info
@@ -141,6 +146,8 @@ class UserFollowerListView(MethodView):
         return render_template('user/followers.html', **data)
 
 class UserView(MethodView):
+    @login_required
+
     def get(self, username):
         user = User.query.filter_by(username=username).first_or_404()
         id = user.id

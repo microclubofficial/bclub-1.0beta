@@ -172,7 +172,6 @@ class TopicListView(MethodView):
         #user = User.query.filter_by(id=1).first()
         topic.author = user
         topic.save()
-        diff_time = time_diff(topic.updated_at)
         topic = object_as_dict(topic)
         Avatar(topic, user)
         #topic['content'] = json.loads(topic['content'])
