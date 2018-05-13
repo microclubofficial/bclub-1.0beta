@@ -58,7 +58,7 @@ class Topic(db.Model, ModelMixin):
     author = db.relationship(
         User,
         backref=db.backref(
-            'topics', cascade='all,delete-orphan', lazy='dynamic'),
+            'topics', cascade='all,delete-orphan', lazy='dynamic', passive_deletes=True),
         lazy='joined')
     board_id = db.Column(
         db.Integer, db.ForeignKey(
@@ -66,7 +66,7 @@ class Topic(db.Model, ModelMixin):
     board = db.relationship(
         Board,
         backref=db.backref(
-            'topics', cascade='all,delete-orphan', lazy='dynamic'),
+            'topics', cascade='all,delete-orphan', lazy='dynamic', passive_deletes=True),
         lazy='joined')
     followers = db.relationship(
         User,
@@ -150,14 +150,14 @@ class Reply(db.Model, ModelMixin):
             'topics.id', ondelete="CASCADE"))
     topic = db.relationship(
         Topic, backref=db.backref(
-            'topic', cascade='all,delete-orphan', lazy='dynamic'), lazy='joined')
+            'topic', cascade='all,delete-orphan', lazy='dynamic', passive_deletes=True), lazy='joined')
     reference = db.Column(db.String(512), default='')
     at_user = db.Column(db.String(81), default='')
 
     author_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete="CASCADE"))
     author = db.relationship(
         User, backref=db.backref(
-            'replies', cascade='all,delete-orphan', lazy='dynamic'), lazy='joined')
+            'replies', cascade='all,delete-orphan', lazy='dynamic', passive_deletes=True), lazy='joined')
     
     likers = db.relationship(
         User,

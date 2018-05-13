@@ -77,17 +77,19 @@ class GetFileView(MethodView):
         for filename in file_dict:
             Files = file_dict[filename]
             if Files and check_file(Files.filename):
-                filename = secure_filename(Files.filename)
-                n_filename = filename.rsplit('.', 1)[0]
-                fix = filename.rsplit('.', 1)[1]
-                newfilename = "%s%s%s%s%s%s"%(n_filename, '_', str(int(time())), str(
+                filenames = secure_filename(Files.filename)
+                if '.' in filenames:
+                    fix = filenames.rsplit('.', 1)[1]
+                else:
+                    fix = filenames.rsplit('.', 1)[0]
+                newfilename = "%s%s%s%s"%(str(int(time())), str(
                         randint(1000, 9999)), '.', fix)
                 file_path = current_app.config['PICTURE_FOLDER']
                 file = os.path.join(file_path, newfilename)
                 if not os.path.exists(file_path):
                     os.makedirs(file_path)
                 files = File(
-                    front_file = filename,
+                    front_file = filenames,
                     file_path = '/' + file_path + '/' + newfilename)
                 files.save()
                 files.file_path = '/' + file_path + '/' + newfilename
@@ -113,7 +115,7 @@ class PhotoView(MethodView):
             if Files:
                 n_filename = ''.join(sample(digits, 6))
                 fix = filename.rsplit('.')[-1]
-                newfilename = "%s%s%s%s%s%s"%(n_filename, '_', str(int(time())), str(
+                newfilename = "%s%s%s%s"%(str(int(time())), str(
                         randint(1000, 9999)), '.', fix)
                 file_path = current_app.config['PICTURE_FOLDER']
                 file = os.path.join(file_path, newfilename)

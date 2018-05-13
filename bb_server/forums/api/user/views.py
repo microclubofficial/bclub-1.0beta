@@ -17,7 +17,7 @@ from forums.api.tag.models import Tags
 from forums.api.topic.models import Topic, Reply
 from forums.api.collect.models import Collect
 from forums.common.utils import gen_filter_dict, gen_order_by
-from forums.common.views import BaseMethodView as MethodView
+from forums.common.views import IsAuthMethodView as MethodView
 from forums.func import get_json, object_as_dict, Avatar, Count, FindAndCount, time_diff, json_loads
 from datetime import datetime
 import math
@@ -27,7 +27,6 @@ from .models import User
 per_page = 5
 
 class UserListView(MethodView):
-    @login_required
     def get(self):
         query_dict = request.data
         #page, number = self.page_info
@@ -43,6 +42,7 @@ class UserListView(MethodView):
 
 
 class UserTopicView(MethodView):
+
     def get(self, username, page):
         start = (page-1)*per_page
         query_dict = request.data
@@ -86,8 +86,6 @@ class UserTopicView(MethodView):
         Avatar(user_data, user)
         user_data['username'] = user.username
         user = object_as_dict(user)
-        if user.pop('is_confirmed'):
-            user_data['is_confirm'] = '邮箱未认证'
         if user.pop('is_superuser'):
             user_data['Authority'] = '管理员'
         else:
@@ -97,6 +95,7 @@ class UserTopicView(MethodView):
 
 
 class UserReplyListView(MethodView):
+
     def get(self, username, page):
         start = (page-1)*per_page
         query_dict = request.data
@@ -134,7 +133,7 @@ class UserReplyListView(MethodView):
 
 
 class UserFollowerListView(MethodView):
-    @login_required
+
     def get(self, username):
         user = User.query.filter_by(username=username).first_or_404()
         page, number = self.page_info
@@ -143,6 +142,7 @@ class UserFollowerListView(MethodView):
         return render_template('user/followers.html', **data)
 
 class UserView(MethodView):
+
     def get(self, username):
         user = User.query.filter_by(username=username).first_or_404()
         id = user.id
@@ -153,8 +153,6 @@ class UserView(MethodView):
         keys = ['password']
         for i in keys:
             user_data.pop(i)
-        if user_data.pop('is_confirmed'):
-            user_data['is_confirm'] = '邮箱未认证'
         if user_data.pop('is_superuser'):
             user_data['Authority'] = '管理员'
         else:

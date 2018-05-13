@@ -26,10 +26,8 @@ from forums.api.utils import gen_topic_filter, gen_topic_orderby
 from forums.common.serializer import Serializer
 from forums.common.utils import gen_filter_dict, gen_order_by
 from flask.views import MethodView
-from forums.common.views import IsAuthMethodView, IsConfirmedMethodView
-
+from forums.common.views import IsAuthMethodView
 from forums.jinja import safe_markdown
-
 from .models import Reply, Topic
 from .permissions import (like_permission, reply_list_permission,
                           reply_permission, topic_list_permission,
@@ -55,7 +53,7 @@ def collect_bool(topicid):
             return False
     return False
 
-class TopicAskView(IsConfirmedMethodView):
+class TopicAskView(IsAuthMethodView):
     def get(self):
         boardId = request.args.get('boardId', type=int)
         form = form_board()
@@ -65,7 +63,7 @@ class TopicAskView(IsConfirmedMethodView):
         return render_template('topic/ask.html', **data)
 
 
-class TopicEditView(IsConfirmedMethodView):
+class TopicEditView(IsAuthMethodView):
     decorators = (edit_permission, )
 
     def get(self, topicId):
@@ -79,7 +77,7 @@ class TopicEditView(IsConfirmedMethodView):
         return render_template('topic/edit.html', **data)
 
 
-class TopicPreviewView(IsConfirmedMethodView):
+class TopicPreviewView(IsAuthMethodView):
     @login_required
     def post(self):
         post_data = request.data
@@ -172,7 +170,6 @@ class TopicListView(MethodView):
         #user = User.query.filter_by(id=1).first()
         topic.author = user
         topic.save()
-        diff_time = time_diff(topic.updated_at)
         topic = object_as_dict(topic)
         Avatar(topic, user)
         #topic['content'] = json.loads(topic['content'])
@@ -406,27 +403,23 @@ class ThumbView(IsAuthMethodView):
         userlist_bad = json.loads(session.is_bad)
         if thumb == 'up':
             if user.id in userlist_good:
-                return get_json(0, '不能重复点赞', len(userlist_good))
+                userlist_good.remove(user.id)
             elif user.id in userlist_bad:
                 userlist_bad.remove(user.id)
-            userlist_good.append(user.id)
-            #good_count = len(userlist_good)
-            #bad_count = len(userlist_bad)
-            session.is_good = json.dumps(userlist_good)
-            session.is_bad = json.dumps(userlist_bad)
+            else:
+                userlist_good.append(user.id)
         elif thumb == 'down':
             if user.id in userlist_bad:
-                return get_json(0, '不能重复吐槽', len(userlist_bad))
+                userlist_bad.remove(user.id)
             elif user.id in userlist_good:
                 userlist_good.remove(user.id)
-            userlist_bad.append(user.id)
-            #good_count = len(userlist_good)
-            #bad_count = len(userlist_bad)
-            session.is_good = json.dumps(userlist_good)
-            session.is_bad = json.dumps(userlist_bad)
+            else:
+                userlist_bad.append(user.id)
+        session.is_good = json.dumps(userlist_good)
+        session.is_bad = json.dumps(userlist_bad)
         session.save()
-        #data = {'good_count':good_count, 'bad_count':bad_count}
         data = {}
         data['is_good'], data['is_good_bool'] = Count(session.is_good)
         data['is_bad'], data['is_bad_bool'] = Count(session.is_bad)
         return get_json(1, '成功', data)
+

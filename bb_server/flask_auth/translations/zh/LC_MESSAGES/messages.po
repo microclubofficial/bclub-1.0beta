@@ -34,24 +34,32 @@ msgstr "你没有权限!"
 msgid "You have logined in ,needn't login again"
 msgstr "你已经登陆，不能重复登陆"
 
-#: ../flask_maple/auth/views.py:48
+#: ../flask_maple/auth/views.py:53
 msgid "Username"
 msgstr "用户名"
 
-#: ../flask_maple/auth/views.py:49
+#: ../flask_maple/auth/views.py:54
 msgid "Password"
 msgstr "密码"
 
-#: ../flask_maple/auth/views.py:50
-msgid "Email"
-msgstr "邮箱"
+#: ../flask_maple/auth/views.py:55
+msgid "Phone"
+msgstr "手机号"
 
-#: ../flask_maple/auth/views.py:51
+#: ../flask_maple/auth/views.py:56
+msgid "PhoneCaptcha"
+msgstr "手机验证码"
+
+#: ../flask_maple/auth/views.py:57
 #: ../flask_maple/templates/maple/captcha.html:3
 msgid "Captcha"
 msgstr "验证码"
 
-#: ../flask_maple/auth/views.py:57
+#: ../flask_maple/auth/views.py:58
+msgid "Confirm_password"
+msgstr "密码"
+
+#: ../flask_maple/auth/views.py:60
 #, python-format
 msgid "The %(key)s is required"
 msgstr "%(key)s不能为空"
