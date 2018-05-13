@@ -73,7 +73,7 @@
                         </div>
                     <div class="modal-footer">
                         <button type="button" class="btn-default" @click="closeModal" data-dismiss="modal">关闭</button>
-                        <button type="button" class="btnm btn-primary" v-bind:disabled="!setForm.phone || !setForm.username" @click="setusername">确定</button>
+                        <button type="button" class="btnm btn-primary" v-bind:disabled="!setForm.username" @click="setusername">确定</button>
                     </div>
                 </div>
             </div>

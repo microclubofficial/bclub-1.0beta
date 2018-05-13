@@ -52,16 +52,16 @@
        <div class="editor-comment clearfloat">
          <img :src="userInfo.avatar" alt="" class="avatar" v-show="commentShow">
          <div class="avatar" v-show="showReport"><img :src="userInfo.avatar" alt=""></div>
-         <div class="editor-bd clearfloat">
-           <span class="comment-img-delete"></span>
-           <!--默认-->
-           <svg v-show="commentShow" version='1.1' xmlns='http://www.w3.org/2000/svg' class="editor-triangle">
+         <!--默认-->
+           <svg v-show="commentShow" version='1.1' xmlns='http://www.w3.org/2000/svg' class="editor-triangle editor-hot-comment-default">
             <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
            </svg>
            <!--富文本-->
-           <svg style="left:0; top:40px;" version='1.1' xmlns='http://www.w3.org/2000/svg' v-show="showReport" class="editor-svg">
+           <svg style="left:56px; top:62px;" version='1.1' xmlns='http://www.w3.org/2000/svg' v-show="showReport" class="editor-svg">
             <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
           </svg>
+         <div class="editor-bd clearfloat">
+           <span class="comment-img-delete"></span>
            <div class="editor-textarea" v-show="commentShow" @click="commentShowFun">
              <div class="editor-placeholder">评论...</div>
            </div>
@@ -136,12 +136,12 @@
                 <!-- 回复文本框 -->
         <div class="editor-comment clearfloat">
          <div class="avatar" style="margin-top:8px;" v-show="showReportReplay"><img :src="userInfo.avatar" alt=""></div>
-         <div class="editor-bd clearfloat">
-           <span class="comment-img-delete"></span>
-            <!--富文本-->
-           <svg style="left:-1px; top:40px;" version='1.1' xmlns='http://www.w3.org/2000/svg' v-show="showReportReplay" class="editor-svg">
+         <!--富文本-->
+           <svg style="left:56px; top: 62px;" version='1.1' xmlns='http://www.w3.org/2000/svg' v-show="showReportReplay" class="editor-svg">
             <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
           </svg>
+         <div class="editor-bd clearfloat">
+           <span class="comment-img-delete"></span>
            <div class="editor-textarea"  v-show="talkReplyTxt" @click="talkReplyEditor">
              <div class="editor-placeholder">回复...</div>
            </div>
@@ -297,7 +297,6 @@ export default{
       let that = this
       document.querySelector('#app').addEventListener('scroll', function () {
         if (this.clientHeight + this.scrollTop === this.scrollHeight) {
-          console.log(that.tpno < that.pageCount)
           if (that.tpno < that.pageCount) {
             that.loadTopicPage()
           } else {
@@ -649,6 +648,10 @@ export default{
 </script>
 
 <style>
+  .editor-hot-comment-default{
+    left:53px;
+    top: 35px;
+  }
 .replyBackConten>p:first-child{
     overflow: hidden;
     text-overflow: ellipsis;
@@ -753,8 +756,6 @@ svg:not(:root) {
 }
 .editor-triangle{
     position: absolute;
-    top: 18px;
-    left: -4px;
     width: 5px;
     height: 10px;
     z-index: 11;
@@ -912,7 +913,7 @@ a.avatar img {
   margin-top: 20px;
   background: #EDF5FE;
   margin-left: 42px;
-  padding: 8px 0;
+  /*padding: 8px 0;*/
 }
 .comment-reply>.comment-item{
   margin: 15px 0;
@@ -1065,8 +1066,6 @@ svg:not(:root) {
 }
 .editor-triangle{
     position: absolute;
-    top: 18px;
-    left: -4px;
     width: 5px;
     height: 10px;
     z-index: 11;

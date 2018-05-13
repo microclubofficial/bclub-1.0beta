@@ -298,8 +298,9 @@ export default {
   font-size: 14px;
   color: #33353c;
   cursor: default;
-  width: 120px;
+  width: 100%;
   left: 0;
+  min-width:120px;
 }
 
 .nav_msg_dropdown {

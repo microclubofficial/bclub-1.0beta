@@ -667,8 +667,6 @@ svg:not(:root) {
 }
 .editor-triangle{
     position: absolute;
-    top: 10px;
-    left: -4px;
     width: 5px;
     height: 10px;
     z-index: 11;
