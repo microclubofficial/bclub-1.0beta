@@ -5,9 +5,9 @@
                 <div class="bibar-boxtitle" style="margin-bottom:10px;"> <span class="name">简介</span> </div>
                 <div class="bibar-boxbody">
                     <div class="bibar-indexintro">
-                        <p>{{briefTxt.length > 0 ? briefTxt : '暂无简介'}}</p>
+                        <p>{{briefC.length > 0 ? briefC : '暂无简介'}}</p>
                     </div>
-                    <a href="#" v-if='briefTxt.length > 0' class="bibar-indexintromore text-theme" @click="showText">展开 <i class="iconfont icon-quan-arrowdown"></i></a>
+                    <a href="#" v-if='briefC.length > 0' class="bibar-indexintromore text-theme" @click="showText = !showText">{{more}}<i class="iconfont" v-if='!showText'>&#xe692;</i><i class="iconfont" v-if='showText'>&#xe693;</i></a>
                     <div class="bibar-indexinftrList">
                         <dl>
                             <dt>发行时间</dt>
@@ -120,8 +120,6 @@ export default{
   props: ['bId'],
   data: function () {
     return {
-      txt: '',
-      txth: '',
       isBx: false,
       sideList: [],
       sidePage: 1,
@@ -140,17 +138,11 @@ export default{
       websites: '',
       // 上下一页
       showPre: false,
-      showNext: true
+      showNext: true,
+      showText: false
     }
   },
   created: function () {
-    this.txt = $('.bibar-indexintro').html()
-    var divH = $('.bibar-indexintro').height()
-    var $p = $('p', $('.bibar-indexintro')).eq(0)
-    while ($p.outerHeight() > divH) {
-      $p.text($p.text().replace(/(\s)*([a-zA-Z0-9]+|\W)(\.\.\.)?$/, '...'))
-    };
-    this.txth = $('.bibar-indexintro').html()
     $('#myTab li:eq(1) a').tab('show')
     // 影响力
     this.sideFun(this.sidePage)
@@ -165,19 +157,23 @@ export default{
       this.briefFun('bitcoin')
     }
   },
-  methods: {
-    showText: function () {
-      var btnTxt = $('.bibar-indexintromore').html()
-      if (btnTxt === '展开 <i class="iconfont icon-quan-arrowdown"></i>') {
-        $('.bibar-indexintromore').html('收起 <i class="iconfont icon-quan-arrowup"></i>')
-        $('.bibar-indexintro').html(this.txth)
-        $('.bibar-indexintro').css({'height': 'auto'})
+  computed: {
+    briefC: function () {
+      if (this.showText === false) {
+        return this.briefTxt.substring(0, 80) + '...'
       } else {
-        $('.bibar-indexintromore').html('展开 <i class="iconfont icon-quan-arrowdown"></i>')
-        $('.bibar-indexintro').html(this.txth)
-        $('.bibar-indexintro').css({'height': '108px'})
-      };
+        return this.briefTxt
+      }
     },
+    more: function () {
+      if (this.showText === false) {
+        return '展开'
+      } else {
+        return '收起'
+      }
+    }
+  },
+  methods: {
     // 热门话题
     showHotTab (id) {
       if (id === 0) {
@@ -228,7 +224,6 @@ export default{
         } else {
           this.showPre = false
         }
-        console.log(this.showPre + '上一页')
       } else if (id === 1) {
         if (this.hotbPage < this.hotPageCount) {
           this.hotbPage++
@@ -240,7 +235,6 @@ export default{
         } else {
           this.showNext = false
         }
-        console.log(this.showNext + '下一页')
       }
     },
     // 去币详情
@@ -253,12 +247,17 @@ export default{
     },
     // 简介
     briefFun (id) {
+      this.showText = false
       get(`/api/side/tokenintroduce/${id}`).then(data => {
         if (data.resultcode === 1) {
           this.brief = data.data
           // console.log(this.brief)
           this.websites = this.brief.websites[0]
-          this.briefTxt = this.brief.descriptions.zh[0] + this.brief.descriptions.zh[1]
+          if (id === 'bitcoin') {
+            this.briefTxt = this.brief.descriptions.zh[0]
+          } else {
+            this.briefTxt = this.brief.descriptions.zh[0] + this.brief.descriptions.zh[1]
+          }
         }
       })
     }

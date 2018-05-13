@@ -160,7 +160,7 @@ export default{
 
 <style>
 .report{
-    padding: 6px 10px;
+  /*padding: 6px 10px;*/
    text-align: center;
    background: #1E8FFF;
    border-radius: 3px;

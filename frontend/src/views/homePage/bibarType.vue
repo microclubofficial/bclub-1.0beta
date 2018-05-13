@@ -93,7 +93,9 @@ export default{
     width: 360px;
 }
 .bibarType-main > .bibarType-main-box {
-    width: 30%;
+    width: 32%;
     height: 220px;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
 }
 </style>

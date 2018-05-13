@@ -76,7 +76,7 @@ export default{
     // 币种
     this.bitId = this.$route.params.currency
     // 富文本样式
-    $('.mainBibar-editor').find('.wangeditor').css({'width': '860px'})
+    // $('.mainBibar-editor').find('.wangeditor').css({'width': '860px'})
     let scope = $('.bibar-list-item ul li:eq(2)').find('span').html()
     let scopeStyle = $('.bibar-list-item ul li:eq(2)').find('a')
     if (scope === '-') {
@@ -117,7 +117,7 @@ export default{
 <style>
   /*币讯富文本样式*/
   .mainBibar-editor{
-    width: 960px;
+    /*width: 960px;*/
     margin: auto;
     background: rgb(255, 255, 255);
     padding: 20px 40px;
@@ -127,7 +127,7 @@ export default{
     background: #F8F8F8 !important;
   }
   .mainBibar-editor .wangeditor .editor{
-    width: 85%;
+    width: 94%;
   }
  .bibar-Main>.bibar-w1100>.bx-mainLeft{width: 960px;}
 .bibarMainGzList{background: #fff}

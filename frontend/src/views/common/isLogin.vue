@@ -60,16 +60,34 @@
       </div>
       <a href="javascript:void(0)" class="nav_btn_longtext" @click="postModel">发帖</a>
     </div>
-    <vdialog ref="headerChild" v-show="Showdialog" :toDialog='postEditor'></vdialog>
+    <div class="modal fade hmModal" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title" id="myModalLabel">有什么消息告诉大家</h4>
+          </div>
+          <div class="modal-body">
+            <BibarPostContent ref="headerChild" @backFtNav = 'FtNavFun'></BibarPostContent>
+          </div>
+          <!-- <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            <button type="button" class="btn btn-primary">提交更改</button>
+          </div> -->
+        </div>
+    </div>
+  </div>
+    <!--<vdialog ref="headerChild" v-show="Showdialog" :toDialog='postEditor'></vdialog>-->
   </div>
 </template>
 
 <script>
 import { get, post } from '../../utils/http.js'
-import vdialog from './dialog.vue'
+// import vdialog from './dialog.vue'
 import { getToken, removeToken } from '../../utils/auth'
+import BibarPostContent from '../homePage/bibarPostContent.vue'
 export default {
-  data: function() {
+  data: function () {
     return {
       user_token: '',
       hasCount: false,
@@ -81,26 +99,31 @@ export default {
       postEditor: {
         'title': '有什么消息告诉大家',
         'id': 1
-      },
+      }
       // isShowft: false
     }
   },
   components: {
-    vdialog
+    BibarPostContent
   },
   computed: {
-    userInfo() {
+    userInfo () {
       return this.$store.state.userInfo.userInfo
     }
   },
-  created() {
-    if(getToken()) {
+  created () {
+    if (getToken()) {
       this.user_token = JSON.parse(getToken())
     }
     // console.log(this.user_token)
   },
-  mounted() {
+  mounted () {
     // this.outloginSty()
+    $('.bibar-headerSearchitem').find('.toLongText').css({'right': '320px', 'bottom': '9px'})
+    $('.bibar-headerSearchitem').find('.avatar').css({'display': 'none'})
+    $('.bibar-headerSearchitem').find('.editor').css({'width': '570px'})
+    $('.bibar-headerSearchitem').find('.cancel').css({'right': '52px', 'bottom': '6px'})
+    $('.w-e-text-container').css({'overflow-y': 'scroll', 'height': '87px'})
   },
   watch: {
     $route (val) {
@@ -111,27 +134,27 @@ export default {
     this.Showdialog = false
   },
   methods: {
-    toRegister() {
+    toRegister () {
       this.$router.push('/register')
     },
-    toLogin() {
+    toLogin () {
       this.$router.push('/login')
     },
     // 查看消息
-    handleMsg(e) {
+    handleMsg (e) {
       this.showMsg = !this.showMsg
     },
     // 查看个人中心
-    handlePersonal() {
+    handlePersonal () {
       this.showPersonal = !this.showPersonal
     },
     // 退出登录
-    outlogin() {
+    outlogin () {
       post('api/logout').then(data => {
         if (data.message === '登出成功') {
           this.$store.commit('USER_INFO', {
             'username': '',
-            'avatar': '',
+            'avatar': ''
             // 'isLogin': false
           })
           removeToken()
@@ -143,17 +166,13 @@ export default {
       })
     },
     // 发帖
-    postModel() {
-      this.Showdialog = true
-      $('.hmodal').addClass('in')
-      $('.hmodal').css({ 'display': 'block' })
-      $('.modal-backdrop').css({ 'display': 'block' })
-      // document.body.removeChild(document.querySelector('.modal-backdrop'))
-      this.$refs.headerChild.ftDilog()
-      $('#myModal').modal({
-        keyboard: true
-      })
+    postModel () {
+      $('#myModal1').modal('show')
+      this.$refs.headerChild.ftEditor()
     },
+    FtNavFun (data) {
+      this.$store.dispatch('set_backForNav', data)
+    }
     // // 退登样式
     // outloginSty() {
     //   if (!this.userInfo.isLogin) {
@@ -170,7 +189,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 .user_info_dropdown>ul>li>a {
   display: inline-block;
 }
@@ -339,4 +358,73 @@ a.nav_btn_longtext {
   height: 35px;
   line-height: 28px;
 }
+/*模态框*/
+.modal-dialog>.modal-content>.modal-body>.wangeditor>.editor{
+  width: 525px;
+}
+ .modal-dialog>.modal-content>.modal-body>.wangeditor>.editor>.w-e-panel-container{
+    width: 300px!important;
+    z-index: 20000;
+    border-top: 1px solid #ccc!important;
+    position: fixed!important;
+    top: 195px!important;
+}
+.modal-body{
+    position: relative;
+    padding: 0 15px 15px 15px !important;
+    margin: 0 !important;
+}
+.modal-title{
+    font-size: 18px !important;
+    font-weight: 700 !important;
+    color: #000 !important;
+}
+.modal-header{border: none;border-bottom: 1px solid #e5e5e5;}
+.modal-body>.wangeditor{
+    width: 570px !important;
+    /* margin: 20px auto 0 auto; */
+    background-color: #fff;
+    padding: 12px 0 !important;
+    margin: 0 !important;
+    position: relative;
+    min-height: 160px;
+    /* padding-left: 16%; */
+}
+.modal-open .modal{
+  overflow-y: hidden !important;
+}
+.modal-body>.wangeditor>.avatar{display: none;}
+.modal-body>.wangeditor .report{
+  right: 0;
+  bottom:21px;
+}
+.modal-body>.wangeditor .cancel{
+    bottom: -6px;
+    right: 60px;
+}
+.modal .modal-content{
+  border-radius: 5px !important;
+}
+/* .w-e-toolbar .w-e-menu{z-index: 10000 !important;} */
+.modal-body>.wangeditor>.editor>.w-e-toolbar{
+  background: #fff !important;
+  bottom: -20px !important;
+}
+.modal-body>.wangeditor>.editor>.w-e-text-container{border: 1px solid #edf0f5 !important; z-index: 9999;height: 87px !important;}
+.modal-body>.wangeditor>.editor>.w-e-text-container>.w-e-panel-container{
+    width: 300px !important;
+    /* margin-left: -285px !important; */
+    z-index: 20000;
+    border-top: 1px solid #ccc !important;
+    position: fixed !important;
+    top: 195px !important;
+}
+.modal-body>.wangeditor>.editor>.w-e-text-container>.w-e-panel-container>.w-e-panel-tab-content{
+  height: 143px !important;
+}
+.modal-body>.wangeditor .toLongText{
+    bottom: 0;
+    right: 320px;
+}
+.modal-body>.wangeditor>.editor{width: 525px;}
 </style>

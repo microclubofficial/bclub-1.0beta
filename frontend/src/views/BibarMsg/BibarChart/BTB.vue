@@ -168,13 +168,11 @@ export default {
         // 流通率进度条
         that.rate = parseFloat(that.bibarData.Circulation_rate.split(/%/g)[0])
         // 人民币汇率
-        console.log(that.bibarData.CNY_RATE)
         that.CNY_RATE = parseFloat(that.bibarData.CNY_RATE)
         // 比特币汇率
         that.BTC_RATE = parseFloat(that.bibarData.BTC_RATE)
         // 人民币转换
         that.cny_price = that.bibarData.price * that.CNY_RATE
-        console.log(that.CNY_RATE)
         // 涨幅
         that.change1h = that.bibarData.change1h
         var change1hStr = that.change1h.toString()

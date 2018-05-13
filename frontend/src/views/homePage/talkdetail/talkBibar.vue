@@ -1,6 +1,6 @@
 <template>
   <div class="talkBibar">
-    <MainHeader></MainHeader>
+    <!--<MainHeader></MainHeader>-->
     <div class="talkBibar-main">
       <!-- 文章 -->
       <div class="talkBibar-article shadow-box">

@@ -49,6 +49,7 @@
     color: #0181ff;
     text-decoration: underline;
   }
+.w-e-text{line-height: 1.5;}
 .media-body > div{
     display: -webkit-box;
     width: 100%;
@@ -68,7 +69,7 @@
 .detail-main-content h1,.detail-main-content h2,.detail-main-content h3,.detail-main-content h4,.detail-main-content h5,
 .detail-main-content h6{line-height: 28px;}
 /* 模态框 */
- .modal-backdrop{z-index: 10000;}
+ .modal-backdrop{z-index: 10001;}
  #myModal{z-index: 10002;}
  .btn{padding: 0px 10px !important;}
  .box{
@@ -82,6 +83,8 @@
  .container{
     width: 1060px !important;
  }
+ /*面包屑*/
+ .crumb .row .span6 .breadcrumb .crumbActive{color: #999;}
  /*放大缩小图片*/
  .zoom-in{
   cursor: zoom-in;
@@ -91,7 +94,7 @@
 .zoom-out{
   cursor: zoom-out !important;
   max-width: 100%;
-  margin: 10px auto;
+  /*margin: 10px auto;*/
 }
 /*表情样式*/
 img[data-w-e]{
@@ -105,6 +108,12 @@ img[data-w-e]{
     text-align: justify;
     line-height: 1.8;
 }
+/*面包屑*/
+.crumb .row .span6 .breadcrumb{
+  background: #fff;
+  border-bottom: 1px solid #efefef;
+}
+.crumb .row .span6 .breadcrumb li a,.crumb .row .span6 .breadcrumb li span{color: #2DA2FF; }
  /*分页*/
 .pages{
     margin: 10px 0;
@@ -775,7 +784,7 @@ ul.dropdown-menu{height: auto;}
 /*清除浮动*/
 .clearfloat::after{display:block;clear:both;content:"";visibility:hidden;height:0}
 /*首页框架*/
-.bibar-Main{margin-top: 80px; position: relative; z-index: 5;}
+.bibar-Main{margin-top: 20px; position: relative; z-index: 5;}
 .bibar-Mainleft{width: 1200px; float: left;}
 .bibar-Mainright{width: 220px; float: right;}
 .bibar-box{background-color: #fff; box-shadow: 0px 0px 4px 3px #ededed;}
@@ -817,7 +826,7 @@ i.icon-BTC{font-size: 14px; font-weight: bold;}
 .bibar-indexDisplay-datamore dl dt{width: 100px; line-height: 24px; float: left;}
 .bibar-indexDisplay-datamore dl dd{margin-left: 100px; font-weight: bold; line-height: 24px;}
 .bibar-indexDisplay-datamore dl dd .bibar-uipress{top: 0px;margin-left: 25px;}
-.bibar-indexDisplay-chart{margin: 5px 0px;}
+/*.bibar-indexDisplay-chart{margin: 5px 0px;}*/
 .bibar-indexDisplay-chartTAB{overflow: hidden;margin: 5px 0px;}
 .bibar-indexDisplay-chartTAB ul{float: left;}
 .bibar-indexDisplay-chartTAB ul li{}
@@ -832,7 +841,7 @@ i.icon-BTC{font-size: 14px; font-weight: bold;}
 /* 首页左边栏 */
 .bibar-sidebar{width: 150px;float: left;position: relative;margin-right: 20px;}
 /*首页新闻*/
-.bibar-boxindex2{padding:20px 40px;}
+.bibar-boxindex2{padding:40px 60px;}
 .bibar-indexNewsList{}
 .bibar-indexNewsItem{padding: 15px 0px 10px; border-top: 1px solid #dcdcdc;}
 .bibar-indexNewsItem:first-child{border-top:0px}
@@ -910,7 +919,7 @@ i.icon-BTC{font-size: 14px; font-weight: bold;}
 .bibar-indexNewsItem .bibar-list .set>ul>li .dropdown-menu li:hover i{color: #333;}
 .bibar-indexNewsItem .bibar-list .set>ul>li .dropdown-menu li a i{margin-right: 5px;vertical-align: middle;color: #999;font-size: 15px}
 .bibar-indexNewsItem .bibar-list {
-    margin: 0 55px;
+    /*margin: 0 55px;*/
     border-bottom: 1px solid #F6F5F5;
     padding-bottom: 20px;
 }
@@ -925,7 +934,7 @@ i.icon-BTC{font-size: 14px; font-weight: bold;}
 .bibar-boxtitle > div > a{margin: 0 8px;}
 .bibar-boxtitle .name{font-size: 14px; font-weight: bolder;}
 .bibar-boxbody{}
-.bibar-indexintro{overflow: hidden; height:108px; transition: height 2s;-webkit-transition: height linear 2s;}
+.bibar-indexintro{overflow: hidden; transition: height 2s;-webkit-transition: height linear 2s;}
 .bibar-indexintro p{font-size: 14px; line-height: 18px;}
 .bibar-indexinftrList{margin-top: 30px;}
 .bibar-indexinftrList dl{clear: both; height: 24px; margin-bottom: 12px;}
@@ -971,7 +980,7 @@ i.icon-BTC{font-size: 14px; font-weight: bold;}
 /*--------------------------------------------------------------换肤--------------------------------------------------------------------------*/
 /*背景色：#f8fafe; 响应色：#e5edff; 间色：#1e98ff; 主色：#0181ff; 字色：#5381b1; */
 a:focus, a:active, a:hover{color:#333}
-.text-theme,.text-theme:link,.text-theme:visited{color: #5381b1;}
+.text-theme,.text-theme:link,.text-theme:visited{color: #1E8FFF;}
 .text-theme:hover,.text-theme:focus{color:#0181ff !Important}
 .btn:hover, .btn:focus, .btn.focus{color: #0181ff; text-decoration: none; background-color:#fff; border-color:#1e98ff}
 .btn:active, .btn.active{background-color:#0181ff; border-color:#0181ff; color:#fff;}

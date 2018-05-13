@@ -300,7 +300,9 @@ export default {
     },
     // 去币详情
     toBibarDetail (tmp) {
-      this.$router.push(`/msgDetail/${tmp.id}`)
+      this.$router.push({
+        path: `/msgDetail/${tmp.id}`
+      })
     }
     // // 展开折叠chart图
     // toggleChart(index) {

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="container">
+        <div class="container bindEmail">
             <form>
                 <div class="form-group">
                     <label class="col-sm-12" for="exampleInputEmail1">请输入要绑定的邮箱</label>
@@ -13,13 +13,16 @@
                 <div class="modal fade emaiModal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                   <div class="modal-dialog">
                     <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                      </div>
                       <div class="modal-body">
                         一封邮件已发送，请注意查收
                       </div>
                       <div class="modal-footer">
-                        <button type="button" @click="bindEmailFun"  class="btn btn-default">重新发送
+                        <button type="button" @click="bindEmailFun" class="btn btn-primary">重新发送
                         </button>
-                        <button type="button" class="btn btn-primary">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
                           完成验证
                         </button>
                       </div>
@@ -31,7 +34,7 @@
 </template>
 <script>
 import {post} from '../../../utils/http'
-// import { Toast } from 'mint-ui'
+import { Toast } from 'mint-ui'
 export default {
   data () {
     return {
@@ -42,7 +45,6 @@ export default {
     }
   },
   mounted () {
-    $('.emaiModal').modal('show')
   },
   methods: {
     // 验证
@@ -65,11 +67,17 @@ export default {
     },
     // 绑定邮箱
     bindEmailFun () {
-      // let instance
+      let instance
       if (this.canFind) {
         post(`/api/setting/email`, this.bindForm).then(data => {
           if (data.resultcode === 0) {
-            alert(data.message)
+            instance = new Toast({
+              message: data.message,
+              duration: 1000
+            })
+            setTimeout(() => {
+              instance.close()
+            }, 1000)
             $('.emaiModal').modal('hide')
             return false
           } else if (data.resultcode === 1) {
@@ -92,4 +100,18 @@ export default {
   .findEmail{
     transition: opacity .5s
   }
+ .bindEmail>.emaiModal>.modal-dialog{
+    width: 30%;
+  }
+ .emaiModal>.modal-dialog>.modal-content>.modal-body{
+   font-size: 16px;
+   text-align: center;
+ }
+ .emaiModal>.modal-dialog>.modal-content>.modal-footer{
+   border:none;
+   text-align: center;
+ }
+ .emaiModal>.modal-dialog>.modal-content>.modal-footer>.btn-primary{
+   margin-left: 20px;
+ }
 </style>
