@@ -95,11 +95,11 @@ export default{
     margin-top: 10px;
     color: red;
   }
-  .disable{
+  /*.disable{
     background: #BCBCBC !important;
     color: #797979 !important;
     border:none !important;
-}
+}*/
 /* .disable:hover{
     background: #BCBCBC;
     color: #797979;
