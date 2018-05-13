@@ -968,9 +968,7 @@ svg:not(:root) {
     overflow: hidden;
 }
 .editor-triangle{
-    position: absolute;
-    top: 10px;
-    left: -4px;
+    position: absolute;;
     width: 5px;
     height: 10px;
     z-index: 11;

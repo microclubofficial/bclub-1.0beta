@@ -50,11 +50,17 @@
        <!-- 评论框 -->
        <div class="editor-comment">
          <img :src="userInfo.avatar" alt="" class="avatar" v-show="commentShow">
-         <div class="editor-bd">
-           <span class="comment-img-delete"></span>
-           <svg version='1.1' xmlns='http://www.w3.org/2000/svg' v-show="commentShow" class="editor-triangle">
+         <div class="avatar" v-show="showReport"><img :src="userInfo.avatar" alt=""></div>
+         <!--默认-->
+           <svg v-show="commentShow" version='1.1' xmlns='http://www.w3.org/2000/svg' class="editor-triangle editor-topic-comment-default">
             <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
            </svg>
+           <!--富文本-->
+           <svg style="left:48px; top:52px;" version='1.1' xmlns='http://www.w3.org/2000/svg' v-show="showReport" class="editor-svg">
+            <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
+          </svg>
+         <div class="editor-bd clearfloat">
+           <span class="comment-img-delete"></span>
            <div class="editor-textarea" v-show="commentShow" @click="commentShowFun">
              <div class="editor-placeholder">评论...</div>
            </div>
@@ -113,7 +119,7 @@
                       <!-- <p>{{item}}</p> -->
                       <p v-html="item.content">{{item.content}}</p>
                     </div>
-                    <div class="set">
+                    <div class="set" style="margin-left:42px;" >
                       <ul class="bibar-indexNewsItem-infro">
                         <li class="set-choseTwo"> <a href="javascript:void(0);" class="icon-quan mr15"  @click="changeNum(0,now,item.id,1,item)" :class='{active:item.is_good_bool}'><i class="iconfont">&#xe603;</i><span class="is-good-t">{{item.is_good}}</span></a><a href="javascript:void(0);"  :class='{active:item.is_bad_bool}' class="icon-quan set-choseTwo" @click="changeNum(1,now,item.id,1,item)"><i class="iconfont">&#xe731;</i><span class="is-bad-t">{{item.is_bad}}</span></a></li>
                         <!-- <li class="set-choseShang"> <a href="javascript:void(0);"><i class="iconfont icon-dashang"></i> 打赏<span>438</span></a> </li> -->
@@ -125,15 +131,16 @@
                       </ul>
                     </div>
                      <!-- 回复 -->
-        <div class="comment-reply"  v-show="now === replayId">
+        <div class="comment-reply" style="margin-left:42px;" v-show="now === replayId">
                 <!-- 回复文本框 -->
         <div class="editor-comment">
          <img :src="userInfo.avatar" alt="" class="avatar" v-show="talkReplyTxt">
-         <div class="editor-bd">
-           <span class="comment-img-delete"></span>
-           <svg version='1.1' xmlns='http://www.w3.org/2000/svg' v-show="talkReplyTxt" class="editor-triangle">
+          <div class="avatar" v-show="showReportReplay"><img :src="userInfo.avatar" alt=""></div>
+         <svg version='1.1' style="left:53px; top:52px;" xmlns='http://www.w3.org/2000/svg' v-show="showReportReplay" class="editor-triangle">
             <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
            </svg>
+         <div class="editor-bd">
+           <span class="comment-img-delete"></span>
            <div class="editor-textarea"  v-show="talkReplyTxt" @click="talkReplyEditor">
              <div class="editor-placeholder">回复...</div>
            </div>
@@ -157,7 +164,7 @@
         <!-- first -->
         <li :class="['paging-item', 'paging-item--first', {'paging-item--disabled' : cpno === 1}]" @click="first">first</li>
         <li :class="['paging-item', 'paging-item--more']" v-if="showPrevMore">...</li>
-        <li :class="['paging-item', {'paging-item--current' : cpno === tmp}]" :key="index" v-for="(tmp, index) in showPageBtn"  @click="go(tmp)">{{tmp}}</li>
+        <li :class="['paging-item', {'paging-item--current' : cpno === tmp}]" :key="index" v-for="(tmp, index) in showPageBtn"  @click="editor-comment(tmp)">{{tmp}}</li>
         <li :class="['paging-item', 'paging-item--more']" v-if="showNextMore">...</li>
         <!-- next -->
         <li :class="['paging-item', 'paging-item--next', {'paging-item--disabled' : cpno === cpageCount}]" @click="next">next</li>
@@ -566,6 +573,10 @@ export default{
 </script>
 
 <style>
+  .editor-topic-comment-default{
+    left:48px;
+    top: 26px;
+  }
   .replyBackConten>p:first-child{
     overflow: hidden;
     text-overflow: ellipsis;
@@ -601,9 +612,9 @@ export default{
     margin-left: 58px;
 }
 .editor-comment{
-    margin-top: 5px;
+    /*margin-top: 5px;*/
     background-color: #f8f8f8;
-    /* padding: 20px; */
+     padding: 15px;
     padding-left: 10px;
 }
 .editor-comment>.avatar{
@@ -617,18 +628,11 @@ img.avatar{
     border-radius: 50%;
     vertical-align: middle;
 }
-.editor-bd{
-    margin-left: 42px;
-    position: relative;
-    z-index: 1;
-}
 svg:not(:root) {
     overflow: hidden;
 }
 .editor-triangle{
     position: absolute;
-    top: 10px;
-    left: -4px;
     width: 5px;
     height: 10px;
     z-index: 11;
@@ -797,13 +801,13 @@ a.avatar img {
   /*回复*/
 .comment-reply{
   border-top: 1px solid #edf0f5;
-  margin-top: 50px;
+  margin-top: 20px;
 }
 .comment-reply>.comment-item{
   margin: 15px 0;
 }
 .comment-reply>.editor-comment{
-  margin-top: 15px;
+  padding: 15px;
 }
 .talkCommentEditor>.wangeditor>.editor{
   padding-bottom: 30px;
@@ -934,8 +938,6 @@ a.avatar img {
 .editor-comment{
     margin-top: 5px;
     background-color: #f8f8f8;
-    /* padding: 20px; */
-   padding: 15px 10px 15px 0;
 }
 .editor-comment>.avatar{
     width: 32px;
@@ -952,14 +954,13 @@ img.avatar{
     margin-left: 42px;
     position: relative;
     z-index: 1;
+    overflow: hidden;
 }
 svg:not(:root) {
     overflow: hidden;
 }
 .editor-triangle{
     position: absolute;
-    top: 10px;
-    left: -4px;
     width: 5px;
     height: 10px;
     z-index: 11;

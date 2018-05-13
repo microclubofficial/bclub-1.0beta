@@ -17,7 +17,7 @@
         <div class="container">
             <ol class="breadcrumb">
                 <li>
-                    <router-link to='/'>首页</router-link>
+                    <router-link to='/'><i class="iconfont" style="margin-right:10px;">&#xe65a;</i>首页</router-link>
                 </li>
                 <li class="active">个人中心</li>
             </ol>
@@ -64,3 +64,7 @@ export default {
   }
 }
 </script>
+<style>
+    .breadcrumb{border-bottom: 1px solid #efefef;background: #F2F2F2;}
+    .breadcrumb li:first-child a{color: #2DA2FF;}
+</style>
