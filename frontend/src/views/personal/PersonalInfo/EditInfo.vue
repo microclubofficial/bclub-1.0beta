@@ -83,6 +83,7 @@
 </template>
 <script>
 import {get, post} from '../../../utils/http'
+import { setToken } from '../../../utils/auth'
 import { Toast } from 'mint-ui'
 export default {
   data () {
@@ -171,6 +172,7 @@ export default {
               'avatar': data.data.avatar,
               'isLogin': true
             })
+            setToken(data.data)
             this.personalUser(data.data.username)
           }
         })

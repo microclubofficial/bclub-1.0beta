@@ -1,99 +1,208 @@
+<style lang="scss" scoped>
+.login-box {
+  width: 40%;
+  margin: 100px auto;
+  border: none;
+  .login-title {
+    padding: 20px;
+    background-color: #1e8fff;
+    h3 {
+      font-size: 24px;
+      letter-spacing: 2px;
+    }
+  }
+  .toggle-tab {
+    display: flex;
+    margin-top: 10px;
+    .toggle-login {
+      flex: 1;
+      text-align: center;
+      font-size: 18px;
+      font-weight:bold;
+      padding:10px 0;
+    }
+  }
+  .active-login {
+    border-bottom: 4px solid #1e8fff;
+    border-radius: 4px;
+  }
+  .panel-body {
+    padding: 40px 0 30px;
+    .tab-content {
+      padding: 0 120px 0 60px;
+    }
+    .control-label {
+      // text-align: left;
+      font-size: 14px;
+    }
+  }
+  .login-button {
+    background-color: #1e8fff;
+    border: none;
+    height: 40px;
+    line-height: 40px;
+    font-size: 18px;
+    margin: 10px 0;
+    &:hover {
+      color: #fff;
+      background-color: #50a6fc;
+    }
+  }
+}
+
+.captcha-box {
+  position: relative;
+  .getcontrol {
+    cursor: pointer;
+    position: absolute;
+    right: 15px;
+    top: 0;
+    color: #1e8fff;
+    width: 41%;
+    height: 32px;
+    line-height: 32px;
+    text-align: right;
+    span {
+      color: #333;
+    }
+    i {
+      color: #e8e8e8;
+      font-size: 18px;
+      padding: 0 10px;
+    }
+  }
+  .disable {
+    color: #e8e8e8;
+  }
+}
+
+.go-login {
+  text-align: center;
+  .login-hover {
+    cursor: pointer;
+    &:hover {
+      color: #1e8fff;
+    }
+  }
+}
+
+.prompt {
+  float: left;
+  margin-left: 4%;
+  margin-top: 10px;
+  color: red;
+}
+</style>
 <template>
   <div class="login-container">
-    <div class="panel panel-primary" style="width:30%;margin:100px auto">
-      <ul id="myTab" class="nav nav-tabs">
-        <li class="active" @click="changeTab(0)">
+    <div class="panel panel-primary login-box">
+      <div class="panel-heading login-title">
+        <h3 class="panel-title text-center">用户登录</h3>
+      </div>
+      <ul id="myTab" class="toggle-tab">
+        <li class="toggle-login" :class="{'active-login':showTab}" @click="changeTab(0)">
           <a href="#home" data-toggle="tab">用户名登录</a>
         </li>
-        <li @click="changeTab(1)">
+        <li @click="changeTab(1)" class="toggle-login" :class="{'active-login':!showTab}">
           <a href="#ios" data-toggle="tab">手机登录</a>
         </li>
       </ul>
       <div class="panel-body">
         <div id="myTabContent" class="tab-content">
-          <form class="form-horizontal" style="max-width:420px;margin:auto">
+          <form class="form-horizontal">
             <!-- 用户名登录 -->
             <div class="tab-pane fade active" id="home" v-show="showTab" :class="{in:showTab}">
               <div class="form-group">
-                <label class="col-sm-2 control-label">用户名:</label>
-                <div class="col-sm-9">
-                  <input class="form-control" @blur='showRegisterMsg(userForm.username, 0)' name="username" type="text" placeholder="Username" v-model="userForm.username">
+                <label class="col-md-3 control-label">用户名:</label>
+                <div class="col-md-9">
+                  <input class="form-control" name="username" type="text" placeholder="请输入用户名" @blur='showRegisterMsg(userForm.username, 0)' v-model="userForm.username">
                 </div>
-                <label class="col-sm-2 control-label"></label>
-                <p class="prompt col-sm-9">{{unamePrompt}}</p>
+                <label class="col-md-3 control-label"></label>
+                <p class="prompt">{{unamePrompt}}</p>
               </div>
               <div class="form-group">
-                <label class="col-sm-2 control-label">密码:</label>
-                <div class="col-sm-9">
-                  <input class="form-control" @blur='showRegisterMsg(userForm.password, 1)' name="password" type="password" placeholder="Password" v-model="userForm.password">
+                <label class="col-md-3 control-label">密　码:</label>
+                <div class="col-md-9">
+                  <input class="form-control" name="password" type="password" placeholder="请输入密码" @blur='showRegisterMsg(userForm.password, 1)' v-model="userForm.password">
                 </div>
-                <label class="col-sm-2 control-label"></label>
-                <p class="prompt col-sm-9">{{upwdPrompt}}</p>
+                <label class="col-sm-3 control-label"></label>
+                <p class="prompt">{{upwdPrompt}}</p>
               </div>
               <div class="form-group">
-                <label class="col-sm-2 control-label">验证码:</label>
-                <div class="col-sm-9">
+                <label class="col-md-3 control-label">验证码:</label>
+                <div class="col-md-9">
                   <div class="input-group">
-                    <span class="input-group-addon" style="padding:0;border-right:none;">
-                      <img ref="captcha" :src="controlImg" alt="验证码" width="90" height="20" @click="changeControl()">
+                    <input class="form-control" name="captcha" @blur='showRegisterMsg(userForm.captcha, 2)' placeholder="Captcha" type="text" v-model="userForm.captcha" @keyup.enter="handleLogin">
+                    <span class="input-group-addon" style="padding:0;border-left:none;">
+                      <img ref="captcha" :src="controlImg" alt="验证码" width="120" height="30" @click="changeControl()">
                     </span>
-                    <input class="form-control" name="captcha" @blur='showRegisterMsg(userForm.captcha, 2)' placeholder="Captcha" type="text" style="border-left:none;" v-model="userForm.captcha" @keyup.enter="handleLogin">
                   </div>
                 </div>
-                <label class="col-sm-2 control-label"></label>
-                <p class="prompt col-sm-9">{{captchaPrompt}}</p>
+                <label class="col-md-3 control-label"></label>
+                <p class="prompt col-md-9">{{captchaPrompt}}</p>
               </div>
               <div class="form-group">
-                <div class="col-sm-offset-2 col-sm-9">
+                <div class="col-md-offset-3 col-md-9">
                   <input id="remember" v-model="userForm.remember" type="checkbox" value="y">
                   <label for="remember">记住我</label>
                   <a class="pull-right" @click="toForgetPwd">忘记密码?</a>
                 </div>
               </div>
               <div class="form-group">
-                <div class="col-sm-offset-2 col-sm-9">
-                  <button type="button" class="btnm btnm-primary btnm-block" style="width: 100%; border-radius: 5px;background: #286090; color:#fff;" @click="handleLogin">登陆</button>
+                <div class="col-md-offset-3 col-md-9">
+                  <button type="button" class="btn btn-primary btn-block login-button" @click="handleLogin">登陆</button>
                 </div>
               </div>
-              <h5 style='text-align:center;cursor: pointer'>没有账号？
-                <router-link :to="{path:'/register'}">注册</router-link>
+              <h5 class="go-login col-md-offset-3 col-md-9">没有账号？
+                <router-link class="login-hover" :to="{path:'/register'}">去注册</router-link>
               </h5>
             </div>
             <!-- 手机登录 -->
             <div class="tab-pane fade  active" id="ios" v-show="!showTab" :class="{in:!showTab}">
               <div class="form-group">
-                <label class="col-sm-2 control-label">手机号:</label>
-                <div class="col-sm-9">
+                <label class="col-md-3 control-label">手机号：</label>
+                <div class="col-md-9">
                   <input class="form-control" name="phone" type="text" placeholder="phone" v-model="phoneForm.phone" @blur='showRegisterMsg(phoneForm.phone, 3)'>
                 </div>
-                <label class="col-sm-2 control-label"></label>
-                <p class="prompt col-sm-9">{{phonePrompt}}</p>
+                <label class="col-md-3 control-label"></label>
+                <p class="prompt col-md-9">{{phonePrompt}}</p>
               </div>
               <div class="form-group">
-                <label for="inputCaptcha3" class="col-md-2 control-label">验证码</label>
-                <div class="col-md-5">
-                  <input type="text" @blur='showRegisterMsg(phoneForm.phonecaptcha, 4)' class="form-control" v-model="phoneForm.phonecaptcha" id="inputCaptcha3" placeholder="请输入验证码">
+                <label for="inputCaptcha3" class="col-md-3 control-label">验证码：</label>
+                <div class="col-md-9 captcha-box">
+                  <input type="text" class="form-control" v-model="phoneForm.phonecaptcha" @blur='showRegisterMsg(phoneForm.phonecaptcha, 4)' id="inputCaptcha3" placeholder="请输入验证码">
+                  <div class="col-md-3 getcontrol" v-bind:disabled="hasphone" :class="{disable:hasphone}" @click="getPhoneControl">
+                    <span v-show="hasControl">{{countdown}}</span>
+                    <i> | </i>{{getcontroltxt}}</div>
                 </div>
-                <button type="button" class="col-md-3 btnm getcontrol" style=" padding: 0 !important;height: 34px;line-height: 34px;
-        " @click="getPhoneControl" v-bind:disabled="hasphone" :class="{disable:hasphone}">
-                  <span v-show="hasControl">{{countdown}}</span>{{getcontroltxt}}</button>
-                <p class="prompt col-sm-9">
-                  <label class="col-md-3 control-label"></label>{{phoneControlPrompt}}</p>
+                <label class="col-md-3 control-label"></label>
+                <p class="prompt">{{captchaPrompt}}</p>
               </div>
+              <!--<div class="form-group">
+                    <label for="inputCaptcha3" class="col-md-3 control-label">验证码</label>
+                    <div class="col-md-5">
+                      <input type="text" @blur='showRegisterMsg(phoneForm.phonecaptcha, 4)' class="form-control" v-model="phoneForm.phonecaptcha" id="inputCaptcha3" placeholder="请输入验证码">
+                    </div>
+                    <button type="button" class="col-md-3 btnm getcontrol" style=" padding: 0 !important;height: 34px;line-height: 34px;
+                " @click="getPhoneControl" v-bind:disabled="hasphone" :class="{disable:hasphone}">
+                      <span v-show="hasControl">{{countdown}}</span>{{getcontroltxt}}</button>
+                    <p class="prompt col-md-9">
+                      <label class="col-md-3 control-label"></label>{{phoneControlPrompt}}</p>
+                  </div>-->
               <div class="form-group">
-                <div class="col-sm-offset-2 col-sm-9">
+                <div class="col-md-offset-3 col-md-9">
                   <input id="rememberPhone" v-model="phoneForm.remember" type="checkbox" value="p">
                   <label for="rememberPhone">记住我</label>
                   <a class="pull-right" @click="toForgetPwd">忘记密码?</a>
                 </div>
               </div>
               <div class="form-group">
-                <div class="col-sm-offset-2 col-sm-9">
-                  <button type="button" style="width: 100%; border-radius: 5px;background: #286090; color:#fff;" class="btnm btnm-primary btnm-block" @click="handlePhoneLogin">登陆</button>
+                <div class="col-md-offset-3 col-md-9">
+                  <button type="button" class="btn btn-primary btn-block login-button" @click="handlePhoneLogin">登陆</button>
                 </div>
-              </div> 
-              <h5 style='text-align:center;cursor: pointer'>没有账号？
-                <router-link :to="{path:'/register'}">注册</router-link>
+              </div>
+              <h5 class="go-login col-md-offset-3 col-md-9">没有账号？
+                <router-link class="login-hover" :to="{path:'/register'}">去注册</router-link>
               </h5>
             </div>
           </form>
@@ -109,7 +218,7 @@ import { post } from 'src/utils/http'
 import { setToken } from '../../utils/auth'
 export default {
   name: 'login',
-  data () {
+  data() {
     return {
       userForm: {},
       phoneForm: {},
@@ -129,7 +238,7 @@ export default {
       getcontroltxt: '获取验证码'
     }
   },
-  mounted () {
+  mounted() {
     $('#myTab li:eq(0) a').tab('show')
     if ($('div').hasClass('modal-backdrop')) {
       document.body.removeChild(document.querySelector('.modal-backdrop'))
@@ -137,7 +246,7 @@ export default {
   },
   methods: {
     // 失去焦点验证
-    showRegisterMsg (input, id) {
+    showRegisterMsg(input, id) {
       if (id === 0) {
         if (input === undefined || input.length === 0) {
           this.unamePrompt = '用户名不能为空'
@@ -182,7 +291,7 @@ export default {
       }
     },
     // 用户名登录
-    handleLogin () {
+    handleLogin() {
       if (this.userForm.username === undefined) {
         alert('用户名不能为空')
         return
@@ -218,6 +327,7 @@ export default {
             'avatar': data.data.avatar,
             'isLogin': true
           })
+
           if (this.userForm.remember) {
             setToken(data.data, { expires: 7 })
           } else {
@@ -230,7 +340,7 @@ export default {
       })
     },
     // 手机登录
-    handlePhoneLogin () {
+    handlePhoneLogin() {
       if (this.phoneForm.phone === undefined) {
         alert('手机号码不能为空')
         return
@@ -270,15 +380,15 @@ export default {
       })
     },
     // 切换验证码
-    changeControl () {
+    changeControl() {
       this.controlImg = this.controlImg + '?d=' + Date.now()
     },
     // 去忘记密码
-    toForgetPwd () {
+    toForgetPwd() {
       this.$router.push('/forgetPwd')
     },
     // 获取手机验证码
-    getPhoneControl () {
+    getPhoneControl() {
       let phone = parseFloat(this.phoneForm.phone)
       post('/api/phoneCaptcha/login', { 'phone': phone }).then((data) => {
         if (data.resultcode === 0) {
@@ -288,7 +398,7 @@ export default {
         if (data.resultcode === 1) {
           this.hasphone = true
           let that = this
-          this.timer = setInterval(function () {
+          this.timer = setInterval(function() {
             that.countdown--
             that.hasControl = true
             that.getcontroltxt = '重新获取'
@@ -309,7 +419,7 @@ export default {
       })
     },
     // 显示当前tab
-    changeTab (now) {
+    changeTab(now) {
       if (now === 0) {
         this.showTab = true
       } else {
@@ -319,59 +429,3 @@ export default {
   }
 }
 </script>
-
-<style rel="stylesheet/scss" lang="scss">
-.prompt {
-  float: left;
-  margin-left: 20%;
-  display: block;
-  margin-top: 10px;
-  color: red;
-}
-
-.nav-tabs>li>a {
-  border-radius: 0 !important;
-}
-
-.form-group>label {
-  padding: 0 10px;
-}
-
-.disable {
-  background: #BCBCBC !important;
-  color: #797979 !important;
-  border: none !important;
-}
-
-.disable:hover{
-  background: #BCBCBC;
-  olor: #797979;
-}
-.getcontrol {
-  border-radius: 4px;
-  color: #fff;
-  background-color: #5cb85c;
-  border-color: #4cae4c;
-}
-
-.btnm {
-  display: inline-block;
-  padding: 6px 12px;
-  margin-bottom: 0;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 1.42857143;
-  text-align: center;
-  white-space: nowrap;
-  vertical-align: middle;
-  -ms-touch-action: manipulation;
-  touch-action: manipulation;
-  cursor: pointer;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  background-image: none;
-  border: 1px solid transparent;
-}
-</style>
