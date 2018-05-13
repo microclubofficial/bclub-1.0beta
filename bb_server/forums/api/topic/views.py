@@ -104,7 +104,7 @@ class TopicListView(MethodView):
         #    filter_dict.update(is_bad=True)
         #    title = _('bad Topics')
         topics = Topic.query.filter_by(**filter_dict).order_by('-id').limit(per_page).offset(start)
-        topic_count = FindAndCount(Topic)
+        topic_count = FindAndCount(Topic, **filter_dict)
         page_count = int(math.ceil(topic_count/per_page))
         topic = []
         for i in topics:
