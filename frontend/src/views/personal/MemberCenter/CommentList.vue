@@ -401,7 +401,16 @@ export default{
     // 去详情页
     goDetail (id) {
       this.lid = id
-      this.$router.push(`/details/${this.lid}`)
+      this.$router.push({
+        path: `/details/${this.lid}`,
+        query: {
+          a: JSON.stringify([
+            {label: '首页', path: '/'},
+            {label: '个人中心', path: `this.$route.path`},
+            {label: '全部', path: 'last'}
+          ])
+        }
+      })
     },
     // 评论
     showDiscuss (index, id) {

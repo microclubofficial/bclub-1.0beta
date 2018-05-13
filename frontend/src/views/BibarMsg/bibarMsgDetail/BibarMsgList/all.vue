@@ -15,12 +15,12 @@
               <div class="tit"><a href="javascript:void(0)" @click="goDetail(tmp.id)">{{tmp.title}}</a></div>
           <div class="txt indexNewslimitHeight" @click="goDetail(tmp.id)">
             <div class="media">
-              <a class="pull-left" href="javascript:void(0)" v-if="tmp.picture">
-              <img class="media-object" :src="tmp.picture">
-            </a>
-            <div class="media-body">
+              <div class="media-body">
               <div v-html="EditorContent(tmp.content)"></div>
             </div>
+            <a class="pull-left" href="javascript:void(0)" v-if="tmp.picture">
+              <img class="media-object" :src="tmp.picture">
+            </a>
             </div>
           </div>
           <div class="set">

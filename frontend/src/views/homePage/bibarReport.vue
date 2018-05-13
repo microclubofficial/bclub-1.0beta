@@ -148,7 +148,7 @@ export default {
     var div = $('.avatar').parent('div')
     div.addClass('wangeditor')
     div.addClass('clearfloat')
-    $('.w-e-text-container').css({'min-height': '87px', 'height': 'auto', 'border': '1px solid #F3F2F2'})
+    $('.w-e-text-container').css({'min-height': '87px', 'height': 'auto !important', 'border': '1px solid #F3F2F2'})
     $('.w-e-text-container').find('div').css('min-height', '87px')
     $('.w-e-toolbar').css({'position': 'absolute', 'background': '#F8F8F8', 'bottom': '0', 'border': '0'})
     $('.comment-reply').find('.w-e-text-container').css({'border': '1px solid rgb(237, 242, 249)'})

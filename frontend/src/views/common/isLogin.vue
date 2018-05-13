@@ -119,10 +119,10 @@ export default {
   },
   mounted () {
     // this.outloginSty()
-    $('.bibar-headerSearchitem').find('.toLongText').css({'right': '320px', 'bottom': '9px'})
+    $('.bibar-headerSearchitem').find('.toLongText').css({'right': '320px', 'bottom': '0'})
     $('.bibar-headerSearchitem').find('.avatar').css({'display': 'none'})
     $('.bibar-headerSearchitem').find('.editor').css({'width': '570px'})
-    $('.bibar-headerSearchitem').find('.cancel').css({'right': '52px', 'bottom': '6px'})
+    $('.bibar-headerSearchitem').find('.cancel').css({'right': '52px', 'bottom': '0px'})
     $('.w-e-text-container').css({'overflow-y': 'scroll', 'height': '87px'})
   },
   watch: {

@@ -8,7 +8,7 @@
         <span class="toLongText" @click="toBibarData(4)"><img src="../../assets/img/longText.png">长文</span>
         <button @click="getContent()" class="report btnm">发布</button>
         <button class="cancel" @click="isHideFun" v-if="!showDilog">取消</button>
-        <button class="cancel" @click="isHideFun" v-if="showDilog">取消</button>
+        <button class="cancel" @click="isHideFun" v-if="!showDilog">取消</button>
         <!-- <div>{{backData}}</div> -->
     </div>
 </template>

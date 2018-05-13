@@ -157,6 +157,9 @@ img[data-w-e]{
     cursor: not-allowed;
     opacity: .75;
 }
+.w-e-text-container{
+  height: auto !important;
+}
 .paging-item--more,.paging-item--current {
     cursor: default !important;
 }
@@ -929,6 +932,7 @@ button[disabled]{cursor: not-allowed;}
 /*列表图片*/
 .media-left, .media>.pull-left{margin: 10px 0;}
 .indexNewslimitHeight{overflow: hidden;}
+.indexNewslimitHeight img{display: block;}
 /* .indexNewslimitHeight{height:96px;} */
 /*首页右侧*/
 .bibar-boxindex3{padding: 20px 20px 15px;}
