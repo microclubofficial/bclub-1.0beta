@@ -138,7 +138,7 @@
                   </div>
                 </div>
                 <label class="col-md-3 control-label"></label>
-                <p class="prompt col-md-9">{{captchaPrompt}}</p>
+                <p class="prompt">{{captchaPrompt}}</p>
               </div>
               <div class="form-group">
                 <div class="col-md-offset-3 col-md-9">
@@ -237,11 +237,12 @@ export default {
       getcontroltxt: '获取验证码'
     }
   },
-  mounted() {
+  mounted () {
     $('#myTab li:eq(0) a').tab('show')
     if ($('div').hasClass('modal-backdrop')) {
       document.body.removeChild(document.querySelector('.modal-backdrop'))
     }
+    this.changeControl()
   },
   methods: {
     // 失去焦点验证
@@ -308,7 +309,8 @@ export default {
         this.controlPrompt = data.message
         if (data.message === '验证码错误') {
           this.controlPrompt = data.message
-          this.phoneControlPrompt = data.message
+          this.captchaPrompt = data.message
+          this.changeControl()
           return
         } else {
           this.controlPrompt = ''
@@ -318,6 +320,7 @@ export default {
         }
         if (data.message === '你已经登陆，不能重复登陆') {
           alert(data.message)
+          this.changeControl()
           this.$router.push('/')
         }
         if (data.resultcode === 1) {
@@ -332,6 +335,7 @@ export default {
           } else {
             setToken(data.data)
           }
+          this.changeControl()
           this.$router.push('/')
         }
       }).catch(error => {
@@ -339,12 +343,13 @@ export default {
       })
     },
     // 手机登录
-    handlePhoneLogin() {
+    handlePhoneLogin () {
       if (this.phoneForm.phone === undefined) {
         alert('手机号码不能为空')
         return
       } else if (this.phoneForm.phonecaptcha === undefined) {
         alert('验证码不能为空')
+        this.changeControl()
         return
       }
       post(this.phoneUrl, this.phoneForm).then(data => {
@@ -352,12 +357,13 @@ export default {
           if (data.message === '你已经登陆，不能重复登陆') {
             alert(data.message)
             this.$router.push('/')
+            this.changeControl()
           } if (data.message === 'failed') {
             alert('手机号未注册')
             return
           } else {
             this.controlPrompt = data.message
-            // this.changeControl()
+            this.changeControl()
             return
           }
         }

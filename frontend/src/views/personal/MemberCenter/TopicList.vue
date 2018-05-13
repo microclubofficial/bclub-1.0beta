@@ -52,13 +52,13 @@
          <img :src="userInfo.avatar" alt="" class="avatar" v-show="commentShow">
          <div class="avatar" v-show="showReport"><img :src="userInfo.avatar" alt=""></div>
          <!--默认-->
-           <svg v-show="commentShow" version='1.1' xmlns='http://www.w3.org/2000/svg' class="editor-triangle editor-topic-comment-default">
+           <!--<svg v-show="commentShow" version='1.1' xmlns='http://www.w3.org/2000/svg' class="editor-triangle editor-topic-comment-default">
             <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
-           </svg>
+           </svg>-->
            <!--富文本-->
-           <svg style="left:48px; top:52px;" version='1.1' xmlns='http://www.w3.org/2000/svg' v-show="showReport" class="editor-svg">
+           <!--<svg style="left:48px; top:52px;" version='1.1' xmlns='http://www.w3.org/2000/svg' v-show="showReport" class="editor-svg">
             <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
-          </svg>
+          </svg>-->
          <div class="editor-bd clearfloat">
            <span class="comment-img-delete"></span>
            <div class="editor-textarea" v-show="commentShow" @click="commentShowFun">
@@ -136,9 +136,9 @@
         <div class="editor-comment">
          <img :src="userInfo.avatar" alt="" class="avatar" v-show="talkReplyTxt">
           <div class="avatar" v-show="showReportReplay"><img :src="userInfo.avatar" alt=""></div>
-         <svg version='1.1' style="left:53px; top:52px;" xmlns='http://www.w3.org/2000/svg' v-show="showReportReplay" class="editor-triangle">
+         <!--<svg version='1.1' style="left:53px; top:52px;" xmlns='http://www.w3.org/2000/svg' v-show="showReportReplay" class="editor-triangle">
             <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
-           </svg>
+           </svg>-->
          <div class="editor-bd">
            <span class="comment-img-delete"></span>
            <div class="editor-textarea"  v-show="talkReplyTxt" @click="talkReplyEditor">

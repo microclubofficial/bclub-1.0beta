@@ -1,9 +1,9 @@
 <template>
     <div>
         <div class="avatar"><img :src="userInfo.avatar" alt=""></div>
-        <svg version='1.1' style='top:61px; left:56px; z-index:10001' xmlns='http://www.w3.org/2000/svg' class="editor-triangle">
+        <!--<svg version='1.1' style='top:61px; left:56px; z-index:10001' xmlns='http://www.w3.org/2000/svg' class="editor-triangle">
             <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
-           </svg>
+           </svg>-->
         <div ref="editor" style="text-align:left" class='editor'></div>
         <span class="toLongText" @click="toBibarData(4)"><img src="../../assets/img/longText.png">长文</span>
         <button @click="getContent()" class="report btnm">发布</button>

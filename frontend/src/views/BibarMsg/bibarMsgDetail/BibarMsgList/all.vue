@@ -550,6 +550,7 @@ export default{
     showReplyContent (data) {
       this.talkReplayBox = false
       this.showLoaderComment = true
+      this.replayId = ''
       this.nowData.unshift(data)
       get(`/api/topic/token/${this.$route.path.split('/')[2]}/1`).then(data => {
         this.showLoaderComment = false
