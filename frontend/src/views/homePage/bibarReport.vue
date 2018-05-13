@@ -1,9 +1,5 @@
 <template>
     <div>
-        <div class="avatar"><img :src="userInfo.avatar" alt=""></div>
-        <svg version='1.1' xmlns='http://www.w3.org/2000/svg' class="editor-svg">
-          <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
-        </svg>
         <div ref="editor" style="text-align:left" class='editor'></div>
         <button @click="getContent" v-show="toApi!==3 || toApi!==4" class="report btnm">发布</button>
         <button @click="getContent" v-show="toApi===3 || toApi===4" class="report btnm">回复</button>
@@ -157,7 +153,7 @@ export default {
     $('.w-e-toolbar').css({'position': 'absolute', 'background': '#F8F8F8', 'bottom': '0', 'border': '0'})
     $('.comment-reply').find('.w-e-text-container').css({'border': '1px solid rgb(237, 242, 249)'})
     $('.comment-reply').find('.w-e-toolbar').css({'background': '#EDF5FE'})
-    $('.comment-reply').find('.editor-svg').css({'left': '38px'})
+    // $('.comment-reply').find('.editor-svg').css({'left': '38px'})
     $('.bibar-hot').find('.cancel').css({'background': '#F8F8F8'})
   }
 }
@@ -217,10 +213,11 @@ export default {
     border-radius: 50%;
 }
 .editor{
-    width: 85%;
+    width: 99%;
     margin: auto;
     position: relative;
     float: left;
+    padding-bottom: 45px;
 }
 .btnm{
     display: inline-block;
@@ -251,7 +248,7 @@ export default {
     border-radius: 2px;
     position: absolute;
     bottom: 10px;
-    right: 98px;
+    right: 8px;
 }
 .cancel{
     font-size: 14px;
@@ -260,7 +257,7 @@ export default {
     background: #fff;
     position: absolute;
     bottom: 15px;
-    right: 150px;
+    right: 65px;
 }
 .w-e-toolbar{z-index: 9998 !important;}
 </style>

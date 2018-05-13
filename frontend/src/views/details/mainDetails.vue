@@ -1,6 +1,6 @@
 <template>
   <div class="list-detail">
-    <main-header></main-header>
+    <MainHeader></MainHeader>
     <div class="main-details-box">
       <div class="DetailmainLeft">
         <!-- 比特币 -->
@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import MainHeader from '../common/header'
+import MainHeader from '../common/header.vue'
 
 // 比特币
 import btb from '../BibarMsg/BibarChart/BTB.vue'

@@ -1,5 +1,5 @@
 <template>
-  <div class="header">
+  <div class="header" style="height:60px;">
     <!--头部-->
     <header class="bibar-header">
       <section class="bibar-w1100">
@@ -58,9 +58,9 @@ export default {
   props: {
     message: Boolean
   },
-  data: function() {
+  data: function () {
     return {
-      user_token: {},
+      user_token: '',
       remember_token: ''
     }
   },
@@ -69,23 +69,21 @@ export default {
     isLogin
   },
   computed: {
-    userInfo() {
+    userInfo () {
       return this.$store.state.userInfo.userInfo
     }
   },
-  created() {
-    if(getToken()) {
+  created () {
+    if (getToken()) {
       this.user_token = JSON.parse(getToken())
     }
-    // console.log(this.user_token)
     // this.remember_token = rememberToken('remember_token')
-    // console.log(this.remember_token)
   },
   methods: {
     // toLoadMain () {
     //   this.$emit('backLoadMain')
     // },
-    routerSelect(url) {
+    routerSelect (url) {
       let path = this.$route.path.substr(1)
       if (url === path) {
         return true
@@ -104,13 +102,13 @@ export default {
 .bibar-header {
   height: 60px;
   background-color: #fff;
-  box-shadow: 0px 0px 4px 3px #efefef;
+  /*box-shadow: 0px 0px 4px 3px #efefef;*/
   position: fixed;
   top: 0px;
   left: 0px;
   width: 100%;
   min-width: 1200px;
-  z-index: 10001;
+  z-index: 10003;
 }
 
 .bibar-w1100 {

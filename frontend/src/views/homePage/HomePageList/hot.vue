@@ -51,11 +51,17 @@
        <!-- 评论框 -->
        <div class="editor-comment clearfloat">
          <img :src="userInfo.avatar" alt="" class="avatar" v-show="commentShow">
+         <div class="avatar" v-show="showReport"><img :src="userInfo.avatar" alt=""></div>
          <div class="editor-bd clearfloat">
            <span class="comment-img-delete"></span>
+           <!--默认-->
            <svg v-show="commentShow" version='1.1' xmlns='http://www.w3.org/2000/svg' class="editor-triangle">
             <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
            </svg>
+           <!--富文本-->
+           <svg style="left:0; top:40px;" version='1.1' xmlns='http://www.w3.org/2000/svg' v-show="showReport" class="editor-svg">
+            <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
+          </svg>
            <div class="editor-textarea" v-show="commentShow" @click="commentShowFun">
              <div class="editor-placeholder">评论...</div>
            </div>
@@ -129,12 +135,13 @@
         <div class="comment-reply" v-show="now===replayId">
                 <!-- 回复文本框 -->
         <div class="editor-comment clearfloat">
-         <img :src="userInfo.avatar" alt="" class="avatar" v-show="talkReplyTxt">
+         <div class="avatar" style="margin-top:8px;" v-show="showReportReplay"><img :src="userInfo.avatar" alt=""></div>
          <div class="editor-bd clearfloat">
            <span class="comment-img-delete"></span>
-           <svg version='1.1' v-show="talkReplyTxt" xmlns='http://www.w3.org/2000/svg' class="editor-triangle">
+            <!--富文本-->
+           <svg style="left:-1px; top:40px;" version='1.1' xmlns='http://www.w3.org/2000/svg' v-show="showReportReplay" class="editor-svg">
             <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
-           </svg>
+          </svg>
            <div class="editor-textarea"  v-show="talkReplyTxt" @click="talkReplyEditor">
              <div class="editor-placeholder">回复...</div>
            </div>
@@ -246,7 +253,8 @@ export default{
       // 加载
       showLoader: false,
       // 评论加载
-      showLoaderComment: false
+      showLoaderComment: false,
+      pageTimer: null
     }
   },
   components: {
@@ -276,9 +284,10 @@ export default{
   },
   created: function () {
     // 文章分页
+    this.tpno = 1
     this.$store.dispatch('clear_backForNav')
     this.showLoader = true
-    get(`/api/topic/${this.tpno}`).then(data => {
+    get(`/api/topic/1`).then(data => {
       this.articles = data.data.topics
       this.showLoader = false
       this.pageCount = data.data.page_count
@@ -288,7 +297,15 @@ export default{
       let that = this
       document.querySelector('#app').addEventListener('scroll', function () {
         if (this.clientHeight + this.scrollTop === this.scrollHeight) {
-          that.loadTopicPage()
+          console.log(that.tpno < that.pageCount)
+          if (that.tpno < that.pageCount) {
+            that.loadTopicPage()
+          } else {
+            this.bottomText = '没有啦'
+            this.listLoding = false
+            this.noLoading = true
+            return false
+          }
         }
       })
     })
@@ -304,7 +321,8 @@ export default{
   methods: {
     // 分页
     loadTopicPage () {
-      if (this.tpno <= this.pageCount) {
+      console.log(this.tpno < this.pageCount - 1)
+      if (this.tpno < this.pageCount - 1) {
         setTimeout(() => {
           this.showLoader = true
           this.tpno++
@@ -400,7 +418,15 @@ export default{
     // 去详情页
     goDetail (id) {
       this.lid = id
-      this.$router.push(`/details/${this.lid}`)
+      this.$router.push({
+        path: `/details/${this.lid}`,
+        query: {
+          a: JSON.stringify([
+            {label: '首页', path: '/'},
+            {label: '全部', path: 'last'}
+          ])
+        }
+      })
     },
     // 评论
     showDiscuss (index, id) {
@@ -444,6 +470,7 @@ export default{
         this.showComment = false
         this.commentShow = false
       }
+      this.replayId = ''
       this.toId = 0
       this.lid = id
       // if (!this.showComment) {
@@ -700,15 +727,14 @@ export default{
     margin-left: 58px;
 }
 .editor-comment{
-    margin-top: 5px;
     background-color: #F8F8F8;
     /* padding: 20px; */
     padding-left: 10px;
-    padding: 10px 10px 10px 0;
+    padding: 15px;
 }
 .editor-comment>.avatar{
-    width: 32px;
-    height: 32px;
+    width: 35px;
+    height: 35px;
     float: left;
 }
 img.avatar{
@@ -886,6 +912,7 @@ a.avatar img {
   margin-top: 20px;
   background: #EDF5FE;
   margin-left: 42px;
+  padding: 8px 0;
 }
 .comment-reply>.comment-item{
   margin: 15px 0;
@@ -1015,15 +1042,11 @@ a.avatar img {
     float: left;
     margin-left: 0 !important;
 }
-.editor-comment{
-    margin-top: 5px;
-    /* padding: 20px; */
-    padding-left: 10px;
-}
 .editor-comment>.avatar{
-    width: 32px;
-    height: 32px;
+    width: 35px;
+    height: 35px;
     float: left;
+    margin-top: 5px;
 }
 img.avatar{
     width: 48px;

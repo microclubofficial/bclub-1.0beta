@@ -2,6 +2,20 @@
   <div class="comment-item">
     <main-header></main-header>
     <div class="article_container">
+      <!--面包屑-->
+      <div class="crumb">
+        <div class="row">
+      <div class="span6">
+        <ul class="breadcrumb">
+          <li v-for='(item, index) in crumb' :key="index" :class='{crumbActive:item.path === "last"}'>
+          <router-link :class='{crumbActive:item.path === "last"}' :to="item.path === '' ? '/' : item.path"><i class="iconfont" v-if='item.label === "首页"' style="margin-right:10px;">&#xe65a;</i>{{item.label}}</router-link>
+            <span class="divider" v-if='item.path !== "last"'>></span>
+          </li>
+        </ul>
+      </div>
+    </div>
+      </div>
+      <!--用户名-->
       <div class="article_author">
         <div class="top_left">
           <a href="javascript:void(0)" class="avatar"><img :src='articleDetail.avatar'></a>
@@ -16,6 +30,7 @@
           </div>
         </div>
       </div>
+      <div class="article_container_main" style="width:742px;margin: auto;">
       <article class="article_bd">
         <div class="loader" v-if='showLoader'>
           <div class="dot"></div>
@@ -75,7 +90,14 @@
       </div>
       </div>
       <div class="detail-editor-toolbar">
-        <BibarReport :toApi='5' :detailId='articleDetail.id' @backList = 'showDetailContent'></BibarReport>
+        <div class="avatar"><img :src="userInfo.avatar" alt=""></div>
+        <!--富文本-->
+           <svg style="left:56px; top:55px;" version='1.1' xmlns='http://www.w3.org/2000/svg' class="editor-svg">
+            <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
+          </svg>
+        <div class="detailEditor">
+          <BibarReport :toApi='5' :detailId='articleDetail.id' @backList = 'showDetailContent'></BibarReport>
+        </div>
       </div>
       <!-- 评论内容 -->
        <div class="comment-wrap">
@@ -87,7 +109,7 @@
             <div class="loading" v-if='nowData.length === 0 && repliesCcount !== 0'>
               <img src="../../assets/img/loading.png" alt="">
             </div>
-            <div class="comment-all" v-if='nowData.length > 0'>
+            <div class="comment-all">
               <h3>全部评论({{repliesCcount}})</h3>
               <!-- <div class="comment-sort">
                 <a href="#" class="active">最近</a>
@@ -129,11 +151,13 @@
                 <!-- 回复文本框 -->
         <div class="editor-comment">
          <img :src="userInfo.avatar" alt="" class="avatar" v-show="talkReplyTxt">
+         <div class="avatar" v-if='showReportReplay'><img :src="userInfo.avatar" alt=""></div>
+         <svg style="left:51px; top:55px;" v-if='showReportReplay' version='1.1' xmlns='http://www.w3.org/2000/svg' class="editor-svg">
+            <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
+          </svg>
          <div class="editor-bd">
            <span class="comment-img-delete"></span>
-           <svg version='1.1' xmlns='http://www.w3.org/2000/svg' v-show="talkReplyTxt" class="editor-triangle">
-            <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
-           </svg>
+        <!--富文本-->
            <div class="editor-textarea" v-show="talkReplyTxt" @click="talkReplyEditor">
              <div class="editor-placeholder">回复...</div>
            </div>
@@ -160,6 +184,7 @@
             </div>
           </div>
        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -206,7 +231,8 @@ export default {
       changeIndex: false,
       // 加载
       showLoader: false,
-      showLoaderComment: false
+      showLoaderComment: false,
+      crumb: []
     }
   },
   computed: {
@@ -216,7 +242,8 @@ export default {
   },
   mounted () {
     this.did = this.$route.params.id
-    // console.log(this.pageCount)
+    this.crumb = JSON.parse(this.$route.query.a)
+    // console.log(this.$route.query)
     this.showLoader = true
     get(`api/topic/${this.did}/${this.pno}`).then(data => {
       this.showLoader = false
@@ -228,7 +255,7 @@ export default {
       }
       this.pageCount = data.data.page_count
       this.$nextTick(() => {
-        $('.article_bd').find('img').css({'margin': '10px auto', 'display': 'block', 'text-align': 'center'})
+        $('.article_bd').find('img').css({'margin': '10px auto', 'display': 'block', 'text-align': 'center', 'max-width': '60%'})
         // $('.article_bd').find('p').css({'font-size': '16px', 'margin': '25px 0', 'text-align': 'justify', 'line-height': '1.8'})
         $('.detailContent').find('img').addClass('zoom-in')
         $('.detailContent').on('click', 'img', function () {
@@ -382,6 +409,7 @@ export default {
     showReplyContent (data) {
       this.talkReplayBox = false
       this.nowData.unshift(data)
+      this.replayId = ''
       this.talkReplayBox = false
       this.showReportReplay = false
       get(`api/topic/${this.did}/${this.pno}`).then(data => {
@@ -442,6 +470,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  /*评论富文本*/
+  .detailEditor{
+    margin-left: 42px;
+    position: relative;
+    overflow: hidden;
+  }
+  /*处理文字*/
+  .detail-main-content{
+    word-wrap: break-word;
+    word-break: break-all;
+    overflow: hidden;
+  }
   /*图片放大效果*/
   .detail-main-content img{
     display: block;
@@ -457,7 +497,9 @@ export default {
   .detail-editor-toolbar{
     text-align: center;
     background: #F8F8F8;
-    padding: 30px 0 10px 0px;
+    position: relative;
+    overflow: hidden;
+    padding: 23px 15px;
   }
   .detail-editor-toolbar>.wangeditor>.report{padding: 0;}
   /*回复样式*/
@@ -558,12 +600,12 @@ export default {
     background-color: #dadee5;
 }
 .article_container {
-    width: 1100px;
+    width: 1200px;
     /* margin: 80px auto 20px auto; */
     background: #fff;
     margin: auto;
     padding: 35px 55px;
-    margin-top: 60px;
+    /*margin-top: 60px;*/
 }
 
 .article_author {
@@ -687,8 +729,8 @@ export default {
 }
 .comment-item .avatar {
     float: left;
-    width: 48px;
-    height: 48px;
+    width: 35px;
+    height: 35px;
 }
 a.avatar {
     display: inline-block;
@@ -764,7 +806,7 @@ a.avatar img {
 .comment-reply{
   border-top: 1px solid #edf0f5;
   margin-top: 20px;
-  width: 94%;
+  width: 100%;
   float: right;
 }
 .comment-reply>.comment-item{
@@ -772,7 +814,7 @@ a.avatar img {
 }
 .comment-reply>.editor-comment{
   /*margin-top: 15px;*/
-  padding: 20px 0;
+  /*padding: 20px 0;*/
   background: #EDF5FE;
 }
 .talkCommentEditor>.wangeditor>.editor{
@@ -906,8 +948,8 @@ a.avatar img {
     padding-left: 10px;
 }
 .editor-comment>.avatar{
-    width: 32px;
-    height: 32px;
+    width: 35px;
+    height: 35px;
     float: left;
 }
 img.avatar{
@@ -920,6 +962,7 @@ img.avatar{
     /*margin-left: 42px;*/
     position: relative;
     z-index: 1;
+    overflow: hidden;
 }
 svg:not(:root) {
     overflow: hidden;

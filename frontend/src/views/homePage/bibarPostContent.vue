@@ -1,6 +1,9 @@
 <template>
     <div>
         <div class="avatar"><img :src="userInfo.avatar" alt=""></div>
+        <svg version='1.1' style='top:61px; left:56px; z-index:10001' xmlns='http://www.w3.org/2000/svg' class="editor-triangle">
+            <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
+           </svg>
         <div ref="editor" style="text-align:left" class='editor'></div>
         <span class="toLongText" @click="toBibarData(4)"><img src="../../assets/img/longText.png">长文</span>
         <button @click="getContent()" class="report btnm">发布</button>
@@ -95,15 +98,14 @@ export default {
               if (this.showDilog) {
                 this.$emit('backFtNav', backFt)
                 this.showDilog = false
-                $('.hmodal').removeClass('in')
-                $('.hmodal').css({'display': 'none'})
-                $('.modal-backdrop').css({'display': 'none'})
+                $('#myModal1').modal('hide')
                 // document.body.removeChild(document.querySelector('.modal-backdrop'))
               } else {
                 this.$emit('backFtContent', backFt)
               }
               $('.w-e-text').html('')
               // this.$emit('backBibarContent', data.data.content)
+              // this.$router.push('/')
             }
           }
         })
@@ -179,7 +181,7 @@ export default {
     div.addClass('wangeditor')
     div.addClass('clearfloat')
     $('.editor').css({'height': 'auto', 'padding-bottom': '37px'})
-    $('.w-e-text-container').css({'min-height': '87px', 'height': 'auto', 'border': '1px solid rgb(204, 204, 204)'})
+    $('.w-e-text-container').css({'min-height': '87px', 'border': '1px solid rgb(204, 204, 204)'})
     $('.w-e-text-container').find('div').css('min-height', '87px')
     $('.w-e-toolbar').css({'position': 'absolute', 'bottom': '0', 'border': '0', 'background-color': '#fff'})
   }
@@ -191,8 +193,8 @@ export default {
 .toLongText{
     cursor: pointer;
     position: absolute;
-    bottom: 26px;
-    right: 497px;
+    bottom: 20px;
+    right: 572px;
 }
 .toLongText img{
   margin-right: 5px;
@@ -208,10 +210,9 @@ export default {
     width: 790px;
     /* margin: 20px auto 0 auto; */
     background-color: #fff;
-    padding: 20px 0;
+    padding: 30px 15px 15px 15px;
     position: relative;
     overflow: hidden;
-    padding-left: 10%;
 }
 .avatar{
     float: left;
@@ -260,8 +261,8 @@ export default {
     line-height: 30px;
     border-radius: 2px;
     position: absolute;
-    bottom: 20px;
-    right: 75px;
+    bottom: 15px;
+    right: 22px;
 }
 .cancel{
     font-size: 14px;
@@ -269,8 +270,8 @@ export default {
     margin-right: 20px;
     background: #fff;
     position: absolute;
-    bottom: 25px;
-    right: 138px;
+    bottom: 20px;
+    right: 80px;
 }
 .w-e-toolbar{z-index: 9998 !important;}
 </style>

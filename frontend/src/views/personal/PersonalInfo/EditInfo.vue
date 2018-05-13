@@ -17,7 +17,7 @@
                         <p class="form-control-static">{{personalUserInfo.phone}}</p>
                     </div>
                     <div class="col-md-2">
-                        <div class="btnm setFormconfirm" data-target="#myModal" data-toggle="modal" @click="setFormBtn(1)">修改</div>
+                        <div class="btnm setFormconfirm" @click="setFormBtn(1)">修改</div>
                     </div>
                 </div>
                 <div class="form-group">
@@ -34,16 +34,16 @@
                 </div>
             </form>
             <!-- 模态框填新密码 -->
-            <div class="modal fade in" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal fade in setPhone" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" @click="closeModal" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h4 class="modal-title" id="myModalLabel">请填写用户名</h4>
+                            <h4 class="modal-title" id="myModalLabel">{{showModel ? '请填写用户名' : '请填写手机号'}}</h4>
                         </div>
                         <div class="modal-body">
                             <!-- 找用户名 -->
-                            <form class="form-horizontal" v-if="showModel">
+                            <form class="form-horizontal" style="margin-top:20px;" v-if="showModel">
                 <div class="form-group">
             <label class="col-sm-2 control-label">用户名:</label>
             <div class="col-sm-4">
@@ -53,7 +53,7 @@
           </div>
             </form>
             <!-- 找手机 -->
-            <form class="form-horizontal" v-if="!showModel">
+            <form class="form-horizontal" style="margin-top:20px;" v-if="!showModel">
                 <div class="form-group">
                     <label for="inputEmail3" class="col-md-2 control-label">手机号</label>
                     <div class="col-md-4">
@@ -72,8 +72,8 @@
             </form>
                         </div>
                     <div class="modal-footer">
-                        <button type="button" class="btnm btn-default" @click="closeModal" data-dismiss="modal">关闭</button>
-                        <button type="button" class="btnm btn-primary" @click="setusername">确定</button>
+                        <button type="button" class="btn-default" @click="closeModal" data-dismiss="modal">关闭</button>
+                        <button type="button" class="btnm btn-primary" v-bind:disabled="!setForm.phone || !setForm.username" @click="setusername">确定</button>
                     </div>
                 </div>
             </div>
@@ -83,6 +83,7 @@
 </template>
 <script>
 import {get, post} from '../../../utils/http'
+import { setToken } from '../../../utils/auth'
 import { Toast } from 'mint-ui'
 export default {
   data () {
@@ -171,10 +172,8 @@ export default {
               'avatar': data.data.avatar,
               'isLogin': true
             })
+            setToken(data.data)
             this.personalUser(data.data.username)
-            $('.modal').css({'display': 'none'})
-            $('.modal').removeClass('in')
-            document.body.removeChild(document.querySelector('.modal-backdrop'))
           }
         })
       } else {
@@ -192,9 +191,6 @@ export default {
               duration: 1000
             })
             this.personalUser(this.userInfo.username)
-            $('.modal').css({'display': 'none'})
-            $('.modal').removeClass('in')
-            document.body.removeChild(document.querySelector('.modal-backdrop'))
           }
         })
       }
@@ -204,26 +200,27 @@ export default {
       let phone = parseFloat(this.setForm.phone)
       this.hasphone = true
       let that = this
-      this.timer = setInterval(function () {
-        that.countdown--
-        that.hasControl = true
-        that.getcontroltxt = '重新获取'
-        this.kaiguan = false
-        if (that.countdown < 1) {
-          that.getcontroltxt = '获取验证码'
-          that.hasphone = false
-          that.countdown = 30
-          that.hasControl = false
-          clearInterval(that.timer)
-        }
-      }, 1000)
-      console.log(phone)
       post('/api/phoneCaptcha', {'phone': phone}).then((data) => {
-        console.log(data)
         if (data.resultcode === 0) {
           if (data.message === 'failed') {
             alert('手机号已注册')
+            this.hasphone = false
+            return false
           }
+        } else {
+          this.timer = setInterval(function () {
+            that.countdown--
+            that.hasControl = true
+            that.getcontroltxt = '重新获取'
+            this.kaiguan = false
+            if (that.countdown < 1) {
+              that.getcontroltxt = '获取验证码'
+              that.hasphone = false
+              that.countdown = 30
+              that.hasControl = false
+              clearInterval(that.timer)
+            }
+          }, 1000)
         }
       }).catch(error => {
         console.log(error)
@@ -231,17 +228,16 @@ export default {
     },
     setFormBtn (id) {
       if (id === 0) {
-        this.showModel = true
-        $('.modal').css({'display': 'block'})
+        // this.showModel = true
+        // $('.setPhone').modal('show')
+        // document.body.removeChild(document.querySelector('.modal-backdrop'))
       } else {
         this.showModel = false
-        $('.modal').css({'display': 'block'})
+        $('.setPhone').modal('show')
       }
     },
     closeModal () {
-      $('.modal').css({'display': 'none'})
-      $('.modal').removeClass('in')
-      document.body.removeChild(document.querySelector('.modal-backdrop'))
+      $('.setPhone').hide('show')
     },
     // 个人资料
     personalUser (uname) {

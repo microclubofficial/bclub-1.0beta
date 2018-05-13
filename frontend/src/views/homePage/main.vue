@@ -1,15 +1,19 @@
 <template>
   <div id="commun">
-      <MainHeader></MainHeader>
       <!--<MainHeader @backLoadMain='toMainLoadFun'></MainHeader>-->
+      <MainHeader></MainHeader>
+      <div class="bibarDataBox">
+         <!--社区币吧数据-->
+      <div class="bibarDataContainer">
+        <BibarData></BibarData>
+      </div>
+      </div>
       <section class="bibar-Main">
     <section class="bibar-w1100">
       <!-- left slide -->
       <BibarLeft v-if="initHide"></BibarLeft>
         <!--主体左侧-->
       <section class="bibar-Mainleft">
-          <!--社区币吧数据-->
-      <BibarData></BibarData>
       <!--社区各币种-->
       <BibarType></BibarType>
       <!--社区综合-->
@@ -88,7 +92,9 @@ export default{
     }
   },
   mounted () {
-    // this.loadShow()
+    // '/path？a=1'
+    // {name: 'xxx', query: {b: [{label: '', path: ''},{label: '', path: ''} ]}}
+    console.log(this.$route.meta)
   },
   methods: {
     // 社区文章列表切换事件
@@ -132,4 +138,7 @@ export default{
   /* .initHideEditor{margin-top:80px !important;} */
   .initSty{width: 1200px !important;}
   .initClass{width: 1200px !important;}
+  /*轮播图*/
+  .bibarDataBox{width: 100%; padding-bottom: 15px; background-image: url('../../assets/img/data_bg.png');background-repeat : no-repeat;}
+  .bibarDataBox>.bibarDataContainer{width: 1200px; margin:0 auto; padding-top: 40px;}
 </style>
