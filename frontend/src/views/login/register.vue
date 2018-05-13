@@ -12,7 +12,7 @@
       }
     }
     .panel-body{
-      padding:30px 0;
+      padding:30px 0 0 0;
       .control-label{
         text-align: left;
         font-size:14px;
@@ -33,11 +33,12 @@
   }
   .captcha-box{
     position: relative;
-    .getcontrol{
+    .get-captcha{
       cursor: pointer;
       position: absolute;
       right:15px;
       top:0;
+      background-color:rgba(255,255,255,0)!important;
       color: #1e8fff;
       width:41%;
       height:32px;
@@ -52,12 +53,13 @@
         padding:0 10px;
       }
     }
-    .disable{
-      color:#e8e8e8;
+    .text-gray{
+      color:#ccc;
     }
   }
   .go-login{
     text-align: center;
+    margin-bottom: 30px;
     .login-hover{
       cursor: pointer;
       &:hover{
@@ -116,7 +118,7 @@
               <label for="inputCaptcha3" class="col-md-3 control-label"><span class="text-red">* </span>验证码：</label>
               <div class="col-md-9 captcha-box">
                   <input type="text" class="form-control" v-model="userForm.captcha" @blur='showRegisterMsg(userForm.phone, 5)' id="inputCaptcha3" placeholder="请输入验证码">
-                  <div class="col-md-3 getcontrol" v-bind:disabled="hasphone" :class="{disable:hasphone}" @click="getPhoneControl"><span v-show="hasControl">{{countdown}}</span><i> | </i>{{getcontroltxt}}</div>
+                  <button type="button" class="col-md-3 get-captcha" v-bind:disabled="hasphone" :class="{'text-gray':hasphone}" @click="getPhoneControl"><span v-show="hasControl">{{countdown}}</span><i> | </i>{{getcontroltxt}}</button>
               </div>
             <label class="col-md-3 control-label"></label>
             <p class="prompt">{{captchaPrompt}}</p>

@@ -1,29 +1,77 @@
+<style lang="scss" scoped>
+.login-box {
+  width: 40%;
+  margin: 100px auto;
+  border: none;
+  .login-title {
+    padding: 20px;
+    background-color: #1e8fff;
+    h3 {
+      font-size: 24px;
+      letter-spacing: 2px;
+    }
+  }
+  .flex-box {
+    padding: 30px 0;
+    display: flex;
+    .flex-item {
+      flex: 1;
+      text-align: center;
+      cursor: pointer;
+      p {
+        margin: 20px 0;
+        font-size: 14px;
+        &:hover {
+          color: #1e8fff;
+        }
+      }
+      .gray-circle {
+        width: 100px;
+        height: 100px;
+        background-color: #b9dbfe;
+        margin: 0 auto;
+        border-radius: 50%;
+        overflow: hidden;
+      }
+    }
+  }
+}
+</style>
+
 <template>
-    <div class="box">
-        <div class="container">
-            <div class="page-header">
-                <h4>忘记密码</h4>
-            </div>
-            <button type="button" class="btn btn-success" @click="confirmPhone">通过手机找回</button>
-            <button type="button" class="btn btn-primary" @click="confirmEmail">通过邮箱找回</button>
+  <div>
+    <div class="panel panel-primary login-box">
+      <div class="panel-heading login-title">
+        <h3 class="panel-title text-center">找回密码</h3>
+      </div>
+      <div class="panel-body flex-box">
+        <div class="byphone flex-item">
+          <div class="gray-circle" @click="confirmPhone"></div>
+          <p @click="confirmPhone">通过手机找回</p>
         </div>
+        <div class="byemail flex-item">
+          <div class="gray-circle" @click="confirmEmail"></div>
+          <p @click="confirmEmail">通过邮箱找回</p>
+        </div>
+      </div>
     </div>
+  </div>
 </template>
 <script>
-export default{
-  data: function () {
+export default {
+  data: function() {
     return {
 
     }
   },
-  mounted: function () {
+  mounted: function() {
 
   },
   methods: {
-    confirmPhone () {
+    confirmPhone() {
       this.$router.push('/confirmPhone')
     },
-    confirmEmail () {
+    confirmEmail() {
       this.$router.push('/confirmEmail')
     }
   }
