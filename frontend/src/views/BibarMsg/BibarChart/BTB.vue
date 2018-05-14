@@ -8,7 +8,7 @@
                       <div class="dot"></div>
                       <div class="dot"></div>
                     </div>
-                <div class="bibarTop"  @click="toMsgDetail(bibarData.id)" v-if='!showLoader'>
+                <div class="bibarTop"  @click="toMsgDetail(bibarData.id, bibarData.zhName)" v-if='!showLoader'>
                   <div class="bibar-indexDisplay">
                     <div class="bibar-indexDisplay-header">
                         <div class="logopic"><img :src="bibarData.picture"></div>
@@ -315,12 +315,13 @@ export default {
       })
     },
     // 去chart详情
-    toMsgDetail (id) {
+    toMsgDetail (id, zh) {
       this.msgId = id
       this.$store.commit('CHART_ID', {
-        chartId: this.msgId
+        chartId: this.msgId,
+        chartCh: this.bibarData.zhName
       })
-      this.$router.push(`/msgDetail/${this.msgId}`)
+      this.$router.push({path: `/msgDetail/${this.msgId}`})
     },
     // 显示当前chart
     showNowChild (id) {

@@ -242,7 +242,12 @@ export default {
     // 个人资料
     personalUser (uname) {
       get(`/api/u/${uname}`).then(data => {
-        this.personalUserInfo = data.data
+        if (data.message === '未登录') {
+          alert('请先去登录')
+          this.$router.push({ path: '/login' })
+        } else {
+          this.personalUserInfo = data.data
+        }
       })
     }
   }

@@ -627,7 +627,7 @@ export default{
 .indexNewslimitHeight{
   cursor: pointer;
 }
-.bibar-tabitem{overflow: hidden;}
+/*.bibar-tabitem{overflow: hidden;}*/
 .bibar-comment{
     position: relative;
     margin-left: 58px;
@@ -717,7 +717,7 @@ svg:not(:root) {
   position: relative;
 }
 .comment-all>h3 {
-    margin: 15px 0 10px;
+    margin-top: 15px;
     font-size: 15px;
 }
 .comment-sort {
@@ -869,9 +869,9 @@ a.avatar img {
   border-radius: 3px;
 }
 .bibar-indexNewsItem .set>ul>.set-answer>a{color: #1E8FFF;}
-.bibar-tabitem{
+/*.bibar-tabitem{
   overflow: hidden;
-}
+}*/
 .bibar-indexNewsList{
     float: left;
 }
@@ -940,7 +940,6 @@ a.avatar img {
 }
 .w-e-text-container .w-e-panel-container{
   margin-left: 0 !important;
-  left: 10% !important;
 }
 .talkBibar-editor .w-e-text-container{
   min-height: 150px !important;
@@ -1014,7 +1013,7 @@ svg:not(:root) {
 }
 .media-left, .media>.pull-left {
     padding-right: 10px;
-    width: 15%;
+    /*width: 15%;*/
     /* height: 50px; */
     /* position: relative; */
     height: 100px;

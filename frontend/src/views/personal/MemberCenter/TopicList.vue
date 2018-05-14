@@ -261,18 +261,24 @@ export default{
     this.$store.dispatch('clear_backForNav')
     this.showLoader = true
     get(`/api/u/topic/${this.userInfo.username}/${this.tpno}`).then(data => {
-      this.articles = data.data.topics
-      this.showLoader = false
-      this.pageCount = data.data.page_count
-      if (this.articles.length > 0) {
-        this.loadingShow = true
-      }
-      var that = this
-      document.querySelector('#app').addEventListener('scroll', function () {
-        if (this.clientHeight + this.scrollTop === this.scrollHeight) {
-          that.loadTopicPage()
+      console.log(data)
+      if (data.message === '未登录') {
+        alert('请先去登录')
+        this.$router.push({ path: '/login' })
+      } else {
+        this.articles = data.data.topics
+        this.showLoader = false
+        this.pageCount = data.data.page_count
+        if (this.articles.length > 0) {
+          this.loadingShow = true
         }
-      })
+        var that = this
+        document.querySelector('#app').addEventListener('scroll', function () {
+          if (this.clientHeight + this.scrollTop === this.scrollHeight) {
+            that.loadTopicPage()
+          }
+        })
+      }
     })
   },
   mounted () {
@@ -615,7 +621,7 @@ export default{
 .indexNewslimitHeight{
   cursor: pointer;
 }
-.bibar-tabitem{overflow: hidden;}
+/*.bibar-tabitem{overflow: hidden;}*/
 .bibar-comment{
     position: relative;
     margin-left: 58px;
@@ -696,7 +702,7 @@ svg:not(:root) {
   position: relative;
 }
 .comment-all>h3 {
-    margin: 15px 0 10px;
+    margin-top: 15px;
     font-size: 15px;
 }
 .comment-sort {
@@ -853,9 +859,9 @@ a.avatar img {
   border-radius: 3px;
 }
 .bibar-indexNewsItem .set>ul>.set-answer>a{color: #1E8FFF;}
-.bibar-tabitem{
+/*.bibar-tabitem{
   overflow: hidden;
-}
+}*/
 .bibar-indexNewsList{
     float: left;
     /* width: 860px; */
@@ -925,7 +931,6 @@ a.avatar img {
 }
 .w-e-text-container .w-e-panel-container{
   margin-left: 0 !important;
-  left: 10% !important;
 }
 .talkBibar-editor .w-e-text-container{
   min-height: 150px !important;

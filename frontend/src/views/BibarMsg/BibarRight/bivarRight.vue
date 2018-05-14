@@ -253,7 +253,7 @@ export default{
           this.brief = data.data
           // console.log(this.brief)
           this.websites = this.brief.websites[0]
-          if (id === 'bitcoin') {
+          if (this.brief.descriptions.zh.length === 1) {
             this.briefTxt = this.brief.descriptions.zh[0]
           } else {
             this.briefTxt = this.brief.descriptions.zh[0] + this.brief.descriptions.zh[1]

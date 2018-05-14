@@ -5,7 +5,7 @@
     <div class="loading" v-if='showLoader'>
       <img src="../../../assets/img/loading.png" alt="" class="icon-loading">
     </div>
-    <div class="bibar-tabitem fade in active" :key="index" id="bibar-newstab1" v-for="(tmp,index) in [...getNavaVal, ...articles]">
+    <div class="bibar-tabitem fade in active" :key="index" id="bibar-newstab1" v-for="(tmp,index) in articles">
       <div class="bibar-indexNewsList">
         <div class="bibar-indexNewsItem">
           <div class="speech" v-if="tmp.reply_user !== null"> <span><span class="time">{{tmp.reply_time}}</span>前{{tmp.reply_user}}发表了评论</span><i class="iconfont icon-dot"></i></div>
@@ -313,6 +313,9 @@ export default{
   },
   watch: {
     getNavaVal (val) {
+      if (val.length !== 0) {
+        this.articles.unshift(val[0])
+      }
       this.i = ''
       this.changeIndex = true
     }
@@ -320,7 +323,6 @@ export default{
   methods: {
     // 分页
     loadTopicPage () {
-      console.log(this.tpno < this.pageCount - 1)
       if (this.tpno < this.pageCount - 1) {
         setTimeout(() => {
           this.showLoader = true
@@ -429,7 +431,6 @@ export default{
     },
     // 评论
     showDiscuss (index, id) {
-      this.changeIndex = false
       this.replyId = id
       this.showLoaderComment = true
       get(`/api/topic/${id}/${this.cpno}`).then(data => {
@@ -585,6 +586,7 @@ export default{
       }
       return now
     },
+    // 艾特图片处理
     replyFun (val) {
       let reply = val.replace(/<p>|<\/p>/g, '')
       if (/^\/static.*/ig.test(reply)) {
@@ -724,7 +726,7 @@ export default{
 .indexNewslimitHeight{
   cursor: pointer;
 }
-.bibar-tabitem{overflow: hidden;}
+/*.bibar-tabitem{overflow: hidden;}*/
 .bibar-comment{
     position: relative;
     margin-left: 58px;
@@ -810,7 +812,7 @@ svg:not(:root) {
   position: relative;
 }
 .comment-all>h3 {
-    margin: 15px 0 10px;
+    margin-top: 15px;
     font-size: 15px;
 }
 .comment-sort {
@@ -956,9 +958,9 @@ a.avatar img {
   border-radius: 3px;
 }
 .bibar-indexNewsItem .set>ul>.set-answer>a{color: #1E8FFF;}
-.bibar-tabitem{
+/*.bibar-tabitem{
   overflow: hidden;
-}
+}*/
 .bibar-indexNewsList{
     float: left;
 }
@@ -1024,7 +1026,6 @@ a.avatar img {
 .talkBibar-editor>.report{right: 50px; bottom: 10px;}
 .w-e-text-container .w-e-panel-container{
   margin-left: 0 !important;
-  left: 10% !important;
 }
 .talkBibar-editor .w-e-text-container{
   min-height: 150px !important;
@@ -1094,11 +1095,11 @@ svg:not(:root) {
 }
 .media-left, .media>.pull-left {
     padding-right: 10px;
-    width: 15%;
+    /*width: 15%;*/
     overflow: hidden;
     /* height: 50px; */
     /* position: relative; */
     height: 100px;
 }
-.pull-left > img{max-width: 200px; overflow: hidden; height: 100%;}
+.pull-left > img{max-width: 150px; overflow: hidden; height: 100%;}
 </style>

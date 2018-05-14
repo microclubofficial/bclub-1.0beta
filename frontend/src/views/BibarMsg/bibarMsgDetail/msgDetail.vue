@@ -68,6 +68,7 @@ export default{
     }
   },
   created () {
+    console.log(this.$route)
     this.collapseId = `collapse${this.i++}`
     this.hrefCollapse = `#${this.collapseId}`
   },
@@ -108,7 +109,6 @@ export default{
       }
     },
     frombtb (data) {
-      console.log(data)
     }
   }
 }

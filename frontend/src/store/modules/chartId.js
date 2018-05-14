@@ -1,10 +1,12 @@
 const chartId = {
   state: {
-    'chartId': ''
+    'chartId': '',
+    'chartCh': ''
   },
   mutations: {
     CHART_ID (state, payload) {
       state.chartId = payload.chartId
+      state.chartCh = payload.chartCh
     }
   }
 }

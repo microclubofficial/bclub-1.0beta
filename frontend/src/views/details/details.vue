@@ -238,9 +238,13 @@ export default {
   computed: {
     userInfo () {
       return this.$store.state.userInfo.userInfo
+    },
+    chartId () {
+      return this.$store.state.chartId.chartId
     }
   },
   mounted () {
+    console.log(this.chartId)
     this.did = this.$route.params.id
     this.crumb = JSON.parse(this.$route.query.a)
     // console.log(this.$route.query)
@@ -685,7 +689,7 @@ export default {
   position: relative;
 }
 .comment-all>h3 {
-    margin: 15px 0 10px;
+    margin-top: 15px;
     font-size: 15px;
 }
 .comment-sort {
@@ -922,7 +926,6 @@ a.avatar img {
 }
 .w-e-text-container .w-e-panel-container{
   margin-left: 0 !important;
-  left: 10% !important;
 }
 .talkBibar-editor .w-e-text-container{
   min-height: 150px !important;
@@ -1001,7 +1004,7 @@ svg:not(:root) {
 }
 .media-left, .media>.pull-left {
     padding-right: 10px;
-    width: 15%;
+    /*width: 15%;*/
     overflow: hidden;
     /* height: 50px; */
     /* position: relative; */

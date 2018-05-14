@@ -99,7 +99,11 @@ export default {
   },
   mounted () {
     get(`/api/u/${this.userInfo.username}`).then(data => {
-      this.personalUser = data.data
+      if (data.message === '未登录') {
+        this.$router.push({ path: '/login' })
+      } else {
+        this.personalUser = data.data
+      }
     })
     // this.routerId = this.$route.path.split('/')
   },

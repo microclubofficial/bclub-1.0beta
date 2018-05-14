@@ -301,7 +301,10 @@ export default {
     // 去币详情
     toBibarDetail (tmp) {
       this.$router.push({
-        path: `/msgDetail/${tmp.id}`
+        path: `/msgDetail/${tmp.id}`,
+        query: {
+          b: JSON.stringify({'zh': tmp.name_ch})
+        }
       })
     }
     // // 展开折叠chart图

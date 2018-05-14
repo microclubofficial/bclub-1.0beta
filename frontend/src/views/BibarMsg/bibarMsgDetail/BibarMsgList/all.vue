@@ -50,13 +50,13 @@
        <!-- 评论框 -->
        <div class="editor-comment">
          <img :src="userInfo.avatar" alt="" class="avatar" v-show="commentShow">
-         <svg version='1.1' style="left:48px; top:34px;" xmlns='http://www.w3.org/2000/svg' v-show="commentShow" class="editor-triangle">
+         <!--<svg version='1.1' style="left:48px; top:34px;" xmlns='http://www.w3.org/2000/svg' v-show="commentShow" class="editor-triangle">
             <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
-           </svg>
+           </svg>-->
            <!--富文本-->
-           <svg style="left:48px; top:56px;" version='1.1' xmlns='http://www.w3.org/2000/svg' v-show="showReport" class="editor-svg">
+           <!--<svg style="left:48px; top:56px;" version='1.1' xmlns='http://www.w3.org/2000/svg' v-show="showReport" class="editor-svg">
             <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
-          </svg>
+          </svg>-->
          <div class="avatar" v-show="showReport"><img :src="userInfo.avatar" alt=""></div>
          <div class="editor-bd">
            <span class="comment-img-delete"></span>
@@ -115,6 +115,7 @@
                       </div>
                       <!-- @ 样式 -->
                       <p class="replyAuthor" v-if="item.at_user !== ''">@{{item.at_user}}:&nbsp;<span class="replyBackConten" style="display:inline-block;font-weight: normal;" v-html="replyFun(item.reference)"></span></p>
+                      
                       <!-- <p>{{item}}</p> -->
                       <p v-html="item.content">{{item.content}}</p>
                     </div>
@@ -135,9 +136,9 @@
         <div class="editor-comment">
          <img :src="userInfo.avatar" alt="" class="avatar" v-show="talkReplyTxt">
          <div class="avatar" v-show="showReportReplay"><img :src="userInfo.avatar" alt=""></div>
-         <svg version='1.1' style="left:48px; top:56px;" xmlns='http://www.w3.org/2000/svg' v-show="showReportReplay" class="editor-triangle">
+         <!--<svg version='1.1' style="left:48px; top:56px;" xmlns='http://www.w3.org/2000/svg' v-show="showReportReplay" class="editor-triangle">
             <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
-           </svg>
+           </svg>-->
          <div class="editor-bd">
            <span class="comment-img-delete"></span>
            <div class="editor-textarea"  v-show="talkReplyTxt">
@@ -290,9 +291,10 @@ export default{
       get(`/api/topic/token/${val.params.currency}/1`).then(data => {
         this.showLoader = false
         this.bibarArticles = data.data.topics
-        console.log(this.bibarArticles)
         if (this.bibarArticles.length > 0) {
           this.loadingShow = true
+        } else {
+          this.loadingShow = false
         }
         this.pageCount = data.data.page_count
       })
@@ -303,13 +305,13 @@ export default{
     }
   },
   created: function () {
+    console.log(this.chartId)
     // 文章分页
     this.showLoader = true
     this.$store.dispatch('clear_backForNav')
     get(`/api/topic/token/${this.$route.params.currency}/${this.tpno}`).then(data => {
       this.showLoader = false
       this.bibarArticles = data.data.topics
-      console.log(this.bibarArticles)
       this.pageCount = data.data.page_count
       if (this.bibarArticles.length > 0) {
         this.loadingShow = true
@@ -332,11 +334,9 @@ export default{
         setTimeout(() => {
           this.showLoader = true
           this.tpno++
-          console.log(this.tpno)
           get(`/api/topic/token/${this.$route.params.currency}/${this.tpno}`).then(data => {
             this.showLoader = false
             this.bibarArticles = this.bibarArticles.concat(data.data.topics)
-            console.log(this.bibarArticles)
             this.bottomText = '加载中...'
             // this.loadingImg = '../../assets/img/listLoding.png'
           })
@@ -378,7 +378,6 @@ export default{
               // $('.bibar-tabitem:eq(' + index + ')').find('.set-choseOne>a:eq(' + isNum + ')').addClass('active')
               item.is_good = data.data.is_good
               item.is_bad = data.data.is_bad
-              console.log(data.data.is_good_bool)
               item.is_bad_bool = data.data.is_bad_bool
               item.is_good_bool = data.data.is_good_bool
             } else if (data.message === '未登录') {
@@ -433,7 +432,7 @@ export default{
           a: JSON.stringify([
             {label: '首页', path: '/'},
             {label: '币讯', path: '/bibarLayout'},
-            {label: this.$route.params.currency, path: 'last'}
+            {label: JSON.parse(this.$route.query.b).zh, path: 'last'}
           ])
         }
       })
@@ -522,6 +521,7 @@ export default{
     },
     showBibarContentFun (ftData) {
       this.bibarArticles = [ftData, ...this.bibarArticles]
+      this.i = ''
       this.changeIndex = true
     },
     // 评论回复
@@ -595,7 +595,19 @@ export default{
     // 处理图片
     EditorContent (val) {
       let now = `<div>${val}</div>`
-      return $(now).text()
+      now = $(now).text()
+      if (now.length > 128) {
+        return now.substring(0, 128) + '...'
+      }
+      return now
+    },
+    // 艾特图片处理
+    replyFun (val) {
+      let reply = val.replace(/<p>|<\/p>/g, '')
+      if (/^\/static.*/ig.test(reply)) {
+        return '图片评论' + `<a style='color:#0181FF' href='${reply}'><i class='iconfont'>&#xe694;</i>查看图片</a>`
+      }
+      return reply
     },
     // 分页
     prev () {
@@ -644,13 +656,6 @@ export default{
         }
         return newTxt
       }
-    },
-    replyFun (val) {
-      let reply = val.replace(/<p>|<\/p>/g, '')
-      if (/^\/static.*/ig.test(reply)) {
-        return '图片评论' + `<a style='color:#0181FF' href='${reply}'><i class='iconfont'>&#xe694;</i>查看图片</a>`
-      }
-      return reply
     }
   }
   // watch: {
@@ -737,7 +742,7 @@ export default{
 .indexNewslimitHeight{
   cursor: pointer;
 }
-.bibar-tabitem{overflow: hidden;}
+/*.bibar-tabitem{overflow: hidden;}*/
 .bibar-comment{
     position: relative;
     margin-left: 58px;
@@ -828,7 +833,7 @@ svg:not(:root) {
   position: relative;
 }
 .comment-all>h3 {
-    margin: 15px 0 10px;
+    margin-top: 15px;
     font-size: 15px;
 }
 .comment-sort {
@@ -977,9 +982,9 @@ a.avatar img {
   border-radius: 3px;
 }
 .bibar-indexNewsItem .set>ul>.set-answer>a{color: #1E8FFF;}
-.bibar-tabitem{
+/*.bibar-tabitem{
   overflow: hidden;
-}
+}*/
 .bibar-indexNewsList{
     float: left;
 }
@@ -1048,7 +1053,6 @@ a.avatar img {
 }
 .w-e-text-container .w-e-panel-container{
   margin-left: 0 !important;
-  left: 10% !important;
 }
 .talkBibar-editor .w-e-text-container{
   min-height: 150px !important;
@@ -1121,13 +1125,13 @@ svg:not(:root) {
 }
 .media-left, .media>.pull-left {
     padding-right: 10px;
-    width: 15%;
+    /*width: 15%;*/
     overflow: hidden;
     /* height: 50px; */
     /* position: relative; */
     height: 100px;
 }
-.pull-left > img{max-width: 200px; overflow: hidden; height: 100%;}
+.pull-left > img{max-width: 150px; overflow: hidden; height: 100%;}
 /*评论默认框*/
 .editor-placeholder{margin: 6px;}
 </style>

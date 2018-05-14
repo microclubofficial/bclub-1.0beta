@@ -70,6 +70,157 @@ export default{
       'emoticon',
       'image'
     ]
+    // 表情配置
+    editor.customConfig.emotions = [
+      {
+        title: '',
+        type: 'image',
+        content: [
+          {
+            alt: '[坏笑]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/50/pcmoren_huaixiao_org.png'
+          },
+          {
+            alt: '[舔屏]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/40/pcmoren_tian_org.png'
+          },
+          {
+            alt: '[笑cry]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/4a/2018new_xiaoku_org.png'
+          },
+          {
+            alt: '[馋嘴]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/fa/2018new_chanzui_org.png'
+          },
+          {
+            alt: '[拜拜]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/fd/2018new_baibai_org.png'
+          },
+          {
+            alt: '[右哼哼]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/c1/2018new_youhengheng_org.png'
+          },
+          {
+            alt: '[左哼哼]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/43/2018new_zuohengheng_org.png'
+          },
+          {
+            alt: '[怒骂]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/87/2018new_zhouma_org.png'},
+          {
+            alt: '[顶]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/ae/2018new_ding_org.png'
+          },
+          {
+            alt: '[微笑]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/e3/2018new_weixioa02_org.png'},
+          {
+            alt: '[偷笑]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/71/2018new_touxiao_org.png'
+          },
+          {
+            alt: '[舔屏]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/3e/2018new_tianping_org.png'
+          },
+          {
+            alt: '[亲亲]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/2c/2018new_qinqin_org.png'
+          },
+          {
+            alt: '[太开心]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/1e/2018new_taikaixin_org.png'
+          },
+          {
+            alt: '[挤眼]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/43/2018new_jiyan_org.png'
+          },
+          {
+            alt: '[衰]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/a2/2018new_shuai_org.png'
+          },
+          {
+            alt: '[可怜]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/96/2018new_kelian_org.png'
+          },
+          {
+            alt: '[汗]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/28/2018new_han_org.png'
+          },
+          {
+            alt: '[色]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/9d/2018new_huaxin_org.png'
+          },
+          {
+            alt: '[可爱]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/09/2018new_keai_org.png'
+          },
+          {
+            alt: '[钱]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/a2/2018new_qian_org.png'
+          },
+          {
+            alt: '[思考]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/30/2018new_sikao_org.png'
+          },
+          {
+            alt: '[兔子]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/c6/2018new_tuzi_org.png'
+          },
+          {
+            alt: '[熊猫]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/aa/2018new_xiongmao_org.png'
+          },
+          {
+            alt: '[黑寡妇]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/78/fulian3_heiguafu01_org.png'
+          },
+          {
+            alt: '[格鲁特]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/de/fulian3_gelute01_org.png'
+          },
+          {
+            alt: '[哆啦A梦亲亲]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/e0/dora_qinqin_org.png'
+          },
+          {
+            alt: '[小黄人微笑]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/f0/xhrnew_weixiao_org.png'
+          },
+          {
+            alt: '[蜡烛]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/16/2018new_lazhu_org.png'
+          },
+          {
+            alt: '[月亮]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/d5/2018new_yueliang_org.png'
+          },
+          {
+            alt: '[围观]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/6c/2018new_weiguan_org.png'
+          },
+          {
+            alt: '[蛋糕]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/f9/2018new_dangao_org.png'
+          },
+          {
+            alt: '[音乐]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/1f/2018new_yinyue_org.png'
+          },
+          {
+            alt: '[猪头]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/1c/2018new_zhutou_org.png'
+          },
+          {
+            alt: '[鲜花]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/d4/2018new_xianhua_org.png'
+          },
+          {
+            alt: '[太阳]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/cd/2018new_taiyang_org.png'
+          }
+        ]
+      }
+    ]
     // 上传图片
     // editor.customConfig.uploadImgShowBase64 = true
     editor.customConfig.uploadImgServer = '/api/file'
@@ -84,7 +235,6 @@ export default{
       }
     }
     editor.create()
-    $('.long-text-editor').find('.w-e-text-container').css({'border': 'none', 'height': '300px'})
   },
   methods: {
     getContent: function () {
@@ -193,6 +343,14 @@ export default{
 }
 .long-text-editor>div>.editor> .w-e-text-container{
   border:none !important;
+  height: 300px !important;
+}
+.long-text-editor>div>.editor> .w-e-text-container > .w-e-panel-container{
+  top: 0 !important;
+}
+.long-text-editor>div>.editor> .w-e-text-container > .w-e-panel-container{
+  top: 0 !important;
+  left: 315px !important;
 }
 .w-e-text-container{z-index: 9999 !important;}
 .w-e-toolbar{z-index: 9998 !important;}

@@ -2,7 +2,7 @@
   <div class="commun-bibarType">
     <h4>热门币种</h4>
    <div class="bibarType-main">
-     <div v-bind:style="{backgroundImage: 'url(' + type.picture + ')'}" class="bibarType-main-box shadow-box" @click="toBibarData(type.id,type.id)" :key="index" v-for="(type,index) in bibarType">
+     <div v-bind:style="{backgroundImage: 'url(' + type.picture + ')'}" class="bibarType-main-box shadow-box" @click="toBibarData(type.id,type.id,type.name_ch)" :key="index" v-for="(type,index) in bibarType">
        <!--<img :src="type.picture" alt="">-->
        <!--<img src="../../assets/img/pic-news02.png" alt="">-->
        <div class="bibarType-bot">
@@ -36,9 +36,10 @@ export default{
     })
   },
   methods: {
-    toBibarData (router, id) {
+    toBibarData (router, id, ch) {
       this.$store.commit('CHART_ID', {
-        'chartId': id
+        'chartId': id,
+        'chartCh': ch
       })
       this.$router.push(`/msgDetail/${router}`)
     }

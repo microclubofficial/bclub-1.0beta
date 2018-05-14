@@ -414,15 +414,10 @@ a.nav_btn_longtext {
 }
 .modal-body>.wangeditor>.editor>.w-e-text-container{border: 1px solid #edf0f5 !important; z-index: 9999;height: 87px !important;}
 .modal-body>.wangeditor>.editor>.w-e-text-container>.w-e-panel-container{
-    width: 300px !important;
     /* margin-left: -285px !important; */
     z-index: 20000;
-    border-top: 1px solid #ccc !important;
     position: fixed !important;
     top: 195px !important;
-}
-.modal-body>.wangeditor>.editor>.w-e-text-container>.w-e-panel-container>.w-e-panel-tab-content{
-  height: 143px !important;
 }
 .modal-body>.wangeditor .toLongText{
     bottom: 0;
