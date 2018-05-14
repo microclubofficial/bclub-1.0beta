@@ -31,8 +31,8 @@
   height: 40px;
   line-height: 40px;
   font-size: 18px;
-  margin: 40px 0 50px 30px;
-  width: 380px;
+  margin: 40px 0 50px 40px;
+  width: 364px;
   &:hover {
     color: #fff;
     background-color: #50a6fc;
@@ -55,7 +55,7 @@
           <h4>邮箱找回密码</h4>
           <form class="form-horizontal">
             <div class="form-group">
-              <label for="inputEmail3" class="col-md-3 control-label">邮　箱：</label>
+              <label for="inputEmail3" class="col-md-3 control-label">邮 箱：</label>
               <div class="col-md-9">
                 <input type="text" class="form-control" id="inputEmail3" @blur='showRegisterMsg(findForm.email, 0)' v-model="findForm.email" placeholder="请输入邮箱">
               </div>
