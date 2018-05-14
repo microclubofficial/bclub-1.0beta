@@ -385,7 +385,7 @@ class LikeView(MethodView):
             HTTPResponse.NORMAL_STATUS, data=serializer.data).to_response()
 
 class ThumbView(IsAuthMethodView):
-    decorators = (thumd_permission, )
+    #decorators = (thumd_permission, )
 
     def get(self, id, thumb):
         user = request.user
