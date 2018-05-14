@@ -92,9 +92,9 @@
       <div class="detail-editor-toolbar">
         <div class="avatar"><img :src="userInfo.avatar" alt=""></div>
         <!--富文本-->
-           <svg style="left:56px; top:55px;" version='1.1' xmlns='http://www.w3.org/2000/svg' class="editor-svg">
+           <!--<svg style="left:56px; top:55px;" version='1.1' xmlns='http://www.w3.org/2000/svg' class="editor-svg">
             <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
-          </svg>
+          </svg>-->
         <div class="detailEditor">
           <BibarReport :toApi='5' :detailId='articleDetail.id' @backList = 'showDetailContent'></BibarReport>
         </div>
@@ -152,9 +152,9 @@
         <div class="editor-comment">
          <img :src="userInfo.avatar" alt="" class="avatar" v-show="talkReplyTxt">
          <div class="avatar" v-if='showReportReplay'><img :src="userInfo.avatar" alt=""></div>
-         <svg style="left:51px; top:55px;" v-if='showReportReplay' version='1.1' xmlns='http://www.w3.org/2000/svg' class="editor-svg">
+         <!--<svg style="left:51px; top:55px;" v-if='showReportReplay' version='1.1' xmlns='http://www.w3.org/2000/svg' class="editor-svg">
             <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
-          </svg>
+          </svg>-->
          <div class="editor-bd">
            <span class="comment-img-delete"></span>
         <!--富文本-->
@@ -968,9 +968,7 @@ svg:not(:root) {
     overflow: hidden;
 }
 .editor-triangle{
-    position: absolute;
-    top: 10px;
-    left: -4px;
+    position: absolute;;
     width: 5px;
     height: 10px;
     z-index: 11;

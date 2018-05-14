@@ -84,7 +84,7 @@ export default{
       }
     }
     editor.create()
-    $('.long-text-editor').find('.w-e-text-container').css({'border': 'none'})
+    $('.long-text-editor').find('.w-e-text-container').css({'border': 'none', 'height': '300px'})
   },
   methods: {
     getContent: function () {

@@ -1,31 +1,80 @@
+<style lang="scss" scoped>
+.login-box {
+  width: 40%;
+  margin: 100px auto;
+  border: none;
+  .login-title {
+    padding: 20px;
+    background-color: #1e8fff;
+    h3 {
+      font-size: 24px;
+      letter-spacing: 2px;
+    }
+  }
+  .panel-body {
+    padding: 40px 0 0 0;
+    h4 {
+      text-align: center;
+      margin-bottom: 40px;
+      padding-left: 50px;
+    }
+  }
+}
+
+.login-button {
+  background-color: #1e8fff;
+  border: none;
+  height: 40px;
+  line-height: 40px;
+  font-size: 18px;
+  margin: 40px 0 50px 30px;
+  width: 380px;
+  &:hover {
+    color: #fff;
+    background-color: #50a6fc;
+  }
+}
+
+.prompt {
+  margin-top: 10px;
+  color: red;
+}
+</style>
 <template>
-    <div class="box">
-        <div class="container">
-            <div class="page-header">
-                <h4>请填写新密码</h4>
+  <div>
+    <div class="panel panel-primary login-box">
+      <div class="panel-heading login-title">
+        <h3 class="panel-title text-center">找回密码</h3>
+      </div>
+      <div class="panel-body">
+        <div class="confirm-box" style="padding:0 150px 0 100px;">
+          <h4>请设置新密码</h4>
+          <form class="form-horizontal">
+            <div class="form-group">
+              <label for="inputPassword3" class="col-md-3 control-label">新&nbsp;&nbsp;密&nbsp;&nbsp;码：</label>
+              <div class="col-md-9">
+                <input class="form-control" name="password" type="password" placeholder="请设置新密码" @blur='showRegisterMsg(findForm.password, 0)' v-model="findForm.password">
+              </div>
+              <label class="col-md-3 control-label"></label>
+              <p class="prompt col-md-9">{{upwdPrompt}}</p>
             </div>
-            <form class="form-horizontal">
-                <div class="form-group">
-            <label class="col-sm-1 control-label">密码:</label>
-            <div class="col-sm-4">
-              <input class="form-control" name="password" type="password" placeholder="Password" @blur='showRegisterMsg(findForm.password, 0)' v-model="findForm.password">
+            <div class="form-group">
+              <label for="inputRepassword3" class="col-md-3 control-label">确认密码：</label>
+              <div class="col-md-9">
+                <input class="form-control" name="repassword" type="password" placeholder="请确认密码" @blur='showRegisterMsg(findForm.confirm_password, 1)' v-model="findForm.confirm_password">
+              </div>
+              <label class="col-md-3 control-label"></label>
+              <p class="prompt col-md-9">{{confirm_upwdPrompt}}</p>
             </div>
-            <p class="prompt">{{upwdPrompt}}</p>
-          </div>
-          <div class="form-group">
-            <label class="col-sm-1 control-label">确认密码:</label>
-            <div class="col-sm-4">
-              <input class="form-control" name="repassword" type="password" placeholder="Repassword" @blur='showRegisterMsg(findForm.confirm_password, 1)' v-model="findForm.confirm_password">
-            </div>
-            <p class="prompt">{{confirm_upwdPrompt}}</p>
-          </div>
-          <div class="form-group">
-                    <div class="col-md-offset-2 col-md-1 btn findpwd"  @click="setnewpwd">确认
-                    </div>
-                </div>
-            </form>
+            <label class="col-md-3 control-label"></label>
+            <p class="prompt col-md-9" style="margin-top:0px !important;">{{emailPrompt}}</p>
+            <button type="button" class="btn btn-primary btn-block login-button" @click="setnewpwd">确认
+            </button>
+          </form>
         </div>
+      </div>
     </div>
+  </div>
 </template>
 <script>
 import {post} from '../../utils/http'
@@ -95,11 +144,11 @@ export default{
     margin-top: 10px;
     color: red;
   }
-  .disable{
+  /*.disable{
     background: #BCBCBC !important;
     color: #797979 !important;
     border:none !important;
-}
+}*/
 /* .disable:hover{
     background: #BCBCBC;
     color: #797979;

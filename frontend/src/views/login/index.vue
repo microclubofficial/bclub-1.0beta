@@ -27,10 +27,7 @@
     border-radius: 4px;
   }
   .panel-body {
-    padding: 40px 0 30px;
-    .tab-content {
-      padding: 0 120px 0 60px;
-    }
+    padding: 40px 0 0 0;
     .control-label {
       // text-align: left;
       font-size: 14px;
@@ -52,11 +49,12 @@
 
 .captcha-box {
   position: relative;
-  .getcontrol {
+  .get-captcha {
     cursor: pointer;
     position: absolute;
     right: 15px;
     top: 0;
+    background-color:rgba(255,255,255,0)!important;
     color: #1e8fff;
     width: 41%;
     height: 32px;
@@ -71,13 +69,14 @@
       padding: 0 10px;
     }
   }
-  .disable {
-    color: #e8e8e8;
+  .text-gray {
+    color: #ccc;
   }
 }
 
 .go-login {
   text-align: center;
+  margin-bottom:30px;
   .login-hover {
     cursor: pointer;
     &:hover {
@@ -108,7 +107,7 @@
         </li>
       </ul>
       <div class="panel-body">
-        <div id="myTabContent" class="tab-content">
+        <div id="myTabContent" class="tab-content" style="padding:0 120px 0 50px;">
           <form class="form-horizontal">
             <!-- 用户名登录 -->
             <div class="tab-pane fade active" id="home" v-show="showTab" :class="{in:showTab}">
@@ -132,20 +131,20 @@
                 <label class="col-md-3 control-label">验证码:</label>
                 <div class="col-md-9">
                   <div class="input-group">
-                    <input class="form-control" name="captcha" @blur='showRegisterMsg(userForm.captcha, 2)' placeholder="Captcha" type="text" v-model="userForm.captcha" @keyup.enter="handleLogin">
+                    <input class="form-control" name="captcha" @blur='showRegisterMsg(userForm.captcha, 2)' placeholder="请输入验证码" type="text" v-model="userForm.captcha" @keyup.enter="handleLogin">
                     <span class="input-group-addon" style="padding:0;border-left:none;">
                       <img ref="captcha" :src="controlImg" alt="验证码" width="120" height="30" @click="changeControl()">
                     </span>
                   </div>
                 </div>
                 <label class="col-md-3 control-label"></label>
-                <p class="prompt col-md-9">{{captchaPrompt}}</p>
+                <p class="prompt">{{captchaPrompt}}</p>
               </div>
               <div class="form-group">
                 <div class="col-md-offset-3 col-md-9">
                   <input id="remember" v-model="userForm.remember" type="checkbox" value="y">
                   <label for="remember">记住我</label>
-                  <a class="pull-right" @click="toForgetPwd">忘记密码?</a>
+                  <a class="pull-right" style="margin-top:7px;" @click="toForgetPwd">忘记密码?</a>
                 </div>
               </div>
               <div class="form-group">
@@ -162,7 +161,7 @@
               <div class="form-group">
                 <label class="col-md-3 control-label">手机号：</label>
                 <div class="col-md-9">
-                  <input class="form-control" name="phone" type="text" placeholder="phone" v-model="phoneForm.phone" @blur='showRegisterMsg(phoneForm.phone, 3)'>
+                  <input class="form-control" name="phone" type="text" placeholder="请输入手机号" v-model="phoneForm.phone" @blur='showRegisterMsg(phoneForm.phone, 3)'>
                 </div>
                 <label class="col-md-3 control-label"></label>
                 <p class="prompt col-md-9">{{phonePrompt}}</p>
@@ -171,9 +170,9 @@
                 <label for="inputCaptcha3" class="col-md-3 control-label">验证码：</label>
                 <div class="col-md-9 captcha-box">
                   <input type="text" class="form-control" v-model="phoneForm.phonecaptcha" @blur='showRegisterMsg(phoneForm.phonecaptcha, 4)' id="inputCaptcha3" placeholder="请输入验证码">
-                  <div class="col-md-3 getcontrol" v-bind:disabled="hasphone" :class="{disable:hasphone}" @click="getPhoneControl">
+                  <button type="button" class="col-md-3 get-captcha" v-bind:disabled="hasphone" :class="{'text-gray':hasphone}" @click="getPhoneControl">
                     <span v-show="hasControl">{{countdown}}</span>
-                    <i> | </i>{{getcontroltxt}}</div>
+                    <i> | </i>{{getcontroltxt}}</button>
                 </div>
                 <label class="col-md-3 control-label"></label>
                 <p class="prompt">{{captchaPrompt}}</p>
@@ -193,7 +192,7 @@
                 <div class="col-md-offset-3 col-md-9">
                   <input id="rememberPhone" v-model="phoneForm.remember" type="checkbox" value="p">
                   <label for="rememberPhone">记住我</label>
-                  <a class="pull-right" @click="toForgetPwd">忘记密码?</a>
+                  <a class="pull-right" @click="toForgetPwd" style="margin-top:7px;">忘记密码?</a>
                 </div>
               </div>
               <div class="form-group">
@@ -238,11 +237,12 @@ export default {
       getcontroltxt: '获取验证码'
     }
   },
-  mounted() {
+  mounted () {
     $('#myTab li:eq(0) a').tab('show')
     if ($('div').hasClass('modal-backdrop')) {
       document.body.removeChild(document.querySelector('.modal-backdrop'))
     }
+    this.changeControl()
   },
   methods: {
     // 失去焦点验证
@@ -309,7 +309,8 @@ export default {
         this.controlPrompt = data.message
         if (data.message === '验证码错误') {
           this.controlPrompt = data.message
-          this.phoneControlPrompt = data.message
+          this.captchaPrompt = data.message
+          this.changeControl()
           return
         } else {
           this.controlPrompt = ''
@@ -319,6 +320,7 @@ export default {
         }
         if (data.message === '你已经登陆，不能重复登陆') {
           alert(data.message)
+          this.changeControl()
           this.$router.push('/')
         }
         if (data.resultcode === 1) {
@@ -333,6 +335,7 @@ export default {
           } else {
             setToken(data.data)
           }
+          this.changeControl()
           this.$router.push('/')
         }
       }).catch(error => {
@@ -340,12 +343,13 @@ export default {
       })
     },
     // 手机登录
-    handlePhoneLogin() {
+    handlePhoneLogin () {
       if (this.phoneForm.phone === undefined) {
         alert('手机号码不能为空')
         return
       } else if (this.phoneForm.phonecaptcha === undefined) {
         alert('验证码不能为空')
+        this.changeControl()
         return
       }
       post(this.phoneUrl, this.phoneForm).then(data => {
@@ -353,12 +357,13 @@ export default {
           if (data.message === '你已经登陆，不能重复登陆') {
             alert(data.message)
             this.$router.push('/')
+            this.changeControl()
           } if (data.message === 'failed') {
             alert('手机号未注册')
             return
           } else {
             this.controlPrompt = data.message
-            // this.changeControl()
+            this.changeControl()
             return
           }
         }

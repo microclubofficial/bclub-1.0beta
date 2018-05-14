@@ -49,9 +49,9 @@
          <img :src="userInfo.avatar" alt="" class="avatar"  v-show="commentShow">
          <div class="editor-bd">
            <span class="comment-img-delete"></span>
-           <svg version='1.1' xmlns='http://www.w3.org/2000/svg' class="editor-triangle">
+           <!--<svg version='1.1' style="left:56px; top:34px;" xmlns='http://www.w3.org/2000/svg' class="editor-triangle">
             <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
-           </svg>
+           </svg>-->
            <div class="editor-textarea" v-show="commentShow" @click="commentShowFun">
              <div class="editor-placeholder">评论...</div>
            </div>
@@ -129,9 +129,9 @@
          <img :src="userInfo.avatar" alt="" class="avatar" v-show="talkReplyTxt">
          <div class="editor-bd">
            <span class="comment-img-delete"></span>
-           <svg version='1.1' xmlns='http://www.w3.org/2000/svg' class="editor-triangle">
+           <!--<svg version='1.1' style="left:56px; top:34px;" xmlns='http://www.w3.org/2000/svg' class="editor-triangle">
             <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
-           </svg>
+           </svg>-->
            <div class="editor-textarea"  v-show="talkReplyTxt" @click="talkReplyEditor">
              <div class="editor-placeholder">回复...</div>
            </div>
@@ -659,8 +659,6 @@ svg:not(:root) {
 }
 .editor-triangle{
     position: absolute;
-    top: 10px;
-    left: -4px;
     width: 5px;
     height: 10px;
     z-index: 11;
@@ -988,8 +986,6 @@ svg:not(:root) {
 }
 .editor-triangle{
     position: absolute;
-    top: 10px;
-    left: -4px;
     width: 5px;
     height: 10px;
     z-index: 11;

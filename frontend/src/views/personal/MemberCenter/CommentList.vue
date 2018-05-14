@@ -50,11 +50,17 @@
        <!-- 评论框 -->
        <div class="editor-comment">
          <img :src="userInfo.avatar" alt="" class="avatar" v-show="commentShow">
+         <div class="avatar" v-show="showReport"><img :src="userInfo.avatar" alt=""></div>
+         <!--默认-->
+           <!--<svg v-show="commentShow" style="left:38px; top:34px;" version='1.1' xmlns='http://www.w3.org/2000/svg' class="editor-triangle">
+            <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
+           </svg>-->
+           <!--富文本-->
+           <!--<svg style="left:38px; top:52px;" version='1.1' xmlns='http://www.w3.org/2000/svg' v-show="showReport" class="editor-svg">
+            <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
+          </svg>-->
          <div class="editor-bd">
            <span class="comment-img-delete"></span>
-           <svg version='1.1' xmlns='http://www.w3.org/2000/svg' v-show="commentShow" class="editor-triangle">
-            <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
-           </svg>
            <div class="editor-textarea" v-show="commentShow" @click="commentShowFun">
              <div class="editor-placeholder">评论...</div>
            </div>
@@ -114,7 +120,7 @@
                       <!-- <p>{{item}}</p> -->
                       <p v-html="item.content">{{item.content}}</p>
                     </div>
-                    <div class="set">
+                    <div class="set" style="margin-left:42px;">
                       <ul class="bibar-indexNewsItem-infro">
                         <li class="set-choseTwo"> <a href="javascript:void(0);" class="icon-quan mr15"  @click="changeNum(0,now,item.id,1,item)" :class='{active:item.is_good_bool}'><i class="iconfont">&#xe603;</i><span class="is-good-t">{{item.is_good}}</span></a><a href="javascript:void(0);"  :class='{active:item.is_bad_bool}' class="icon-quan set-choseTwo" @click="changeNum(1,now,item.id,1,item)"><i class="iconfont">&#xe731;</i><span class="is-bad-t">{{item.is_bad}}</span></a></li>
                         <!-- <li class="set-choseShang"> <a href="javascript:void(0);"><i class="iconfont icon-dashang"></i> 打赏<span>438</span></a> </li> -->
@@ -130,11 +136,15 @@
                 <!-- 回复文本框 -->
         <div class="editor-comment">
          <img :src="userInfo.avatar" alt="" class="avatar" v-show="talkReplyTxt">
+         <div class="avatar" v-show="showReportReplay"><img :src="userInfo.avatar" alt=""></div>
+         <!--<svg version='1.1' style="left:56px; top:52px;" xmlns='http://www.w3.org/2000/svg' v-show="showReportReplay" class="editor-triangle">
+            <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
+           </svg>-->
          <div class="editor-bd">
            <span class="comment-img-delete"></span>
-           <svg version='1.1' xmlns='http://www.w3.org/2000/svg' v-show="talkReplyTxt" class="editor-triangle">
+           <!--<svg version='1.1' xmlns='http://www.w3.org/2000/svg' v-show="talkReplyTxt" class="editor-triangle">
             <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
-           </svg>
+           </svg>-->
            <div class="editor-textarea"  v-show="talkReplyTxt" @click="talkReplyEditor">
              <div class="editor-placeholder">回复...</div>
            </div>
@@ -391,7 +401,16 @@ export default{
     // 去详情页
     goDetail (id) {
       this.lid = id
-      this.$router.push(`/details/${this.lid}`)
+      this.$router.push({
+        path: `/details/${this.lid}`,
+        query: {
+          a: JSON.stringify([
+            {label: '首页', path: '/'},
+            {label: '个人中心', path: `this.$route.path`},
+            {label: '全部', path: 'last'}
+          ])
+        }
+      })
     },
     // 评论
     showDiscuss (index, id) {
@@ -451,6 +470,8 @@ export default{
     },
     // 评论富文本框
     showContent (data) {
+      this.commentShow = true
+      this.showReport = false
       this.nowData.unshift(data)
       this.articles[this.i].replies_count = data.replies_count
     },
@@ -596,7 +617,7 @@ export default{
     margin-left: 58px;
 }
 .editor-comment{
-    margin-top: 5px;
+    /*margin-top: 5px;*/
     background-color: #f8f8f8;
     /* padding: 20px; */
     padding-left: 10px;
@@ -612,18 +633,11 @@ img.avatar{
     border-radius: 50%;
     vertical-align: middle;
 }
-.editor-bd{
-    margin-left: 42px;
-    position: relative;
-    z-index: 1;
-}
 svg:not(:root) {
     overflow: hidden;
 }
 .editor-triangle{
     position: absolute;
-    top: 10px;
-    left: -4px;
     width: 5px;
     height: 10px;
     z-index: 11;
@@ -792,13 +806,10 @@ a.avatar img {
   /*回复*/
 .comment-reply{
   border-top: 1px solid #edf0f5;
-  margin-top: 50px;
+  /*margin-top: 50px;*/
 }
 .comment-reply>.comment-item{
   margin: 15px 0;
-}
-.comment-reply>.editor-comment{
-  margin-top: 15px;
 }
 .talkCommentEditor>.wangeditor>.editor{
   padding-bottom: 30px;
@@ -926,7 +937,7 @@ a.avatar img {
     margin-left: 0 !important;
 }
 .editor-comment{
-    margin-top: 5px;
+    /*margin-top: 5px;*/
     background-color: #f8f8f8;
     /* padding: 20px; */
     padding: 15px 10px 15px 0;
@@ -946,17 +957,10 @@ img.avatar{
     margin-left: 42px;
     position: relative;
     z-index: 1;
+    overflow: hidden;
 }
 svg:not(:root) {
     overflow: hidden;
-}
-.editor-triangle{
-    position: absolute;
-    top: 10px;
-    left: -4px;
-    width: 5px;
-    height: 10px;
-    z-index: 11;
 }
 .editor-triangle>.arrow{
     stroke: #edf0f5;
