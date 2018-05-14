@@ -12,27 +12,35 @@
     }
   }
   .flex-box {
-    padding: 30px 0;
+    padding: 50px 0 0 0;
     display: flex;
     .flex-item {
       flex: 1;
       text-align: center;
       cursor: pointer;
       p {
-        margin: 20px 0;
+        margin: 20px 0 60px 0;
         font-size: 14px;
         &:hover {
           color: #1e8fff;
         }
       }
       .gray-circle {
-        width: 100px;
-        height: 100px;
-        background-color: #b9dbfe;
+        width: 120px;
+        height: 120px; 
         margin: 0 auto;
         border-radius: 50%;
         overflow: hidden;
-      }
+        &:hover{
+          opacity: 0.7;
+        }
+      } 
+    }
+    .byphone .gray-circle{
+      background: #b9dbfe url('../../assets/img/shouji.png') no-repeat center;
+    }
+    .byemail .gray-circle{
+      background: #b9dbfe url('../../assets/img/youxiang.png') no-repeat center;
     }
   }
 }

@@ -41,6 +41,25 @@
   margin-top: 10px;
   color: red;
 }
+#myModalLabel{
+  text-align: center;
+  font-size:16px;
+  color:#333;
+}
+.login-button {
+  background-color: #1e8fff;
+  border: none;
+  height: 40px;
+  line-height: 40px;
+  font-size: 18px;
+  margin: 30px 0 50px 30px;
+  width: 380px;
+  &:hover {
+    color: #fff;
+    background-color: #50a6fc;
+  }
+}
+
 </style>
 <template>
   <div>
@@ -80,31 +99,31 @@
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
-          <div class="modal-header">
+          <div class="modal-header" style="margin-bottom:40px;">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             <h4 class="modal-title" id="myModalLabel">请填写新密码</h4>
           </div>
           <div class="modal-body">
-            <form class="form-horizontal">
+            <form class="form-horizontal" style="padding:0 100px 10px 60px;">
               <div class="form-group">
-                <label class="col-md-3 control-label">密码:</label>
-                <div class="col-sm-4">
-                  <input class="form-control" name="password" type="password" placeholder="Password" @blur='showRegisterMsg(findForm.password, 2)' v-model="findForm.password">
+                <label for="inputPassword3" class="col-md-3 control-label">新&nbsp;&nbsp;密&nbsp;&nbsp;码：</label>
+                <div class="col-md-9">
+                  <input class="form-control" name="password" type="password" placeholder="请设置新密码" @blur='showRegisterMsg(findForm.password, 0)' v-model="findForm.password">
                 </div>
                 <p class="prompt">{{upwdPrompt}}</p>
               </div>
-              <div class="form-group">
-                <label class="col-md-3 control-label">确认密码:</label>
-                <div class="col-sm-4">
-                  <input class="form-control" name="repassword" type="password" placeholder="Repassword" @blur='showRegisterMsg(findForm.confirm_password, 3)' v-model="findForm.confirm_password">
+              <div class="form-group" style="margin-top:30px;">
+                <label for="inputRepassword3" class="col-md-3 control-label">确认密码：</label>
+                <div class="col-md-9">
+                  <input class="form-control" name="repassword" type="password" placeholder="请确认密码" @blur='showRegisterMsg(findForm.confirm_password, 1)' v-model="findForm.confirm_password">
                 </div>
                 <p class="prompt">{{confirm_upwdPrompt}}</p>
               </div>
+              <label class="col-md-3 control-label"></label>
+              <p class="prompt col-md-9" style="margin-top:0px !important;">{{emailPrompt}}</p>
+              <button type="button" class="btn btn-primary btn-block login-button" style="width:380px;margin: 30px 0 30px 30px;" @click="setnewpwd">确认
+              </button>
             </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btnm btn-default" data-dismiss="modal">关闭</button>
-            <button type="button" class="btnm btn-primary" @click="setnewpwd">确定</button>
           </div>
         </div>
       </div>
@@ -210,6 +229,7 @@ export default {
     },
     // 填新密码
     setnewpwd() {
+      this.findForm.phone = parseInt(this.phoneObj.phone)
       post('/api/setpassword', this.findForm).then(data => {
         if (data.message === '修改成功') {
           $('#myModal').removeClass('in')
