@@ -111,6 +111,10 @@ msgstr "验证链接已过期,请重新验证你的帐号"
 msgid "The email has been confirmed. Please login."
 msgstr "邮箱已验证成功，请登陆"
 
+#: ../flask_maple/auth/views.py:208
+msgid "Please set a new password"
+msgstr "请重置密码"
+
 #: ../flask_maple/templates/maple/auth.html:3
 msgid "Username:"
 msgstr "昵称:"
