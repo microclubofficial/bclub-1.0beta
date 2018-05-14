@@ -299,8 +299,8 @@ class ConfirmTokenView(MethodView):
                     'Please confirm your email again')
             flash(msg)
             return redirect('/')
-        user.email = email
-        user.save()
+        User.email = email
+        User.save()
         flash('You have confirmed your account. Thanks!')
         return redirect('/')
 
