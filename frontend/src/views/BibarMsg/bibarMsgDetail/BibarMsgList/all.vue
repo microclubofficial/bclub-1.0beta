@@ -5,7 +5,7 @@
       <img src="../../../../assets/img/loading.png" alt="" class="icon-loading">
     </div>
     <!-- {{[bibarArticles]}} -->
-    <div class="bibar-tabitem fade in active" :key="index" id="bibar-newstab1" v-for="(tmp,index) in [...getNavaVal, ...bibarArticles]">
+    <div class="bibar-tabitem fade in active" :key="index" id="bibar-newstab1" v-for="(tmp,index) in bibarArticles">
       <div class="bibar-indexNewsList">
         <div class="bibar-indexNewsItem">
           <div class="speech" v-if="tmp.reply_user !== null"> <span><span class="time">{{tmp.reply_time}}</span>前{{tmp.reply_user}}发表了评论</span><i class="iconfont icon-dot"></i></div>
@@ -46,7 +46,7 @@
               </li>
             </ul>
           </div>
-            <div class="bibar-hot" v-show="index===i">
+            <div class="bibar-hot" style="display:none;">
        <!-- 评论框 -->
        <div class="editor-comment">
          <img :src="userInfo.avatar" alt="" class="avatar" v-show="commentShow">
@@ -58,7 +58,7 @@
             <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
           </svg>-->
          <div class="avatar" v-show="showReport"><img :src="userInfo.avatar" alt=""></div>
-         <div class="editor-bd">
+         <div class="editor-bd clearfloat">
            <span class="comment-img-delete"></span>
            <div class="editor-textarea" v-show="commentShow" @click="commentShowFun">
              <div class="editor-placeholder">评论...</div>
@@ -104,7 +104,7 @@
                 </div> -->
                 <!-- 评论 -->
               <div class="comment-list">
-                <div class="comment-item" data-index='' data-id=''  :key ='now' v-for="(item,now) in nowData">
+                <div class="comment-item" data-index='' data-id=''  :key ='now' v-for="(item,now) in nowData[tmp.id]">
                   <div>
                     <a href="#" data-tooltip='' class="avatar">
                       <img :src="item.avatar" alt="">
@@ -207,7 +207,7 @@ export default{
       i: '',
       showComment: false,
       showReport: false,
-      nowData: [],
+      nowData: {},
       commentShow: false,
       backFt: {
         'author': '',
@@ -300,12 +300,15 @@ export default{
       })
     },
     getNavaVal (val) {
+      if (val.length !== 0) {
+        this.bibarArticles.unshift(val[0])
+      }
       this.i = ''
+      $('.bibar-hot').css({'display': 'none'})
       this.changeIndex = true
     }
   },
   created: function () {
-    console.log(this.chartId)
     // 文章分页
     this.showLoader = true
     this.$store.dispatch('clear_backForNav')
@@ -444,7 +447,7 @@ export default{
       this.showLoaderComment = true
       get(`/api/topic/${id}/${this.cpno}`).then(data => {
         this.showLoaderComment = false
-        this.nowData = data.data.replies
+        this.nowData[id] = data.data.replies
         this.cpageCount = data.data.page_count
         if (this.cpageCount > 1) {
           this.showPage = true
@@ -470,6 +473,7 @@ export default{
           })
         })
       })
+      $('.bibar-tabitem:eq(' + index + ')').find('.bibar-hot').slideToggle('fast')
       if (index !== this.i) {
         this.i = index
         this.lid = id
@@ -507,17 +511,8 @@ export default{
     showContent (data) {
       this.commentShow = true
       this.showReport = false
-      this.showLoaderComment = true
-      this.nowData.unshift(data)
-      get(`/api/topic/token/${this.$route.path.split('/')[2]}/1`).then(data => {
-        this.showLoaderComment = false
-        if (this.tpno === 1) {
-          this.bibarArticles = data.data.topics
-        } else {
-          let oldArr = this.bibarArticles.slice(0, -5)
-          this.bibarArticles = oldArr.concat(data.data.topics)
-        }
-      })
+      this.nowData[this.replyId].unshift(data)
+      this.bibarArticles[this.i].replies_count = data.replies_count
     },
     showBibarContentFun (ftData) {
       this.bibarArticles = [ftData, ...this.bibarArticles]
@@ -549,18 +544,9 @@ export default{
     // 回复返回数据
     showReplyContent (data) {
       this.talkReplayBox = false
-      this.showLoaderComment = true
+      this.nowData[this.replyId].unshift(data)
+      this.bibarArticles[this.i].replies_count = data.replies_count
       this.replayId = ''
-      this.nowData.unshift(data)
-      get(`/api/topic/token/${this.$route.path.split('/')[2]}/1`).then(data => {
-        this.showLoaderComment = false
-        if (this.tpno === 1) {
-          this.bibarArticles = data.data.topics
-        } else {
-          let oldArr = this.bibarArticles.slice(0, -5)
-          this.bibarArticles = oldArr.concat(data.data.topics)
-        }
-      })
     },
     // 收藏
     collectionTopic (index, tmp) {
@@ -642,7 +628,7 @@ export default{
       this.showLoaderComment = true
       get(`/api/topic/${this.replyId}/${page}`).then(data => {
         this.showLoaderComment = false
-        this.nowData = data.data.replies
+        this.nowData[this.replayId] = data.data.replies
       })
     },
     // 回复人文字处理
@@ -768,7 +754,6 @@ img.avatar{
     margin-left: 42px;
     position: relative;
     z-index: 1;
-    overflow: hidden;
 }
 svg:not(:root) {
     overflow: hidden;

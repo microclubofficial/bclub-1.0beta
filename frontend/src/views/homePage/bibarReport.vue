@@ -11,6 +11,7 @@
 <script>
 import E from 'wangeditor'
 import {post} from '../../utils/http'
+import { Toast } from 'mint-ui'
 
 export default {
   props: ['contentId', 'toApi', 'talkId', 'mainReplay', 'mainCommnet', 'replyAuthor', 'replyContent', 'detailId'],
@@ -36,7 +37,8 @@ export default {
       },
       nowShowApi: ['topic', 'bar', 'bar', 'bar', 'comment', 'topic'],
       isHide: false,
-      replies: []
+      replies: [],
+      editor: {}
     }
   },
   computed: {
@@ -49,7 +51,23 @@ export default {
       this.nowApi = api
     },
     getContent: function () {
-      this.topicData.content = this.editorContent
+      // this.topicData.content = this.editorContent
+      this.topicData.content = this.editor.$textElem.html()
+      if (this.topicData.content.indexOf('<p>') > -1) {
+        this.topicData.content = this.topicData.content.replace(/(^<p>)|(<\/p>$)/g, '')
+      }
+      let tempContent = this.topicData.content.replace(/<br>|&nbsp;|\s|<p>|<\/p>|<div>|<\/div>/g, '')
+      if (!tempContent) {
+        let instance = new Toast({
+          message: '发帖内容不能为空',
+          duration: 1000
+        })
+        setTimeout(() => {
+          instance.close()
+        }, 1000)
+        $('.w-e-text').html('')
+        return false
+      }
       if (this.toApi !== 0 && this.toApi !== 5 && this.toApi !== 4) {
         // 处理正常内容
         let image = this.topicData.content.match(/<img src="\/static[^>]+>/g)
@@ -124,20 +142,20 @@ export default {
     }
   },
   mounted () {
-    var editor = new E(this.$refs.editor)
-    editor.customConfig.onchange = (html) => {
+    this.editor = new E(this.$refs.editor)
+    this.editor.customConfig.onchange = (html) => {
       this.editorContent = html
     }
     // 菜单配置
-    editor.customConfig.menus = [
+    this.editor.customConfig.menus = [
       'emoticon',
       'image',
       'link'
     ]
     // 表情配置
-    editor.customConfig.emotions = [
+    this.editor.customConfig.emotions = [
       {
-        title: '',
+        title: '表情',
         type: 'image',
         content: [
           {
@@ -287,8 +305,8 @@ export default {
     ]
     // 上传图片
     // editor.customConfig.uploadImgShowBase64 = true
-    editor.customConfig.uploadImgServer = '/api/file'
-    editor.customConfig.uploadImgHooks = {
+    this.editor.customConfig.uploadImgServer = '/api/file'
+    this.editor.customConfig.uploadImgHooks = {
       // success: function (xhr, editor, result) {
       //   console.log(result)
       // },
@@ -296,7 +314,7 @@ export default {
         insertImg(result.data.file_path)
       }
     }
-    editor.create()
+    this.editor.create()
     var div = $('.avatar').parent('div')
     div.addClass('wangeditor')
     div.addClass('clearfloat')
@@ -312,6 +330,7 @@ export default {
 </script>
 
 <style>
+  .initTxt{color: #ddd;}
   .editor-svg{
     position: absolute;
     top: 22px;

@@ -1,5 +1,5 @@
 <style lang="scss" scoped>
-.member-center{margin-top: 40px;}
+/*.member-center{margin-top: 40px;}*/
 .personal-info {
     background-color: #fefefe;
     border: 1px solid #eee;
@@ -42,7 +42,7 @@
  <MainHeader></MainHeader>
     <div class="member-center">
         <div class="container">
-            <h3 class="page-header">个人中心</h3>
+            <h3 style="margin:20px 0;">个人中心</h3>
             <div class="personal-info">
                 <div class="avatar">
                     <img :src="personalUser.avatar" alt="">

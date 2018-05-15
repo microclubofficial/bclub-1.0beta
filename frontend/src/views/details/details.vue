@@ -155,7 +155,7 @@
          <!--<svg style="left:51px; top:55px;" v-if='showReportReplay' version='1.1' xmlns='http://www.w3.org/2000/svg' class="editor-svg">
             <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
           </svg>-->
-         <div class="editor-bd">
+         <div class="editor-bd clearfloat">
            <span class="comment-img-delete"></span>
         <!--富文本-->
            <div class="editor-textarea" v-show="talkReplyTxt" @click="talkReplyEditor">
@@ -965,7 +965,6 @@ img.avatar{
     /*margin-left: 42px;*/
     position: relative;
     z-index: 1;
-    overflow: hidden;
 }
 svg:not(:root) {
     overflow: hidden;

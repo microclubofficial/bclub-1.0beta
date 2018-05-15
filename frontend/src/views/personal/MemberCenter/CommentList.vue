@@ -46,7 +46,7 @@
               </li>
             </ul>
           </div>
-            <div class="bibar-hot"  v-show="index===i">
+            <div class="bibar-hot" style="display:none;">
        <!-- 评论框 -->
        <div class="editor-comment">
          <img :src="userInfo.avatar" alt="" class="avatar" v-show="commentShow">
@@ -59,7 +59,7 @@
            <!--<svg style="left:38px; top:52px;" version='1.1' xmlns='http://www.w3.org/2000/svg' v-show="showReport" class="editor-svg">
             <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
           </svg>-->
-         <div class="editor-bd">
+         <div class="editor-bd clearfloat">
            <span class="comment-img-delete"></span>
            <div class="editor-textarea" v-show="commentShow" @click="commentShowFun">
              <div class="editor-placeholder">评论...</div>
@@ -76,9 +76,6 @@
        <div class="comment-wrap">
           <div class="hook-comment"></div>
           <div class="comment-container">
-            <div class="loading" v-if='showLoaderComment'>
-              <img src="../../../assets/img/loading.png" alt="" class="icon-loading">
-            </div>
             <div class="comment-all">
               <h3>全部评论({{tmp.replies_count}})</h3>
               <!-- <div class="comment-sort">
@@ -104,8 +101,11 @@
                   </div>
                 </div> -->
                 <!-- 评论 -->
+                <div class="loading" v-if='showLoaderComment'>
+              <img src="../../../assets/img/loading.png" alt="" class="icon-loading">
+            </div>
               <div class="comment-list">
-                <div class="comment-item" data-index='' data-id=''  :key ='now' v-for="(item,now) in nowData">
+                <div class="comment-item" data-index='' data-id=''  :key ='now' v-for="(item,now) in nowData[tmp.id]">
                   <div>
                     <a href="#" data-tooltip='' class="avatar">
                       <img :src="item.avatar" alt="">
@@ -140,7 +140,7 @@
          <!--<svg version='1.1' style="left:56px; top:52px;" xmlns='http://www.w3.org/2000/svg' v-show="showReportReplay" class="editor-triangle">
             <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
            </svg>-->
-         <div class="editor-bd">
+         <div class="editor-bd clearfloat">
            <span class="comment-img-delete"></span>
            <!--<svg version='1.1' xmlns='http://www.w3.org/2000/svg' v-show="talkReplyTxt" class="editor-triangle">
             <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
@@ -164,16 +164,16 @@
             <div class="pages" v-if='showPage'>
               <ul class="mo-paging">
               <!-- prev -->
-        <li class="paging-item paging-item--prev" :class="{'paging-item--disabled' : cpno === 1}" @click="prev">prev</li>
+        <li class="paging-item paging-item--prev" :class="{'paging-item--disabled' : cpno === 1}" @click="prev">上一页</li>
         <!-- first -->
-        <li :class="['paging-item', 'paging-item--first', {'paging-item--disabled' : cpno === 1}]" @click="first">first</li>
+        <li :class="['paging-item', 'paging-item--first', {'paging-item--disabled' : cpno === 1}]" @click="first">首页</li>
         <li :class="['paging-item', 'paging-item--more']" v-if="showPrevMore">...</li>
         <li :class="['paging-item', {'paging-item--current' : cpno === tmp}]" :key="index" v-for="(tmp, index) in showPageBtn"  @click="go(tmp)">{{tmp}}</li>
         <li :class="['paging-item', 'paging-item--more']" v-if="showNextMore">...</li>
         <!-- next -->
-        <li :class="['paging-item', 'paging-item--next', {'paging-item--disabled' : cpno === cpageCount}]" @click="next">next</li>
+        <li :class="['paging-item', 'paging-item--next', {'paging-item--disabled' : cpno === cpageCount}]" @click="next">下一页</li>
         <!-- last -->
-        <li :class="['paging-item', 'paging-item--last', {'paging-item--disabled' : cpno === cpageCount}]"  @click="last">last</li>
+        <li :class="['paging-item', 'paging-item--last', {'paging-item--disabled' : cpno === cpageCount}]"  @click="last">尾页</li>
         </ul>
             </div>
             </div>
@@ -212,7 +212,7 @@ export default{
       i: '',
       showComment: false,
       showReport: false,
-      nowData: [],
+      nowData: {},
       commentShow: false,
       backFt: {
         'author': '',
@@ -422,7 +422,7 @@ export default{
       this.replyId = id
       this.showLoaderComment = true
       get(`/api/topic/${id}/${this.cpno}`).then(data => {
-        this.nowData = data.data.replies
+        this.nowData[id] = data.data.replies
         this.showLoaderComment = false
         this.cpageCount = data.data.page_count
         if (this.cpageCount > 1) {
@@ -449,6 +449,7 @@ export default{
           })
         })
       })
+      $('.bibar-tabitem:eq(' + index + ')').find('.bibar-hot').slideToggle('fast')
       if (index !== this.i) {
         this.i = index
         this.lid = id
@@ -477,7 +478,7 @@ export default{
     showContent (data) {
       this.commentShow = true
       this.showReport = false
-      this.nowData.unshift(data)
+      this.nowData[this.replyId].unshift(data)
       this.articles[this.i].replies_count = data.replies_count
     },
     showFtContentFun (ftData) {
@@ -507,7 +508,7 @@ export default{
     },
     // 回复返回数据
     showReplyContent (data) {
-      this.nowData.unshift(data)
+      this.nowData[this.replyId].unshift(data)
       this.articles[this.i].replies_count = data.replies_count
       this.replayId = ''
     },
@@ -580,7 +581,7 @@ export default{
         this.cpno = page
       }
       get(`/api/topic/${this.replyId}/${page}`).then(data => {
-        this.nowData = data.data.replies
+        this.nowData[this.reply] = data.data.replies
       })
     }
   }
@@ -961,7 +962,6 @@ img.avatar{
     margin-left: 42px;
     position: relative;
     z-index: 1;
-    overflow: hidden;
 }
 svg:not(:root) {
     overflow: hidden;

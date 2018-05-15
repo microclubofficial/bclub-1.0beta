@@ -77,8 +77,8 @@
   top: 130px !important;
   box-shadow: 0 2px 4px 0 rgba(0,0,0,.4);
   border: none;
-  width: 258px !important;
-  left: 0;
+  width: 260px !important;
+  left: 0 !important;
 }
 .w-e-text-container .w-e-panel-container .w-e-icon-close{display: none;}
 .w-e-text-container .w-e-panel-container .w-e-panel-tab-content{

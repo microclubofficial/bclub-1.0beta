@@ -47,7 +47,7 @@
               <!--</li>-->
             </ul>
           </div>
-            <div class="bibar-hot" v-show="index===i">
+            <div class="bibar-hot" style="display:none;">
        <!-- 评论框 -->
        <div class="editor-comment clearfloat">
          <img :src="userInfo.avatar" alt="" class="avatar" v-show="commentShow">
@@ -77,9 +77,6 @@
        <div class="comment-wrap">
           <div class="hook-comment"></div>
           <div class="comment-container">
-            <div class="loading" v-if='showLoaderComment'>
-              <img src="../../../assets/img/loading.png" alt="" class="icon-loading">
-            </div>
             <div class="comment-all">
               <h3>全部评论({{tmp.replies_count}})</h3>
               <!-- <div class="comment-sort">
@@ -105,8 +102,11 @@
                   </div>
                 </div> -->
                 <!-- 评论 -->
+                <div class="loading" v-if='showLoaderComment'>
+                  <img src="../../../assets/img/loading.png" alt="" class="icon-loading">
+                </div>
               <div class="comment-list">
-                <div class="comment-item" data-index='' data-id='' :key ='now' v-for="(item,now) in nowData">
+                <div class="comment-item" data-index='' data-id='' :key ='now' v-for="(item,now) in nowData[tmp.id]">
                   <div>
                     <a href="#" data-tooltip='' class="avatar">
                       <img :src="item.avatar" alt="">
@@ -158,7 +158,7 @@
                 </div>
               </div>
               <!-- 分页条 -->
-            <div class="pages" v-if='showPage && nowData.length > 0'>
+            <div class="pages" v-if='showPage && nowData[tmp.id].length > 0'>
               <ul class="mo-paging">
                 <!-- prev -->
                 <!-- first -->
@@ -207,7 +207,7 @@ export default{
       i: '',
       showComment: false,
       showReport: false,
-      nowData: [],
+      nowData: {},
       commentShow: false,
       backFt: {
         'author': '',
@@ -254,7 +254,8 @@ export default{
       showLoader: false,
       // 评论加载
       showLoaderComment: false,
-      pageTimer: null
+      pageTimer: null,
+      showId: []
     }
   },
   components: {
@@ -297,14 +298,7 @@ export default{
       let that = this
       document.querySelector('#app').addEventListener('scroll', function () {
         if (this.clientHeight + this.scrollTop === this.scrollHeight) {
-          if (that.tpno < that.pageCount) {
-            that.loadTopicPage()
-          } else {
-            this.bottomText = '没有啦'
-            this.listLoding = false
-            this.noLoading = true
-            return false
-          }
+          that.loadTopicPage()
         }
       })
     })
@@ -317,6 +311,7 @@ export default{
         this.articles.unshift(val[0])
       }
       this.i = ''
+      $('.bibar-hot').css({'display': 'none'})
       this.changeIndex = true
     }
   },
@@ -434,7 +429,7 @@ export default{
       this.replyId = id
       this.showLoaderComment = true
       get(`/api/topic/${id}/${this.cpno}`).then(data => {
-        this.nowData = data.data.replies
+        this.nowData[id] = data.data.replies
         this.showLoaderComment = false
         this.cpageCount = data.data.page_count
         if (this.cpageCount > 1) {
@@ -461,14 +456,18 @@ export default{
           })
         })
       })
+      $('.bibar-tabitem:eq(' + index + ')').find('.bibar-hot').slideToggle('fast')
+      this.showId.push(index)
+      for (let i = 0; i < this.showId.length; i++) {
+        this.showId[i] = i
+      }
       if (index !== this.i) {
         this.i = index
         this.lid = id
       } else {
         this.i = ''
-        this.talkReplayBox = false
-        this.showComment = false
-        this.commentShow = false
+        // this.talkReplayBox = false
+        // this.commentShow = false
       }
       this.replayId = ''
       this.toId = 0
@@ -500,7 +499,7 @@ export default{
     showContent (data) {
       this.commentShow = true
       this.showReport = false
-      this.nowData.unshift(data)
+      this.nowData[this.replyId].unshift(data)
       this.articles[this.i].replies_count = data.replies_count
       // get(`/api/topic/${this.tpno}`).then(data => {
       //   // this.showLoader = false
@@ -541,7 +540,7 @@ export default{
     // 回复返回数据
     showReplyContent (data) {
       this.talkReplayBox = false
-      this.nowData.unshift(data)
+      this.nowData[this.replyId].unshift(data)
       this.articles[this.i].replies_count = data.replies_count
       this.replayId = ''
       // get(`/api/topic/${this.tpno}`).then(data => {
@@ -625,7 +624,7 @@ export default{
         this.cpno = page
       }
       get(`/api/topic/${this.replyId}/${page}`).then(data => {
-        this.nowData = data.data.replies
+        this.nowData[this.replyId] = data.data.replies
       })
     },
     // 回复人文字处理

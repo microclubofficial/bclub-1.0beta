@@ -40,7 +40,8 @@ export default {
         'picture': '',
         replt_count: 0
       },
-      showDilog: false
+      showDilog: false,
+      editor: {}
     }
   },
   computed: {
@@ -56,7 +57,23 @@ export default {
   },
   methods: {
     getContent: function () {
-      this.topicData.content = this.editorContent
+      // this.topicData.content = this.editorContent
+      this.topicData.content = this.editor.$textElem.html()
+      if (this.topicData.content.indexOf('<p>') > -1) {
+        this.topicData.content = this.topicData.content.replace(/(^<p>)|(<\/p>$)/g, '')
+      }
+      let tempContent = this.topicData.content.replace(/<br>|&nbsp;|\s|<p>|<\/p>|<div>|<\/div>/g, '')
+      if (!tempContent) {
+        let instance = new Toast({
+          message: '发帖内容不能为空',
+          duration: 1000
+        })
+        setTimeout(() => {
+          instance.close()
+        }, 1000)
+        $('.w-e-text').html('')
+        return false
+      }
       let image = this.topicData.content.match(/<img src="\/static[^>]+>/g)
       this.topicData.picture = ''
       if (image !== null) {
@@ -147,12 +164,12 @@ export default {
   },
   mounted () {
     let that = this
-    var editor = new E(this.$refs.editor)
-    editor.customConfig.onchange = (html) => {
+    this.editor = new E(this.$refs.editor)
+    this.editor.customConfig.onchange = (html) => {
       this.editorContent = html
     }
     // 菜单配置
-    editor.customConfig.menus = [
+    this.editor.customConfig.menus = [
       'emoticon',
       'image',
       'link',
@@ -162,9 +179,9 @@ export default {
       'quote'
     ]
     // 表情配置
-    editor.customConfig.emotions = [
+    this.editor.customConfig.emotions = [
       {
-        title: '',
+        title: '表情',
         type: 'image',
         content: [
           {
@@ -314,8 +331,8 @@ export default {
     ]
     // 上传图片
     // editor.customConfig.uploadImgShowBase64 = true
-    editor.customConfig.uploadImgServer = '/api/file'
-    editor.customConfig.uploadImgHooks = {
+    this.editor.customConfig.uploadImgServer = '/api/file'
+    this.editor.customConfig.uploadImgHooks = {
       // success: function (xhr, editor, result) {
       //   // console.log(result)
       // },
@@ -324,7 +341,9 @@ export default {
         insertImg(that.backFt.picture)
       }
     }
-    editor.create()
+    this.editor.create()
+    $('.modal-body').find('.w-e-text').html('<p class="initTxt">请输入...</p>')
+    $('.detailEditor').find('.w-e-text').html('<p class="initTxt">请输入...</p>')
     // get('/api/avatar').then(data => {
     //   this.articles = data.data.topics
     // })
@@ -363,7 +382,6 @@ export default {
     background-color: #fff;
     padding: 30px 15px 15px 15px;
     position: relative;
-    overflow: hidden;
 }
 .avatar{
     float: left;
