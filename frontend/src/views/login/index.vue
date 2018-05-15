@@ -18,16 +18,18 @@
       flex: 1;
       text-align: center;
       font-size: 18px;
-      font-weight:bold;
+      // font-weight:bold;
       padding:10px 0;
     }
   }
   .active-login {
     border-bottom: 4px solid #1e8fff;
-    border-radius: 4px;
+    border-radius: 2px;
+    display: inline-block;
+    padding:0 5px 10px;
   }
   .panel-body {
-    padding: 40px 0 0 0;
+    padding: 30px 0 0 0;
     .control-label {
       // text-align: left;
       font-size: 14px;
@@ -99,11 +101,11 @@
         <h3 class="panel-title text-center">用户登录</h3>
       </div>
       <ul id="myTab" class="toggle-tab">
-        <li class="toggle-login" :class="{'active-login':showTab}" @click="changeTab(0)">
-          <a href="#home" data-toggle="tab">用户名登录</a>
+        <li class="toggle-login" @click="changeTab(0)">
+          <a href="#home" :class="{'active-login':showTab}" data-toggle="tab">用户名登录</a>
         </li>
-        <li @click="changeTab(1)" class="toggle-login" :class="{'active-login':!showTab}">
-          <a href="#ios" data-toggle="tab">手机登录</a>
+        <li @click="changeTab(1)" class="toggle-login">
+          <a href="#ios" :class="{'active-login':!showTab}" data-toggle="tab">手机登录</a>
         </li>
       </ul>
       <div class="panel-body">
