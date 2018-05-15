@@ -814,7 +814,7 @@ ul.dropdown-menu{height: auto;}
 .bibar-box{background-color: #fff; box-shadow: 0px 0px 4px 3px #ededed;}
 .bibar-box:after{visibility: hidden;display: block;font-size: 0;content: " ";clear: both;height: 0;}
 /*首页显示*/
-.bibar-boxindex1{padding:24px 40px;}
+.bibar-boxindex1{padding:40px;}
 .bibar-indexDisplay{overflow: hidden;}
 .bibar-indexDisplay-header{height: 24px; line-height: 24px; float: left;}
 .bibar-indexDisplay-header .logopic{float: left; margin-right: 10px;}
@@ -865,7 +865,7 @@ i.icon-BTC{font-size: 14px; font-weight: bold;}
 /* 首页左边栏 */
 .bibar-sidebar{width: 150px;float: left;position: relative;margin-right: 20px;}
 /*首页新闻*/
-.bibar-boxindex2{padding:40px 60px;}
+.bibar-boxindex2{padding:40px 60px;margin-top:40px;}
 .bibar-indexNewsList{}
 .bibar-indexNewsItem{padding: 15px 0px 10px; border-top: 1px solid #dcdcdc;}
 .bibar-indexNewsItem:first-child{border-top:0px}

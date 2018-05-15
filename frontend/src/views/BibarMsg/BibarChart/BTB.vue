@@ -30,8 +30,7 @@
                     <div class="col-sm-6">
                         <dl>
                             <dt>市值</dt>
-                            <dd> <i class="iconfont icon-USD">&#xe634;</i>{{bibarData.marketCap
- | cnyFun(CNY_RATE,2)}}
+                            <dd> <i class="iconfont icon-USD">&#xe634;</i>{{bibarData.marketCap | cnyFun(CNY_RATE,2)}}
                                 <div class="sprit-12 bg-green ml10">第{{bibarData.level}}名</div>
                             </dd>
                             <dd> <i class="iconfont icon-yueden">&#xe6ca;</i> <i class="iconfont icon-rmb icon-CNY">&#xe736;</i>{{bibarData.marketCap | formatNum(2)}} </dd>
