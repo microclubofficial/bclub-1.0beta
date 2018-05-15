@@ -322,7 +322,7 @@ export default {
 
 .chartListBox {
   background: #fff;
-  padding: 30px 60px;
+  padding: 40px;
   position: relative;
   overflow: hidden;
 }

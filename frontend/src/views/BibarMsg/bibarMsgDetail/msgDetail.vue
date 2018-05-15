@@ -3,7 +3,7 @@
     <MainHeader></MainHeader>
     <!--主体-->
     <section class="bibar-Main">
-    <div class="pt40"></div>
+    <!--<div class="pt20"></div>-->
     <section class="bibar-w1100">
         <!--主体左侧-->
         <section class="bibar-Mainleft bx-mainLeft">
@@ -120,7 +120,7 @@ export default{
     /*width: 960px;*/
     margin: auto;
     background: rgb(255, 255, 255);
-    padding: 20px 40px;
+    padding:40px;
   }
   .mainBibar-editor .wangeditor{
     width: 100% !important;
@@ -129,7 +129,9 @@ export default{
   .mainBibar-editor .wangeditor .editor{
     width: 94%;
   }
- .bibar-Main>.bibar-w1100>.bx-mainLeft{width: 960px;}
+ .bibar-Main>.bibar-w1100>.bx-mainLeft{
+   width: 960px;margin-top:20px;
+   }
 .bibarMainGzList{background: #fff}
 .bibar-list-item{
   /* padding: 0 40px; */

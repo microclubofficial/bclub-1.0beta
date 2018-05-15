@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="pt20">
  <!--简介-->
             <article class="bibar-box bibar-boxindex3" v-if="$route.path !== '/'">
                 <div class="bibar-boxtitle" style="margin-bottom:10px;"> <span class="name">简介</span> </div>
