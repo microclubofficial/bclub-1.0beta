@@ -10,7 +10,7 @@
             <btb @btbFun='frombtb' :bId="bitId"></btb>
             <!-- 富文本区 -->
             <div class="mainBibar-editor" v-if='initHide'>
-              <BibarPostContent @backFtContent = 'BibarContentFun' ></BibarPostContent>
+              <BibarPostContent :tokenBibar='tokenList' @backFtContent = 'BibarContentFun' ></BibarPostContent>
             </div>
             <!--新闻-->
             <article class="bibar-box bibar-boxindex2">
@@ -53,7 +53,9 @@ export default{
       bitId: '',
       initHide: false,
       initShow: false,
-      showLoader: true
+      showLoader: true,
+      // token
+      tokenList: {}
     }
   },
   components: {
@@ -68,7 +70,6 @@ export default{
     }
   },
   created () {
-    console.log(this.$route)
     this.collapseId = `collapse${this.i++}`
     this.hrefCollapse = `#${this.collapseId}`
   },
@@ -109,6 +110,8 @@ export default{
       }
     },
     frombtb (data) {
+      this.tokenList.id = this.$route.params.currency
+      this.tokenList.zhName = data
     }
   }
 }

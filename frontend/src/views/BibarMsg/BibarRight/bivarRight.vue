@@ -243,7 +243,12 @@ export default{
       // this.$emit('toBibarMsg', tmp.id)
       // 调简介
       this.briefFun(tmp.id)
-      this.$router.push(`/msgDetail/${tmp.id}`)
+      this.$router.push({
+        path: `/msgDetail/${tmp.id}`,
+        query: {
+          b: JSON.stringify({'zh': tmp.name_ch})
+        }
+      })
     },
     // 简介
     briefFun (id) {

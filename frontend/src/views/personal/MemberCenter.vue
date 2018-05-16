@@ -1,5 +1,5 @@
 <style lang="scss" scoped>
-.member-center{margin-top: 40px;}
+/*.member-center{margin-top: 40px;}*/
 .personal-info {
     background-color: #fefefe;
     border: 1px solid #eee;
@@ -42,18 +42,18 @@
  <MainHeader></MainHeader>
     <div class="member-center">
         <div class="container">
-            <h3 class="page-header">个人中心</h3>
+            <h3 style="margin:20px 0;">个人中心</h3>
             <div class="personal-info">
                 <div class="avatar">
                     <img :src="personalUser.avatar" alt="">
                 </div>
                 <div class="right-main">
                     <h3>{{personalUser.username}}</h3>
-                    <p>
+                    <!--<p>
                         关注：<a href="">1652</a>&nbsp;&nbsp;&nbsp;&nbsp;
                         主题：<a href="">152</a>&nbsp;&nbsp;&nbsp;&nbsp;
                         热度：<a href="">16515642</a>
-                    </p>
+                    </p>-->
                     <ul class="nav nav-pills">
                         <li v-for="(item,index) in navList" :class="{active:item.name === $route.name}" @click="routerGo(index)" :key="index">
                             <a href="javascript:void(0)">{{item.cnName}}</a>

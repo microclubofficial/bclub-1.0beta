@@ -11,7 +11,7 @@
           <div class="speech" v-if="tmp.reply_user !== null"> <span><span class="time">{{tmp.reply_time}}</span>前{{tmp.reply_user}}发表了评论</span><i class="iconfont icon-dot"></i></div>
           <div class="user">
             <!--<img :src="tmp.avatar">-->
-            <div class="bibar-author"> <a href="#"> <span class="photo"><img :src="tmp.avatar"></span> <span class="name">{{tmp.author}}</span> <span class="time">{{tmp.diff_time !== '0秒' ? tmp.diff_time + '前' : '刚刚发布'}}·来自币吧</span> </a> </div>
+            <div class="bibar-author"> <a href="#"> <span class="photo"><img :src="tmp.avatar"></span> <span class="name">{{tmp.author}}</span> <span class="time" @click='toBibar(tmp)'>{{tmp.diff_time !== '0秒' ? tmp.diff_time + '前' : '刚刚发布'}}·来自{{tmp.token !== null ? tmp.token : '币吧'}}</span> </a> </div>
             <div class="bibar-list">
               <div class="tit"><a href="javascript:void(0)" @click="goDetail(tmp.id)">{{tmp.title}}</a></div>
           <div class="txt indexNewslimitHeight" @click="goDetail(tmp.id)">
@@ -47,7 +47,7 @@
               <!--</li>-->
             </ul>
           </div>
-            <div class="bibar-hot" v-show="index===i">
+            <div class="bibar-hot" style="display:none;">
        <!-- 评论框 -->
        <div class="editor-comment clearfloat">
          <img :src="userInfo.avatar" alt="" class="avatar" v-show="commentShow">
@@ -77,9 +77,6 @@
        <div class="comment-wrap">
           <div class="hook-comment"></div>
           <div class="comment-container">
-            <div class="loading" v-if='showLoaderComment'>
-              <img src="../../../assets/img/loading.png" alt="" class="icon-loading">
-            </div>
             <div class="comment-all">
               <h3>全部评论({{tmp.replies_count}})</h3>
               <!-- <div class="comment-sort">
@@ -105,8 +102,11 @@
                   </div>
                 </div> -->
                 <!-- 评论 -->
+                <div class="loading" v-if='showLoaderComment'>
+                  <img src="../../../assets/img/loading.png" alt="" class="icon-loading">
+                </div>
               <div class="comment-list">
-                <div class="comment-item" data-index='' data-id='' :key ='now' v-for="(item,now) in nowData">
+                <div class="comment-item" data-index='' data-id='' :key ='now' v-for="(item,now) in nowData[tmp.id]">
                   <div>
                     <a href="#" data-tooltip='' class="avatar">
                       <img :src="item.avatar" alt="">
@@ -158,7 +158,7 @@
                 </div>
               </div>
               <!-- 分页条 -->
-            <div class="pages" v-if='showPage && nowData.length > 0'>
+            <div class="pages" v-if='showPage && index === i'>
               <ul class="mo-paging">
                 <!-- prev -->
                 <!-- first -->
@@ -207,7 +207,7 @@ export default{
       i: '',
       showComment: false,
       showReport: false,
-      nowData: [],
+      nowData: {},
       commentShow: false,
       backFt: {
         'author': '',
@@ -254,7 +254,8 @@ export default{
       showLoader: false,
       // 评论加载
       showLoaderComment: false,
-      pageTimer: null
+      pageTimer: null,
+      showId: []
     }
   },
   components: {
@@ -284,10 +285,9 @@ export default{
   },
   created: function () {
     // 文章分页
-    this.tpno = 1
     this.$store.dispatch('clear_backForNav')
     this.showLoader = true
-    get(`/api/topic/1`).then(data => {
+    get(`/api/topic/${this.tpno}`).then(data => {
       this.articles = data.data.topics
       this.showLoader = false
       this.pageCount = data.data.page_count
@@ -297,14 +297,7 @@ export default{
       let that = this
       document.querySelector('#app').addEventListener('scroll', function () {
         if (this.clientHeight + this.scrollTop === this.scrollHeight) {
-          if (that.tpno < that.pageCount) {
-            that.loadTopicPage()
-          } else {
-            this.bottomText = '没有啦'
-            this.listLoding = false
-            this.noLoading = true
-            return false
-          }
+          that.loadTopicPage()
         }
       })
     })
@@ -317,13 +310,14 @@ export default{
         this.articles.unshift(val[0])
       }
       this.i = ''
+      $('.bibar-hot').css({'display': 'none'})
       this.changeIndex = true
     }
   },
   methods: {
     // 分页
     loadTopicPage () {
-      if (this.tpno < this.pageCount - 1) {
+      if (this.tpno < this.pageCount) {
         setTimeout(() => {
           this.showLoader = true
           this.tpno++
@@ -434,7 +428,8 @@ export default{
       this.replyId = id
       this.showLoaderComment = true
       get(`/api/topic/${id}/${this.cpno}`).then(data => {
-        this.nowData = data.data.replies
+        if (!this.nowData[id]) this.$set(this.nowData, id, data.data.replies)
+        else this.nowData[id] = data.data.replies
         this.showLoaderComment = false
         this.cpageCount = data.data.page_count
         if (this.cpageCount > 1) {
@@ -461,14 +456,18 @@ export default{
           })
         })
       })
+      $('.bibar-tabitem:eq(' + index + ')').find('.bibar-hot').slideToggle('fast')
+      this.showId.push(index)
+      for (let i = 0; i < this.showId.length; i++) {
+        this.showId[i] = i
+      }
       if (index !== this.i) {
         this.i = index
         this.lid = id
       } else {
         this.i = ''
-        this.talkReplayBox = false
-        this.showComment = false
-        this.commentShow = false
+        // this.talkReplayBox = false
+        // this.commentShow = false
       }
       this.replayId = ''
       this.toId = 0
@@ -500,7 +499,7 @@ export default{
     showContent (data) {
       this.commentShow = true
       this.showReport = false
-      this.nowData.unshift(data)
+      this.nowData[this.replyId].unshift(data)
       this.articles[this.i].replies_count = data.replies_count
       // get(`/api/topic/${this.tpno}`).then(data => {
       //   // this.showLoader = false
@@ -541,7 +540,7 @@ export default{
     // 回复返回数据
     showReplyContent (data) {
       this.talkReplayBox = false
-      this.nowData.unshift(data)
+      this.nowData[this.replyId].unshift(data)
       this.articles[this.i].replies_count = data.replies_count
       this.replayId = ''
       // get(`/api/topic/${this.tpno}`).then(data => {
@@ -558,7 +557,7 @@ export default{
     collectionTopic (tmp) {
       let instance
       post(`/api/collect/${tmp.id}`).then(data => {
-        if (data.data.collect_bool) {
+        if (data.message === '收藏成功') {
           tmp.collect_bool = data.data.collect_bool
           instance = new Toast({
             message: data.message,
@@ -624,8 +623,9 @@ export default{
       if (this.cpno !== page) {
         this.cpno = page
       }
+      // debugger
       get(`/api/topic/${this.replyId}/${page}`).then(data => {
-        this.nowData = data.data.replies
+        this.nowData[this.replyId] = data.data.replies
       })
     },
     // 回复人文字处理
@@ -639,6 +639,15 @@ export default{
         }
         return newTxt
       }
+    },
+    // 来自去币讯
+    toBibar (tmp) {
+      this.$router.push({
+        path: `/msgDetail/${tmp.token}`,
+        query: {
+          b: JSON.stringify({'zh': tmp.name_ch})
+        }
+      })
     }
   }
   // watch: {

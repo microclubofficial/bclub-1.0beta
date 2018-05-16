@@ -219,7 +219,7 @@ import { post } from 'src/utils/http'
 import { setToken } from '../../utils/auth'
 export default {
   name: 'login',
-  data() {
+  data () {
     return {
       userForm: {},
       phoneForm: {},
@@ -248,7 +248,7 @@ export default {
   },
   methods: {
     // 失去焦点验证
-    showRegisterMsg(input, id) {
+    showRegisterMsg (input, id) {
       if (id === 0) {
         if (input === undefined || input.length === 0) {
           this.unamePrompt = '用户名不能为空'
@@ -293,7 +293,7 @@ export default {
       }
     },
     // 用户名登录
-    handleLogin() {
+    handleLogin () {
       if (this.userForm.username === undefined) {
         alert('用户名不能为空')
         return

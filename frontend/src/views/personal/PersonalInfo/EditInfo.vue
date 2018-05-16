@@ -100,7 +100,9 @@ export default {
       timer: null,
       getcontroltxt: '获取验证码',
       phonePrompt: '',
-      phoneControlPrompt: ''
+      phoneControlPrompt: '',
+      canSetU: false,
+      cansetP: false
     }
   },
   computed: {
@@ -118,15 +120,24 @@ export default {
     //   验证
     showsetFormMsg(input, id) {
       if (id === 0) {
-        var unamereg = /^[a-zA-Z0-9_\u4e00-\u9fa5]{3,16}$/
-        if (!unamereg.test(input) && input !== undefined && input.length > 0) {
-          this.unamePrompt = '用户名长度在3-16位之间'
-          return false
-        } else if (input === undefined || input.length === 0) {
-          this.unamePrompt = '用户名不能为空'
+        if (input.indexOf(' ') >= 0) {
+          this.unamePrompt = '不能输入空格'
+          this.canSetU = false
           return false
         } else {
-          this.unamePrompt = ''
+          var unamereg = /^[a-zA-Z0-9_\u4e00-\u9fa5]{3,16}$/
+          if (!unamereg.test(input) && input !== undefined && input.length > 0) {
+            this.unamePrompt = '用户名长度在3-16位之间'
+            this.canSetU = false
+            return false
+          } else if (input === undefined || input.length === 0) {
+            this.unamePrompt = '用户名不能为空'
+            this.canSetU = false
+            return false
+          } else {
+            this.unamePrompt = ''
+            this.canSetU = true
+          }
         }
       } else if (id === 1) {
         var ponereg = /^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$/
@@ -156,28 +167,32 @@ export default {
     setusername() {
       let instance
       if (this.showModel) {
-        post(`/api/setting/username`, this.setForm).then(data => {
-          if (data.resultcode === 0) {
-            alert(data.message)
-            return false
-          } else if (data.resultcode === 1) {
-            instance = new Toast({
-              message: data.message,
-              iconClass: 'glyphicon glyphicon-ok',
-              duration: 1000
-            })
-            setTimeout(() => {
-              instance.close()
-            }, 1000)
-            this.$store.commit('USER_INFO', {
-              'username': data.data.username,
-              'avatar': data.data.avatar,
-              'isLogin': true
-            })
-            setToken(data.data)
-            this.personalUser(data.data.username)
-          }
-        })
+        if (this.canSetU) {
+          post(`/api/setting/username`, this.setForm).then(data => {
+            if (data.resultcode === 0) {
+              alert(data.message)
+              return false
+            } else if (data.resultcode === 1) {
+              instance = new Toast({
+                message: data.message,
+                iconClass: 'glyphicon glyphicon-ok',
+                duration: 1000
+              })
+              setTimeout(() => {
+                instance.close()
+              }, 1000)
+              this.$store.commit('USER_INFO', {
+                'username': data.data.username,
+                'avatar': data.data.avatar,
+                'isLogin': true
+              })
+              setToken(data.data)
+              this.personalUser(data.data.username)
+              $('.form-control').val('')
+              $('.setPhone').modal('hide')
+            }
+          })
+        }
       } else {
         post(`/api/setting/phone`, this.setForm).then(data => {
           if (data.resultcode === 0) {
@@ -193,6 +208,8 @@ export default {
               duration: 1000
             })
             this.personalUser(this.userInfo.username)
+            $('.form-control').val('')
+            $('.setPhone').modal('hide')
           }
         })
       }
