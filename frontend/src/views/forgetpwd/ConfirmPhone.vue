@@ -30,8 +30,8 @@
   height: 40px;
   line-height: 40px;
   font-size: 18px;
-  margin: 40px 0 50px 30px;
-  width:380px;
+  margin: 40px 0 50px 48px;
+  width:362px;
   &:hover {
     color: #fff;
     background-color: #50a6fc;
@@ -41,7 +41,7 @@
   margin-top: 10px;
   color: red;
 }
-#myModalLabel{
+.diy-title{
   text-align: center;
   font-size:16px;
   color:#333;
@@ -52,8 +52,8 @@
   height: 40px;
   line-height: 40px;
   font-size: 18px;
-  margin: 30px 0 50px 30px;
-  width: 380px;
+  margin: 40px 0 50px 48px;
+  width: 362px;
   &:hover {
     color: #fff;
     background-color: #50a6fc;
@@ -101,7 +101,7 @@
         <div class="modal-content">
           <div class="modal-header" style="margin-bottom:40px;">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title" id="myModalLabel">请填写新密码</h4>
+            <h4 class="modal-title diy-title" id="myModalLabel">请填写新密码</h4>
           </div>
           <div class="modal-body">
             <form class="form-horizontal" style="padding:0 100px 10px 60px;">

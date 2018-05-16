@@ -8,6 +8,11 @@
     display: -webkit-flex;
     align-items: center;
 }
+.breadcrumb{
+    .hover:hover{
+        color:#1e8fff;
+    }
+}
 </style>
 
 <template>
@@ -19,7 +24,9 @@
                 <li>
                     <router-link to='/'><i class="iconfont" style="margin-right:10px;">&#xe65a;</i>首页</router-link>
                 </li>
-                <li class="active">个人中心</li>
+                <li class="active">
+                    <router-link class="hover" :to="{path:'/memberCenter'}">个人中心</router-link>
+                </li>
             </ol>
             <ul class="nav nav-tabs">
                 <li v-for="(item,index) in infoList" :class="{active:item.name === $route.name}" @click="routerGo(index)" :key="index">

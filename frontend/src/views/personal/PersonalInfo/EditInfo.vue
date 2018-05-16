@@ -1,92 +1,94 @@
 <template>
-    <div>
-        <div class="container">
-            <form class="form-horizontal">
-                <div class="form-group">
-                    <label class="col-md-1 control-label">用户名:</label>
-                    <div class="col-md-2">
-                        <p class="form-control-static">{{userInfo.username}}</p>
-                    </div>
-                    <div class="col-md-2">
-                        <div class="btnm setFormconfirm" data-target="#myModal" data-toggle="modal" @click="setFormBtn(0)">修改</div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-md-1 control-label">手机号:</label>
-                    <div class="col-md-2">
-                        <p class="form-control-static">{{personalUserInfo.phone}}</p>
-                    </div>
-                    <div class="col-md-2">
-                        <div class="btnm setFormconfirm" @click="setFormBtn(1)">修改</div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-md-1 control-label">注册时间:</label>
-                    <div class="col-md-2">
-                        <p class="form-control-static">{{personalUserInfo.register_time}}</p>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-md-1 control-label">上次登录:</label>
-                    <div class="col-md-2">
-                        <p class="form-control-static">{{personalUserInfo.last_login}}</p>
-                    </div>
-                </div>
-            </form>
-            <!-- 模态框填新密码 -->
-            <div class="modal fade in setPhone" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" @click="closeModal" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h4 class="modal-title" id="myModalLabel">{{showModel ? '请填写用户名' : '请填写手机号'}}</h4>
-                        </div>
-                        <div class="modal-body">
-                            <!-- 找用户名 -->
-                            <form class="form-horizontal" style="margin-top:20px;" v-if="showModel">
-                <div class="form-group">
-            <label class="col-sm-2 control-label">用户名:</label>
-            <div class="col-sm-4">
-              <input class="form-control" name="username" type="text" placeholder="usernanme" @blur='showsetFormMsg(setForm.username, 0)' v-model="setForm.username">
-            </div>
-            <p class="prompt" style="height:34px;line-height: 34px;">{{unamePrompt}}</p>
+  <div>
+    <div class="container">
+      <form class="form-horizontal">
+        <div class="form-group">
+          <label class="col-md-1 control-label">用户名:</label>
+          <div class="col-md-2">
+            <p class="form-control-static">{{userInfo.username}}</p>
           </div>
-            </form>
-            <!-- 找手机 -->
-            <form class="form-horizontal" style="margin-top:20px;" v-if="!showModel">
-                <div class="form-group">
-                    <label for="inputEmail3" class="col-md-2 control-label">手机号</label>
-                    <div class="col-md-4">
-                        <input type="text" class="form-control" id="inputEmail3"  @blur='showsetFormMsg(setForm.phone, 1)' v-model="setForm.phone" placeholder="请输入手机号">
-                    </div>
-                </div>
-                <p class="prompt col-md-offset-2">{{phonePrompt}}</p>
-                <div class="form-group">
-                    <label for="inputCaptcha3" class="col-md-2 control-label">验证码</label>
-                    <div class="col-md-4">
-                        <input type="text" class="form-control" v-model="setForm.captcha" @blur='showsetFormMsg(setForm.captcha, 2)' id="inputCaptcha3" placeholder="请输入验证码">
-                    </div>
-                    <button type="button" class="col-md-2 btnm getcontrol" style="padding: 0 !important;height: 34px;line-height: 34px;" @click="getPhoneControl" v-bind:disabled="hasphone" :class="{disable:hasphone}"><span v-show="hasControl">{{countdown}}</span>{{getcontroltxt}}</button>
-                </div>
-                <p class="prompt col-md-offset-2">{{phoneControlPrompt}}</p>
-            </form>
-                        </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn-default" @click="closeModal" data-dismiss="modal">关闭</button>
-                        <button type="button" class="btnm btn-primary" v-bind:disabled="!setForm.username" @click="setusername">确定</button>
-                    </div>
-                </div>
+          <div class="col-md-2">
+            <div class="btnm setFormconfirm" data-target="#myModal" data-toggle="modal" @click="setFormBtn(0)">修改</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-md-1 control-label">手机号:</label>
+          <div class="col-md-2">
+            <p class="form-control-static">{{personalUserInfo.phone}}</p>
+          </div>
+          <div class="col-md-2">
+            <div class="btnm setFormconfirm" @click="setFormBtn(1)">修改</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-md-1 control-label">注册时间:</label>
+          <div class="col-md-2">
+            <p class="form-control-static">{{personalUserInfo.register_time}}</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-md-1 control-label">上次登录:</label>
+          <div class="col-md-2">
+            <p class="form-control-static">{{personalUserInfo.last_login}}</p>
+          </div>
+        </div>
+      </form>
+      <!-- 模态框填新密码 -->
+      <div class="modal fade in setPhone" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" @click="closeModal" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+              <h4 class="modal-title diy-title" id="myModalLabel">{{showModel ? '请填写用户名' : '请填写手机号'}}</h4>
             </div>
+            <div class="modal-body">
+              <!-- 修改用户名 -->
+              <form class="form-horizontal form-space" v-if="showModel">
+                <div class="form-group">
+                  <label for="inputEmail3" class="col-md-3 control-label">用户名：</label>
+                  <div class="col-md-9">
+                    <input type="text" class="form-control" name="username" @blur='showsetFormMsg(setForm.username, 0)' v-model="setForm.username" id="inputEmail3" placeholder="请输入用户名">
+                  </div>
+                </div>
+                <label class="col-md-3 control-label"></label>
+                <p class="prompt col-md-9" style="margin-top:0px !important;">{{unamePrompt}}</p>
+                <button type="button" class="btn btn-primary btn-block login-button"  v-bind:disabled="!setForm.username" @click="setusername" data-target="#myModal" data-toggle="">确认
+                </button>
+              </form>
+              <!-- 修改手机号 -->
+              <form class="form-horizontal form-space" v-if="!showModel">
+                <div class="form-group">
+                  <label for="inputEmail3" class="col-md-3 control-label">手机号：</label>
+                  <div class="col-md-9">
+                    <input type="text" class="form-control" id="inputEmail3" @blur='showsetFormMsg(setForm.phone, 1)' v-model="setForm.phone" placeholder="请输入手机号">
+                  </div>
+                </div>
+                <p class="prompt col-md-offset-3 col-md-9" style="margin-top:0px !important;">{{phonePrompt}}</p>
+                <div class="form-group" style="margin-top: 37px;">
+                  <label for="inputCaptcha3" class="col-md-3 control-label">验证码：</label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" v-model="setForm.captcha" @blur='showsetFormMsg(setForm.captcha, 2)' id="inputCaptcha3" placeholder="请输入验证码">
+                  </div>
+                  <button type="button" class="btn btn-default get-captcha" style="height:34px;line-height:34px;" @click="getPhoneControl" v-bind:disabled="hasphone" :class="{'btn-success':!hasphone}">
+                    <span v-show="hasControl">{{countdown}}</span>{{getcontroltxt}}</button>
+                </div>
+                <p class="prompt col-md-offset-3 col-md-9" style="margin-top:0px !important;">{{phoneControlPrompt}}</p>
+                <button type="button" class="btn btn-primary btn-block login-button"  v-bind:disabled="!setForm.username" @click="setusername" data-target="#myModal" data-toggle="">确认
+                </button>
+              </form>
+            </div>
+          </div>
         </div>
-        </div>
+      </div>
     </div>
+  </div>
 </template>
 <script>
-import {get, post} from '../../../utils/http'
+import { get, post } from '../../../utils/http'
 import { setToken } from '../../../utils/auth'
 import { Toast } from 'mint-ui'
 export default {
-  data () {
+  data() {
     return {
       personalUserInfo: [],
       setForm: {},
@@ -102,19 +104,19 @@ export default {
     }
   },
   computed: {
-    userInfo () {
+    userInfo() {
       return this.$store.state.userInfo.userInfo
     }
   },
-  created: function () {
+  created: function() {
     // 个人资料
     this.personalUser(this.userInfo.username)
   },
-  mounted () {
+  mounted() {
   },
   methods: {
     //   验证
-    showsetFormMsg (input, id) {
+    showsetFormMsg(input, id) {
       if (id === 0) {
         var unamereg = /^[a-zA-Z0-9_\u4e00-\u9fa5]{3,16}$/
         if (!unamereg.test(input) && input !== undefined && input.length > 0) {
@@ -151,7 +153,7 @@ export default {
       }
     },
     // 修改用户名和手机号
-    setusername () {
+    setusername() {
       let instance
       if (this.showModel) {
         post(`/api/setting/username`, this.setForm).then(data => {
@@ -196,11 +198,11 @@ export default {
       }
     },
     // 获取手机验证码
-    getPhoneControl () {
+    getPhoneControl() {
       let phone = parseFloat(this.setForm.phone)
       this.hasphone = true
       let that = this
-      post('/api/phoneCaptcha', {'phone': phone}).then((data) => {
+      post('/api/phoneCaptcha', { 'phone': phone }).then((data) => {
         if (data.resultcode === 0) {
           if (data.message === 'failed') {
             alert('手机号已注册')
@@ -208,7 +210,7 @@ export default {
             return false
           }
         } else {
-          this.timer = setInterval(function () {
+          this.timer = setInterval(function() {
             that.countdown--
             that.hasControl = true
             that.getcontroltxt = '重新获取'
@@ -226,21 +228,21 @@ export default {
         console.log(error)
       })
     },
-    setFormBtn (id) {
+    setFormBtn(id) {
       if (id === 0) {
-        // this.showModel = true
+        this.showModel = true
         // $('.setPhone').modal('show')
         // document.body.removeChild(document.querySelector('.modal-backdrop'))
-      } else {
+      } else if (id === 1) {
         this.showModel = false
         $('.setPhone').modal('show')
       }
     },
-    closeModal () {
+    closeModal() {
       $('.setPhone').hide('show')
     },
     // 个人资料
-    personalUser (uname) {
+    personalUser(uname) {
       get(`/api/u/${uname}`).then(data => {
         if (data.message === '未登录') {
           alert('请先去登录')
@@ -253,31 +255,58 @@ export default {
   }
 }
 </script>
-<style>
-.prompt{
-    color: red;
+<style lang="scss" scoped>
+.prompt {
+  color: red;
+}
+
+.setFormconfirm {
+  color: #fff;
+  background-color: #337ab7;
+  border-color: #2e6da4;
+  border-radius: 3px !important;
+  padding: 0px 8px !important;
+}
+
+.disable {
+  background: #BCBCBC !important;
+  color: #797979 !important;
+  border: none !important;
+}
+
+.getcontrol {
+  border-radius: 4px;
+  color: #fff;
+  background-color: #5cb85c;
+  border-color: #4cae4c;
+}
+
+.diy-title{
+  text-align: center;
+  font-size:16px;
+  color:#333;
+}
+
+.login-button {
+  background-color: #1e8fff;
+  border: none;
+  height: 40px;
+  line-height: 40px;
+  font-size: 18px;
+  margin: 40px 0 30px 48px;
+  width: 362px;
+  &:hover {
+    color: #fff;
+    background-color: #50a6fc;
   }
-.setFormconfirm{
-    color: #fff;
-    background-color: #337ab7;
-    border-color: #2e6da4;
-    border-radius: 3px !important;
-    padding: 0px 8px !important;
 }
-.disable{
-    background: #BCBCBC !important;
-    color: #797979 !important;
-    border:none !important;
+
+.modal-body{
+  .form-space{
+    padding:40px 100px 0 50px;
+  }
 }
-.getcontrol{
-    border-radius: 4px;
-    color: #fff;
-    background-color: #5cb85c;
-    border-color: #4cae4c;
+.show {
+  display: none;
 }
-.modal-footer{
-    border-top: none !important;
-    padding-top: 0 !important;
-}
-.show{display: none;}
 </style>

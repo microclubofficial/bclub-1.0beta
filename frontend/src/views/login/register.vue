@@ -72,6 +72,7 @@
     margin-left: 4%;
     margin-top: 10px;
     color: red;
+    padding-left:20px;
   }
 </style>
 <template>

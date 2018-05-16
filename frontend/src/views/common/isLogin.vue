@@ -28,13 +28,13 @@
         </div>
         <div class="user_info_dropdown" v-show="showPersonal">
           <ul>
-            <li>
+            <!--<li>
               <a href="javascript:void(0)" @click.stop.prevent><img :src="user_token.avatar" alt="">
                 <span class="user-name">
                   <router-link :to="{path:'/memberCenter'}">{{user_token.username}}</router-link>
                 </span>
               </a>
-            </li>
+            </li>-->
             <li>
               <a href="javascript:void(0)" @click.stop.prevent><img src="../../assets/img/personal.png" alt="">
                 <span>

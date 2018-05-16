@@ -31,8 +31,8 @@
   height: 40px;
   line-height: 40px;
   font-size: 18px;
-  margin: 40px 0 50px 40px;
-  width: 380px;
+  margin: 40px 0 50px 52px;
+  width: 360px;
   &:hover {
     color: #fff;
     background-color: #50a6fc;
