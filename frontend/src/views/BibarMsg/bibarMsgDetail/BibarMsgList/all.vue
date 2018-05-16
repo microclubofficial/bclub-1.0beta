@@ -446,8 +446,9 @@ export default{
       this.replyId = id
       this.showLoaderComment = true
       get(`/api/topic/${id}/${this.cpno}`).then(data => {
+        if (!this.nowData[id]) this.$set(this.nowData, id, data.data.replies)
+        else this.nowData[id] = data.data.replies
         this.showLoaderComment = false
-        this.nowData[id] = data.data.replies
         this.cpageCount = data.data.page_count
         if (this.cpageCount > 1) {
           this.showPage = true
@@ -561,14 +562,14 @@ export default{
         } else if (data.message === '收藏成功') {
           this.collection = index
           instance = new Toast({
-            message: '收藏成功',
+            message: data.message,
             iconClass: 'glyphicon glyphicon-ok',
             duration: 1000
           })
           tmp.collect_bool = data.data.collect_bool
         } else {
           instance = new Toast({
-            message: '取消收藏',
+            message: data.message,
             duration: 1000
           })
         }

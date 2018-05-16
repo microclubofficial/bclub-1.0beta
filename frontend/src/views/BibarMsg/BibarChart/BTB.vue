@@ -162,6 +162,8 @@ export default {
       $.getJSON(`/api/currency_news/${this.nowId}`, function (data) {
         // main数据
         that.bibarData = data.data
+        // 父组件传值
+        that.$emit('btbFun', that.bibarData.zhName)
         // 总市值进度条
         that.market = parseFloat(that.bibarData.global_market_rate.split(/%/g)[0])
         // 流通率进度条

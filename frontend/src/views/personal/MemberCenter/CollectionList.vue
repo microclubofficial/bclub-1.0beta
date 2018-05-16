@@ -32,7 +32,7 @@
                   <span>{{tmp.replies_count}}</span>
                 </a>
               </li>
-              <li class="set-choseStar" @click="collectionTopic(index,tmp.id)"> <a :class="{collectionActive:index === collection}" href="javascript:void(0);"><i class="iconfont icon-star">&#xe6a7;</i>收藏</a> </li>
+              <li class="set-choseStar" @click="collectionTopic(tmp)"> <a :class='{collectionActive:tmp.collect_bool}' href="javascript:void(0);"><i class="iconfont icon-star">&#xe6a7;</i>收藏</a> </li>
               <!-- <li> <a href="javascript:void(0);"><i class="iconfont icon-fenxiang"></i> 分享</a> </li> -->
               <!-- <li class="set-choseShang"> <a href="javascript:void(0);"><i class="iconfont icon-dashang"></i> 打赏<span>438</span></a> </li> -->
               <li>
@@ -46,7 +46,7 @@
               </li>
             </ul>
           </div>
-            <div class="bibar-hot"  v-show="index===i">
+            <div class="bibar-hot" style="display:none;">
        <!-- 评论框 -->
        <div class="editor-comment">
          <img :src="userInfo.avatar" alt="" class="avatar" v-show="commentShow">
@@ -59,7 +59,7 @@
            <!--<svg style="left:56px; top:52px;" version='1.1' xmlns='http://www.w3.org/2000/svg' v-show="showReport" class="editor-svg">
             <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
           </svg>-->
-         <div class="editor-bd">
+         <div class="editor-bd clearfloat">
            <span class="comment-img-delete"></span>
            <div class="editor-textarea" v-show="commentShow" @click="commentShowFun">
              <div class="editor-placeholder">评论...</div>
@@ -139,7 +139,7 @@
          <!--<svg version='1.1' style="left:56px; top:52px;" xmlns='http://www.w3.org/2000/svg' v-show="showReportReplay" class="editor-triangle">
             <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
            </svg>-->
-         <div class="editor-bd">
+         <div class="editor-bd clearfloat">
            <span class="comment-img-delete"></span>
            <!--<svg version='1.1' xmlns='http://www.w3.org/2000/svg' v-show="talkReplyTxt" class="editor-triangle">
             <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
@@ -430,7 +430,8 @@ export default{
       this.replyId = id
       this.showLoaderComment = true
       get(`/api/topic/${id}/${this.cpno}`).then(data => {
-        this.nowData[id] = data.data.replies
+        if (!this.nowData[id]) this.$set(this.nowData, id, data.data.replies)
+        else this.nowData[id] = data.data.replies
         this.showLoaderComment = false
         this.cpageCount = data.data.page_count
         if (this.cpageCount > 1) {
@@ -519,19 +520,20 @@ export default{
       this.replayId = ''
     },
     // 收藏
-    collectionTopic (index, id) {
+    collectionTopic (tmp) {
       let instance
-      post(`/api/collect/${id}`).then(data => {
-        if (data.message === 'success') {
-          this.collection = index
+      post(`/api/collect/${tmp.id}`).then(data => {
+        if (data.message === '收藏成功') {
+          tmp.collect_bool = data.data.collect_bool
           instance = new Toast({
-            message: '收藏成功',
+            message: data.message,
             iconClass: 'glyphicon glyphicon-ok',
             duration: 1000
           })
         } else {
+          tmp.collect_bool = data.data.collect_bool
           instance = new Toast({
-            message: '取消收藏',
+            message: data.message,
             duration: 1000
           })
         }

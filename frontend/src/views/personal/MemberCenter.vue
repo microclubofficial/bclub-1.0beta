@@ -49,11 +49,11 @@
                 </div>
                 <div class="right-main">
                     <h3>{{personalUser.username}}</h3>
-                    <p>
+                    <!--<p>
                         关注：<a href="">1652</a>&nbsp;&nbsp;&nbsp;&nbsp;
                         主题：<a href="">152</a>&nbsp;&nbsp;&nbsp;&nbsp;
                         热度：<a href="">16515642</a>
-                    </p>
+                    </p>-->
                     <ul class="nav nav-pills">
                         <li v-for="(item,index) in navList" :class="{active:item.name === $route.name}" @click="routerGo(index)" :key="index">
                             <a href="javascript:void(0)">{{item.cnName}}</a>

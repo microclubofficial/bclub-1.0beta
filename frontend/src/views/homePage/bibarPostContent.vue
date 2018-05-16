@@ -19,7 +19,7 @@ import {post} from '../../utils/http'
 import { Toast } from 'mint-ui'
 
 export default {
-  props: ['contentId', 'fromHeader'],
+  props: ['contentId', 'fromHeader', 'tokenBibar'],
   name: 'editor',
   data () {
     return {
@@ -81,12 +81,13 @@ export default {
         this.topicData.picture = this.topicData.picture.slice(this.topicData.picture.indexOf('/'), this.topicData.picture.lastIndexOf('=') - 7)
       }
       if (this.$route.path !== '/') {
-        this.topicData.token = this.$route.params.currency
+        this.topicData.token = this.tokenBibar
       }
       this.$store.commit('LONG_ID', {
         hideDilog: !this.showDilog,
         bId: this.$route.params.currency
       })
+      console.log(this.topicData)
       if (this.topicData.content.length > 0 || this.topicData.picture.length > 0) {
         post(`/api/topic`, this.topicData).then(data => {
           this.editorContent = ''
@@ -342,8 +343,8 @@ export default {
       }
     }
     this.editor.create()
-    $('.modal-body').find('.w-e-text').html('<p class="initTxt">请输入...</p>')
-    $('.detailEditor').find('.w-e-text').html('<p class="initTxt">请输入...</p>')
+    //$('.modal-body').find('.w-e-text').html('<p class="initTxt">请输入...</p>')
+    //$('.detailEditor').find('.w-e-text').html('<p class="initTxt">请输入...</p>')
     // get('/api/avatar').then(data => {
     //   this.articles = data.data.topics
     // })

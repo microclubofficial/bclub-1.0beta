@@ -789,7 +789,6 @@ svg:not(:root) {
     /* margin: 15px 0; */
     border-bottom: 1px solid #edf0f5;
     border-top: 0 !important;
-    overflow: hidden;
 }
 .comment-item .avatar {
     float: left;

@@ -95,7 +95,7 @@
            <!--<svg style="left:56px; top:55px;" version='1.1' xmlns='http://www.w3.org/2000/svg' class="editor-svg">
             <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
           </svg>-->
-        <div class="detailEditor">
+        <div class="detailEditor clearfloat">
           <BibarReport :toApi='5' :detailId='articleDetail.id' @backList = 'showDetailContent'></BibarReport>
         </div>
       </div>
@@ -118,7 +118,7 @@
               </div> -->
                 <div class="comment-list">
                   <!-- <pull-to> -->
-                  <div class="comment-item" data-index='' data-id=''  :key ='now' v-for="(item,now) in nowData">
+                  <div class="comment-item clearfloat" data-index='' data-id=''  :key ='now' v-for="(item,now) in nowData">
                   <div>
                     <a href="#" data-tooltip='' class="avatar">
                       <img :src="item.avatar" alt="">
@@ -244,7 +244,6 @@ export default {
     }
   },
   mounted () {
-    console.log(this.chartId)
     this.did = this.$route.params.id
     this.crumb = JSON.parse(this.$route.query.a)
     // console.log(this.$route.query)
@@ -478,7 +477,6 @@ export default {
   .detailEditor{
     margin-left: 42px;
     position: relative;
-    overflow: hidden;
   }
   /*处理文字*/
   .detail-main-content{
@@ -502,7 +500,6 @@ export default {
     text-align: center;
     background: #F8F8F8;
     position: relative;
-    overflow: hidden;
     padding: 23px 15px;
   }
   .detail-editor-toolbar>.wangeditor>.report{padding: 0;}
@@ -856,9 +853,6 @@ a.avatar img {
   border-radius: 3px;
 }
 .bibar-indexNewsItem .set>ul>.set-answer>a{color: #1E8FFF;}*/
-.comment-item{
-  overflow: hidden;
-}
 .bibar-indexNewsList{
     float: left;
 }
@@ -924,9 +918,6 @@ a.avatar img {
 .w-e-text::-webkit-scrollbar{
   background:snow;
 }
-.w-e-text-container .w-e-panel-container{
-  margin-left: 0 !important;
-}
 .talkBibar-editor .w-e-text-container{
   min-height: 150px !important;
   border:none !important;
@@ -945,7 +936,6 @@ a.avatar img {
     margin-left: 0 !important;
 }
 .editor-comment{
-    margin-top: 5px;
     background-color: #f8f8f8;
     /* padding: 20px; */
     padding-left: 10px;

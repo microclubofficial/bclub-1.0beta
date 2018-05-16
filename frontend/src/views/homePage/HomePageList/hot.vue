@@ -11,7 +11,7 @@
           <div class="speech" v-if="tmp.reply_user !== null"> <span><span class="time">{{tmp.reply_time}}</span>前{{tmp.reply_user}}发表了评论</span><i class="iconfont icon-dot"></i></div>
           <div class="user">
             <!--<img :src="tmp.avatar">-->
-            <div class="bibar-author"> <a href="#"> <span class="photo"><img :src="tmp.avatar"></span> <span class="name">{{tmp.author}}</span> <span class="time">{{tmp.diff_time !== '0秒' ? tmp.diff_time + '前' : '刚刚发布'}}·来自币吧</span> </a> </div>
+            <div class="bibar-author"> <a href="#"> <span class="photo"><img :src="tmp.avatar"></span> <span class="name">{{tmp.author}}</span> <span class="time" @click='toBibar(tmp)'>{{tmp.diff_time !== '0秒' ? tmp.diff_time + '前' : '刚刚发布'}}·来自{{tmp.token !== null ? tmp.token : '币吧'}}</span> </a> </div>
             <div class="bibar-list">
               <div class="tit"><a href="javascript:void(0)" @click="goDetail(tmp.id)">{{tmp.title}}</a></div>
           <div class="txt indexNewslimitHeight" @click="goDetail(tmp.id)">
@@ -158,7 +158,7 @@
                 </div>
               </div>
               <!-- 分页条 -->
-            <div class="pages" v-if='showPage && nowData[tmp.id].length > 0'>
+            <div class="pages" v-if='showPage && index === i'>
               <ul class="mo-paging">
                 <!-- prev -->
                 <!-- first -->
@@ -285,10 +285,9 @@ export default{
   },
   created: function () {
     // 文章分页
-    this.tpno = 1
     this.$store.dispatch('clear_backForNav')
     this.showLoader = true
-    get(`/api/topic/1`).then(data => {
+    get(`/api/topic/${this.tpno}`).then(data => {
       this.articles = data.data.topics
       this.showLoader = false
       this.pageCount = data.data.page_count
@@ -318,7 +317,7 @@ export default{
   methods: {
     // 分页
     loadTopicPage () {
-      if (this.tpno < this.pageCount - 1) {
+      if (this.tpno < this.pageCount) {
         setTimeout(() => {
           this.showLoader = true
           this.tpno++
@@ -429,7 +428,8 @@ export default{
       this.replyId = id
       this.showLoaderComment = true
       get(`/api/topic/${id}/${this.cpno}`).then(data => {
-        this.nowData[id] = data.data.replies
+        if (!this.nowData[id]) this.$set(this.nowData, id, data.data.replies)
+        else this.nowData[id] = data.data.replies
         this.showLoaderComment = false
         this.cpageCount = data.data.page_count
         if (this.cpageCount > 1) {
@@ -557,7 +557,7 @@ export default{
     collectionTopic (tmp) {
       let instance
       post(`/api/collect/${tmp.id}`).then(data => {
-        if (data.data.collect_bool) {
+        if (data.message === '收藏成功') {
           tmp.collect_bool = data.data.collect_bool
           instance = new Toast({
             message: data.message,
@@ -623,6 +623,7 @@ export default{
       if (this.cpno !== page) {
         this.cpno = page
       }
+      // debugger
       get(`/api/topic/${this.replyId}/${page}`).then(data => {
         this.nowData[this.replyId] = data.data.replies
       })
@@ -638,6 +639,15 @@ export default{
         }
         return newTxt
       }
+    },
+    // 来自去币讯
+    toBibar (tmp) {
+      this.$router.push({
+        path: `/msgDetail/${tmp.token}`,
+        query: {
+          b: JSON.stringify({'zh': tmp.name_ch})
+        }
+      })
     }
   }
   // watch: {
