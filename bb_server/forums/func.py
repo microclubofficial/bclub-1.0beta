@@ -68,3 +68,9 @@ def json_loads(data, list):
         except:
             data[i] = data[i]
     return
+
+def bool_delete(user, bool_alter = False):
+    if current_user.is_authenticated:
+        if request.user == user:
+            bool_alter = True
+    return bool_alter

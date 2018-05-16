@@ -46,7 +46,7 @@ class Topic(db.Model, ModelMixin):
         db.String(10), nullable=False, default=CONTENT_TYPE_MARKDOWN)
     created_at = db.Column(
         db.DateTime, default=datetime.now, nullable=False)
-    token = db.Column(db.String(24))
+    token = db.Column(db.String(81))
     updated_at = db.Column(
         db.DateTime, default=datetime.now, onupdate=datetime.now)
     is_good = db.Column(db.String(512), default='[]')

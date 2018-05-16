@@ -211,8 +211,8 @@ class ForgetView(MethodView):
 
 class ForgetTokenView(MethodView):
     def get(self, token):
-        email = User.check_email_token(token)
-        if not email:
+        email, user = User.check_email_token(token)
+        if not user:
             msg = _('The confirm link has been out of time.'
                     'Please confirm your email again')
             flash(msg)
@@ -233,8 +233,7 @@ class SetPasswordView(MethodView):
             phone = post_data['phone']
             user = User.query.filter_by(phone = phone).first()
         else:
-            email = User.check_email_token(token)
-            user = User.query.filter_by(email=email).first()
+            email, user = User.check_email_token(token)
         if password != confirm_password:
             msg = _('Two passwords are different')
             return get_json(0, msg, {})
@@ -273,10 +272,12 @@ class ConfirmView(MethodView):
         if User.query.filter_by(email=email).exists():
             msg = '邮箱已注册'
             return get_json(0, msg, {})
+        return get_json(1, '', {})
 
     def post(self):
         user = request.user
         email = request.data.get('email')
+        user.email = email
         self.send_email(user)
         msg = '一封邮件已发出'
         return get_json(1, msg, {})
@@ -293,14 +294,14 @@ class ConfirmView(MethodView):
 
 class ConfirmTokenView(MethodView):
     def get(self, token):
-        email = User.check_email_token(token)
-        if not email:
+        email, user = User.check_email_token(token)
+        if not user:
             msg = _('The confirm link has been out of time.'
                     'Please confirm your email again')
             flash(msg)
             return redirect('/')
-        User.email = email
-        User.save()
+        user.email = email
+        user.save()
         flash('You have confirmed your account. Thanks!')
         return redirect('/')
 

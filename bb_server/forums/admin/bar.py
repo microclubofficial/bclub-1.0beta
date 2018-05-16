@@ -15,6 +15,7 @@ from forums.extension import db
 from forums.api.forums.models import Board
 from forums.api.bar.models import Bar,Questions
 from forums.api.tag.models import Tags
+import json
 
 
 class BarView(BaseView):

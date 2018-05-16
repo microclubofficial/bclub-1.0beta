@@ -33,7 +33,7 @@ from .permissions import (like_permission, reply_list_permission,
                           reply_permission, topic_list_permission,
                           topic_permission, edit_permission, thumd_permission)
 from forums.api.message.models import MessageClient
-from forums.func import get_json, object_as_dict, time_diff, FindAndCount, Avatar, Count, json_loads
+from forums.func import get_json, object_as_dict, time_diff, FindAndCount, Avatar, Count, json_loads, bool_delete
 from forums.api.user.models import User
 from forums.api.collect.models import Collect
 from sqlalchemy import func
@@ -122,7 +122,6 @@ class TopicListView(MethodView):
             i.updated_at = str(i.updated_at)
             collect = collect_bool(i.id)
             topics_data = object_as_dict(i)
-            #topics_data['content'] = json.loads(topics_data['content'])
             json_loads(topics_data, ['content', 'title'])
             topics_data['reply_time'] = reply_time
             topics_data['reply_user'] = reply_user
@@ -132,6 +131,7 @@ class TopicListView(MethodView):
             topics_data['is_good'], topics_data['is_good_bool'] = Count(i.is_good)
             topics_data['is_bad'], topics_data['is_bad_bool'] = Count(i.is_bad)
             topics_data['collect_bool'] = collect
+            topics_data['bool_delete'] = bool_delete(user)
             Avatar(topics_data, user)
             topic.append(topics_data)
         data = {'classification': title, 'topics': topic, 'topic_count':topic_count, 'page_count':page_count}
@@ -154,7 +154,7 @@ class TopicListView(MethodView):
             title=json.dumps(title),
             content=json.dumps(content),
             content_type=content_type,
-            token = token,
+            token = json.dumps(token),
             picture = picture)
             #board_id=int(board))
         #tags = tags.split(',')
@@ -178,6 +178,7 @@ class TopicListView(MethodView):
         topic['is_good'] = 0
         topic['is_bad'] = 0
         topic['diff_time'] = '0秒'
+        topic['bool_delete'] = bool_delete(user)
         #topic.board.topic_count = 1
         #topic.board.post_count = 1
         #topic.author.topic_count = 1
@@ -213,6 +214,7 @@ class TopicView(MethodView):
             replies_data['diff_time'] = diff_time
             replies_data['is_good'], replies_data['is_good_bool'] = Count(i.is_good)
             replies_data['is_bad'], replies_data['is_bad_bool'] = Count(i.is_bad)
+            replies_data['bool_delete'] = bool_delete(user)
             Avatar(replies_data, user)
             replies.append(replies_data)
         topic_user = topic.author   
@@ -224,6 +226,7 @@ class TopicView(MethodView):
         topic_data['is_good'], topic_data['is_good_bool'] = Count(topic.is_good)
         topic_data['is_bad'], topic_data['is_bad_bool'] = Count(topic.is_bad)
         topic_data['collect_bool'] = collect_bool(topicId)
+        topic_data['bool_delete'] = bool_delete(topic_user)
         Avatar(topic_data, topic_user)
         data = {
             #'title': topic['title'],
@@ -261,7 +264,17 @@ class TopicView(MethodView):
 class ReplyListView(MethodView):
     def get(self, topicId, page):
         start = (page-1)*per_page
-        reply = Reply.query.filter_by(topic_id = topicId).order_by(('-id')).limit(per_page).offset(start)
+        if 'early' in request.path:
+            reply = Reply.query.filter_by(topic_id = topicId).order_by(('id')).limit(per_page).offset(start)
+        elif 'good' in request.path:
+            is_goodlist = Reply.query.with_entities(Topic.is_good, Topic.id).filter_by().all()
+            for i in is_goodlist:
+                i = list(i)
+                i[0] = len(json.dumps(i[0]))
+
+            reply = Reply.query.filter_by(topic_id = topicId).order_by(('-id')).limit(per_page).offset(start)
+        else:
+            reply = Reply.query.filter_by(topic_id = topicId).order_by(('-id')).limit(per_page).offset(start)
         reply_count = FindAndCount(Reply, topic_id = topicId)
         page_count = int(math.ceil(reply_count/per_page))
         data = []
@@ -278,6 +291,7 @@ class ReplyListView(MethodView):
             replies_data['diff_time'] = diff_time
             replies_data['is_good'], replies_data['is_good_bool'] = Count(i.is_good)
             replies_data['is_bad'], replies_data['is_bad_bool'] = Count(i.is_bad)
+            replies_data['bool_delete'] = bool_delete(user)
             Avatar(replies_data, user)
             data.append(replies_data)
         data.append({'page_count':page_count, 'reply_count':reply_count}) 
@@ -308,6 +322,7 @@ class ReplyListView(MethodView):
         replies_data['is_bad'] = 0
         replies_data['diff_time'] = '0秒'
         replies_data['replies_count'] = reply_count
+        replies_data['bool_delete'] = bool_delete(user)
         # noticetopicId
         #MessageClient.topic(reply)
         # count
@@ -406,6 +421,7 @@ class ThumbView(IsAuthMethodView):
                 userlist_good.remove(user.id)
             elif user.id in userlist_bad:
                 userlist_bad.remove(user.id)
+                userlist_good.append(user.id)
             else:
                 userlist_good.append(user.id)
         elif thumb == 'down':
@@ -413,6 +429,7 @@ class ThumbView(IsAuthMethodView):
                 userlist_bad.remove(user.id)
             elif user.id in userlist_good:
                 userlist_good.remove(user.id)
+                userlist_bad.append(user.id)
             else:
                 userlist_bad.append(user.id)
         session.is_good = json.dumps(userlist_good)
