@@ -81,15 +81,16 @@ export default {
         this.topicData.picture = this.topicData.picture.slice(this.topicData.picture.indexOf('/'), this.topicData.picture.lastIndexOf('=') - 7)
       }
       if (this.$route.path !== '/') {
-        this.topicData.token = this.tokenBibar
+        this.topicData.token = this.$route.params.currency
+        this.topicData.tokenname = this.tokenBibar
       }
       this.$store.commit('LONG_ID', {
         hideDilog: !this.showDilog,
         bId: this.$route.params.currency
       })
-      console.log(this.topicData)
       if (this.topicData.content.length > 0 || this.topicData.picture.length > 0) {
         post(`/api/topic`, this.topicData).then(data => {
+          console.log(data)
           this.editorContent = ''
           if (data.message === '未登录') {
             alert('先去登录')
@@ -105,6 +106,7 @@ export default {
               backFt.is_good = data.data.is_good
               backFt.title = data.data.title
               backFt.token = data.data.token
+              backFt.zh_token = data.data.zh_token
               backFt.updated_at = data.data.updated_at
               backFt.content = data.data.content
               backFt.author = data.data.author
