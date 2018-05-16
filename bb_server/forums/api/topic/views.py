@@ -96,7 +96,7 @@ class TopicListView(MethodView):
         query_dict = request.data
         keys = ['title']
         filter_dict = {}
-        title = _('All Topics') 
+        title = _('All Topics')     
         if 'token' in request.path:
             filter_dict['token'] = token
             title = _(token+'Topics')
@@ -148,13 +148,15 @@ class TopicListView(MethodView):
         #tags = post_data.pop('tags', None)
         content_type = post_data.pop('content_type', 0)
         token = post_data.pop('token', None)
+        zh_token = post_data.pop('tokenname', None)
         picture = post_data.pop('picture', None)
         #board = post_data.pop('category', None)
         topic = Topic(
             title=json.dumps(title),
             content=json.dumps(content),
             content_type=content_type,
-            token = json.dumps(token),
+            token = token,
+            zh_token = zh_token,
             picture = picture)
             #board_id=int(board))
         #tags = tags.split(',')

@@ -47,6 +47,7 @@ class Topic(db.Model, ModelMixin):
     created_at = db.Column(
         db.DateTime, default=datetime.now, nullable=False)
     token = db.Column(db.String(81))
+    zh_token = db.Column(db.String(81))
     updated_at = db.Column(
         db.DateTime, default=datetime.now, onupdate=datetime.now)
     is_good = db.Column(db.String(512), default='[]')
