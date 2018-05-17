@@ -50,7 +50,7 @@
     text-decoration: underline;
   }
 .w-e-text{line-height: 1.5;}
-.w-e-text a {color: #0181ff;}
+.w-e-text a {color: #0181ff !important;}
 .media-body > div{
     display: -webkit-box;
     width: 100%;
@@ -126,6 +126,7 @@ img[data-w-e]{
     width: 22px;
     height: 22px;
 }
+.comment-item-main{position: relative;}
 .comment-item-main a {color: #0181ff !important;}
 /*详情正文样式*/
 .detail-main-content p{
@@ -134,6 +135,8 @@ img[data-w-e]{
     text-align: justify;
     line-height: 1.8;
 }
+.detail-main-content a{color: #0181ff !important;}
+.media-body a{color: #0181ff !important;}
 /*面包屑*/
 .crumb .row .span6 .breadcrumb{
   background: #fff;

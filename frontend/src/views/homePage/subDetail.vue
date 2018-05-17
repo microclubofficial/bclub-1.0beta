@@ -392,11 +392,11 @@ export default{
   },
   created () {
     this.tdId = this.$route.params.tbId
-    get(`/api/bar/question/${this.subId}`).then(data => {
-      console.log(data)
-      this.answers = data.data.answers
-      this.question = data.data.question
-    })
+    // get(`/api/bar/question/${this.subId}`).then(data => {
+    //   console.log(data)
+    //   this.answers = data.data.answers
+    //   this.question = data.data.question
+    // })
   },
   methods: {
     // 写回答

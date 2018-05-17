@@ -94,7 +94,6 @@ export default{
   mounted () {
     // '/path？a=1'
     // {name: 'xxx', query: {b: [{label: '', path: ''},{label: '', path: ''} ]}}
-    console.log(this.$route.meta)
   },
   methods: {
     // 社区文章列表切换事件
