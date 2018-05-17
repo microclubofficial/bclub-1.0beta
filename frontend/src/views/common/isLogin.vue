@@ -15,12 +15,12 @@
               </a>
               <div class="nav_msg_dropdown" v-show="showMsg">
                 <ul>
-                  <li class="nav_msg_empty">暂无消息</li>
-                  <li class="nav_msg_set">
+                  <li class="nav_msg_empty">{{$t('nav.noNews')}}</li>
+                  <!--<li class="nav_msg_set">
                     <a href="#">
                       <span><img src="../../assets/img/msg.png" alt="">提醒设置</span>
                     </a>
-                  </li>
+                  </li>-->
                 </ul>
               </div>
             </div>
@@ -38,27 +38,27 @@
             <li>
               <a href="javascript:void(0)" @click.stop.prevent><img src="../../assets/img/personal.png" alt="">
                 <span>
-                  <router-link :to="{path:'/memberCenter'}">个人中心</router-link>
+                  <router-link :to="{path:'/memberCenter'}">{{$t('nav.personal')}}</router-link>
                 </span>
               </a>
             </li>
             <li>
               <a href="javascript:void(0)" @click.stop.prevent><img src="../../assets/img/set.png" alt="">
                 <span>
-                  <router-link :to="{path:'/personalInfo'}">编辑资料</router-link>
+                  <router-link :to="{path:'/personalInfo'}">{{$t('nav.editProfile')}}</router-link>
                 </span>
               </a>
             </li>
             <!--<li><a href="javascript:void(0)" @click.stop.prevent><img src="../../assets/img/share.png" alt=""><span>股票设置</span></a></li>-->
             <li>
               <a href="#" @click="outlogin"><img src="../../assets/img/outlogin.png" alt="">
-                <span>退出</span>
+                <span>{{$t('nav.logout')}}</span>
               </a>
             </li>
           </ul>
         </div>
       </div>
-      <a href="javascript:void(0)" class="nav_btn_longtext" @click="postModel">发帖</a>
+      <a href="javascript:void(0)" class="nav_btn_longtext" @click="postModel">{{$t('nav.newTopic')}}</a>
     </div>
     <div class="modal fade hmModal" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
       <div class="modal-dialog">
@@ -348,14 +348,14 @@ export default {
 
 a.nav_btn_longtext {
   display: inline-block;
-  width: 58px;
+  /*width: 58px;*/
   text-align: center;
   margin-left: 12px;
   vertical-align: middle;
   color: #0094D9;
   font-size: 13px;
   border: 1px solid #0094D9;
-  padding: 4px 0;
+  padding: 4px 15px;
   border-radius: 30px;
   height: 35px;
   line-height: 28px;

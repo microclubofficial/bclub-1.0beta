@@ -1,6 +1,6 @@
 <template>
   <div class="commun-bibarType">
-    <h4 style="font-weight:bold;">热门币种</h4>
+    <h4 style="font-weight:bold;">{{$t('column.hotCoins')}}</h4>
    <div class="bibarType-main">
      <div v-bind:style="{backgroundImage: 'url(' + type.picture + ')'}" class="bibarType-main-box shadow-box" @click="toBibarData(type.id,type.id,type.name_ch)" :key="index" v-for="(type,index) in bibarType">
        <!--<img :src="type.picture" alt="">-->
@@ -10,12 +10,12 @@
          <img :src="type.bpicture" alt=""><img style="width:18px; height:18px;" :src="type.b_picture" alt="">{{type.symbol}}-{{type.name_ch}}
          <!--<span class="bibarType-talk-btn">加入讨论</span>-->
          </div>
-        <ul>
+        <!--<ul>
           <li>关注 <span class="text-number">17825</span></li>
           <li>文章 <span class="text-number">32216</span></li>
           <li>热度 <span class="text-number">7343</span></li>
-          <!--<li>创建管理员</li>-->
-        </ul>
+          <li>创建管理员</li>
+        </ul>-->
        </div>
      </div>
    </div>

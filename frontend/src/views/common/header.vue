@@ -10,12 +10,12 @@
           <ul class="bibar-headernavlist">
             <li class="bibar-headernavitem">
               <a href="javascript:void(0)">
-                <router-link :class="{headerActive: routerSelect('')}" :to="{path:'/'}">首页</router-link>
+                <router-link :class="{headerActive: routerSelect('')}" :to="{path:'/'}">{{$t('nav.index')}}</router-link>
               </a>
             </li>
             <li class="bibar-headernavitem">
               <a href="javascript:void(0)">
-                <router-link :class="{headerActive: routerSelect('bibarLayout')}" :to="{path:'/bibarLayout'}">币讯</router-link>
+                <router-link :class="{headerActive: routerSelect('bibarLayout')}" :to="{path:'/bibarLayout'}">{{$t('nav.coinNews')}}</router-link>
               </a>
             </li>
             <!--<li class="bibar-headernavitem"> <a href="javascript:void(0)"><router-link :class="{headerActive: routerSelect('community')}" :to="{path:'/community'}">社区</router-link></a> </li>-->
@@ -38,6 +38,9 @@
               <!-- 已登录 -->
               <isLogin v-if="user_token && userInfo.isLogin"></isLogin>
             </li>
+            <li class="language-switch">
+              <a href="#" @click.stop.prevent="switchLang('en')" :class="{'active-language':language==='en'}">English</a> | <a href="#" :class="{'active-language':language==='zh'}" @click.stop.prevent="switchLang('zh')">中文</a>
+            </li>
           </ul>
         </div>
       </section>
@@ -48,7 +51,7 @@
 <script>
 import NavLogin from './navlogin.vue'
 import isLogin from './isLogin.vue'
-import { getToken, rememberToken } from '../../utils/auth'
+import { setToken, getToken, rememberToken } from '../../utils/auth'
 import Cookies from 'js-cookie'
 export default {
   props: {
@@ -57,7 +60,8 @@ export default {
   data: function () {
     return {
       user_token: '',
-      remember_token: ''
+      remember_token: '',
+      language: 'zh'
     }
   },
   components: {
@@ -73,9 +77,18 @@ export default {
     if (getToken()) {
       this.user_token = JSON.parse(getToken())
     }
+    if (getToken('language')){
+      this.language = getToken('language')
+      // console.log(this.language)
+    }
     // this.remember_token = rememberToken('remember_token')
   },
   methods: {
+    switchLang(lang){
+      setToken('language', lang)
+      this.language = lang
+      location.reload()
+    },
     // toLoadMain () {
     //   this.$emit('backLoadMain')
     // },
@@ -94,7 +107,15 @@ export default {
 
 <style>
 /*头*/
-
+.language-switch{
+  margin-right:20px;
+}
+.language-switch a{
+  font-size:14px;
+}
+.language-switch .active-language{
+  color:#0181ff;
+}
 .bibar-header {
   height: 60px;
   background-color: #fff;
@@ -139,12 +160,12 @@ export default {
 }
 
 .bibar-headernav ul li a {
-  width: 78px;
+  padding:0 10px;
   height: 60px;
   line-height: 56px;
   font-size: 18px;
   text-align: center;
-  display: inline-block;
+  display: block;
 }
 
 .bibar-headerSearch {

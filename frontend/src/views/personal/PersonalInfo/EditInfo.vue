@@ -187,9 +187,9 @@ export default {
                 'isLogin': true
               })
               if(rememberToken('remember_token')){
-                setToken(data.data, {expires: 7})
+                setToken('b-Token', data.data, {expires: 7})
               }else{
-                setToken(data.data)
+                setToken('b-Token', data.data)
               }
               this.personalUser(data.data.username)
               $('.form-control').val('')
