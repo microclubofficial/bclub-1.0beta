@@ -5,8 +5,8 @@
         <div class="username_info">
           <a href="javascript:;">
             <div class="user-info" @click="handlePersonal">
-              <img class="user-avatar" :src="user_token.avatar" alt="">
-              <span class="user-name">{{user_token.username}}</span>
+              <img class="user-avatar" :src="user_token.avatar ? user_token.avatar : userInfo.avatar" alt="">
+              <span class="user-name">{{user_token.username ? user_token.username : userInfo.username}}</span>
             </div>
             <div class="nav-info-msg">
               <a href="#" @click="handleMsg">
@@ -154,8 +154,8 @@ export default {
         if (data.message === '登出成功') {
           this.$store.commit('USER_INFO', {
             'username': '',
-            'avatar': ''
-            // 'isLogin': false
+            'avatar': '',
+            'isLogin': false
           })
           removeToken()
           this.$router.push('/')

@@ -85,7 +85,7 @@
 </template>
 <script>
 import { get, post } from '../../../utils/http'
-import { setToken } from '../../../utils/auth'
+import { setToken, getToken, rememberToken } from '../../../utils/auth'
 import { Toast } from 'mint-ui'
 export default {
   data () {
@@ -186,7 +186,11 @@ export default {
                 'avatar': data.data.avatar,
                 'isLogin': true
               })
-              setToken(data.data)
+              if(rememberToken('remember_token')){
+                setToken(data.data, {expires: 7})
+              }else{
+                setToken(data.data)
+              }
               this.personalUser(data.data.username)
               $('.form-control').val('')
               $('.setPhone').modal('hide')

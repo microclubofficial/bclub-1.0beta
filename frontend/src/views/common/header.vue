@@ -45,10 +45,6 @@
   </div>
 </template>
 
-<style >
-
-</style>
-
 <script>
 import NavLogin from './navlogin.vue'
 import isLogin from './isLogin.vue'
