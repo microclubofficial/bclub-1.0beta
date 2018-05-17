@@ -72,6 +72,7 @@
     margin-left: 4%;
     margin-top: 10px;
     color: red;
+    padding-left:20px;
   }
 </style>
 <template>
@@ -85,7 +86,7 @@
           <div class="form-group">
             <label class="col-md-3 control-label"><span class="text-red">* </span>用户名:</label>
             <div class="col-md-9">
-              <input  class="form-control" name="username" type="text" placeholder="请输入用户名" @blur='showRegisterMsg(userForm.username, 0)'  v-model="userForm.username">
+              <input  class="form-control" maxlength="16" name="username" type="text" placeholder="请输入用户名" @blur='showRegisterMsg(userForm.username, 0)'  v-model="userForm.username">
             </div>
             <label class="col-md-3 control-label"></label>
             <p class="prompt">{{unamePrompt}}</p>

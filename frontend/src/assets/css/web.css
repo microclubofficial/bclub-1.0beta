@@ -50,6 +50,7 @@
     text-decoration: underline;
   }
 .w-e-text{line-height: 1.5;}
+.w-e-text a {color: #0181ff;}
 .media-body > div{
     display: -webkit-box;
     width: 100%;
@@ -64,6 +65,28 @@
 /*富文本滚动条*/
 .w-e-text::-webkit-scrollbar{
   background:snow;
+}
+/*富文本表情*/
+.w-e-emoticon-container span img{width: 22px; height: 22px;}
+.w-e-emoticon-container span{
+  margin: 5px;
+  display: inline !important;
+}
+/*富文本表情title*/
+/*.w-e-panel-tab-title{display: none !important;}*/
+.w-e-text-container .w-e-panel-container{
+  top: 130px !important;
+  box-shadow: 0 2px 4px 0 rgba(0,0,0,.4);
+  border: none;
+  width: 260px !important;
+  left: 0 !important;
+  margin-left: 0 !important;
+}
+.w-e-text-container .w-e-panel-container .w-e-icon-close{display: none;}
+.w-e-text-container .w-e-panel-container .w-e-panel-tab-content{
+  overflow-y: inherit !important;
+  height: auto !important;
+  line-height: 32px !important;
 }
 /*详情内容*/
 .detail-main-content h1,.detail-main-content h2,.detail-main-content h3,.detail-main-content h4,.detail-main-content h5,
@@ -100,7 +123,10 @@
 img[data-w-e]{
     display: inline !important;
     cursor: default !important;
+    width: 22px;
+    height: 22px;
 }
+.comment-item-main a {color: #0181ff !important;}
 /*详情正文样式*/
 .detail-main-content p{
     font-size: 16px;
@@ -752,7 +778,7 @@ ul.dropdown-menu{height: auto;}
 .bibar-table.bibar-table-blue th{height: 40px;font-size: 16px;background-color: #f5faff;padding: 0 15px;}
 .bibar-table.bibar-table-blue td{}
 .bibar-tabAll{position: relative;}
-.bibar-tabAll .bibar-tabitem{/* display:none; */* display:none; */overflow: hidden;position: relative;height: 0px;}
+.bibar-tabAll .bibar-tabitem{/* display:none; */ display:none;position: relative;height: 0px;}
 .bibar-tabAll .bibar-tabitem.active{height: auto;display: block}
 .bibar-tabAll .bibar-tabitem .bibar-table{display: none;}
 .bibar-tabAll .bibar-tabitem.active .bibar-table{display: block;}
@@ -787,13 +813,13 @@ ul.dropdown-menu{height: auto;}
 /*清除浮动*/
 .clearfloat::after{display:block;clear:both;content:"";visibility:hidden;height:0}
 /*首页框架*/
-.bibar-Main{margin-top: 20px; position: relative; z-index: 5;}
+.bibar-Main{position: relative; z-index: 5;}
 .bibar-Mainleft{width: 1200px; float: left;}
 .bibar-Mainright{width: 220px; float: right;}
 .bibar-box{background-color: #fff; box-shadow: 0px 0px 4px 3px #ededed;}
 .bibar-box:after{visibility: hidden;display: block;font-size: 0;content: " ";clear: both;height: 0;}
 /*首页显示*/
-.bibar-boxindex1{padding:24px 40px;}
+.bibar-boxindex1{padding:40px;}
 .bibar-indexDisplay{overflow: hidden;}
 .bibar-indexDisplay-header{height: 24px; line-height: 24px; float: left;}
 .bibar-indexDisplay-header .logopic{float: left; margin-right: 10px;}
@@ -844,16 +870,16 @@ i.icon-BTC{font-size: 14px; font-weight: bold;}
 /* 首页左边栏 */
 .bibar-sidebar{width: 150px;float: left;position: relative;margin-right: 20px;}
 /*首页新闻*/
-.bibar-boxindex2{padding:40px 60px;}
+.bibar-boxindex2{padding:40px 60px;margin-top:40px;}
 .bibar-indexNewsList{}
 .bibar-indexNewsItem{padding: 15px 0px 10px; border-top: 1px solid #dcdcdc;}
 .bibar-indexNewsItem:first-child{border-top:0px}
 .bibar-indexNewsItem .speech{color: #999;}
 .bibar-indexNewsItem .speech span{}
 .bibar-indexNewsItem .speech i{}
-.bibar-indexNewsItem .user{
+/*.bibar-indexNewsItem .user{
     overflow: hidden;
-}
+}*/
 .w-e-text p{line-height: 1 !important;}
 /*toast*/
 .mint-toast{z-index: 10003 !important;}

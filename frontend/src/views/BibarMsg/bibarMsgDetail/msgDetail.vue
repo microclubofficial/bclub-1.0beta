@@ -3,14 +3,14 @@
     <MainHeader></MainHeader>
     <!--主体-->
     <section class="bibar-Main">
-    <div class="pt40"></div>
+    <!--<div class="pt20"></div>-->
     <section class="bibar-w1100">
         <!--主体左侧-->
         <section class="bibar-Mainleft bx-mainLeft">
             <btb @btbFun='frombtb' :bId="bitId"></btb>
             <!-- 富文本区 -->
             <div class="mainBibar-editor" v-if='initHide'>
-              <BibarPostContent @backFtContent = 'BibarContentFun' ></BibarPostContent>
+              <BibarPostContent :tokenBibar='tokenName' @backFtContent = 'BibarContentFun' ></BibarPostContent>
             </div>
             <!--新闻-->
             <article class="bibar-box bibar-boxindex2">
@@ -53,7 +53,9 @@ export default{
       bitId: '',
       initHide: false,
       initShow: false,
-      showLoader: true
+      showLoader: true,
+      // token
+      tokenName: ''
     }
   },
   components: {
@@ -108,7 +110,7 @@ export default{
       }
     },
     frombtb (data) {
-      console.log(data)
+      this.tokenName = data
     }
   }
 }
@@ -120,7 +122,7 @@ export default{
     /*width: 960px;*/
     margin: auto;
     background: rgb(255, 255, 255);
-    padding: 20px 40px;
+    padding:40px;
   }
   .mainBibar-editor .wangeditor{
     width: 100% !important;
@@ -129,7 +131,9 @@ export default{
   .mainBibar-editor .wangeditor .editor{
     width: 94%;
   }
- .bibar-Main>.bibar-w1100>.bx-mainLeft{width: 960px;}
+ .bibar-Main>.bibar-w1100>.bx-mainLeft{
+   width: 960px;margin-top:20px;
+   }
 .bibarMainGzList{background: #fff}
 .bibar-list-item{
   /* padding: 0 40px; */

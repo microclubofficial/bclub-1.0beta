@@ -8,7 +8,7 @@
                       <div class="dot"></div>
                       <div class="dot"></div>
                     </div>
-                <div class="bibarTop"  @click="toMsgDetail(bibarData.id)" v-if='!showLoader'>
+                <div class="bibarTop"  @click="toMsgDetail(bibarData.id, bibarData.zhName)" v-if='!showLoader'>
                   <div class="bibar-indexDisplay">
                     <div class="bibar-indexDisplay-header">
                         <div class="logopic"><img :src="bibarData.picture"></div>
@@ -30,8 +30,7 @@
                     <div class="col-sm-6">
                         <dl>
                             <dt>市值</dt>
-                            <dd> <i class="iconfont icon-USD">&#xe634;</i>{{bibarData.marketCap
- | cnyFun(CNY_RATE,2)}}
+                            <dd> <i class="iconfont icon-USD">&#xe634;</i>{{bibarData.marketCap | cnyFun(CNY_RATE,2)}}
                                 <div class="sprit-12 bg-green ml10">第{{bibarData.level}}名</div>
                             </dd>
                             <dd> <i class="iconfont icon-yueden">&#xe6ca;</i> <i class="iconfont icon-rmb icon-CNY">&#xe736;</i>{{bibarData.marketCap | formatNum(2)}} </dd>
@@ -163,6 +162,8 @@ export default {
       $.getJSON(`/api/currency_news/${this.nowId}`, function (data) {
         // main数据
         that.bibarData = data.data
+        // 父组件传值
+        that.$emit('btbFun', that.bibarData.zhName)
         // 总市值进度条
         that.market = parseFloat(that.bibarData.global_market_rate.split(/%/g)[0])
         // 流通率进度条
@@ -315,12 +316,13 @@ export default {
       })
     },
     // 去chart详情
-    toMsgDetail (id) {
+    toMsgDetail (id, zh) {
       this.msgId = id
       this.$store.commit('CHART_ID', {
-        chartId: this.msgId
+        chartId: this.msgId,
+        chartCh: this.bibarData.zhName
       })
-      this.$router.push(`/msgDetail/${this.msgId}`)
+      this.$router.push({path: `/msgDetail/${this.msgId}`})
     },
     // 显示当前chart
     showNowChild (id) {

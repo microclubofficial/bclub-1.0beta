@@ -28,13 +28,13 @@
         </div>
         <div class="user_info_dropdown" v-show="showPersonal">
           <ul>
-            <li>
+            <!--<li>
               <a href="javascript:void(0)" @click.stop.prevent><img :src="user_token.avatar" alt="">
                 <span class="user-name">
                   <router-link :to="{path:'/memberCenter'}">{{user_token.username}}</router-link>
                 </span>
               </a>
-            </li>
+            </li>-->
             <li>
               <a href="javascript:void(0)" @click.stop.prevent><img src="../../assets/img/personal.png" alt="">
                 <span>
@@ -414,15 +414,10 @@ a.nav_btn_longtext {
 }
 .modal-body>.wangeditor>.editor>.w-e-text-container{border: 1px solid #edf0f5 !important; z-index: 9999;height: 87px !important;}
 .modal-body>.wangeditor>.editor>.w-e-text-container>.w-e-panel-container{
-    width: 300px !important;
     /* margin-left: -285px !important; */
     z-index: 20000;
-    border-top: 1px solid #ccc !important;
     position: fixed !important;
     top: 195px !important;
-}
-.modal-body>.wangeditor>.editor>.w-e-text-container>.w-e-panel-container>.w-e-panel-tab-content{
-  height: 143px !important;
 }
 .modal-body>.wangeditor .toLongText{
     bottom: 0;

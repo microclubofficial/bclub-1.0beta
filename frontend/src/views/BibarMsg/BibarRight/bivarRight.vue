@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="pt20">
  <!--简介-->
             <article class="bibar-box bibar-boxindex3" v-if="$route.path !== '/'">
                 <div class="bibar-boxtitle" style="margin-bottom:10px;"> <span class="name">简介</span> </div>
@@ -88,7 +88,7 @@
   <div class="indexrightscroll-top">
     <!--热门-->
     <div class="bibar-box bibar-boxindex3">
-      <div class="bibar-boxtitle"> <span class="name">热门币</span><div style="display:inline-block;float:right;"><a href="javascript:void(0)" v-if='showNext' class="fr" @click="changeBtb(1)">下十位</a><a href="javascript:void(0)" class="fr" v-if='showPre' @click="changeBtb(0)">上十位</a></div></div>
+      <div class="bibar-boxtitle"> <span class="name">热门币</span><div style="display:inline-block;float:right;"><a href="javascript:void(0)" v-if='showNext' class="fr" @click="changeBtb(1)">后10位</a><a href="javascript:void(0)" class="fr" v-if='showPre' @click="changeBtb(0)">前10位</a></div></div>
       <div class="bibar-boxbody">
         <ul class="bibar-indexRMlist">
           <li class="bibar-indexRMitem row" v-for="(tmp,index) in hotList" :key="index" @click='toBibarDetail(tmp)'>
@@ -243,7 +243,12 @@ export default{
       // this.$emit('toBibarMsg', tmp.id)
       // 调简介
       this.briefFun(tmp.id)
-      this.$router.push(`/msgDetail/${tmp.id}`)
+      this.$router.push({
+        path: `/msgDetail/${tmp.id}`,
+        query: {
+          b: JSON.stringify({'zh': tmp.name_ch})
+        }
+      })
     },
     // 简介
     briefFun (id) {
@@ -253,7 +258,7 @@ export default{
           this.brief = data.data
           // console.log(this.brief)
           this.websites = this.brief.websites[0]
-          if (id === 'bitcoin') {
+          if (this.brief.descriptions.zh.length === 1) {
             this.briefTxt = this.brief.descriptions.zh[0]
           } else {
             this.briefTxt = this.brief.descriptions.zh[0] + this.brief.descriptions.zh[1]

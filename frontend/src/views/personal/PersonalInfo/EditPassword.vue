@@ -57,6 +57,9 @@ export default {
             this.newpwdPrompt = '新密码长度不能小于6位'
           }
           return false
+        } else if (id === 1 && (input === this.setPwd.OldPassword)) {
+          this.newpwdPrompt = '新密码不能和原密码一致'
+          return false
         } else if (input === undefined || input.length === 0) {
           if (id === 0) {
             this.oldpwdPrompt = '原密码不能为空'
@@ -66,6 +69,7 @@ export default {
           return false
         } else {
           this.oldpwdPrompt = ''
+          this.newpwdPrompt = ''
         }
       } else if (id === 2) {
         if (input !== this.setPwd.NewPassword && input !== undefined && input.length > 0) {

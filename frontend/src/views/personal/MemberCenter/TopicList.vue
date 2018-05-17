@@ -32,7 +32,7 @@
                   <span>{{tmp.replies_count}}</span>
                 </a>
               </li>
-              <li class="set-choseStar" @click="collectionTopic(index,tmp.id)"> <a :class="{collectionActive:index === collection}" href="javascript:void(0);"><i class="iconfont icon-star">&#xe6a7;</i>收藏</a> </li>
+              <li class="set-choseStar" @click="collectionTopic(tmp)"> <a :class='{collectionActive:tmp.collect_bool}' href="javascript:void(0);"><i class="iconfont icon-star">&#xe6a7;</i>收藏</a> </li>
               <!-- <li> <a href="javascript:void(0);"><i class="iconfont icon-fenxiang"></i> 分享</a> </li> -->
               <!-- <li class="set-choseShang"> <a href="javascript:void(0);"><i class="iconfont icon-dashang"></i> 打赏<span>438</span></a> </li> -->
               <li>
@@ -46,7 +46,7 @@
               </li>
             </ul>
           </div>
-            <div class="bibar-hot" v-show="index===i">
+            <div class="bibar-hot" style="display:none;">
        <!-- 评论框 -->
        <div class="editor-comment">
          <img :src="userInfo.avatar" alt="" class="avatar" v-show="commentShow">
@@ -76,9 +76,6 @@
        <div class="comment-wrap">
           <div class="hook-comment"></div>
           <div class="comment-container">
-            <div class="loading" v-if='showLoaderComment'>
-              <img src="../../../assets/img/loading.png" alt="" class="icon-loading">
-            </div>
             <div class="comment-all">
               <h3>全部评论({{tmp.replies_count}})</h3>
               <!-- <div class="comment-sort">
@@ -104,8 +101,11 @@
                   </div>
                 </div> -->
                 <!-- 评论 -->
+                <div class="loading" v-if='showLoaderComment'>
+              <img src="../../../assets/img/loading.png" alt="" class="icon-loading">
+            </div>
               <div class="comment-list">
-                <div class="comment-item" data-index='' data-id=''  :key ='now' v-for="(item,now) in nowData">
+                <div class="comment-item" data-index='' data-id=''  :key ='now' v-for="(item,now) in nowData[tmp.id]">
                   <div>
                     <a href="#" data-tooltip='' class="avatar">
                       <img :src="item.avatar" alt="">
@@ -139,7 +139,7 @@
          <!--<svg version='1.1' style="left:53px; top:52px;" xmlns='http://www.w3.org/2000/svg' v-show="showReportReplay" class="editor-triangle">
             <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
            </svg>-->
-         <div class="editor-bd">
+         <div class="editor-bd clearfloat">
            <span class="comment-img-delete"></span>
            <div class="editor-textarea"  v-show="talkReplyTxt" @click="talkReplyEditor">
              <div class="editor-placeholder">回复...</div>
@@ -159,18 +159,17 @@
               <!-- 分页条 -->
             <div class="pages" v-if='showPage'>
               <ul class="mo-paging">
-              <!-- prev -->
-        <li class="paging-item paging-item--prev" :class="{'paging-item--disabled' : cpno === 1}" @click="prev">prev</li>
-        <!-- first -->
-        <li :class="['paging-item', 'paging-item--first', {'paging-item--disabled' : cpno === 1}]" @click="first">first</li>
-        <li :class="['paging-item', 'paging-item--more']" v-if="showPrevMore">...</li>
-        <li :class="['paging-item', {'paging-item--current' : cpno === tmp}]" :key="index" v-for="(tmp, index) in showPageBtn"  @click="editor-comment(tmp)">{{tmp}}</li>
-        <li :class="['paging-item', 'paging-item--more']" v-if="showNextMore">...</li>
-        <!-- next -->
-        <li :class="['paging-item', 'paging-item--next', {'paging-item--disabled' : cpno === cpageCount}]" @click="next">next</li>
-        <!-- last -->
-        <li :class="['paging-item', 'paging-item--last', {'paging-item--disabled' : cpno === cpageCount}]"  @click="last">last</li>
-        </ul>
+                <!-- prev -->
+                <!-- first -->
+                <li :class="['paging-item', 'paging-item--first', {'paging-item--disabled' : cpno === 1}]" @click="first">首页</li>
+                <li class="paging-item paging-item--prev" :class="{'paging-item--disabled' : cpno === 1}" @click="prev">上一页</li>
+                <li :class="['paging-item', {'paging-item--current' : cpno === tmp}]" :key="index" v-for="(tmp, index) in showPageBtn" @click="go(tmp)">{{tmp}}</li>
+                <!--<li :class="['paging-item', 'paging-item--more']" @click="next" v-if="showNextMore">...</li>-->
+                <!-- next -->
+                <li :class="['paging-item', 'paging-item--next', {'paging-item--disabled' : cpno === cpageCount}]" @click="next">下一页</li>
+                <!-- last -->
+                <li :class="['paging-item', 'paging-item--last', {'paging-item--disabled' : cpno === cpageCount}]" @click="last">尾页</li>
+              </ul>
             </div>
             </div>
           </div>
@@ -207,7 +206,7 @@ export default{
       i: '',
       showComment: false,
       showReport: false,
-      nowData: [],
+      nowData: {},
       commentShow: false,
       backFt: {
         'author': '',
@@ -261,18 +260,23 @@ export default{
     this.$store.dispatch('clear_backForNav')
     this.showLoader = true
     get(`/api/u/topic/${this.userInfo.username}/${this.tpno}`).then(data => {
-      this.articles = data.data.topics
-      this.showLoader = false
-      this.pageCount = data.data.page_count
-      if (this.articles.length > 0) {
-        this.loadingShow = true
-      }
-      var that = this
-      document.querySelector('#app').addEventListener('scroll', function () {
-        if (this.clientHeight + this.scrollTop === this.scrollHeight) {
-          that.loadTopicPage()
+      if (data.message === '未登录') {
+        alert('请先去登录')
+        this.$router.push({ path: '/login' })
+      } else {
+        this.articles = data.data.topics
+        this.showLoader = false
+        this.pageCount = data.data.page_count
+        if (this.articles.length > 0) {
+          this.loadingShow = true
         }
-      })
+        var that = this
+        document.querySelector('#app').addEventListener('scroll', function () {
+          if (this.clientHeight + this.scrollTop === this.scrollHeight) {
+            that.loadTopicPage()
+          }
+        })
+      }
     })
   },
   mounted () {
@@ -413,7 +417,8 @@ export default{
       this.replyId = id
       this.showLoaderComment = true
       get(`/api/topic/${id}/${this.cpno}`).then(data => {
-        this.nowData = data.data.replies
+        if (!this.nowData[id]) this.$set(this.nowData, id, data.data.replies)
+        else this.nowData[id] = data.data.replies
         this.showLoaderComment = false
         this.cpageCount = data.data.page_count
         if (this.cpageCount > 1) {
@@ -440,6 +445,7 @@ export default{
           })
         })
       })
+      $('.bibar-tabitem:eq(' + index + ')').find('.bibar-hot').slideToggle('fast')
       if (index !== this.i) {
         this.i = index
         this.lid = id
@@ -469,8 +475,7 @@ export default{
     showContent (data) {
       this.commentShow = true
       this.showReport = false
-      // this.showLoaderComment = true
-      this.nowData.unshift(data)
+      this.nowData[this.replyId].unshift(data)
       this.articles[this.i].replies_count = data.replies_count
     },
     showFtContentFun (ftData) {
@@ -500,25 +505,26 @@ export default{
     },
     // 回复返回数据
     showReplyContent (data) {
-      this.nowData.unshift(data)
+      this.nowData[this.replayId].unshift(data)
       // this.showLoaderComment = true
       this.articles[this.i].replies_count = data.replies_count
       this.replayId = ''
     },
     // 收藏
-    collectionTopic (index, id) {
+    collectionTopic (tmp) {
       let instance
-      post(`/api/collect/${id}`).then(data => {
-        if (data.message === 'success') {
-          this.collection = index
+      post(`/api/collect/${tmp.id}`).then(data => {
+        if (data.message === '收藏成功') {
+          tmp.collect_bool = data.data.collect_bool
           instance = new Toast({
-            message: '收藏成功',
+            message: data.message,
             iconClass: 'glyphicon glyphicon-ok',
             duration: 1000
           })
         } else {
+          tmp.collect_bool = data.data.collect_bool
           instance = new Toast({
-            message: '取消收藏',
+            message: data.message,
             duration: 1000
           })
         }
@@ -574,7 +580,7 @@ export default{
         this.cpno = page
       }
       get(`/api/topic/${this.replyId}/${page}`).then(data => {
-        this.nowData = data.data.replies
+        this.nowData[this.replyId] = data.data.replies
       })
     }
   }
@@ -615,7 +621,7 @@ export default{
 .indexNewslimitHeight{
   cursor: pointer;
 }
-.bibar-tabitem{overflow: hidden;}
+/*.bibar-tabitem{overflow: hidden;}*/
 .bibar-comment{
     position: relative;
     margin-left: 58px;
@@ -696,7 +702,7 @@ svg:not(:root) {
   position: relative;
 }
 .comment-all>h3 {
-    margin: 15px 0 10px;
+    margin-top: 15px;
     font-size: 15px;
 }
 .comment-sort {
@@ -853,9 +859,9 @@ a.avatar img {
   border-radius: 3px;
 }
 .bibar-indexNewsItem .set>ul>.set-answer>a{color: #1E8FFF;}
-.bibar-tabitem{
+/*.bibar-tabitem{
   overflow: hidden;
-}
+}*/
 .bibar-indexNewsList{
     float: left;
     /* width: 860px; */
@@ -925,7 +931,6 @@ a.avatar img {
 }
 .w-e-text-container .w-e-panel-container{
   margin-left: 0 !important;
-  left: 10% !important;
 }
 .talkBibar-editor .w-e-text-container{
   min-height: 150px !important;
@@ -945,7 +950,6 @@ a.avatar img {
     margin-left: 0 !important;
 }
 .editor-comment{
-    margin-top: 5px;
     background-color: #f8f8f8;
 }
 .editor-comment>.avatar{
@@ -963,7 +967,6 @@ img.avatar{
     margin-left: 42px;
     position: relative;
     z-index: 1;
-    overflow: hidden;
 }
 svg:not(:root) {
     overflow: hidden;

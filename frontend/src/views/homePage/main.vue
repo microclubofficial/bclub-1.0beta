@@ -132,7 +132,7 @@ export default{
 <style>
   .bibar-commun{
     width: 1200px;
-    margin: 20px auto 0 auto;
+    margin: 0 auto;
   }
   .Maineditor>.wangeditor>.toLongText{right: 415px !important;}
   /* .initHideEditor{margin-top:80px !important;} */

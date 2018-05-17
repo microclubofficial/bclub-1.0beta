@@ -105,9 +105,6 @@ export default{
     position: fixed !important;
     top: 195px !important;
 }
-.modal-body>.wangeditor>.editor>.w-e-text-container>.w-e-panel-container>.w-e-panel-tab-content{
-  height: 143px !important;
-}
 .modal-body>.wangeditor .toLongText{
     bottom: 0;
     right: 320px;

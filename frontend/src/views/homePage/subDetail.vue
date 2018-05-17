@@ -550,9 +550,9 @@ export default{
   border-radius: 3px;
 }
 .bibar-indexNewsItem .set>ul>.set-answer>a{color: #1E8FFF;}
-.bibar-tabitem{
+/*.bibar-tabitem{
   overflow: hidden;
-}
+}*/
 .bibar-indexNewsList{
     float: left;
 }
@@ -621,7 +621,6 @@ export default{
 }
 .w-e-text-container .w-e-panel-container{
   margin-left: 0 !important;
-  left: 10% !important;
 }
 .talkBibar-editor .w-e-text-container{
   min-height: 150px !important;
@@ -725,12 +724,12 @@ svg:not(:root) {
   position: relative;
 }
 .comment-all>h3 {
-    margin: 15px 0 10px;
+    margin-top: 15px;
     font-size: 18px;
     font-weight: bold;
-    padding-bottom: 20px;
+    /*padding-bottom: 20px;*/
 }
-.comment-all>h3::after {
+/*.comment-all>h3::after {
     content: '';
     position: absolute;
     width: 100%;
@@ -738,7 +737,7 @@ svg:not(:root) {
     background-color: #edf0f5;
     left: 0;
     top: 35px;
-}
+}*/
 .comment-all>h5::after {
     content: '';
     position: absolute;
@@ -790,7 +789,6 @@ svg:not(:root) {
     /* margin: 15px 0; */
     border-bottom: 1px solid #edf0f5;
     border-top: 0 !important;
-    overflow: hidden;
 }
 .comment-item .avatar {
     float: left;

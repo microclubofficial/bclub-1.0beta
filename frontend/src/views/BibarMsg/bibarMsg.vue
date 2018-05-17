@@ -122,9 +122,9 @@
             </div>
           </div>
           <!-- 富文本区 -->
-          <div class="mainBibar-editor" :class="{initSty:initShow}" style="margin:auto; background:#fff;">
+          <!--<div class="mainBibar-editor" :class="{initSty:initShow}" style="margin:auto; background:#fff;">
             <BibarPostContent :bid='toEditorBid' @backFtContent='BibarContentFun' v-show="initHide"></BibarPostContent>
-          </div>
+          </div>-->
           <!--新闻-->
           <article v-if="initHide" class="bibar-box bibar-boxindex2" style="margin-top:20px;">
             <div class="bibar-indexNews">
@@ -301,7 +301,10 @@ export default {
     // 去币详情
     toBibarDetail (tmp) {
       this.$router.push({
-        path: `/msgDetail/${tmp.id}`
+        path: `/msgDetail/${tmp.id}`,
+        query: {
+          b: JSON.stringify({'zh': tmp.name_ch})
+        }
       })
     }
     // // 展开折叠chart图
@@ -324,11 +327,12 @@ export default {
 <style>
 .bibar-Main>.bibar-w1100>.bx-mainLeft {
   width: 960px;
+  margin-top:20px;
 }
 
 .chartListBox {
   background: #fff;
-  /*padding: 30px 60px;*/
+  padding: 40px;
   position: relative;
   overflow: hidden;
 }

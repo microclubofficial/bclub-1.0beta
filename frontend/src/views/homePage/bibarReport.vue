@@ -11,6 +11,7 @@
 <script>
 import E from 'wangeditor'
 import {post} from '../../utils/http'
+import { Toast } from 'mint-ui'
 
 export default {
   props: ['contentId', 'toApi', 'talkId', 'mainReplay', 'mainCommnet', 'replyAuthor', 'replyContent', 'detailId'],
@@ -36,7 +37,8 @@ export default {
       },
       nowShowApi: ['topic', 'bar', 'bar', 'bar', 'comment', 'topic'],
       isHide: false,
-      replies: []
+      replies: [],
+      editor: {}
     }
   },
   computed: {
@@ -49,7 +51,32 @@ export default {
       this.nowApi = api
     },
     getContent: function () {
-      this.topicData.content = this.editorContent
+      // this.topicData.content = this.editorContent
+      this.topicData.content = this.editor.$textElem.html()
+      if (this.topicData.content.indexOf('href') > -1) {
+        let href = this.topicData.content.match(/(?<=(href="))[^"]*?(?=")/ig)
+        for (let i = 0; i < href.length; i++) {
+          if (href[i].indexOf('http') === -1) {
+            this.topicData.content = this.topicData.content.replace(href[i], 'http://' + href[i])
+          }
+        }
+      }
+      // link = link.substr(0, 7).toLowerCase() === 'http://' ? link : 'http://' + link
+      if (this.topicData.content.indexOf('<p>') > -1) {
+        this.topicData.content = this.topicData.content.replace(/(^<p>)|(<\/p>$)/g, '')
+      }
+      let tempContent = this.topicData.content.replace(/<br>|&nbsp;|\s|<p>|<\/p>|<div>|<\/div>/g, '')
+      if (!tempContent) {
+        let instance = new Toast({
+          message: '发帖内容不能为空',
+          duration: 1000
+        })
+        setTimeout(() => {
+          instance.close()
+        }, 1000)
+        $('.w-e-text').html('')
+        return false
+      }
       if (this.toApi !== 0 && this.toApi !== 5 && this.toApi !== 4) {
         // 处理正常内容
         let image = this.topicData.content.match(/<img src="\/static[^>]+>/g)
@@ -123,20 +150,179 @@ export default {
     }
   },
   mounted () {
-    var editor = new E(this.$refs.editor)
-    editor.customConfig.onchange = (html) => {
+    this.editor = new E(this.$refs.editor)
+    this.editor.customConfig.onchange = (html) => {
       this.editorContent = html
     }
     // 菜单配置
-    editor.customConfig.menus = [
+    this.editor.customConfig.menus = [
       'emoticon',
       'image',
       'link'
     ]
+    // 校验链接
+    this.editor.customConfig.linkCheck = function (text, link) {
+      if (text === '' || link === '') {
+        return ('无效的链接')
+      } else {
+        return true
+      }
+    }
+    // 表情配置
+    this.editor.customConfig.emotions = [
+      {
+        title: '表情',
+        type: 'image',
+        content: [
+          {
+            alt: '[坏笑]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/50/pcmoren_huaixiao_org.png'
+          },
+          {
+            alt: '[舔屏]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/40/pcmoren_tian_org.png'
+          },
+          {
+            alt: '[笑cry]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/4a/2018new_xiaoku_org.png'
+          },
+          {
+            alt: '[馋嘴]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/fa/2018new_chanzui_org.png'
+          },
+          {
+            alt: '[拜拜]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/fd/2018new_baibai_org.png'
+          },
+          {
+            alt: '[右哼哼]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/c1/2018new_youhengheng_org.png'
+          },
+          {
+            alt: '[左哼哼]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/43/2018new_zuohengheng_org.png'
+          },
+          {
+            alt: '[怒骂]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/87/2018new_zhouma_org.png'},
+          {
+            alt: '[顶]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/ae/2018new_ding_org.png'
+          },
+          {
+            alt: '[微笑]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/e3/2018new_weixioa02_org.png'},
+          {
+            alt: '[偷笑]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/71/2018new_touxiao_org.png'
+          },
+          {
+            alt: '[舔屏]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/3e/2018new_tianping_org.png'
+          },
+          {
+            alt: '[亲亲]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/2c/2018new_qinqin_org.png'
+          },
+          {
+            alt: '[太开心]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/1e/2018new_taikaixin_org.png'
+          },
+          {
+            alt: '[挤眼]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/43/2018new_jiyan_org.png'
+          },
+          {
+            alt: '[衰]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/a2/2018new_shuai_org.png'
+          },
+          {
+            alt: '[可怜]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/96/2018new_kelian_org.png'
+          },
+          {
+            alt: '[汗]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/28/2018new_han_org.png'
+          },
+          {
+            alt: '[色]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/9d/2018new_huaxin_org.png'
+          },
+          {
+            alt: '[可爱]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/09/2018new_keai_org.png'
+          },
+          {
+            alt: '[钱]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/a2/2018new_qian_org.png'
+          },
+          {
+            alt: '[思考]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/30/2018new_sikao_org.png'
+          },
+          {
+            alt: '[兔子]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/c6/2018new_tuzi_org.png'
+          },
+          {
+            alt: '[熊猫]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/aa/2018new_xiongmao_org.png'
+          },
+          {
+            alt: '[黑寡妇]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/78/fulian3_heiguafu01_org.png'
+          },
+          {
+            alt: '[格鲁特]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/de/fulian3_gelute01_org.png'
+          },
+          {
+            alt: '[哆啦A梦亲亲]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/e0/dora_qinqin_org.png'
+          },
+          {
+            alt: '[小黄人微笑]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/f0/xhrnew_weixiao_org.png'
+          },
+          {
+            alt: '[蜡烛]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/16/2018new_lazhu_org.png'
+          },
+          {
+            alt: '[月亮]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/d5/2018new_yueliang_org.png'
+          },
+          {
+            alt: '[围观]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/6c/2018new_weiguan_org.png'
+          },
+          {
+            alt: '[蛋糕]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/f9/2018new_dangao_org.png'
+          },
+          {
+            alt: '[音乐]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/1f/2018new_yinyue_org.png'
+          },
+          {
+            alt: '[猪头]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/1c/2018new_zhutou_org.png'
+          },
+          {
+            alt: '[鲜花]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/d4/2018new_xianhua_org.png'
+          },
+          {
+            alt: '[太阳]',
+            src: 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/cd/2018new_taiyang_org.png'
+          }
+        ]
+      }
+    ]
     // 上传图片
     // editor.customConfig.uploadImgShowBase64 = true
-    editor.customConfig.uploadImgServer = '/api/file'
-    editor.customConfig.uploadImgHooks = {
+    this.editor.customConfig.uploadImgServer = '/api/file'
+    this.editor.customConfig.uploadImgHooks = {
       // success: function (xhr, editor, result) {
       //   console.log(result)
       // },
@@ -144,7 +330,7 @@ export default {
         insertImg(result.data.file_path)
       }
     }
-    editor.create()
+    this.editor.create()
     var div = $('.avatar').parent('div')
     div.addClass('wangeditor')
     div.addClass('clearfloat')
@@ -160,6 +346,7 @@ export default {
 </script>
 
 <style>
+  .initTxt{color: #ddd;}
   .editor-svg{
     position: absolute;
     top: 22px;

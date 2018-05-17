@@ -5,7 +5,7 @@
       <img src="../../../../assets/img/loading.png" alt="" class="icon-loading">
     </div>
     <!-- {{[bibarArticles]}} -->
-    <div class="bibar-tabitem fade in active" :key="index" id="bibar-newstab1" v-for="(tmp,index) in [...getNavaVal, ...bibarArticles]">
+    <div class="bibar-tabitem fade in active" :key="index" id="bibar-newstab1" v-for="(tmp,index) in bibarArticles">
       <div class="bibar-indexNewsList">
         <div class="bibar-indexNewsItem">
           <div class="speech" v-if="tmp.reply_user !== null"> <span><span class="time">{{tmp.reply_time}}</span>前{{tmp.reply_user}}发表了评论</span><i class="iconfont icon-dot"></i></div>
@@ -46,19 +46,19 @@
               </li>
             </ul>
           </div>
-            <div class="bibar-hot" v-show="index===i">
+            <div class="bibar-hot" style="display:none;">
        <!-- 评论框 -->
        <div class="editor-comment">
          <img :src="userInfo.avatar" alt="" class="avatar" v-show="commentShow">
-         <svg version='1.1' style="left:48px; top:34px;" xmlns='http://www.w3.org/2000/svg' v-show="commentShow" class="editor-triangle">
+         <!--<svg version='1.1' style="left:48px; top:34px;" xmlns='http://www.w3.org/2000/svg' v-show="commentShow" class="editor-triangle">
             <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
-           </svg>
+           </svg>-->
            <!--富文本-->
-           <svg style="left:48px; top:56px;" version='1.1' xmlns='http://www.w3.org/2000/svg' v-show="showReport" class="editor-svg">
+           <!--<svg style="left:48px; top:56px;" version='1.1' xmlns='http://www.w3.org/2000/svg' v-show="showReport" class="editor-svg">
             <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
-          </svg>
+          </svg>-->
          <div class="avatar" v-show="showReport"><img :src="userInfo.avatar" alt=""></div>
-         <div class="editor-bd">
+         <div class="editor-bd clearfloat">
            <span class="comment-img-delete"></span>
            <div class="editor-textarea" v-show="commentShow" @click="commentShowFun">
              <div class="editor-placeholder">评论...</div>
@@ -104,7 +104,7 @@
                 </div> -->
                 <!-- 评论 -->
               <div class="comment-list">
-                <div class="comment-item" data-index='' data-id=''  :key ='now' v-for="(item,now) in nowData">
+                <div class="comment-item" data-index='' data-id=''  :key ='now' v-for="(item,now) in nowData[tmp.id]">
                   <div>
                     <a href="#" data-tooltip='' class="avatar">
                       <img :src="item.avatar" alt="">
@@ -115,6 +115,7 @@
                       </div>
                       <!-- @ 样式 -->
                       <p class="replyAuthor" v-if="item.at_user !== ''">@{{item.at_user}}:&nbsp;<span class="replyBackConten" style="display:inline-block;font-weight: normal;" v-html="replyFun(item.reference)"></span></p>
+                      
                       <!-- <p>{{item}}</p> -->
                       <p v-html="item.content">{{item.content}}</p>
                     </div>
@@ -135,10 +136,10 @@
         <div class="editor-comment">
          <img :src="userInfo.avatar" alt="" class="avatar" v-show="talkReplyTxt">
          <div class="avatar" v-show="showReportReplay"><img :src="userInfo.avatar" alt=""></div>
-         <svg version='1.1' style="left:48px; top:56px;" xmlns='http://www.w3.org/2000/svg' v-show="showReportReplay" class="editor-triangle">
+         <!--<svg version='1.1' style="left:48px; top:56px;" xmlns='http://www.w3.org/2000/svg' v-show="showReportReplay" class="editor-triangle">
             <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
-           </svg>
-         <div class="editor-bd">
+           </svg>-->
+         <div class="editor-bd clearfloat">
            <span class="comment-img-delete"></span>
            <div class="editor-textarea"  v-show="talkReplyTxt">
              <div class="editor-placeholder">回复...</div>
@@ -206,7 +207,7 @@ export default{
       i: '',
       showComment: false,
       showReport: false,
-      nowData: [],
+      nowData: {},
       commentShow: false,
       backFt: {
         'author': '',
@@ -290,15 +291,20 @@ export default{
       get(`/api/topic/token/${val.params.currency}/1`).then(data => {
         this.showLoader = false
         this.bibarArticles = data.data.topics
-        console.log(this.bibarArticles)
         if (this.bibarArticles.length > 0) {
           this.loadingShow = true
+        } else {
+          this.loadingShow = false
         }
         this.pageCount = data.data.page_count
       })
     },
     getNavaVal (val) {
+      if (val.length !== 0) {
+        this.bibarArticles.unshift(val[0])
+      }
       this.i = ''
+      $('.bibar-hot').css({'display': 'none'})
       this.changeIndex = true
     }
   },
@@ -309,7 +315,6 @@ export default{
     get(`/api/topic/token/${this.$route.params.currency}/${this.tpno}`).then(data => {
       this.showLoader = false
       this.bibarArticles = data.data.topics
-      console.log(this.bibarArticles)
       this.pageCount = data.data.page_count
       if (this.bibarArticles.length > 0) {
         this.loadingShow = true
@@ -332,11 +337,9 @@ export default{
         setTimeout(() => {
           this.showLoader = true
           this.tpno++
-          console.log(this.tpno)
           get(`/api/topic/token/${this.$route.params.currency}/${this.tpno}`).then(data => {
             this.showLoader = false
             this.bibarArticles = this.bibarArticles.concat(data.data.topics)
-            console.log(this.bibarArticles)
             this.bottomText = '加载中...'
             // this.loadingImg = '../../assets/img/listLoding.png'
           })
@@ -378,7 +381,6 @@ export default{
               // $('.bibar-tabitem:eq(' + index + ')').find('.set-choseOne>a:eq(' + isNum + ')').addClass('active')
               item.is_good = data.data.is_good
               item.is_bad = data.data.is_bad
-              console.log(data.data.is_good_bool)
               item.is_bad_bool = data.data.is_bad_bool
               item.is_good_bool = data.data.is_good_bool
             } else if (data.message === '未登录') {
@@ -433,7 +435,7 @@ export default{
           a: JSON.stringify([
             {label: '首页', path: '/'},
             {label: '币讯', path: '/bibarLayout'},
-            {label: this.$route.params.currency, path: 'last'}
+            {label: JSON.parse(this.$route.query.b).zh, path: 'last'}
           ])
         }
       })
@@ -444,8 +446,9 @@ export default{
       this.replyId = id
       this.showLoaderComment = true
       get(`/api/topic/${id}/${this.cpno}`).then(data => {
+        if (!this.nowData[id]) this.$set(this.nowData, id, data.data.replies)
+        else this.nowData[id] = data.data.replies
         this.showLoaderComment = false
-        this.nowData = data.data.replies
         this.cpageCount = data.data.page_count
         if (this.cpageCount > 1) {
           this.showPage = true
@@ -471,6 +474,7 @@ export default{
           })
         })
       })
+      $('.bibar-tabitem:eq(' + index + ')').find('.bibar-hot').slideToggle('fast')
       if (index !== this.i) {
         this.i = index
         this.lid = id
@@ -508,20 +512,12 @@ export default{
     showContent (data) {
       this.commentShow = true
       this.showReport = false
-      this.showLoaderComment = true
-      this.nowData.unshift(data)
-      get(`/api/topic/token/${this.$route.path.split('/')[2]}/1`).then(data => {
-        this.showLoaderComment = false
-        if (this.tpno === 1) {
-          this.bibarArticles = data.data.topics
-        } else {
-          let oldArr = this.bibarArticles.slice(0, -5)
-          this.bibarArticles = oldArr.concat(data.data.topics)
-        }
-      })
+      this.nowData[this.replyId].unshift(data)
+      this.bibarArticles[this.i].replies_count = data.replies_count
     },
     showBibarContentFun (ftData) {
       this.bibarArticles = [ftData, ...this.bibarArticles]
+      this.i = ''
       this.changeIndex = true
     },
     // 评论回复
@@ -549,18 +545,9 @@ export default{
     // 回复返回数据
     showReplyContent (data) {
       this.talkReplayBox = false
-      this.showLoaderComment = true
+      this.nowData[this.replyId].unshift(data)
+      this.bibarArticles[this.i].replies_count = data.replies_count
       this.replayId = ''
-      this.nowData.unshift(data)
-      get(`/api/topic/token/${this.$route.path.split('/')[2]}/1`).then(data => {
-        this.showLoaderComment = false
-        if (this.tpno === 1) {
-          this.bibarArticles = data.data.topics
-        } else {
-          let oldArr = this.bibarArticles.slice(0, -5)
-          this.bibarArticles = oldArr.concat(data.data.topics)
-        }
-      })
     },
     // 收藏
     collectionTopic (index, tmp) {
@@ -575,14 +562,14 @@ export default{
         } else if (data.message === '收藏成功') {
           this.collection = index
           instance = new Toast({
-            message: '收藏成功',
+            message: data.message,
             iconClass: 'glyphicon glyphicon-ok',
             duration: 1000
           })
           tmp.collect_bool = data.data.collect_bool
         } else {
           instance = new Toast({
-            message: '取消收藏',
+            message: data.message,
             duration: 1000
           })
         }
@@ -595,7 +582,19 @@ export default{
     // 处理图片
     EditorContent (val) {
       let now = `<div>${val}</div>`
-      return $(now).text()
+      now = $(now).text()
+      if (now.length > 128) {
+        return now.substring(0, 128) + '...'
+      }
+      return now
+    },
+    // 艾特图片处理
+    replyFun (val) {
+      let reply = val.replace(/<p>|<\/p>/g, '')
+      if (/^\/static.*/ig.test(reply)) {
+        return '图片评论' + `<a style='color:#0181FF' href='${reply}'><i class='iconfont'>&#xe694;</i>查看图片</a>`
+      }
+      return reply
     },
     // 分页
     prev () {
@@ -630,7 +629,7 @@ export default{
       this.showLoaderComment = true
       get(`/api/topic/${this.replyId}/${page}`).then(data => {
         this.showLoaderComment = false
-        this.nowData = data.data.replies
+        this.nowData[this.replayId] = data.data.replies
       })
     },
     // 回复人文字处理
@@ -644,13 +643,6 @@ export default{
         }
         return newTxt
       }
-    },
-    replyFun (val) {
-      let reply = val.replace(/<p>|<\/p>/g, '')
-      if (/^\/static.*/ig.test(reply)) {
-        return '图片评论' + `<a style='color:#0181FF' href='${reply}'><i class='iconfont'>&#xe694;</i>查看图片</a>`
-      }
-      return reply
     }
   }
   // watch: {
@@ -737,7 +729,7 @@ export default{
 .indexNewslimitHeight{
   cursor: pointer;
 }
-.bibar-tabitem{overflow: hidden;}
+/*.bibar-tabitem{overflow: hidden;}*/
 .bibar-comment{
     position: relative;
     margin-left: 58px;
@@ -763,7 +755,6 @@ img.avatar{
     margin-left: 42px;
     position: relative;
     z-index: 1;
-    overflow: hidden;
 }
 svg:not(:root) {
     overflow: hidden;
@@ -828,7 +819,7 @@ svg:not(:root) {
   position: relative;
 }
 .comment-all>h3 {
-    margin: 15px 0 10px;
+    margin-top: 15px;
     font-size: 15px;
 }
 .comment-sort {
@@ -977,9 +968,9 @@ a.avatar img {
   border-radius: 3px;
 }
 .bibar-indexNewsItem .set>ul>.set-answer>a{color: #1E8FFF;}
-.bibar-tabitem{
+/*.bibar-tabitem{
   overflow: hidden;
-}
+}*/
 .bibar-indexNewsList{
     float: left;
 }
@@ -1048,7 +1039,6 @@ a.avatar img {
 }
 .w-e-text-container .w-e-panel-container{
   margin-left: 0 !important;
-  left: 10% !important;
 }
 .talkBibar-editor .w-e-text-container{
   min-height: 150px !important;
@@ -1121,13 +1111,13 @@ svg:not(:root) {
 }
 .media-left, .media>.pull-left {
     padding-right: 10px;
-    width: 15%;
+    /*width: 15%;*/
     overflow: hidden;
     /* height: 50px; */
     /* position: relative; */
     height: 100px;
 }
-.pull-left > img{max-width: 200px; overflow: hidden; height: 100%;}
+.pull-left > img{max-width: 150px; overflow: hidden; height: 100%;}
 /*评论默认框*/
 .editor-placeholder{margin: 6px;}
 </style>

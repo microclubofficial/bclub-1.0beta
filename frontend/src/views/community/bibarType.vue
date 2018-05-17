@@ -99,6 +99,6 @@ export default{
     width: 360px;
 }
 .bibarType-main > .bibarType-main-box {
-    width: 30%;
+    width: 32%;
 }
 </style>

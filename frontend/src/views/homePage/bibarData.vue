@@ -24,6 +24,7 @@
   border: 1px solid #D7D7D7;
   background: #fff;
   margin-bottom: 1%;
+  box-shadow:#ddd 2px 0px 3px 0px;
 }
 .bibarData-box>li>a{
   display: block;
