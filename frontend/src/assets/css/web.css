@@ -965,7 +965,7 @@ button[disabled]{cursor: not-allowed;}
 /* .indexNewslimitHeight{height:96px;} */
 /*首页右侧*/
 .bibar-boxindex3{padding: 20px 20px 15px;}
-.bibar-boxtitle > div > a{margin: 0 8px;}
+.bibar-boxtitle > div > a{margin: 3px 8px 0;}
 .bibar-boxtitle .name{font-size: 14px; font-weight: bolder;}
 .bibar-boxbody{}
 .bibar-indexintro{overflow: hidden; transition: height 2s;-webkit-transition: height linear 2s;}

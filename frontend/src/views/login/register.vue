@@ -79,59 +79,59 @@
   <div class="login-container">
     <div class="panel panel-primary login-box">
       <div class="panel-heading login-title">
-        <h3 class="panel-title text-center">用户注册</h3>
+        <h3 class="panel-title text-center">{{$t('register.title')}}</h3>
       </div>
       <div class="panel-body">
         <form action="" class="form-horizontal" style="max-width:420px;margin:auto" name="vForm" method="post">
           <div class="form-group">
-            <label class="col-md-3 control-label"><span class="text-red">* </span>用户名:</label>
+            <label class="col-md-3 control-label"><span class="text-red">* </span>{{$t('register.username')}}</label>
             <div class="col-md-9">
-              <input  class="form-control" maxlength="16" name="username" type="text" placeholder="请输入用户名" @blur='showRegisterMsg(userForm.username, 0)'  v-model="userForm.username">
+              <input  class="form-control" maxlength="16" name="username" type="text" :placeholder="$t('placeholder.username')" @blur='showRegisterMsg(userForm.username, 0)'  v-model="userForm.username">
             </div>
             <label class="col-md-3 control-label"></label>
             <p class="prompt">{{unamePrompt}}</p>
           </div>
           <div class="form-group">
-            <label class="col-md-3 control-label"><span class="text-red">* </span>密码:</label>
+            <label class="col-md-3 control-label"><span class="text-red">* </span>{{$t('register.password')}}</label>
             <div class="col-md-9">
-              <input class="form-control" name="password" type="password" placeholder="请输入密码" @blur='showRegisterMsg(userForm.password, 1)' v-model="userForm.password">
+              <input class="form-control" name="password" type="password" :placeholder="$t('placeholder.password')" @blur='showRegisterMsg(userForm.password, 1)' v-model="userForm.password">
             </div>
             <label class="col-md-3 control-label"></label>
             <p class="prompt">{{upwdPrompt}}</p>
           </div>
           <div class="form-group">
-            <label class="col-md-3 control-label"><span class="text-red">* </span>确认密码:</label>
+            <label class="col-md-3 control-label"><span class="text-red">* </span>{{$t('register.repassword')}}</label>
             <div class="col-md-9">
-              <input class="form-control" name="repassword" type="password" placeholder="请确认密码" @blur='showRegisterMsg(userForm.confirm_password, 2)' v-model="userForm.confirm_password">
+              <input class="form-control" name="repassword" type="password" :placeholder="$t('placeholder.repassword')" @blur='showRegisterMsg(userForm.confirm_password, 2)' v-model="userForm.confirm_password">
             </div>
             <label class="col-md-3 control-label"></label>
             <p class="prompt">{{confirm_upwdPrompt}}</p>
           </div>
           <div class="form-group">
-            <label class="col-md-3 control-label"><span class="text-red">* </span>手机号:</label>
+            <label class="col-md-3 control-label"><span class="text-red">* </span>{{$t('register.phone')}}</label>
             <div class="col-md-9">
-              <input class="form-control" name="phone" type="text" placeholder="请输入手机号" v-model="userForm.phone" @blur='showRegisterMsg(userForm.phone, 3)'>
+              <input class="form-control" name="phone" type="text" :placeholder="$t('placeholder.phone')" v-model="userForm.phone" @blur='showRegisterMsg(userForm.phone, 3)'>
             </div>
             <label class="col-md-3 control-label"></label>
              <p class="prompt">{{phonePrompt}}</p>
           </div>
           <div class="form-group">
-              <label for="inputCaptcha3" class="col-md-3 control-label"><span class="text-red">* </span>验证码：</label>
+              <label for="inputCaptcha3" class="col-md-3 control-label"><span class="text-red">* </span>{{$t('register.vcode')}}</label>
               <div class="col-md-9 captcha-box">
-                  <input type="text" class="form-control" v-model="userForm.captcha" @blur='showRegisterMsg(userForm.phone, 5)' id="inputCaptcha3" placeholder="请输入验证码">
+                  <input type="text" class="form-control" v-model="userForm.captcha" @blur='showRegisterMsg(userForm.phone, 5)' id="inputCaptcha3" :placeholder="$t('placeholder.vcode')">
                   <button type="button" class="col-md-3 get-captcha" v-bind:disabled="hasphone" :class="{'text-gray':hasphone}" @click="getPhoneControl"><span v-show="hasControl">{{countdown}}</span><i> | </i>{{getcontroltxt}}</button>
               </div>
             <label class="col-md-3 control-label"></label>
             <p class="prompt">{{captchaPrompt}}</p>
           </div>
           <div class="form-group">
-            <label class="col-md-3 control-label">&nbsp;&nbsp;&nbsp;邀请码:</label>
+            <label class="col-md-3 control-label">&nbsp;&nbsp;&nbsp;{{$t('register.icode')}}</label>
             <div class="col-md-9">
-              <input class="form-control" name="recommender_code" type="text" placeholder="邀请码（选填）" v-model="userForm.recommender_code">
+              <input class="form-control" name="recommender_code" type="text" :placeholder="$t('placeholder.icode')" v-model="userForm.recommender_code">
             </div>
           </div>
-          <button class="btn btn-primary btn-block" type="button" id="register" @click="submitForm">注 册</button>
-          <h5 class="go-login">已有账号？<router-link class="login-hover" :to="{path:'/login'}">去登录</router-link></h5>
+          <button class="btn btn-primary btn-block" type="button" id="register" @click="submitForm">{{$t('register.register')}}</button>
+          <h5 class="go-login">{{$t('register.hasAccount')}}<router-link class="login-hover" :to="{path:'/login'}">{{$t('register.goLogin')}}</router-link></h5>
         </form>
       </div>
     </div>
@@ -157,7 +157,7 @@ export default {
       hasphone: true,
       countdown: 30,
       hasControl: false,
-      getcontroltxt: '获取验证码',
+      getcontroltxt: this.$t('prompt.acquireVcode'),
       timer: null,
       kaiguan: true
     }
@@ -237,7 +237,7 @@ export default {
             'avatar': data.data.avatar,
             'isLogin': true
           })
-          setToken(data.data)
+          setToken('b-Token', data.data)
           this.$router.push('/')
         }
       }).catch(error => {
@@ -258,10 +258,10 @@ export default {
           this.timer = setInterval(function () {
             that.countdown--
             that.hasControl = true
-            that.getcontroltxt = '重新获取'
+            that.getcontroltxt = that.$t('prompt.reacquire')
             this.kaiguan = false
             if (that.countdown < 1) {
-              that.getcontroltxt = '获取验证码'
+              that.getcontroltxt = that.$t('prompt.acquireVcode')
               that.hasphone = false
               that.countdown = 30
               that.hasControl = false
