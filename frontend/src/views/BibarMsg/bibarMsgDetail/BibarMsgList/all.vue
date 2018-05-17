@@ -139,7 +139,7 @@
          <!--<svg version='1.1' style="left:48px; top:56px;" xmlns='http://www.w3.org/2000/svg' v-show="showReportReplay" class="editor-triangle">
             <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
            </svg>-->
-         <div class="editor-bd">
+         <div class="editor-bd clearfloat">
            <span class="comment-img-delete"></span>
            <div class="editor-textarea"  v-show="talkReplyTxt">
              <div class="editor-placeholder">回复...</div>

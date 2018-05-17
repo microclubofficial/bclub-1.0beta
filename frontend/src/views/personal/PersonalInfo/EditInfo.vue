@@ -88,7 +88,7 @@ import { get, post } from '../../../utils/http'
 import { setToken } from '../../../utils/auth'
 import { Toast } from 'mint-ui'
 export default {
-  data() {
+  data () {
     return {
       personalUserInfo: [],
       setForm: {},
@@ -106,19 +106,19 @@ export default {
     }
   },
   computed: {
-    userInfo() {
+    userInfo () {
       return this.$store.state.userInfo.userInfo
     }
   },
-  created: function() {
+  created: function () {
     // 个人资料
     this.personalUser(this.userInfo.username)
   },
-  mounted() {
+  mounted () {
   },
   methods: {
     //   验证
-    showsetFormMsg(input, id) {
+    showsetFormMsg (input, id) {
       if (id === 0) {
         if (input.indexOf(' ') >= 0) {
           this.unamePrompt = '不能输入空格'
@@ -164,7 +164,7 @@ export default {
       }
     },
     // 修改用户名和手机号
-    setusername() {
+    setusername () {
       let instance
       if (this.showModel) {
         if (this.canSetU) {
@@ -215,7 +215,7 @@ export default {
       }
     },
     // 获取手机验证码
-    getPhoneControl() {
+    getPhoneControl () {
       let phone = parseFloat(this.setForm.phone)
       this.hasphone = true
       let that = this
@@ -223,11 +223,11 @@ export default {
         if (data.resultcode === 0) {
           if (data.message === 'failed') {
             alert('手机号已注册')
-            this.hasphone = false
+            this.hasphone = true
             return false
           }
         } else {
-          this.timer = setInterval(function() {
+          this.timer = setInterval(function () {
             that.countdown--
             that.hasControl = true
             that.getcontroltxt = '重新获取'
@@ -245,7 +245,7 @@ export default {
         console.log(error)
       })
     },
-    setFormBtn(id) {
+    setFormBtn (id) {
       if (id === 0) {
         this.showModel = true
         // $('.setPhone').modal('show')
@@ -255,11 +255,11 @@ export default {
         $('.setPhone').modal('show')
       }
     },
-    closeModal() {
+    closeModal () {
       $('.setPhone').hide('show')
     },
     // 个人资料
-    personalUser(uname) {
+    personalUser (uname) {
       get(`/api/u/${uname}`).then(data => {
         if (data.message === '未登录') {
           alert('请先去登录')

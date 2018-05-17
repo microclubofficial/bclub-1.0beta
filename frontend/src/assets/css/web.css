@@ -50,6 +50,7 @@
     text-decoration: underline;
   }
 .w-e-text{line-height: 1.5;}
+.w-e-text a {color: #0181ff;}
 .media-body > div{
     display: -webkit-box;
     width: 100%;
@@ -122,7 +123,10 @@
 img[data-w-e]{
     display: inline !important;
     cursor: default !important;
+    width: 22px;
+    height: 22px;
 }
+.comment-item-main a {color: #0181ff !important;}
 /*详情正文样式*/
 .detail-main-content p{
     font-size: 16px;
