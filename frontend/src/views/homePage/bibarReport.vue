@@ -53,6 +53,15 @@ export default {
     getContent: function () {
       // this.topicData.content = this.editorContent
       this.topicData.content = this.editor.$textElem.html()
+      if (this.topicData.content.indexOf('href') > -1) {
+        let href = this.topicData.content.match(/(?<=(href="))[^"]*?(?=")/ig)
+        for (let i = 0; i < href.length; i++) {
+          if (href[i].indexOf('http') === -1) {
+            this.topicData.content = this.topicData.content.replace(href[i], 'http://' + href[i])
+          }
+        }
+      }
+      // link = link.substr(0, 7).toLowerCase() === 'http://' ? link : 'http://' + link
       if (this.topicData.content.indexOf('<p>') > -1) {
         this.topicData.content = this.topicData.content.replace(/(^<p>)|(<\/p>$)/g, '')
       }
@@ -95,7 +104,6 @@ export default {
           this.topicData.replyContent = this.topicData.replyContent.match(/(?<=(src="))[^"]*?(?=")/ig)[0]
         }
       }
-      // this.topicData.content = this.topicData.content.replace(/(^\s*|&nbsp;*)|(\s*|&nbsp;*$)/g, '')
       if (this.topicData.content.length > 0 || this.topicData.url.length > 0) {
         post(`/api/${this.nowShowApi[this.toApi]}${this.toApi === 1 ? '/question' : this.toApi === 2 ? '/answer' : this.toApi === 3 ? '/comment' : ''}/replies/${this.toApi === 0 ? this.mainCommnet : this.toApi === 2 ? this.talkId : this.toApi === 3 ? this.contentId : this.toApi === 5 ? this.detailId : this.mainReplay}`, this.topicData).then(data => {
           //   评论发送完毕
@@ -152,6 +160,14 @@ export default {
       'image',
       'link'
     ]
+    // 校验链接
+    this.editor.customConfig.linkCheck = function (text, link) {
+      if (text === '' || link === '') {
+        return ('无效的链接')
+      } else {
+        return true
+      }
+    }
     // 表情配置
     this.editor.customConfig.emotions = [
       {

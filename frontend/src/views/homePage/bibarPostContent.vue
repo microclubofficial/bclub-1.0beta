@@ -59,6 +59,14 @@ export default {
     getContent: function () {
       // this.topicData.content = this.editorContent
       this.topicData.content = this.editor.$textElem.html()
+      if (this.topicData.content.indexOf('href') > -1) {
+        let href = this.topicData.content.match(/(?<=(href="))[^"]*?(?=")/ig)
+        for (let i = 0; i < href.length; i++) {
+          if (href[i].indexOf('http') === -1) {
+            this.topicData.content = this.topicData.content.replace(href[i], 'http://' + href[i])
+          }
+        }
+      }
       if (this.topicData.content.indexOf('<p>') > -1) {
         this.topicData.content = this.topicData.content.replace(/(^<p>)|(<\/p>$)/g, '')
       }
@@ -90,7 +98,6 @@ export default {
       })
       if (this.topicData.content.length > 0 || this.topicData.picture.length > 0) {
         post(`/api/topic`, this.topicData).then(data => {
-          console.log(data)
           this.editorContent = ''
           if (data.message === '未登录') {
             alert('先去登录')
@@ -181,6 +188,14 @@ export default {
       '|',
       'quote'
     ]
+    // 校验链接
+    this.editor.customConfig.linkCheck = function (text, link) {
+      if (text === '' || link === '') {
+        return ('无效的链接')
+      } else {
+        return true
+      }
+    }
     // 表情配置
     this.editor.customConfig.emotions = [
       {
@@ -345,8 +360,6 @@ export default {
       }
     }
     this.editor.create()
-    //$('.modal-body').find('.w-e-text').html('<p class="initTxt">请输入...</p>')
-    //$('.detailEditor').find('.w-e-text').html('<p class="initTxt">请输入...</p>')
     // get('/api/avatar').then(data => {
     //   this.articles = data.data.topics
     // })

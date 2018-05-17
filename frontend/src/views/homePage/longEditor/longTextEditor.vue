@@ -71,6 +71,14 @@ export default{
       'emoticon',
       'image'
     ]
+    // 校验链接
+    this.editor.customConfig.linkCheck = function (text, link) {
+      if (text === '' || link === '') {
+        return ('无效的链接')
+      } else {
+        return true
+      }
+    }
     // 表情配置
     this.editor.customConfig.emotions = [
       {
@@ -242,6 +250,14 @@ export default{
       let that = this
       // this.topicData.content = this.editorContent
       this.topicData.content = this.editor.$textElem.html()
+      if (this.topicData.content.indexOf('href') > -1) {
+        let href = this.topicData.content.match(/(?<=(href="))[^"]*?(?=")/ig)
+        for (let i = 0; i < href.length; i++) {
+          if (href[i].indexOf('http') === -1) {
+            this.topicData.content = this.topicData.content.replace(href[i], 'http://' + href[i])
+          }
+        }
+      }
       if (this.topicData.content.indexOf('<p>') > -1) {
         this.topicData.content = this.topicData.content.replace(/(^<p>)|(<\/p>$)/g, '')
       }
