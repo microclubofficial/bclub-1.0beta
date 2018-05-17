@@ -56,10 +56,13 @@ class MailMixin(object):
         try:
             email = serializer.loads(token, max_age=max_age)
         except SignatureExpired:
-            return False
+            return email, False
         except BadSignature:
-            return False
-        return email
+            return email, False
+        user = cls.query.filter_by(email=email).first()
+        if user is None:
+            return email, False
+        return email, user
 
     # def send_email(self, *args, **kwargs):
     #     kwargs.update(recipients=[self.email])

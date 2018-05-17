@@ -14,6 +14,7 @@ from forums.extension import db
 from forums.api.topic.models import Topic, Reply
 from forums.api.collect.models import Collect
 from .views import BaseView
+import json
 
 
 class TopicView(BaseView):
@@ -23,8 +24,9 @@ class TopicView(BaseView):
     column_editable_list = ['title', 'content_type']  #可点击
     column_default_sort = ('created_at', True)  #按时间降序排序
     column_formatters = dict(           #列表视图列格式化程序字典
-        content=lambda v, c, m, p: m.content[:100] + '...',
-        content_type=lambda v, c, m, p: m.get_choice_display('content_type', 'CONTENT_TYPE')
+        content=lambda v, c, m, p: json.loads(m.content)[:100] + '...',
+        content_type=lambda v, c, m, p: m.get_choice_display('content_type', 'CONTENT_TYPE'),
+        title = lambda v, c, m, p: json.loads(m.title)
     )
     form_choices = {'content_type': Topic.CONTENT_TYPE}    #在列表视图中将选项映射到列
     #form_widget_args = {'content': {'rows': 10}}    #表单控件渲染参数字典。使用它可以自定义如何在不使用自定义模板的情况下呈现小部件
@@ -43,6 +45,10 @@ class ReplyView(BaseView):
     #form_excluded_columns = ['likers']
     form_widget_args = {'content': {'rows': 10}}
     form_excluded_columns = ('likers')
+    column_formatters = dict(           #列表视图列格式化程序字典
+        content=lambda v, c, m, p: json.loads(m.content)[:100] + '...',
+        title = lambda v, c, m, p: json.loads(m.title)
+    )
 
 def init_admin(admin):
     admin.add_view(
