@@ -1,7 +1,7 @@
 <template>
   <div>
     <div ref="editor" style="text-align:left" class='editor'></div>
-    <button type="button" @click="getContent" class="report">发布</button>
+    <button type="button" @click="getContent" class="report">{{$t('button.publish')}}</button>
   </div>
 </template>
 

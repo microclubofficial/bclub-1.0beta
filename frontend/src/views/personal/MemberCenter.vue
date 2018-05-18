@@ -42,7 +42,7 @@
  <MainHeader></MainHeader>
     <div class="member-center">
         <div class="container">
-            <h3 style="margin:20px 0;">个人中心</h3>
+            <h3 style="margin:20px 0;">{{$t('personalCenter.personal')}}</h3>
             <div class="personal-info">
                 <div class="avatar">
                     <img :src="personalUser.avatar" alt="">
@@ -61,7 +61,7 @@
                     </ul>
                 </div>
                 <div class="right-btn">
-                    <button class="btn btn-primary" @click="personalInfo">编辑资料</button>
+                    <button class="btn btn-primary" @click="personalInfo">{{$t('personalCenter.editProfile')}}</button>
                 </div>
             </div>
             <section>
@@ -81,9 +81,9 @@ export default {
   data () {
     return {
       navList: [
-        { 'name': 'topic', 'cnName': '主题', 'path': 'topic' },
-        { 'name': 'comment', 'cnName': '评论', 'path': 'comment' },
-        { 'name': 'collection', 'cnName': '收藏', 'path': 'collection' }
+        { 'name': 'topic', 'cnName': this.$t('personalCenter.topic'), 'path': 'topic' },
+        { 'name': 'comment', 'cnName': this.$t('personalCenter.comment'), 'path': 'comment' },
+        { 'name': 'collection', 'cnName': this.$t('personalCenter.collection'), 'path': 'collection' }
       ],
       nowIndex: 0,
       personalUser: []

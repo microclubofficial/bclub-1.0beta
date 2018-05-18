@@ -1,9 +1,9 @@
 <template>
     <div>
         <div ref="editor" style="text-align:left" class='editor'></div>
-        <button @click="getContent" v-show="toApi!==3 || toApi!==4" class="report btnm">发布</button>
-        <button @click="getContent" v-show="toApi===3 || toApi===4" class="report btnm">回复</button>
-        <button class="cancel" @click="isHideFun">取消</button>
+        <button @click="getContent" v-show="toApi!==3 || toApi!==4" class="report btnm">{{$t('button.publish')}}</button>
+        <button @click="getContent" v-show="toApi===3 || toApi===4" class="report btnm">{{$t('list.reply')}}</button>
+        <button class="cancel" @click="isHideFun">{{$t('button.cancel')}}</button>
         <!-- <div>{{backData}}</div> -->
     </div>
 </template>

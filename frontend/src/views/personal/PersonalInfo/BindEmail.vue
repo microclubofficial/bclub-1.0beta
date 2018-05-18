@@ -3,11 +3,11 @@
         <div class="container bindEmail">
             <form>
                 <div class="form-group">
-                    <label class="col-sm-12" for="exampleInputEmail1">请输入要绑定的邮箱</label>
-                    <input type="email" style="width:25%;margin-top:10px" class="form-control col-sm-3" v-model="bindForm.email" id="exampleInputEmail1" placeholder="Email" @blur='showBindEmailMsg(bindForm.email, 0)'>
+                    <label class="col-sm-12" for="exampleInputEmail1">{{$t('editProfile.bindEmail')}}</label>
+                    <input type="email" style="width:25%;margin-top:10px" class="form-control col-sm-3" v-model="bindForm.email" id="exampleInputEmail1" :placeholder="$t('placeholder.email')" @blur='showBindEmailMsg(bindForm.email, 0)'>
                     <span class="prompt col-sm-9" style="margin-left: 0 !important;height:34px;margin-top:20px; display:block;">{{emailPrompt}}</span>
                 </div>
-                <button type="button" style="margin-top:10px;" v-bind:disabled="!bindForm.email" @click="bindEmailFun" class="btn findEmail btn-primary">确认</button>
+                <button type="button" style="margin-top:10px;" v-bind:disabled="!bindForm.email" @click="bindEmailFun" class="btn findEmail btn-primary">{{$t('button.confirm')}}</button>
             </form>
             <!--发邮件模态框-->
                 <div class="modal fade emaiModal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

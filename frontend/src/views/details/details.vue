@@ -27,7 +27,7 @@
           <div class="avatar_subtitle">
             <!--<a href="" target="_blank" class="time">{{articleDetail.diff_time}}前</a>
             <span class="source">·&nbsp;来自币吧</span>-->
-            <a href="javascript:void(0)" @click='toBibar(articleDetail)'> <span class="time">{{articleDetail.diff_time !== '0秒' ? articleDetail.diff_time + '前' : '刚刚发布'}}·来自{{articleDetail.token !== null ? articleDetail.zh_token : '币吧'}}</span> </a>
+            <a href="javascript:void(0)" @click='toBibar(articleDetail)'> <span class="time">{{articleDetail.diff_time !== '0秒' ? articleDetail.diff_time + '前' : '刚刚发布'}} - 来自{{articleDetail.token !== null ? articleDetail.zh_token : '币吧'}}</span> </a>
           </div>
         </div>
       </div>
@@ -68,7 +68,7 @@
             <ul class="bibar-indexNewsItem-infro">
               <li class="set-choseOne" style="margin-top: 3px"> <a href="javascript:void(0);" class="icon-quan mr15" :class='{active:articleDetail.is_good_bool}'  @click="changeNumAriticle(0,articleDetail)" ><i class="iconfont">&#xe603;</i><span class="is-good">{{articleDetail.is_good}}</span></a> <a href="javascript:void(0);" :class='{active:articleDetail.is_bad_bool}' class="icon-quan set-choseOne" @click="changeNumAriticle(1,articleDetail)"><i class="iconfont">&#xe731;</i><span class="is-bad">{{articleDetail.is_bad}}</span></a> </li>
               <li class="set-choseStar" @click="collectionTopic(articleDetail)"> <a href="javascript:void(0)" class="btn-article-retweet" :class='{collectionActive:articleDetail.collect_bool}'>
-          <i class="iconfont icon-star">&#xe6a7;</i>收藏
+          <i class="iconfont icon-star">&#xe6a7;</i>{{$t('list.collect')}}
         </a> </li>
               <!-- <li> <a href="javascript:void(0);"><i class="iconfont icon-fenxiang"></i> 分享</a> </li> -->
               <!-- <li class="set-choseShang"> <a href="javascript:void(0);"><i class="iconfont icon-dashang"></i> 打赏<span>438</span></a> </li> -->
@@ -111,7 +111,7 @@
               <img src="../../assets/img/loading.png" alt="">
             </div>
             <div class="comment-all">
-              <h3>全部评论({{repliesCcount}})</h3>
+              <h3>{{$t('list.allComments')}}({{repliesCcount}})</h3>
               <!-- <div class="comment-sort">
                 <a href="#" class="active">最近</a>
                 <a href="#">最早</a>
@@ -143,7 +143,7 @@
                         <li class="set-choseOne"> <a href="javascript:void(0);" class="icon-quan mr15" :class='{active:item.is_good_bool}'  @click="changeNum(0,now,item.id,item)"><i class="iconfont">&#xe603;</i><span class="is-good">{{item.is_good}}</span></a><a href="javascript:void(0);" :class='{active:item.is_bad_bool}' class="icon-quan" @click="changeNum(1,now,item.id,item)"><i class="iconfont">&#xe731;</i><span class="is-bad">{{item.is_bad}}</span></a> </li>
                         <li class="set-discuss" @click="replyComment(item.id,now)">
                           <a href="javascript:void(0);">
-                            <i class="iconfont icon-pinglun"></i> 回复
+                            <i class="iconfont icon-pinglun"></i> {{$t('list.reply')}}
                           </a>
                         </li>
                       </ul>
@@ -161,7 +161,7 @@
            <span class="comment-img-delete"></span>
         <!--富文本-->
            <div class="editor-textarea" v-show="talkReplyTxt" @click="talkReplyEditor">
-             <div class="editor-placeholder">回复...</div>
+             <div class="editor-placeholder">{{$t('list.reply')}}...</div>
            </div>
            <div class="editor-toolbar">
               <BibarReport ref='childShowApi' :toApi='toRId' :replyAuthor='item.author' :replyContent='item.content' @backhotReplies = 'showReplyContent' :mainReplay='articleDetail.id' v-show="showReportReplay"></BibarReport>

@@ -65,7 +65,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            <h4 class="modal-title" id="myModalLabel">有什么消息告诉大家</h4>
+            <h4 class="modal-title" id="myModalLabel">{{$t('message.sthToSay')}}</h4>
           </div>
           <div class="modal-body">
             <BibarPostContent ref="headerChild" @backFtNav = 'FtNavFun'></BibarPostContent>
@@ -97,7 +97,7 @@ export default {
       useravatar: '',
       Showdialog: false,
       postEditor: {
-        'title': '有什么消息告诉大家',
+        'title': this.$t('message.sthToSay'),
         'id': 1
       }
       // isShowft: false
@@ -151,13 +151,13 @@ export default {
     // 退出登录
     outlogin () {
       post('api/logout').then(data => {
-        if (data.message === '登出成功') {
+        if (data.resultcode === 1) {
           this.$store.commit('USER_INFO', {
             'username': '',
             'avatar': '',
             'isLogin': false
           })
-          removeToken()
+          removeToken()         
           this.$router.push('/')
           // this.outloginSty()
           // this.$emit('backLoadContent')
