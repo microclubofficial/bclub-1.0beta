@@ -25,8 +25,9 @@
             <a href="javascript:void(0)" class="name">{{articleDetail.author}}</a>
           </div>
           <div class="avatar_subtitle">
-            <a href="" target="_blank" class="time">{{articleDetail.diff_time}}前</a>
-            <span class="source">·&nbsp;来自币吧</span>
+            <!--<a href="" target="_blank" class="time">{{articleDetail.diff_time}}前</a>
+            <span class="source">·&nbsp;来自币吧</span>-->
+            <a href="javascript:void(0)" @click='toBibar(articleDetail)'> <span class="time">{{articleDetail.diff_time !== '0秒' ? articleDetail.diff_time + '前' : '刚刚发布'}}·来自{{articleDetail.token !== null ? articleDetail.zh_token : '币吧'}}</span> </a>
           </div>
         </div>
       </div>
@@ -130,11 +131,12 @@
                         <span class="time">{{item.diff_time !== '0秒' ? item.diff_time + '前' : '刚刚'}}发布</span>
                       </div>
                       <!-- @ 样式 -->
-                      <!--<p class="replyAuthor" v-if="item.at_user !== ''"><span style="position:absolute;">@{{item.at_user}}:</span><span class="replyBackConten" style="display:inline-block;margin-left:70px;font-weight: normal;" v-html="replyFun(item.reference)"></span></p>-->
                       <p class="replyAuthor" v-if="item.at_user !== ''">@{{item.at_user}}:&nbsp;<span class="replyBackConten" style="display:inline-block;font-weight: normal;" v-html="replyFun(item.reference)"></span></p>
                       <!-- <p>{{item}}</p> -->
                       <!-- <p>{{item}}</p> -->
-                      <div class="detailContent" v-html="item.content">{{item.content}}</div>
+                      <div class="detailContent" v-html="commentContent(item.content)"></div>
+                      <!--展开-->
+              <a style="font-size:16px; float:right; display: block;" v-if='item.content.length > 500' href="#" class="bibar-indexintromore text-theme" @click="changeMore(item.id)">{{item.id === moreId ? '收起' : '展开'}}<i style="font-size:16px;" class="iconfont" v-if='more === "展开"'>&#xe692;</i><i style="font-size:16px;" class="iconfont" v-if='more === "收起"'>&#xe693;</i></a>
                     </div>
                     <div class="set" style="margin-left: 57px;">
                       <ul class="bibar-indexNewsItem-infro">
@@ -232,7 +234,9 @@ export default {
       // 加载
       showLoader: false,
       showLoaderComment: false,
-      crumb: []
+      crumb: [],
+      more: '展开',
+      moreId: ''
     }
   },
   computed: {
@@ -251,6 +255,7 @@ export default {
     get(`api/topic/${this.did}/${this.pno}`).then(data => {
       this.showLoader = false
       this.articleDetail = data.data.topic
+      console.log(this.articleDetail)
       this.repliesCcount = data.data.replies_count
       this.nowData = data.data.replies
       if (this.nowData.length === 0) {
@@ -467,6 +472,32 @@ export default {
           instance.close()
         }, 1000)
       })
+    },
+    // 来自去币讯
+    toBibar (tmp) {
+      this.$router.push({
+        path: `/msgDetail/${tmp.token}`,
+        query: {
+          b: JSON.stringify({'zh': tmp.zh_token})
+        }
+      })
+    },
+    // 评论回复文字处理
+    commentContent (val) {
+      if (this.more === '展开') {
+        return val.substring(0, 500) + '...'
+      } else {
+        return val
+      }
+    },
+    changeMore (id) {
+      if (id !== this.moreId) {
+        this.moreId = id
+        this.more = '收起'
+      } else {
+        this.more = '展开'
+        this.moreId = ''
+      }
     }
   }
 }
