@@ -81,15 +81,15 @@
                     </td>
                     <td>
                       <a href="javascript:void(0)" @click='toBibarDetail(item)'>
-                        <i class="iconfont icon-CNY"></i>￥ {{item.price * CNY | formatNum(2)}}
+                        <i v-if="parseFloat((item.price * CNY + '').replace(/[^\d.-]/g, '')).toFixed(2) + '' > 0" class="iconfont icon-CNY">&#xe634;</i>{{item.price * CNY | formatNum(2)}}
                       </a>
                     </td>
                     <td :class="item.change_1h >= 0 ? 'text-green' : 'text-red'">{{item.change_1h | bfb(2)}}</td>
                     <td>
-                      <i class="iconfont icon-CNY"></i>￥ {{item.volume | cnyFunStr(CNY,2)}}</td>
+                      <i class="iconfont icon-CNY" v-if='cnyFunStr(item.volume,CNY,2) > 0 || cnyFunStr(item.volume,CNY,2) === ""'>&#xe634;</i> {{cnyFunStr(item.volume,CNY,2)}}</td>
                     <td :title="item.marketcap">
-                      <i class="iconfont icon-CNY"></i>￥ {{item.marketcap | cnyFunStr(CNY,2)}}</td>
-                    <td>{{item.available_supply | cnyFunStr(CNY,2)}}</td>
+                      <i class="iconfont icon-CNY" v-if='cnyFunStr(item.marketcap,CNY,2) > 0 || cnyFunStr(item.marketcap,CNY,2) === ""'>&#xe634;</i> {{cnyFunStr(item.marketcap,CNY,2)}}</td>
+                    <td>{{cnyFunStr(item.available_supply,CNY,2)}}</td>
                     <!--<td @click="toggleChart(index)">
                       <i style="font-size:16px; color:#909499; cursor:pointer;" class="iconfont">&#xe604;</i>
                     </td>-->
@@ -306,6 +306,84 @@ export default {
           b: JSON.stringify({'zh': tmp.name_ch})
         }
       })
+    },
+    cnyFunStr (value, rate, num) {
+      if (value === undefined || value === 0) {
+        return '--'
+      }
+      let rateW = null
+      let rateNum = null
+      let len = null
+      let r = null
+      if ((value * rate + '').length >= 9) {
+        rateW = parseInt(value) / 100000000
+        rateNum = rateW.toFixed(num).toString()
+        len = rateNum.split('.')[0].length
+        if (len <= 3) {
+          rateNum = parseFloat(rateNum)
+          if (rateNum > 0) {
+            return rateNum + '亿'
+          } else {
+            return '--'
+          }
+        } else {
+          r = len % 3
+          if (rateNum.slice(r, len).match(/\d{3}/g) === null) {
+            return
+          }
+          if (parseFloat(rateNum) > 0) {
+            return r > 0 ? rateNum.slice(0, r) + ',' + rateNum.slice(r, len).match(/\d{3}/g).join(',') + '亿' : rateNum + '亿'
+          } else {
+            return '--'
+          }
+        }
+      } else if ((value * rate + '').length >= 7 && (value + '').length < 9) {
+        rateW = parseInt(value) / 1000000
+        rateNum = rateW.toFixed(num).toString()
+        len = rateNum.length
+        if (len <= 3) {
+          return rateNum
+        } else {
+          r = len % 3
+          if (rateNum.slice(r, len).match(/\d{3}/g) === null) {
+            return
+          }
+          if (parseFloat(rateNum) > 0) {
+            return r > 0 ? rateNum.slice(0, r) + ',' + rateNum + '百万' : rateNum + '百万'
+          } else {
+            return '--'
+          }
+        }
+      } else if ((value + '').length >= 5 && (value + '').length < 7) {
+        rateW = (parseInt(value) * rate) / 10000
+        rateNum = rateW.toFixed(num).toString()
+        len = rateNum.length
+        if (len <= 3) {
+          return rateNum
+        } else {
+          r = len % 3
+          if (rateNum.slice(r, len).match(/\d{3}/g) === null) {
+            return
+          }
+          if (parseFloat(rateNum) > 0) {
+            return r > 0 ? rateNum.slice(0, r) + ',' + rateNum.slice(r, len).match(/\d{3}/g).join(',') + '万' : rateNum + '万'
+          } else {
+            return '--'
+          }
+        }
+      } else {
+        rateNum = (parseInt(value) * rate).toFixed(num).toString()
+        len = rateNum.length
+        if (len <= 3) {
+          return rateNum
+        } else {
+          r = len % 3
+          if (rateNum.slice(r, len).match(/\d{3}/g) === null) {
+            return
+          }
+          return r > 0 ? rateNum.slice(0, r) + ',' + rateNum.slice(r, len).match(/\d{3}/g).join(',') : rateNum.slice(r, len).match(/\d{3}/g).join(',')
+        }
+      }
     }
     // // 展开折叠chart图
     // toggleChart(index) {

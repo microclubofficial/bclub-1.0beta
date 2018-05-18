@@ -165,9 +165,13 @@ export default {
         // 父组件传值
         that.$emit('btbFun', that.bibarData.zhName)
         // 总市值进度条
-        that.market = parseFloat(that.bibarData.global_market_rate.split(/%/g)[0])
+        if (that.bibarData.global_market_rate > 0) {
+          that.market = parseFloat(that.bibarData.global_market_rate.split(/%/g)[0])
+        }
         // 流通率进度条
-        that.rate = parseFloat(that.bibarData.Circulation_rate.split(/%/g)[0])
+        if (that.bibarData.Circulation_rate > 0) {
+          that.rate = parseFloat(that.bibarData.Circulation_rate.split(/%/g)[0])
+        }
         // 人民币汇率
         that.CNY_RATE = parseFloat(that.bibarData.CNY_RATE)
         // 比特币汇率

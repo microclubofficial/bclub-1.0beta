@@ -62,7 +62,6 @@ export default {
             let reg = /<a.*?>(.*?)<\/a>/ig
             let result = reg.exec(this.topicData.content)
             this.topicData.content = this.topicData.content.replace(result[1], '<i class="iconfont">&#xe60e;</i>' + result[1] + '&nbsp;')
-            console.log(this.topicData.content)
           }
         }
       }
@@ -111,7 +110,6 @@ export default {
           }
         }
       }
-      console.log(this.topicData)
       if (this.topicData.content.length > 0 || this.topicData.url.length > 0) {
         post(`/api/${this.nowShowApi[this.toApi]}${this.toApi === 1 ? '/question' : this.toApi === 2 ? '/answer' : this.toApi === 3 ? '/comment' : ''}/replies/${this.toApi === 0 ? this.mainCommnet : this.toApi === 2 ? this.talkId : this.toApi === 3 ? this.contentId : this.toApi === 5 ? this.detailId : this.mainReplay}`, this.topicData).then(data => {
           //   评论发送完毕
