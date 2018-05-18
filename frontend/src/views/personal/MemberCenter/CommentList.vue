@@ -433,8 +433,11 @@ export default{
       this.replyId = id
       this.showLoaderComment = true
       get(`/api/topic/${id}/${this.cpno}`).then(data => {
-        if (!this.nowData[id]) this.$set(this.nowData, id, data.data.replies)
-        else this.nowData[id] = data.data.replies
+        if (!this.nowData[id]) { 
+          this.$set(this.nowData, id, data.data.replies) 
+        } else { 
+          this.nowData[id] = data.data.replies 
+        }
         this.showLoaderComment = false
         this.cpageCount = data.data.page_count
         if (this.cpageCount > 1) {
