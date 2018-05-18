@@ -952,7 +952,7 @@ i.icon-BTC{font-size: 14px; font-weight: bold;}
 .bibar-indexNewsItem .bibar-list .set>ul>li .dropdown-menu li a i{margin-right: 5px;vertical-align: middle;color: #999;font-size: 15px}
 .bibar-indexNewsItem .bibar-list {
     margin: 0 55px;
-    border-bottom: 1px solid #F6F5F5;
+    /*border-bottom: 1px solid #F6F5F5;*/
     padding-bottom: 20px;
 }
 /*富文本样式*/

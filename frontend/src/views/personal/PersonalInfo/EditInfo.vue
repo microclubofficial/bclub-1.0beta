@@ -73,7 +73,7 @@
                     <span v-show="hasControl">{{countdown}}</span>{{getcontroltxt}}</button>
                 </div>
                 <p class="prompt col-md-offset-3 col-md-9" style="margin-top:0px !important;">{{phoneControlPrompt}}</p>
-                <button type="button" class="btn btn-primary btn-block login-button"  v-bind:disabled="!setForm.username" @click="setusername" data-target="#myModal" data-toggle="">{{$t('button.confirm')}}
+                <button type="button" class="btn btn-primary btn-block login-button"  v-bind:disabled="!setForm.phone" @click="setusername" data-target="#myModal" data-toggle="">{{$t('button.confirm')}}
                 </button>
               </form>
             </div>

@@ -865,7 +865,9 @@ svg:not(:root) {
 }
 .comment-all>h3 {
     margin-top: 15px;
+    padding-bottom: 15px;
     font-size: 15px;
+    border-bottom: 1px solid #edf0f5;
 }
 .comment-sort {
     position: absolute;
@@ -903,7 +905,7 @@ svg:not(:root) {
 }
 .comment-item{
     padding: 15px 0 10px;
-    border-top: 1px solid #edf0f5;
+    border-bottom: 1px solid #edf0f5;
     margin: 15px 0;
 }
 .comment-item .avatar {
