@@ -62,7 +62,7 @@
             </div>
             <label class="col-md-3 control-label"></label>
             <p class="prompt col-md-9" style="margin-top:0px !important;">{{emailPrompt}}</p>
-            <button type="button" class="btn col-md-offset-1 col-md-11 btn-primary login-button" @click="setfindemail">{{$t('button.confirm')}}
+            <button type="button" class="btn col-md-offset-2 col-md-10 btn-primary login-button" @click="setfindemail">{{$t('button.confirm')}}
             </button>
           </form>
         </div>
