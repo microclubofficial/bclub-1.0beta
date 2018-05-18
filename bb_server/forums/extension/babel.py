@@ -28,7 +28,7 @@ def locale():
         if request.path.startswith('/admin'):
             return 'zh_Hans_CN'
         if g.user.is_authenticated:
-            return user.setting.locale or 'zh'
+            return 'zh'
     return request.accept_languages.best_match(current_app.config['LANGUAGES']
                                                .keys())
 

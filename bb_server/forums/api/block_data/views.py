@@ -55,7 +55,7 @@ class B_List(MethodView):
         blist['page_count'] = int(math.ceil(int(blist['count'])/int(limit)))
         for i in blist['summaryList']:
             i['picture'] = 'https://blockchains.oss-cn-shanghai.aliyuncs.com/static/coinInfo/%s.png'%(i['id'])
-        return get_json(1, 'success', blist)
+        return get_json(1, 'success', blist) 
 
 class Picture(MethodView):
     def get(self):
@@ -64,7 +64,7 @@ class Picture(MethodView):
         blist = blist.json()['data']['summaryList']
         picturelist = []
         data = []
-        for i in pictures:
+        for i in pictures:  
             picturelist.append(object_as_dict(i)['picture'])
         for j in blist:
             Blist = {}

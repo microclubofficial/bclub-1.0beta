@@ -21,7 +21,6 @@ class HTTPResponse(object):
     AUTH_USERNAME_UNIQUE = '303'
     AUTH_EMAIL_UNIQUE = '303'
     AUTH_EMAIL_NOT_REGISTER = '304'
-    AUTH_USER_IS_CONFIRMED = '305',
     FORM_VALIDATE_ERROR = '305'
     AUTH_TOKEN_VERIFY_FAIL = '306'
 
@@ -36,8 +35,6 @@ class HTTPResponse(object):
         AUTH_EMAIL_UNIQUE: _('The email has been registered!'),
         AUTH_USERNAME_UNIQUE: _('The username has been registered!'),
         AUTH_EMAIL_NOT_REGISTER: _('The email is error'),
-        AUTH_USER_IS_CONFIRMED:
-        _('Your account has been confirmed,don\'t need again!'),
         AUTH_TOKEN_VERIFY_FAIL:
         _('Token is out of time,please get token again!'),
         FORM_VALIDATE_ERROR: _('Form validate error'),

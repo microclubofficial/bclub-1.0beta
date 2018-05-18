@@ -81,7 +81,7 @@ WITHIN = [(0, _('All Topics')), (1, _('One Day')), (2, _('One Week')),
 
 ORDERBY = [(0, _('Publish')), (1, _('Author'))]
 
-DESC = [(0, _('Desc')), (1, _('Asc'))]
+DESC = [(0, _('Desc')), (1, _('Asc'))] 
 
 
 class SortForm(Form):

@@ -40,7 +40,7 @@ class Topic(db.Model, ModelMixin):
     CONTENT_TYPE = (('0', 'text'), ('1', 'markdown'), ('2', 'org-mode'))
 
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(255))
+    title = db.Column(db.String(512))
     content = db.Column(db.Text, nullable=False)
     content_type = db.Column(
         db.String(10), nullable=False, default=CONTENT_TYPE_MARKDOWN)
@@ -151,14 +151,13 @@ class Reply(db.Model, ModelMixin):
             'topics.id', ondelete="CASCADE"))
     topic = db.relationship(
         Topic, backref=db.backref(
-            'topic', cascade='all,delete-orphan', lazy='dynamic', passive_deletes=True), lazy='joined')
+            'topic_replies', cascade='all,delete-orphan', lazy='dynamic', passive_deletes=True), lazy='joined')
     reference = db.Column(db.String(512), default='')
     at_user = db.Column(db.String(81), default='')
-
     author_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete="CASCADE"))
     author = db.relationship(
         User, backref=db.backref(
-            'replies', cascade='all,delete-orphan', lazy='dynamic', passive_deletes=True), lazy='joined')
+            'replies_author', cascade='all,delete-orphan', lazy='dynamic', passive_deletes=True), lazy='joined')
     
     likers = db.relationship(
         User,

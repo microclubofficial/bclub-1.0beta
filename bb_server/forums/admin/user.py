@@ -27,9 +27,9 @@ class UserView(BaseView):
     column_exclude_list = ['password', 'info', 'setting']
     column_searchable_list = ['username', 'email', 'phone']
     column_filters = ['email', 'is_superuser', 'username', 'phone']
-    column_editable_list = ['is_confirmed', 'is_superuser']
+    column_editable_list = ['is_superuser']
     form_columns = ('username', 'email', 'phone', 'user_code', 'integral',
-                     'recommender_code', 'avatar', 'is_confirmed', 'is_superuser')
+                     'recommender_code', 'avatar', 'is_superuser')
     # inline_models = (UserInfo, UserSetting)
     # form_extra_fields = {
     #     'password': PasswordField('Password', [DataRequired()])

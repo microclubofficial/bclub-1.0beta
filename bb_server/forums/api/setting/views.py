@@ -38,7 +38,7 @@ class ProfileView(MethodView):
         return render_template('setting/setting.html', **data)
 
     @form_validate(ProfileForm, error=error_callback('setting.setting'), f='')
-    def post(self):
+    def post(self): 
         form = ProfileForm()
         info = current_user.info
         info.introduce = form.introduce.data
@@ -127,13 +127,25 @@ class PrivacyView(MethodView):
         setting.save()
         return redirect(url_for('setting.privacy'))
 
-
 class BabelView(MethodView):
     def get(self):
         user = request.user
         setting = user.setting
         form = BabelForm()
         form.timezone.data = setting.timezone
+        form.locale.data = setting.locale
+        return render_template('setting/babel.html', form=form)
+
+    @form_validate(BabelForm, error=error_callback('setting.babel'), f='')
+    def post(self):
+        user = request.user
+        setting = user.setting
+        form = BabelForm()
+        setting.timezone = form.timezone.data
+        setting.locale = form.locale.data
+        setting.save()
+        return redirect(url_for('setting.babel'))
+
         form.locale.data = setting.locale
         return render_template('setting/babel.html', form=form)
 
