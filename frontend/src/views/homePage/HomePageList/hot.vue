@@ -298,11 +298,19 @@ export default{
         this.loadingShow = true
       }
       let that = this
-      document.querySelector('#app').addEventListener('scroll', function () {
-        if (this.clientHeight + this.scrollTop === this.scrollHeight) {
-          that.loadTopicPage()
-        }
-      })
+      if (this.pageCount === 1) {
+        this.bottomText = '没有啦'
+        this.listLoding = false
+        this.noLoading = true
+        // this.loadingImg = '../../assets/img/noLoading.png'
+        return false
+      } else {
+        document.querySelector('#app').addEventListener('scroll', function () {
+          if (this.clientHeight + this.scrollTop === this.scrollHeight) {
+            that.loadTopicPage()
+          }
+        })
+      }
     })
   },
   mounted () {
@@ -581,7 +589,7 @@ export default{
     },
     // 处理图片
     EditorContent (val) {
-      let now = val.replace(/<p[^>]*>|<\/p>|<h-char[^>]*>|<\/h-char>|<img[^>]*>|<h-inner>|<\/h-inner>/g, '')
+      let now = val.replace(/<p[^>]*>|<\/p>|<span[^>]*>|<\/span>|<h[1-6][^>]*>|<\/h[1-6]>|<h-char[^>]*>|<img[^>]*>|<\/h-char>|<h-inner>|<\/h-inner>/g, '')
       // now = $(now).text()
       if (now.length > 300) {
         return now.substring(0, 300) + '...'
@@ -590,11 +598,17 @@ export default{
     },
     // 艾特图片处理
     replyFun (val) {
-      let reply = val.replace(/<p[^>]*>|<\/p>|<h-char[^>]*>|<\/h-char>|<img[^>]*>|<h-inner>|<\/h-inner>/g, '')
-      if (/^\/static.*/ig.test(reply)) {
+      let reply = val.replace(/<p[^>]*>|<\/p>|<h-char[^>]*>|<\/h-char>|<h-inner>|<\/h-inner>/g, '')
+      if (reply.indexOf('img') > 0) {
+        let imgLength = 0
+        let imgArr = reply.match(/<img[^>]*>/gi)
+        for (let i = 0; i < imgArr.length; i++) {
+          imgLength += imgArr[i].length
+        }
+        return reply.substring(0, 50 + imgLength)
+      } else if (/^\/static.*/ig.test(reply)) {
         return '图片评论' + `<a style='color:#0181FF' href='${reply}'><i class='iconfont'>&#xe694;</i>查看图片</a>`
-      }
-      if (reply.length > 100) {
+      } else if (reply.length > 100) {
         return reply.substring(0, 50) + '...'
       } else {
         return reply
@@ -602,7 +616,7 @@ export default{
     },
     // 评论回复文字处理
     commentContent (val) {
-      val = val.replace(/<p[^>]*>|<\/p>|<h-char[^>]*>|<\/h-char>|<img[^>]*>|<h-inner>|<\/h-inner>/g, '')
+      val = val.replace(/<p[^>]*>|<\/p>|<h-char[^>]*>|<\/h-char>|<h-inner>|<\/h-inner>/g, '')
       if (val.length > 300) {
         if (this.more === '展开') {
           return val.substring(0, 300) + '...'
