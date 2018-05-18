@@ -94,8 +94,9 @@ export default {
       }
       if (this.$route.path !== '/') {
         this.topicData.token = this.$route.params.currency
-        this.topicData.tokenname = this.tokenBibar
-        if (this.tokenBibar === undefined && !typeof (this.$route.query) === 'object') {
+        if (this.tokenBibar) {
+          this.topicData.tokenname = this.tokenBibar
+        } else if (JSON.stringify(this.$route.query) !== '{}') {
           this.topicData.tokenname = JSON.parse(this.$route.query.b).zh
         } else {
           this.topicData.tokenname = '币吧'
@@ -106,6 +107,7 @@ export default {
       //   bId: this.$route.params.currency,
       //   bName: JSON.parse(this.$route.query.b).zh
       // })
+      console.log(this.topicData)
       if (this.topicData.content.length > 0 || this.topicData.picture.length > 0) {
         post(`/api/topic`, this.topicData).then(data => {
           this.editorContent = ''

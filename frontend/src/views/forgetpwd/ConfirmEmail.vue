@@ -31,8 +31,8 @@
   height: 40px;
   line-height: 40px;
   font-size: 18px;
-  margin: 40px 0 50px 52px;
-  width: 360px;
+  margin-top: 20px;
+  margin-bottom: 40px;
   &:hover {
     color: #fff;
     background-color: #50a6fc;
@@ -53,7 +53,7 @@
       <div class="panel-body">
         <div class="confirm-box" style="padding:0 150px 0 100px;">
           <h4>{{$t('forgetPassword.byEmail')}}</h4>
-          <form class="form-horizontal">
+          <form class="form-horizontal clearfloat">
             <div class="form-group">
               <label for="inputEmail3" class="col-md-3 control-label">{{$t('forgetPassword.email')}}</label>
               <div class="col-md-9">
@@ -62,7 +62,7 @@
             </div>
             <label class="col-md-3 control-label"></label>
             <p class="prompt col-md-9" style="margin-top:0px !important;">{{emailPrompt}}</p>
-            <button type="button" class="btn btn-primary btn-block login-button" @click="setfindemail">{{$t('button.confirm')}}
+            <button type="button" class="btn col-md-offset-1 col-md-11 btn-primary login-button" @click="setfindemail">{{$t('button.confirm')}}
             </button>
           </form>
         </div>
@@ -73,7 +73,7 @@
 <script>
 import { post } from '../../utils/http'
 export default {
-  data: function() {
+  data: function () {
     return {
       findForm: {
         'email': ''
@@ -81,12 +81,12 @@ export default {
       emailPrompt: ''
     }
   },
-  mounted: function() {
+  mounted: function () {
 
   },
   methods: {
     // 失去焦点验证
-    showRegisterMsg(input, id) {
+    showRegisterMsg (input, id) {
       var emailreg = /^[A-Za-z0-9.\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
       if (id === 0) {
         if (input === undefined || input.length === 0) {
@@ -101,7 +101,7 @@ export default {
       }
     },
     // 填新密码
-    setfindemail() {
+    setfindemail () {
       post('/api/forget', this.findForm).then(data => {
         if (data.resultcode === 0) {
           alert(data.message)

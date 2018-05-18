@@ -31,7 +31,6 @@
   line-height: 40px;
   font-size: 18px;
   margin: 40px 0 50px 48px;
-  width:362px;
   &:hover {
     color: #fff;
     background-color: #50a6fc;
@@ -53,7 +52,6 @@
   line-height: 40px;
   font-size: 18px;
   margin: 40px 0 50px 48px;
-  width: 362px;
   &:hover {
     color: #fff;
     background-color: #50a6fc;
