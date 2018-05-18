@@ -5,7 +5,7 @@
         <div class="form-group">
           <label class="col-md-1 control-label">用户名:</label>
           <div class="col-md-2">
-            <p class="form-control-static">{{userInfo.username}}</p>
+            <p class="form-control-static">{{personalUserInfo.username}}</p>
           </div>
           <div class="col-md-2">
             <div class="btnm setFormconfirm" data-target="#myModal" data-toggle="modal" @click="setFormBtn(0)">修改</div>
