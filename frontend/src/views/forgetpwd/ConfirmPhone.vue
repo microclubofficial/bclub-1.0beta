@@ -66,12 +66,12 @@
         <h3 class="panel-title text-center">{{$t('forgetPassword.retrieve')}}</h3>
       </div>
       <div class="panel-body">
-        <div class="confirm-box" style="padding:0 150px 0 100px;">
+        <div class="confirm-box">
           <h4>{{$t('forgetPassword.byPhone')}}</h4>
-          <form class="form-horizontal">
+          <form class="form-horizontal">         
             <div class="form-group">
               <label for="inputEmail3" class="col-md-3 control-label">{{$t('register.phone')}}</label>
-              <div class="col-md-9">
+              <div class="col-md-6">
                 <input type="text" class="form-control" id="inputEmail3" @blur='showRegisterMsg(phoneObj.phone, 0)' v-model="phoneObj.phone" :placeholder="$t('placeholder.phone')">
               </div>
             </div>
@@ -87,7 +87,7 @@
             </div>
             <label class="col-md-3 control-label"></label>
             <p class="prompt col-md-9" style="margin-top:0px !important;">{{phoneControlPrompt}}</p>
-            <button type="button" class="btn btn-primary btn-block login-button" @click='showModel' data-target="#myModal" data-toggle="">{{$t('button.confirm')}}
+            <button type="button" class="btn btn-primary btn-block login-button col-md-9" @click='showModel' data-target="#myModal" data-toggle="">{{$t('button.confirm')}}
             </button>
           </form>
         </div>

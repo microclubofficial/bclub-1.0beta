@@ -784,7 +784,7 @@ svg:not(:root) {
 }
 .comment-item{
     padding: 15px 0 10px;
-    border-top: 1px solid #edf0f5;
+    border-bottom: 1px solid #edf0f5;
     margin: 15px 0;
 }
 .comment-item .avatar {
