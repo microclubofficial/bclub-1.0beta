@@ -71,12 +71,12 @@ export default{
   methods: {
     getContent: function () {
       this.topicData.content = this.editorContent
-      post(`api/bar/question/${this.contentId}`, this.topicData).then(data => {
-        //   评论发送完毕
-        this.backData.content = data.data.content
-        this.$emit('backAnswer', this.backData)
-        $('.talkBibar-editor').find('.w-e-text-container').find('p').html('')
-      })
+      // post(`api/bar/question/${this.contentId}`, this.topicData).then(data => {
+      //   //   评论发送完毕
+      //   this.backData.content = data.data.content
+      //   this.$emit('backAnswer', this.backData)
+      //   $('.talkBibar-editor').find('.w-e-text-container').find('p').html('')
+      // })
     //   get('api/topic').then(data => {
     //     console.log('这是传回来' + data)
     //   })

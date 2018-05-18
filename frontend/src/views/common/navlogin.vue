@@ -1,10 +1,10 @@
 <template>
   <div>
     <div class="nav_login">
-      <a href="javascript:void(0)" class="nav_login_regis" @click="toRegister">没有账号？立即注册</a>
+      <a href="javascript:void(0)" class="nav_login_regis" @click="toRegister">{{$t('nav.isRegister')}}</a>
       <div class="nav_login_btn" @click.stop="toLogin()">
         <img src="../../assets/img/login.png" alt="">
-        <span>登录</span>
+        <span>{{$t('nav.login')}}</span>
       </div>
     </div>
   </div>
@@ -37,6 +37,7 @@ export default{
 }
 .nav_login_regis{
   vertical-align: middle;
+  font-size:14px;
 }
 div[class*=_btn] {
     -webkit-user-select: none;

@@ -98,14 +98,14 @@
   <div class="login-container">
     <div class="panel panel-primary login-box">
       <div class="panel-heading login-title">
-        <h3 class="panel-title text-center">用户登录</h3>
+        <h3 class="panel-title text-center">{{$t('login.title')}}</h3>
       </div>
       <ul id="myTab" class="toggle-tab">
         <li class="toggle-login" @click="changeTab(0)">
-          <a href="#home" :class="{'active-login':showTab}" data-toggle="tab">用户名登录</a>
+          <a href="#home" :class="{'active-login':showTab}" data-toggle="tab">{{$t('login.byUsername')}}</a>
         </li>
         <li @click="changeTab(1)" class="toggle-login">
-          <a href="#ios" :class="{'active-login':!showTab}" data-toggle="tab">手机登录</a>
+          <a href="#ios" :class="{'active-login':!showTab}" data-toggle="tab">{{$t('login.byPhone')}}</a>
         </li>
       </ul>
       <div class="panel-body">
@@ -114,28 +114,28 @@
             <!-- 用户名登录 -->
             <div class="tab-pane fade active" id="home" v-show="showTab" :class="{in:showTab}">
               <div class="form-group">
-                <label class="col-md-3 control-label">用户名:</label>
+                <label class="col-md-3 control-label">{{$t('login.username')}}</label>
                 <div class="col-md-9">
-                  <input class="form-control" name="username" type="text" placeholder="请输入用户名" @blur='showRegisterMsg(userForm.username, 0)' v-model="userForm.username">
+                  <input class="form-control" name="username" type="text" :placeholder="$t('placeholder.username')" @blur='showRegisterMsg(userForm.username, 0)' v-model="userForm.username">
                 </div>
                 <label class="col-md-3 control-label"></label>
                 <p class="prompt">{{unamePrompt}}</p>
               </div>
               <div class="form-group">
-                <label class="col-md-3 control-label">密　码:</label>
+                <label class="col-md-3 control-label">{{$t('login.password')}}</label>
                 <div class="col-md-9">
-                  <input class="form-control" name="password" type="password" placeholder="请输入密码" @blur='showRegisterMsg(userForm.password, 1)' v-model="userForm.password">
+                  <input class="form-control" name="password" type="password" :placeholder="$t('placeholder.password')" @blur='showRegisterMsg(userForm.password, 1)' v-model="userForm.password">
                 </div>
                 <label class="col-sm-3 control-label"></label>
                 <p class="prompt">{{upwdPrompt}}</p>
               </div>
               <div class="form-group">
-                <label class="col-md-3 control-label">验证码:</label>
+                <label class="col-md-3 control-label">{{$t('login.vcode')}}</label>
                 <div class="col-md-9">
                   <div class="input-group">
-                    <input class="form-control" name="captcha" @blur='showRegisterMsg(userForm.captcha, 2)' placeholder="请输入验证码" type="text" v-model="userForm.captcha" @keyup.enter="handleLogin">
+                    <input class="form-control" name="captcha" @blur='showRegisterMsg(userForm.captcha, 2)' :placeholder="$t('placeholder.vcode')" type="text" v-model="userForm.captcha" @keyup.enter="handleLogin">
                     <span class="input-group-addon" style="padding:0;border-left:none;">
-                      <img ref="captcha" :src="controlImg" alt="验证码" width="120" height="30" @click="changeControl()">
+                      <img ref="captcha" :src="controlImg" :alt="$t('placeholder.vcode')" width="120" height="30" @click="changeControl()">
                     </span>
                   </div>
                 </div>
@@ -145,33 +145,33 @@
               <div class="form-group">
                 <div class="col-md-offset-3 col-md-9">
                   <input id="remember" v-model="userForm.remember" type="checkbox" value="y">
-                  <label for="remember">记住我</label>
-                  <a class="pull-right" style="margin-top:7px;" @click="toForgetPwd">忘记密码?</a>
+                  <label for="remember">{{$t('login.rememberMe')}}</label>
+                  <a class="pull-right" style="margin-top:7px;" @click="toForgetPwd">{{$t('login.forgetPwd')}}</a>
                 </div>
               </div>
               <div class="form-group">
                 <div class="col-md-offset-3 col-md-9">
-                  <button type="button" class="btn btn-primary btn-block login-button" @click="handleLogin">登陆</button>
+                  <button type="button" class="btn btn-primary btn-block login-button" @click="handleLogin">{{$t('login.login')}}</button>
                 </div>
               </div>
-              <h5 class="go-login col-md-offset-3 col-md-9">没有账号？
-                <router-link class="login-hover" :to="{path:'/register'}">去注册</router-link>
+              <h5 class="go-login col-md-offset-3 col-md-9">{{$t('login.noAccount')}}
+                <router-link class="login-hover" :to="{path:'/register'}">{{$t('login.goRegister')}}</router-link>
               </h5>
             </div>
             <!-- 手机登录 -->
             <div class="tab-pane fade  active" id="ios" v-show="!showTab" :class="{in:!showTab}">
               <div class="form-group">
-                <label class="col-md-3 control-label">手机号：</label>
+                <label class="col-md-3 control-label">{{$t('login.phone')}}</label>
                 <div class="col-md-9">
-                  <input class="form-control" name="phone" type="text" placeholder="请输入手机号" v-model="phoneForm.phone" @blur='showRegisterMsg(phoneForm.phone, 3)'>
+                  <input class="form-control" name="phone" type="text" :placeholder="$t('placeholder.phone')" v-model="phoneForm.phone" @blur='showRegisterMsg(phoneForm.phone, 3)'>
                 </div>
                 <label class="col-md-3 control-label"></label>
                 <p class="prompt col-md-9">{{phonePrompt}}</p>
               </div>
               <div class="form-group">
-                <label for="inputCaptcha3" class="col-md-3 control-label">验证码：</label>
+                <label for="inputCaptcha3" class="col-md-3 control-label">{{$t('login.vcode')}}</label>
                 <div class="col-md-9 captcha-box">
-                  <input type="text" class="form-control" v-model="phoneForm.phonecaptcha" @blur='showRegisterMsg(phoneForm.phonecaptcha, 4)' id="inputCaptcha3" placeholder="请输入验证码">
+                  <input type="text" class="form-control" v-model="phoneForm.phonecaptcha" @blur='showRegisterMsg(phoneForm.phonecaptcha, 4)' id="inputCaptcha3" :placeholder="$t('placeholder.vcode')">
                   <button type="button" class="col-md-3 get-captcha" v-bind:disabled="hasphone" :class="{'text-gray':hasphone}" @click="getPhoneControl">
                     <span v-show="hasControl">{{countdown}}</span>
                     <i> | </i>{{getcontroltxt}}</button>
@@ -179,31 +179,20 @@
                 <label class="col-md-3 control-label"></label>
                 <p class="prompt">{{captchaPrompt}}</p>
               </div>
-              <!--<div class="form-group">
-                    <label for="inputCaptcha3" class="col-md-3 control-label">验证码</label>
-                    <div class="col-md-5">
-                      <input type="text" @blur='showRegisterMsg(phoneForm.phonecaptcha, 4)' class="form-control" v-model="phoneForm.phonecaptcha" id="inputCaptcha3" placeholder="请输入验证码">
-                    </div>
-                    <button type="button" class="col-md-3 btnm getcontrol" style=" padding: 0 !important;height: 34px;line-height: 34px;
-                " @click="getPhoneControl" v-bind:disabled="hasphone" :class="{disable:hasphone}">
-                      <span v-show="hasControl">{{countdown}}</span>{{getcontroltxt}}</button>
-                    <p class="prompt col-md-9">
-                      <label class="col-md-3 control-label"></label>{{phoneControlPrompt}}</p>
-                  </div>-->
               <div class="form-group">
                 <div class="col-md-offset-3 col-md-9">
                   <input id="rememberPhone" v-model="phoneForm.remember" type="checkbox" value="p">
-                  <label for="rememberPhone">记住我</label>
-                  <a class="pull-right" @click="toForgetPwd" style="margin-top:7px;">忘记密码?</a>
+                  <label for="rememberPhone">{{$t('login.rememberMe')}}</label>
+                  <a class="pull-right" @click="toForgetPwd" style="margin-top:7px;">{{$t('login.forgetPwd')}}</a>
                 </div>
               </div>
               <div class="form-group">
                 <div class="col-md-offset-3 col-md-9">
-                  <button type="button" class="btn btn-primary btn-block login-button" @click="handlePhoneLogin">登陆</button>
+                  <button type="button" class="btn btn-primary btn-block login-button" @click="handlePhoneLogin">{{$t('login.login')}}</button>
                 </div>
               </div>
-              <h5 class="go-login col-md-offset-3 col-md-9">没有账号？
-                <router-link class="login-hover" :to="{path:'/register'}">去注册</router-link>
+              <h5 class="go-login col-md-offset-3 col-md-9">{{$t('login.noAccount')}}
+                <router-link class="login-hover" :to="{path:'/register'}">{{$t('login.goRegister')}}</router-link>
               </h5>
             </div>
           </form>
@@ -236,7 +225,7 @@ export default {
       countdown: 30,
       showTab: true,
       remember: '',
-      getcontroltxt: '获取验证码'
+      getcontroltxt: this.$t('prompt.acquireVcode')
     }
   },
   mounted () {
@@ -333,9 +322,9 @@ export default {
           })
 
           if (this.userForm.remember) {
-            setToken(data.data, { expires: 7 })
+            setToken('b-Token', data.data, { expires: 7 })
           } else {
-            setToken(data.data)
+            setToken('b-Token', data.data)
           }
           this.changeControl()
           this.$router.push('/')
@@ -376,9 +365,9 @@ export default {
             'isLogin': true
           })
           if (this.phoneForm.remember) {
-            setToken(data.data, { expires: 7 })
+            setToken('b-Token', data.data, { expires: 7 })
           } else {
-            setToken(data.data)
+            setToken('b-Token', data.data)
           }
           this.$router.push('/')
         }
@@ -408,10 +397,10 @@ export default {
           this.timer = setInterval(function() {
             that.countdown--
             that.hasControl = true
-            that.getcontroltxt = '重新获取'
+            that.getcontroltxt = that.$t('prompt.reacquire')
             this.kaiguan = false
             if (that.countdown < 1) {
-              that.getcontroltxt = '获取验证码'
+              that.getcontroltxt = that.$t('prompt.reacquire')
               that.hasphone = false
               that.countdown = 30
               that.hasControl = false

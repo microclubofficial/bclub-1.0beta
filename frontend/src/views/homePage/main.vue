@@ -31,7 +31,7 @@
                 <div class="bibar-indexNews">
                     <div class="bibar-indexNews-TAB">
                         <ul class="bibar-tabs-listSty2">
-                          <li class="bibar-tabs-item active"> <a href="#bibar-newstab1" data-toggle="tab">全部</a></li>
+                          <li class="bibar-tabs-item active"> <a href="#bibar-newstab1" data-toggle="tab">{{$t('column.all')}}</a></li>
                             <!--<li class="bibar-tabs-item" :key='index' v-for="(tmp,index) in newList" :class="{active:state==index}" @click="changeActive(index)"> <a href="#bibar-newstab1" data-toggle="tab">{{tmp}}</a></li>-->
                         </ul>
                     </div>
@@ -94,7 +94,6 @@ export default{
   mounted () {
     // '/path？a=1'
     // {name: 'xxx', query: {b: [{label: '', path: ''},{label: '', path: ''} ]}}
-    console.log(this.$route.meta)
   },
   methods: {
     // 社区文章列表切换事件

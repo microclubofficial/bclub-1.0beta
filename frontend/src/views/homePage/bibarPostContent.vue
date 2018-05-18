@@ -59,11 +59,16 @@ export default {
     getContent: function () {
       // this.topicData.content = this.editorContent
       this.topicData.content = this.editor.$textElem.html()
+      // 处理插入链接
       if (this.topicData.content.indexOf('href') > -1) {
         let href = this.topicData.content.match(/(?<=(href="))[^"]*?(?=")/ig)
         for (let i = 0; i < href.length; i++) {
           if (href[i].indexOf('http') === -1) {
             this.topicData.content = this.topicData.content.replace(href[i], 'http://' + href[i])
+            let reg = /<a.*?>(.*?)<\/a>/ig
+            let result = reg.exec(this.topicData.content)
+            this.topicData.content = this.topicData.content.replace(result[1], '<i class="iconfont">&#xe60e;</i>' + result[1] + '&nbsp;')
+            console.log(this.topicData.content)
           }
         }
       }
@@ -94,7 +99,8 @@ export default {
       }
       this.$store.commit('LONG_ID', {
         hideDilog: !this.showDilog,
-        bId: this.$route.params.currency
+        bId: this.$route.params.currency,
+        bName: JSON.parse(this.$route.query.b).zh
       })
       if (this.topicData.content.length > 0 || this.topicData.picture.length > 0) {
         post(`/api/topic`, this.topicData).then(data => {
@@ -163,7 +169,8 @@ export default {
       } else {
         this.$store.commit('LONG_ID', {
           hideDilog: !this.showDilog,
-          bId: this.$route.params.currency
+          bId: this.$route.params.currency,
+          bName: JSON.parse(this.$route.query.b).zh
         })
       }
       this.$router.push(`/mainDetail/${router}`)

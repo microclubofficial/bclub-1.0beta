@@ -250,11 +250,15 @@ export default{
       let that = this
       // this.topicData.content = this.editorContent
       this.topicData.content = this.editor.$textElem.html()
+      // 处理插入链接
       if (this.topicData.content.indexOf('href') > -1) {
         let href = this.topicData.content.match(/(?<=(href="))[^"]*?(?=")/ig)
         for (let i = 0; i < href.length; i++) {
           if (href[i].indexOf('http') === -1) {
             this.topicData.content = this.topicData.content.replace(href[i], 'http://' + href[i])
+            let reg = /<a.*?>(.*?)<\/a>/ig
+            let result = reg.exec(this.topicData.content)
+            this.topicData.content = this.topicData.content.replace(result[1], '<i class="iconfont">&#xe60e;</i>' + result[1] + '&nbsp;')
           }
         }
       }
@@ -278,11 +282,15 @@ export default{
       this.topicData.picture = ''
       if (this.longId.hideDilog) {
         this.topicData.token = this.longId.bId
+        this.topicData.tokenname = this.longId.bName
       }
       this.topicData.title = this.title
       if (image !== null) {
         for (let i = 0; i < image.length; i++) {
-          this.imgArr.push(image[i].match(/(?<=(src="))[^"]*?(?=")/ig)[0])
+          if (image[i].indexOf('alt="[') === -1) {
+            this.imgArr.push(image[i].match(/(?<=(src="))[^"]*?(?=")/ig)[0])
+          }
+          // console.log(image[i])
         }
         this.imgObj.imgName = this.imgArr
         post('/api/photo', this.imgObj).then(data => {
@@ -292,7 +300,9 @@ export default{
             that.topicData.content = content
           }
           // 请求
-          this.topicData.picture = this.topicData.content.match(/<img(?![^<>]*?data-w-e[^<>]*?>).*?>/g)[0].match(/(?<=(src="))[^"]*?(?=")/ig)[0]
+          this.topicData.picture = this.imgArr[0]
+          // console.log(this.topicData.content)
+          // console.log(this)
           this.postEditor()
         })
       } else {
@@ -320,7 +330,12 @@ export default{
               this.backLong.is_good = data.data.is_good
               $('.w-e-text-container').find('p').html('')
               if (this.longId.hideDilog) {
-                this.$router.push(`/msgDetail/${this.longId.bId}`)
+                this.$router.push({
+                  path: `/msgDetail/${this.longId.bId}`,
+                  query: {
+                    b: JSON.stringify({'zh': this.longId.bName})
+                  }
+                })
               } else {
                 this.$router.push('/')
               }

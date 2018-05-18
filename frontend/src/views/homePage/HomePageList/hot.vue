@@ -116,9 +116,10 @@
                         <p href="#" class="user-name">{{item.author}}<span class="time">{{item.diff_time !== '0秒' ? item.diff_time + '前' : '刚刚'}}发布</span></p>
                       </div>
                       <!-- @ 样式 -->
-                      <p class="replyAuthor" v-if="item.at_user !== ''">@{{item.at_user}}:&nbsp;<span class="replyBackConten" style="display:inline-block;font-weight: normal;" v-html="replyFun(item.reference)"></span></p>
+                      <p class="replyAuthor" v-if="item.at_user !== ''">@{{item.at_user}}:&nbsp;<span class="replyBackConten" style="font-weight: normal;" v-html="replyFun(item.reference)"></span></p>
                       <!-- <p>{{item}}</p> -->
-                      <p v-html="item.content">{{item.content}}</p>
+                      <p v-html="commentContent(item.content)"></p>
+                      <a style="font-size:16px; float:right; display: block;" v-if='item.content.length > 500' href="#" class="bibar-indexintromore text-theme" @click="changeMore(item.id)">{{item.id === moreId ? '收起' : '展开'}}<i style="font-size:16px;" class="iconfont" v-if='more === "展开"'>&#xe692;</i><i style="font-size:16px;" class="iconfont" v-if='more === "收起"'>&#xe693;</i></a>
                     </div>
                     <div class="set" style="margin-left:42px">
                       <ul class="bibar-indexNewsItem-infro">
@@ -255,7 +256,9 @@ export default{
       // 评论加载
       showLoaderComment: false,
       pageTimer: null,
-      showId: []
+      showId: [],
+      more: '展开',
+      moreId: ''
     }
   },
   components: {
@@ -289,7 +292,6 @@ export default{
     this.showLoader = true
     get(`/api/topic/${this.tpno}`).then(data => {
       this.articles = data.data.topics
-      console.log(this.articles)
       this.showLoader = false
       this.pageCount = data.data.page_count
       if (this.articles.length > 0) {
@@ -442,8 +444,8 @@ export default{
           $('.comment-item-main').find('img').addClass('zoom-in')
           $('[data-w-e]').removeClass('zoom-in')
           $('.comment-item-main').on('click', 'img', function () {
-            // console.log($(this)).not('[data-w-e]')
-            if (!$(this)[0].hasAttribute('data-w-e')) {
+            // if (!$(this)[0].hasAttribute('data-w-e')) {
+            if (!$(this)[0].indexOf('alt="[') === -1) {
               if (!$(this).hasClass('zoom-out')) {
                 if ($(this).hasClass('zoom-in')) {
                   $(this).removeClass('zoom-in')
@@ -579,20 +581,41 @@ export default{
     },
     // 处理图片
     EditorContent (val) {
-      let now = `<div>${val}</div>`
-      now = $(now).text()
-      if (now.length > 128) {
-        return now.substring(0, 128) + '...'
+      let now = val.replace(/<p[^>]*>|<\/p>|<h-char[^>]*>|<img[^>]*>|<h-inner>/g, '')
+      // now = $(now).text()
+      if (now.length > 300) {
+        return now.substring(0, 300) + '...'
       }
       return now
     },
     // 艾特图片处理
     replyFun (val) {
-      let reply = val.replace(/<p>|<\/p>/g, '')
+      let reply = val.replace(/<p[^>]*>|<\/p>|<h-char[^>]*>|<img[^>]*>|<h-inner>/g, '')
       if (/^\/static.*/ig.test(reply)) {
         return '图片评论' + `<a style='color:#0181FF' href='${reply}'><i class='iconfont'>&#xe694;</i>查看图片</a>`
       }
-      return reply
+      if (reply.length > 100) {
+        return reply.substring(0, 50) + '...'
+      } else {
+        return reply
+      }
+    },
+    // 评论回复文字处理
+    commentContent (val) {
+      if (this.more === '展开') {
+        return val.substring(0, 500) + '...'
+      } else {
+        return val
+      }
+    },
+    changeMore (id) {
+      if (id !== this.moreId) {
+        this.moreId = id
+        this.more = '收起'
+      } else {
+        this.more = '展开'
+        this.moreId = ''
+      }
     },
     // 分页
     prev () {

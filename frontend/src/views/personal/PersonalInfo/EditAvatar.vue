@@ -76,10 +76,10 @@ export default {
         'isLogin': true
       })
       if (rememberToken('remember_token')) {
-        setToken(data.data, { expires: 7 })
+        setToken('b-Token', data.data, { expires: 7 })
         // console.log(setToken(data.data, { expires: 7 }))
       } else {
-        setToken(data.data)
+        setToken('b-Token', data.data)
         // console.log(setToken(data.data))
       }
       this.$router.push('/memberCenter')

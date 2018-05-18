@@ -67,6 +67,9 @@ export default{
   computed: {
     userInfo () {
       return this.$store.state.userInfo.userInfo
+    },
+    longId () {
+      return this.$store.state.longId
     }
   },
   created () {

@@ -53,11 +53,16 @@ export default {
     getContent: function () {
       // this.topicData.content = this.editorContent
       this.topicData.content = this.editor.$textElem.html()
+      // 处理链接
       if (this.topicData.content.indexOf('href') > -1) {
         let href = this.topicData.content.match(/(?<=(href="))[^"]*?(?=")/ig)
         for (let i = 0; i < href.length; i++) {
           if (href[i].indexOf('http') === -1) {
             this.topicData.content = this.topicData.content.replace(href[i], 'http://' + href[i])
+            let reg = /<a.*?>(.*?)<\/a>/ig
+            let result = reg.exec(this.topicData.content)
+            this.topicData.content = this.topicData.content.replace(result[1], '<i class="iconfont">&#xe60e;</i>' + result[1] + '&nbsp;')
+            console.log(this.topicData.content)
           }
         }
       }
@@ -101,9 +106,12 @@ export default {
           let replyNewData = this.topicData.replyContent.split(/<img src="\/static[^>]+>/g)[0]
           this.topicData.replyContent = replyNewData
         } else {
-          this.topicData.replyContent = this.topicData.replyContent.match(/(?<=(src="))[^"]*?(?=")/ig)[0]
+          if (this.topicData.replyContent.indexOf('data-w-e') === -1) {
+            this.topicData.replyContent = this.topicData.replyContent.match(/(?<=(src="))[^"]*?(?=")/ig)[0]
+          }
         }
       }
+      console.log(this.topicData)
       if (this.topicData.content.length > 0 || this.topicData.url.length > 0) {
         post(`/api/${this.nowShowApi[this.toApi]}${this.toApi === 1 ? '/question' : this.toApi === 2 ? '/answer' : this.toApi === 3 ? '/comment' : ''}/replies/${this.toApi === 0 ? this.mainCommnet : this.toApi === 2 ? this.talkId : this.toApi === 3 ? this.contentId : this.toApi === 5 ? this.detailId : this.mainReplay}`, this.topicData).then(data => {
           //   评论发送完毕
