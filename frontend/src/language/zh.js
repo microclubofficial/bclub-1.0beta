@@ -45,6 +45,13 @@ export default {
     hasAccount: '已有账号？',
     goLogin: '去登录'
   },
+  forgetPassword: {
+    retrieve: '找回密码',
+    byPhone: '通过手机找回',
+    byEmail: '通过邮箱找回',
+    email: '邮 箱：',
+    newPassword: '请设置新密码'
+  },
   placeholder: {
     username: '请输入用户名',
     password: '请输入密码',
