@@ -50,16 +50,16 @@
   <div>
     <div class="panel panel-primary login-box">
       <div class="panel-heading login-title">
-        <h3 class="panel-title text-center">找回密码</h3>
+        <h3 class="panel-title text-center">{{$t('forgetPassword.retrieve')}}</h3>
       </div>
       <div class="panel-body flex-box">
         <div class="byphone flex-item">
           <div class="gray-circle" @click="confirmPhone"></div>
-          <p @click="confirmPhone">通过手机找回</p>
+          <p @click="confirmPhone">{{$t('forgetPassword.byPhone')}}</p>
         </div>
         <div class="byemail flex-item">
           <div class="gray-circle" @click="confirmEmail"></div>
-          <p @click="confirmEmail">通过邮箱找回</p>
+          <p @click="confirmEmail">{{$t('forgetPassword.byEmail')}}</p>
         </div>
       </div>
     </div>

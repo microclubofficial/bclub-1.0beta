@@ -45,6 +45,13 @@ export default {
     hasAccount: 'Already has a account?',
     goLogin: 'Login now'
   },
+  forgetPassword: {
+    retrieve: 'Retrieve password',
+    byPhone: 'Retrieve password by phone',
+    byEmail: 'Retrieve password by email',
+    email: 'Email:',
+    newPassword: 'Please set new password'
+  },
   placeholder: {
     username: 'username',
     password: 'password',
