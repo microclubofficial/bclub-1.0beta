@@ -259,7 +259,6 @@ export default{
             let reg = /<a.*?>(.*?)<\/a>/ig
             let result = reg.exec(this.topicData.content)
             this.topicData.content = this.topicData.content.replace(result[1], '<i class="iconfont">&#xe60e;</i>' + result[1] + '&nbsp;')
-            console.log(this.topicData.content)
           }
         }
       }
@@ -291,6 +290,7 @@ export default{
           if (image[i].indexOf('alt="[') === -1) {
             this.imgArr.push(image[i].match(/(?<=(src="))[^"]*?(?=")/ig)[0])
           }
+          // console.log(image[i])
         }
         this.imgObj.imgName = this.imgArr
         post('/api/photo', this.imgObj).then(data => {
@@ -300,7 +300,9 @@ export default{
             that.topicData.content = content
           }
           // 请求
-          this.topicData.content = this.imgArr[0]
+          this.topicData.picture = this.imgArr[0]
+          // console.log(this.topicData.content)
+          // console.log(this)
           this.postEditor()
         })
       } else {
