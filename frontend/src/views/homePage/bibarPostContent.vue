@@ -68,7 +68,6 @@ export default {
             let reg = /<a.*?>(.*?)<\/a>/ig
             let result = reg.exec(this.topicData.content)
             this.topicData.content = this.topicData.content.replace(result[1], '<i class="iconfont">&#xe60e;</i>' + result[1] + '&nbsp;')
-            console.log(this.topicData.content)
           }
         }
       }
@@ -96,12 +95,17 @@ export default {
       if (this.$route.path !== '/') {
         this.topicData.token = this.$route.params.currency
         this.topicData.tokenname = this.tokenBibar
+        if (this.tokenBibar === undefined && !typeof (this.$route.query) === 'object') {
+          this.topicData.tokenname = JSON.parse(this.$route.query.b).zh
+        } else {
+          this.topicData.tokenname = '币吧'
+        }
       }
-      this.$store.commit('LONG_ID', {
-        hideDilog: !this.showDilog,
-        bId: this.$route.params.currency,
-        bName: JSON.parse(this.$route.query.b).zh
-      })
+      // this.$store.commit('LONG_ID', {
+      //   hideDilog: !this.showDilog,
+      //   bId: this.$route.params.currency,
+      //   bName: JSON.parse(this.$route.query.b).zh
+      // })
       if (this.topicData.content.length > 0 || this.topicData.picture.length > 0) {
         post(`/api/topic`, this.topicData).then(data => {
           this.editorContent = ''

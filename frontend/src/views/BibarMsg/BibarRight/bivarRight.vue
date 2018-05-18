@@ -5,10 +5,10 @@
                 <div class="bibar-boxtitle" style="margin-bottom:10px;"> <span class="name">简介</span> </div>
                 <div class="bibar-boxbody">
                     <div class="bibar-indexintro">
-                        <p>{{briefC.length > 0 ? briefC : '暂无简介'}}</p>
+                        <p v-html='briefC !== "" ? briefC : "--" '></p>
                     </div>
-                    <a href="#" v-if='briefC.length > 0' class="bibar-indexintromore text-theme" @click="showText = !showText">{{more}}<i class="iconfont" v-if='!showText'>&#xe692;</i><i class="iconfont" v-if='showText'>&#xe693;</i></a>
-                    <div class="bibar-indexinftrList">
+                    <a href="#" v-if='briefC !== ""' class="bibar-indexintromore text-theme" @click="showText = !showText">{{more}}<i class="iconfont" v-if='!showText'>&#xe692;</i><i class="iconfont" v-if='showText'>&#xe693;</i></a>
+                    <div class="bibar-indexinftrList" v-if='briefC.length > 0'>
                         <dl>
                             <dt>发行时间</dt>
                             <dd>{{brief.publicTime}}</dd>
@@ -145,9 +145,9 @@ export default{
   created: function () {
     $('#myTab li:eq(1) a').tab('show')
     // 影响力
-    this.sideFun(this.sidePage)
+    // this.sideFun(this.sidePage)
     // 分析师
-    this.analystFun(this.analystPage)
+    // this.analystFun(this.analystPage)
     // 热门币
     this.bibarHot(this.hotbPage)
     // 简介
@@ -159,10 +159,14 @@ export default{
   },
   computed: {
     briefC: function () {
-      if (this.showText === false) {
-        return this.briefTxt.substring(0, 80) + '...'
+      if (this.briefTxt !== '') {
+        if (this.showText === false) {
+          return this.briefTxt.substring(0, 80) + '...'
+        } else {
+          return this.briefTxt
+        }
       } else {
-        return this.briefTxt
+        return ''
       }
     },
     more: function () {
@@ -180,32 +184,32 @@ export default{
       }
     },
     // 影响力
-    sideFun (pno) {
-      get(`/api/side/influence/${pno}`).then(data => {
-        this.sideList = data.data.reply
-        this.pageCount = data.data.page_count
-      })
-    },
+    // sideFun (pno) {
+    //   get(`/api/side/influence/${pno}`).then(data => {
+    //     this.sideList = data.data.reply
+    //     this.pageCount = data.data.page_count
+    //   })
+    // },
     // 影响力翻页
-    changePage (id) {
-      if (id === 0) {
-        if (this.sidePage > 1 && this.sidePage < this.pageCount) {
-          this.sidePage--
-          this.sideFun(this.sidePage)
-        }
-      } else if (id === 1) {
-        if (this.sidePage < this.pageCount) {
-          this.sidePage++
-          this.sideFun(this.sidePage)
-        }
-      }
-    },
+    // changePage (id) {
+    //   if (id === 0) {
+    //     if (this.sidePage > 1 && this.sidePage < this.pageCount) {
+    //       this.sidePage--
+    //       this.sideFun(this.sidePage)
+    //     }
+    //   } else if (id === 1) {
+    //     if (this.sidePage < this.pageCount) {
+    //       this.sidePage++
+    //       this.sideFun(this.sidePage)
+    //     }
+    //   }
+    // },
     // 分析师
-    analystFun (pno) {
-      get(`/api/side/analyst/${pno}`).then(data => {
-        this.analystList = data.data.analyst
-      })
-    },
+    // analystFun (pno) {
+    //   get(`/api/side/analyst/${pno}`).then(data => {
+    //     this.analystList = data.data.analyst
+    //   })
+    // },
     // 热门币
     bibarHot (pno) {
       get(`/api/blist/${pno}/${this.hotCount}`).then(data => {
@@ -258,10 +262,8 @@ export default{
           this.brief = data.data
           // console.log(this.brief)
           this.websites = this.brief.websites[0]
-          if (this.brief.descriptions.zh.length === 1) {
-            this.briefTxt = this.brief.descriptions.zh[0]
-          } else {
-            this.briefTxt = this.brief.descriptions.zh[0] + this.brief.descriptions.zh[1]
+          for (let i = 0; i < this.brief.descriptions.zh.length; i++) {
+            this.briefTxt += `<p>${this.brief.descriptions.zh[i]}</p>`
           }
         }
       })

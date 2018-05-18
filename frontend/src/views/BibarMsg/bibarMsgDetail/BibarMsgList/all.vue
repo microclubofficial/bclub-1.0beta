@@ -118,7 +118,7 @@
                       <!-- <p>{{item}}</p> -->
                       <p v-html="commentContent(item.content)"></p>
                       <!--展开-->
-              <a style="font-size:16px; float:right; display: block;" v-if='item.content.length > 500' href="#" class="bibar-indexintromore text-theme" @click="changeMore(item.id)">{{item.id === moreId ? '收起' : '展开'}}<i style="font-size:16px;" class="iconfont" v-if='more === "展开"'>&#xe692;</i><i style="font-size:16px;" class="iconfont" v-if='more === "收起"'>&#xe693;</i></a>
+              <a style="font-size:16px; float:right; display: block;" v-if='item.content.length > 300' href="#" class="bibar-indexintromore text-theme" @click="changeMore(item.id)">{{item.id === moreId ? '收起' : '展开'}}<i style="font-size:16px;" class="iconfont" v-if='more === "展开"'>&#xe692;</i><i style="font-size:16px;" class="iconfont" v-if='more === "收起"'>&#xe693;</i></a>
                     </div>
                     <div class="set" style="margin-left:42px;">
                       <ul class="bibar-indexNewsItem-infro">
@@ -585,25 +585,34 @@ export default{
     },
     // 处理图片
     EditorContent (val) {
-      let now = `<div>${val}</div>`
-      now = $(now).text()
-      if (now.length > 128) {
-        return now.substring(0, 128) + '...'
+      let now = val.replace(/<p[^>]*>|<\/p>|<h-char[^>]*>|<\/h-char>|<img[^>]*>|<h-inner>|<\/h-inner>/g, '')
+      // now = $(now).text()
+      if (now.length > 300) {
+        return now.substring(0, 300) + '...'
       }
       return now
     },
     // 艾特图片处理
     replyFun (val) {
-      let reply = val.replace(/<p>|<\/p>/g, '')
+      let reply = val.replace(/<p[^>]*>|<\/p>|<h-char[^>]*>|<\/h-char>|<img[^>]*>|<h-inner>|<\/h-inner>/g, '')
       if (/^\/static.*/ig.test(reply)) {
         return '图片评论' + `<a style='color:#0181FF' href='${reply}'><i class='iconfont'>&#xe694;</i>查看图片</a>`
       }
-      return reply
+      if (reply.length > 100) {
+        return reply.substring(0, 50) + '...'
+      } else {
+        return reply
+      }
     },
     // 评论回复文字处理
     commentContent (val) {
+      val = val.replace(/<p[^>]*>|<\/p>|<h-char[^>]*>|<\/h-char>|<img[^>]*>|<h-inner>|<\/h-inner>/g, '')
       if (this.more === '展开') {
-        return val.substring(0, 500) + '...'
+        if (val.length > 300) {
+          return val.substring(0, 300) + '...'
+        } else {
+          return val
+        }
       } else {
         return val
       }
