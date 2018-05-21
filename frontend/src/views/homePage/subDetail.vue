@@ -62,7 +62,7 @@
             <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
            </svg>
            <div class="editor-textarea" v-show="commentShow" @click="commentShowFun">
-             <div class="editor-placeholder">评论...</div>
+             <div class="editor-placeholder">{{$t('list.comment')}}...</div>
            </div>
            <div class="editor-toolbar">
               <BibarReport ref='childShowApi' :toApi='toId' :contentId='question.id' v-show="showReport" @backList = 'showContent'></BibarReport>
@@ -80,7 +80,7 @@
               <img src="../../assets/img/loading.png" alt="">
             </div>
             <div class="comment-all">
-              <h3>全部评论(4)</h3>
+              <h3>{{$t('list.allComments')}}(4)</h3>
               <div class="comment-sort">
                 <a href="#" class="active">最近</a>
                 <a href="#">最早</a>
@@ -106,7 +106,7 @@
                         <li class="set-choseShang"> <a href="javascript:void(0);"><i class="iconfont icon-dashang"></i> 打赏<span>438</span></a> </li>
                         <li class="set-discuss">
                           <a href="javascript:void(0);">
-                            <i class="iconfont icon-pinglun"></i> 回复
+                            <i class="iconfont icon-pinglun"></i> {{$t('list.reply')}}
                             <span>75</span>
                           </a>
                         </li>
@@ -237,7 +237,7 @@
                         <li class="set-choseOne"> <a href="javascript:void(0);" class="icon-quan mr15 active"  @click="changeNum(0,item.author_id)"><i class="iconfont icon-handgood"></i><span>{{isGood}}</span></a><a href="javascript:void(0);" class="icon-quan set-choseOne" @click="changeNum(1,item.author_id)"><i class="iconfont icon-handbad"></i><span>{{ishandbad}}</span></a> </li>
                         <li class="set-discuss" @click="replyComment(item.author_id,now)">
                           <a href="javascript:void(0);">
-                            <i class="iconfont icon-pinglun"></i> 回复
+                            <i class="iconfont icon-pinglun"></i> {{$t('list.reply')}}
                             <span>75</span>
                           </a>
                         </li>
@@ -263,7 +263,7 @@
             <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
            </svg>
            <div class="editor-textarea"  v-show="talkReplyTxt" @click="talkReplyEditor">
-             <div class="editor-placeholder">回复...</div>
+             <div class="editor-placeholder">{{$t('list.reply')}}...</div>
            </div>
            <div class="editor-toolbar">
               <BibarReport ref='childShowApi' :toApi='toId' :contentId='item.author_id' v-show="showReport" @backReplies = 'showReplyContent'></BibarReport>

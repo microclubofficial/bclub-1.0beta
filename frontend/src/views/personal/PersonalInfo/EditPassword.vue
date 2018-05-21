@@ -3,28 +3,28 @@
         <div class="container">
             <form class="form-horizontal">
                 <div class="form-group">
-            <label class="col-sm-1 control-label">原密码:</label>
+            <label class="col-sm-2 control-label">{{$t('editProfile.originalPassword')}}</label>
             <div class="col-sm-3">
-              <input class="form-control" name="password" type="password" placeholder="Password" @blur='showFindPwdMsg(setPwd.OldPassword, 0)' v-model="setPwd.OldPassword">
+              <input class="form-control" name="password" type="password" :placeholder="$t('placeholder.originalPassword')" @blur='showFindPwdMsg(setPwd.OldPassword, 0)' v-model="setPwd.OldPassword">
             </div>
             <p class="prompt">{{oldpwdPrompt}}</p>
           </div>
                 <div class="form-group">
-            <label class="col-sm-1 control-label">新密码:</label>
+            <label class="col-sm-2 control-label">{{$t('editProfile.newPassword')}}</label>
             <div class="col-sm-3">
-              <input class="form-control" name="password" type="password" placeholder="Password" @blur='showFindPwdMsg(setPwd.NewPassword, 1)' v-model="setPwd.NewPassword">
+              <input class="form-control" name="password" type="password" :placeholder="$t('placeholder.newPassword')" @blur='showFindPwdMsg(setPwd.NewPassword, 1)' v-model="setPwd.NewPassword">
             </div>
             <p class="prompt">{{newpwdPrompt}}</p>
           </div>
           <div class="form-group">
-            <label class="col-sm-1 control-label">确认密码:</label>
+            <label class="col-sm-2 control-label">{{$t('editProfile.confirmPassword')}}</label>
             <div class="col-sm-3">
-              <input class="form-control" name="repassword" type="password" placeholder="Repassword" @blur='showFindPwdMsg(setPwd.confirm_password, 2)' v-model="setPwd.confirm_password">
+              <input class="form-control" name="repassword" type="password" :placeholder="$t('placeholder.repassword')" @blur='showFindPwdMsg(setPwd.confirm_password, 2)' v-model="setPwd.confirm_password">
             </div>
             <p class="prompt">{{confirm_upwdPrompt}}</p>
           </div>
-          <div class="form-group"  style="margin-top: 37px;">
-                    <div class="col-md-offset-2 col-md-1 forphone btnm confirm" @click='setPwdFun' data-target="#myModal" data-toggle="">确认
+          <div class="form-group">
+                    <div class="col-md-offset-3 col-md-1 forphone btnm confirm" @click='setPwdFun' data-target="#myModal" data-toggle="">{{$t('button.confirm')}}
                     </div>
                 </div>
             </form>
@@ -48,7 +48,18 @@ export default {
   methods: {
     //   验证
     showFindPwdMsg (input, id) {
-      if (id === 0 || id === 1) {
+      if (id === 0) {
+        if (input.length > 0) {
+          post(`/api/confirmed/password`, this.setPwd).then(data => {
+            if (data.resultcode === 0) {
+              this.oldpwdPrompt = '原密码错误'
+              return false
+            } else {
+              this.oldpwdPrompt = ''
+            }
+          })
+        }
+      } else if (id === 0 || id === 1) {
         var upwdreg = /^[a-zA-Z0-9_]{6,}$/
         if (!upwdreg.test(input) && input !== undefined && input.length > 0) {
           if (id === 0) {

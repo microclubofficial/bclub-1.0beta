@@ -6,9 +6,9 @@
            </svg>-->
         <div ref="editor" style="text-align:left" class='editor'></div>
         <span class="toLongText" @click="toBibarData(4)"><img src="../../assets/img/longText.png">长文</span>
-        <button @click="getContent()" class="report btnm">发布</button>
-        <button class="cancel" @click="isHideFun" v-if="!showDilog">取消</button>
-        <button class="cancel" @click="isHideFun" v-if="!showDilog">取消</button>
+        <button @click="getContent()" class="report btnm">{{$t('button.publish')}}</button>
+        <button class="cancel" @click="isHideFun" v-if="!showDilog">{{$t('button.cancel')}}</button>
+        <button class="cancel" @click="isHideFun" v-if="!showDilog">{{$t('button.cancel')}}</button>
         <!-- <div>{{backData}}</div> -->
     </div>
 </template>
@@ -68,7 +68,6 @@ export default {
             let reg = /<a.*?>(.*?)<\/a>/ig
             let result = reg.exec(this.topicData.content)
             this.topicData.content = this.topicData.content.replace(result[1], '<i class="iconfont">&#xe60e;</i>' + result[1] + '&nbsp;')
-            console.log(this.topicData.content)
           }
         }
       }
@@ -93,15 +92,21 @@ export default {
         this.topicData.picture = image[0]
         this.topicData.picture = this.topicData.picture.slice(this.topicData.picture.indexOf('/'), this.topicData.picture.lastIndexOf('=') - 7)
       }
-      if (this.$route.path !== '/') {
+      if (this.$route.path !== '/' && this.$route.path.indexOf('details') === -1) {
         this.topicData.token = this.$route.params.currency
-        this.topicData.tokenname = this.tokenBibar
+        if (this.tokenBibar) {
+          this.topicData.tokenname = this.tokenBibar
+        } else if (JSON.stringify(this.$route.query) !== '{}') {
+          this.topicData.tokenname = JSON.parse(this.$route.query.b).zh
+        } else {
+          this.topicData.tokenname = '币吧'
+        }
       }
-      this.$store.commit('LONG_ID', {
-        hideDilog: !this.showDilog,
-        bId: this.$route.params.currency,
-        bName: JSON.parse(this.$route.query.b).zh
-      })
+      // this.$store.commit('LONG_ID', {
+      //   hideDilog: !this.showDilog,
+      //   bId: this.$route.params.currency,
+      //   bName: JSON.parse(this.$route.query.b).zh
+      // })
       if (this.topicData.content.length > 0 || this.topicData.picture.length > 0) {
         post(`/api/topic`, this.topicData).then(data => {
           this.editorContent = ''
@@ -200,7 +205,12 @@ export default {
       if (text === '' || link === '') {
         return ('无效的链接')
       } else {
-        return true
+        let reg = /[hH][tT][tT][pP]([sS]?):\/\/(\S+\.)+\S{2,}$/ig
+        if (!reg.test(link)) {
+          return ('请输入正确的链接地址')
+        } else {
+          return true
+        }
       }
     }
     // 表情配置

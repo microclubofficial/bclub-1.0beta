@@ -250,7 +250,7 @@ export default {
     },
     // 获取手机验证码
     getPhoneControl () {
-      let phone = parseFloat(this.userForm.phone)     
+      let phone = parseFloat(this.userForm.phone)
       post('/api/phoneCaptcha', {'phone': phone}).then((data) => {
         if (data.resultcode === 1) {
           this.hasphone = true

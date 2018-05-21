@@ -31,8 +31,8 @@
   height: 40px;
   line-height: 40px;
   font-size: 18px;
-  margin: 40px 0 50px 52px;
-  width: 360px;
+  margin-top: 20px;
+  margin-bottom: 40px;
   &:hover {
     color: #fff;
     background-color: #50a6fc;
@@ -48,21 +48,21 @@
   <div>
     <div class="panel panel-primary login-box">
       <div class="panel-heading login-title">
-        <h3 class="panel-title text-center">找回密码</h3>
+        <h3 class="panel-title text-center">{{$t('forgetPassword.retrieve')}}</h3>
       </div>
       <div class="panel-body">
         <div class="confirm-box" style="padding:0 150px 0 100px;">
-          <h4>邮箱找回密码</h4>
-          <form class="form-horizontal">
+          <h4>{{$t('forgetPassword.byEmail')}}</h4>
+          <form class="form-horizontal clearfloat">
             <div class="form-group">
-              <label for="inputEmail3" class="col-md-3 control-label">邮 箱：</label>
+              <label for="inputEmail3" class="col-md-3 control-label">{{$t('forgetPassword.email')}}</label>
               <div class="col-md-9">
-                <input type="text" class="form-control" id="inputEmail3" @blur='showRegisterMsg(findForm.email, 0)' v-model="findForm.email" placeholder="请输入邮箱">
+                <input type="text" class="form-control" id="inputEmail3" @blur='showRegisterMsg(findForm.email, 0)' v-model="findForm.email" :placeholder="$t('placeholder.email')">
               </div>
             </div>
             <label class="col-md-3 control-label"></label>
             <p class="prompt col-md-9" style="margin-top:0px !important;">{{emailPrompt}}</p>
-            <button type="button" class="btn btn-primary btn-block login-button" @click="setfindemail">确认
+            <button type="button" class="btn col-md-offset-2 col-md-10 btn-primary login-button" @click="setfindemail">{{$t('button.confirm')}}
             </button>
           </form>
         </div>
@@ -73,7 +73,7 @@
 <script>
 import { post } from '../../utils/http'
 export default {
-  data: function() {
+  data: function () {
     return {
       findForm: {
         'email': ''
@@ -81,12 +81,12 @@ export default {
       emailPrompt: ''
     }
   },
-  mounted: function() {
+  mounted: function () {
 
   },
   methods: {
     // 失去焦点验证
-    showRegisterMsg(input, id) {
+    showRegisterMsg (input, id) {
       var emailreg = /^[A-Za-z0-9.\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
       if (id === 0) {
         if (input === undefined || input.length === 0) {
@@ -101,7 +101,7 @@ export default {
       }
     },
     // 填新密码
-    setfindemail() {
+    setfindemail () {
       post('/api/forget', this.findForm).then(data => {
         if (data.resultcode === 0) {
           alert(data.message)

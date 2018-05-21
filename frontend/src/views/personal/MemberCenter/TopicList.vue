@@ -8,9 +8,9 @@
     <div class="bibar-tabitem fade in active" :key="index" id="bibar-newstab1" v-for="(tmp,index) in articles">
       <div class="bibar-indexNewsList">
         <div class="bibar-indexNewsItem">
-          <div class="speech" v-if="tmp.reply_user !== null"> <span><span class="time">{{tmp.reply_time}}</span>前{{tmp.reply_user}}发表了评论</span><i class="iconfont icon-dot"></i></div>
+          <div class="speech" v-if="tmp.reply_user !== null"> <span><span class="time">{{tmp.reply_time}}</span>{{$t('list.ago')}} {{tmp.reply_user}} {{$t('list.commented')}}</span><i class="iconfont icon-dot"></i></div>
           <div class="user">
-            <div class="bibar-author"> <a href="#"> <span class="photo"><img :src="tmp.avatar"></span> <span class="name">{{tmp.author}}</span> <span class="time">{{tmp.diff_time !== '0秒' ? tmp.diff_time + '前' : '刚刚发布'}}·来自币吧</span> </a> </div>
+            <div class="bibar-author"> <a href="javascript:void(0)"> <span class="photo"><img :src="tmp.avatar"></span> <span class="name">{{tmp.author}}</span> <span class="time" @click='toBibar(tmp)'>{{tmp.diff_time !== '0秒' ? tmp.diff_time + '前' : '刚刚发布'}} - {{$t('list.from')}}{{tmp.token !== null ? tmp.zh_token : '币吧'}}</span> </a> </div>
             <div class="bibar-list">
               <div class="tit"><a href="javascript:void(0)" @click="goDetail(tmp.id)">{{tmp.title}}</a></div>
           <div class="txt indexNewslimitHeight" @click="goDetail(tmp.id)">
@@ -28,11 +28,11 @@
               <li class="set-choseOne"> <a href="javascript:void(0);" class="icon-quan mr15" :class='{active:tmp.is_good_bool}'  @click="changeNum(0,index,tmp.id,0,tmp)" ><i class="iconfont">&#xe603;</i><span class="is-good">{{tmp.is_good}}</span></a> <a href="javascript:void(0);" :class='{active:tmp.is_bad_bool}' class="icon-quan set-choseOne" @click="changeNum(1,index,tmp.id,0,tmp)"><i class="iconfont">&#xe731;</i><span class="is-bad">{{tmp.is_bad}}</span></a> </li>
               <li class="set-discuss" @click="showDiscuss(index,tmp.id)">
                 <a href="javascript:void(0);">
-                  <i class="iconfont icon-pinglun"></i> 评论
+                  <i class="iconfont icon-pinglun"></i> {{$t('list.comment')}}
                   <span>{{tmp.replies_count}}</span>
                 </a>
               </li>
-              <li class="set-choseStar" @click="collectionTopic(tmp)"> <a :class='{collectionActive:tmp.collect_bool}' href="javascript:void(0);"><i class="iconfont icon-star">&#xe6a7;</i>收藏</a> </li>
+              <li class="set-choseStar" @click="collectionTopic(tmp)"> <a :class='{collectionActive:tmp.collect_bool}' href="javascript:void(0);"><i class="iconfont icon-star">&#xe6a7;</i>{{$t('list.collect')}}</a> </li>
               <!-- <li> <a href="javascript:void(0);"><i class="iconfont icon-fenxiang"></i> 分享</a> </li> -->
               <!-- <li class="set-choseShang"> <a href="javascript:void(0);"><i class="iconfont icon-dashang"></i> 打赏<span>438</span></a> </li> -->
               <li>
@@ -62,7 +62,7 @@
          <div class="editor-bd clearfloat">
            <span class="comment-img-delete"></span>
            <div class="editor-textarea" v-show="commentShow" @click="commentShowFun">
-             <div class="editor-placeholder">评论...</div>
+             <div class="editor-placeholder">{{$t('list.comment')}}...</div>
            </div>
            <div class="editor-toolbar">
               <BibarReport :toApi='toId' :mainCommnet='lid' v-show="showReport" @backList = 'showContent' ></BibarReport>
@@ -77,7 +77,7 @@
           <div class="hook-comment"></div>
           <div class="comment-container">
             <div class="comment-all">
-              <h3>全部评论({{tmp.replies_count}})</h3>
+              <h3>{{$t('list.allComments')}}({{tmp.replies_count}})</h3>
               <!-- <div class="comment-sort">
                 <a href="#" class="active">最近</a>
                 <a href="#">最早</a>
@@ -117,7 +117,9 @@
                       <!-- @ 样式 -->
                       <p class="replyAuthor" v-if="item.at_user !== ''">@{{item.at_user}}:&nbsp;<span class="replyBackConten" style="display:inline-block;font-weight: normal;" v-html="replyFun(item.reference)"></span></p>
                       <!-- <p>{{item}}</p> -->
-                      <p v-html="item.content">{{item.content}}</p>
+                      <p v-html="commentContent(item.content)"></p>
+                      <!--展开-->
+              <a style="font-size:16px; float:right; display: block;" v-if='item.content.length > 300' href="#" class="bibar-indexintromore text-theme" @click="changeMore(item.id)">{{item.id === moreId ? '收起' : '展开'}}<i style="font-size:16px;" class="iconfont" v-if='more === "展开"'>&#xe692;</i><i style="font-size:16px;" class="iconfont" v-if='more === "收起"'>&#xe693;</i></a>
                     </div>
                     <div class="set" style="margin-left:42px;" >
                       <ul class="bibar-indexNewsItem-infro">
@@ -249,7 +251,9 @@ export default{
       showPage: false,
       // loading
       showLoader: false,
-      showLoaderComment: false
+      showLoaderComment: false,
+      more: '展开',
+      moreId: ''
     }
   },
   components: {
@@ -271,11 +275,19 @@ export default{
           this.loadingShow = true
         }
         var that = this
-        document.querySelector('#app').addEventListener('scroll', function () {
-          if (this.clientHeight + this.scrollTop === this.scrollHeight) {
-            that.loadTopicPage()
-          }
-        })
+        if (this.pageCount === 1) {
+          this.bottomText = '没有啦'
+          this.listLoding = false
+          this.noLoading = true
+          // this.loadingImg = '../../assets/img/noLoading.png'
+          return false
+        } else {
+          document.querySelector('#app').addEventListener('scroll', function () {
+            if (this.clientHeight + this.scrollTop === this.scrollHeight) {
+              that.loadTopicPage()
+            }
+          })
+        }
       }
     })
   },
@@ -505,7 +517,7 @@ export default{
     },
     // 回复返回数据
     showReplyContent (data) {
-      this.nowData[this.replayId].unshift(data)
+      this.nowData[this.replyId].unshift(data)
       // this.showLoaderComment = true
       this.articles[this.i].replies_count = data.replies_count
       this.replayId = ''
@@ -535,19 +547,65 @@ export default{
     },
     // 处理图片
     EditorContent (val) {
-      let now = `<div>${val}</div>`
-      now = $(now).text()
-      if (now.length > 128) {
-        return now.substring(0, 128) + '...'
+      let now = val.replace(/<p[^>]*>|<\/p>|<span[^>]*>|<\/span>|<br>|<h[1-6][^>]*>|<\/h[1-6]>|<h-char[^>]*>|<img[^>]*>|<\/h-char>|<h-inner>|<\/h-inner>/g, '')
+      now = now.replace(/&nbsp;*/g, '')
+      // now = $(now).text()
+      if (now.length > 300) {
+        return now.substring(0, 300) + '...'
       }
       return now
     },
+    // 艾特图片处理
     replyFun (val) {
-      let reply = val.replace(/<p>|<\/p>/g, '')
-      if (/^\/static.*/ig.test(reply)) {
+      let reply = val.replace(/<p[^>]*>|<\/p>|<h-char[^>]*>|<\/h-char>|<h-inner>|<\/h-inner>/g, '')
+      if (reply.indexOf('img') > 0) {
+        let imgLength = 0
+        let imgArr = reply.match(/<img[^>]*>/gi)
+        for (let i = 0; i < imgArr.length; i++) {
+          imgLength += imgArr[i].length
+        }
+        return reply.substring(0, 50 + imgLength)
+      } else if (/^\/static.*/ig.test(reply)) {
         return '图片评论' + `<a style='color:#0181FF' href='${reply}'><i class='iconfont'>&#xe694;</i>查看图片</a>`
+      } else if (reply.length > 100) {
+        return reply.substring(0, 50) + '...'
+      } else {
+        return reply
       }
-      return reply
+    },
+    // 评论回复文字处理
+    commentContent (val) {
+      val = val.replace(/<p[^>]*>|<\/p>|<h-char[^>]*>|<\/h-char>|<h-inner>|<\/h-inner>/g, '')
+      if (val.length > 300) {
+        if (this.more === '展开') {
+          return val.substring(0, 300) + '...'
+        } else {
+          return val
+        }
+      } else {
+        return val
+      }
+    },
+    changeMore (id) {
+      if (id !== this.moreId) {
+        this.moreId = id
+        this.more = '收起'
+      } else {
+        this.more = '展开'
+        this.moreId = ''
+      }
+    },
+    // 来自去币讯
+    toBibar (tmp) {
+      if (tmp.token === null) {
+        return
+      }
+      this.$router.push({
+        path: `/msgDetail/${tmp.token}`,
+        query: {
+          b: JSON.stringify({'zh': tmp.zh_token})
+        }
+      })
     },
     // 分页
     prev () {

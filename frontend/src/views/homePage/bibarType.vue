@@ -41,7 +41,12 @@ export default{
         'chartId': id,
         'chartCh': ch
       })
-      this.$router.push(`/msgDetail/${router}`)
+      this.$router.push({
+        path: `/msgDetail/${router}`,
+        query: {
+          b: JSON.stringify({'zh': ch})
+        }
+      })
     }
   }
 }

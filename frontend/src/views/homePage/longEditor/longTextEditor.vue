@@ -1,7 +1,7 @@
 <template>
   <div>
     <div ref="editor" style="text-align:left" class='editor'></div>
-    <button type="button" @click="getContent" class="report">发布</button>
+    <button type="button" @click="getContent" class="report">{{$t('button.publish')}}</button>
   </div>
 </template>
 
@@ -76,7 +76,12 @@ export default{
       if (text === '' || link === '') {
         return ('无效的链接')
       } else {
-        return true
+        let reg = /[hH][tT][tT][pP]([sS]?):\/\/(\S+\.)+\S{2,}$/ig
+        if (!reg.test(link)) {
+          return ('请输入正确的链接地址')
+        } else {
+          return true
+        }
       }
     }
     // 表情配置

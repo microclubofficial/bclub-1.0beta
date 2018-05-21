@@ -3,31 +3,31 @@
     <div class="container">
       <form class="form-horizontal">
         <div class="form-group">
-          <label class="col-md-1 control-label">用户名:</label>
+          <label class="col-md-2 control-label">{{$t('register.username')}}</label>
           <div class="col-md-2">
-            <p class="form-control-static">{{userInfo.username}}</p>
+            <p class="form-control-static">{{personalUserInfo.username}}</p>
           </div>
           <div class="col-md-2">
-            <div class="btnm setFormconfirm" data-target="#myModal" data-toggle="modal" @click="setFormBtn(0)">修改</div>
+            <div class="btnm setFormconfirm" data-target="#myModal" data-toggle="modal" @click="setFormBtn(0)">{{$t('button.edit')}}</div>
           </div>
         </div>
         <div class="form-group">
-          <label class="col-md-1 control-label">手机号:</label>
+          <label class="col-md-2 control-label">{{$t('register.phone')}}</label>
           <div class="col-md-2">
             <p class="form-control-static">{{personalUserInfo.phone}}</p>
           </div>
           <div class="col-md-2">
-            <div class="btnm setFormconfirm" @click="setFormBtn(1)">修改</div>
+            <div class="btnm setFormconfirm" @click="setFormBtn(1)">{{$t('button.edit')}}</div>
           </div>
         </div>
         <div class="form-group">
-          <label class="col-md-1 control-label">注册时间:</label>
+          <label class="col-md-2 control-label">{{$t('editProfile.registerTime')}}</label>
           <div class="col-md-2">
             <p class="form-control-static">{{personalUserInfo.register_time}}</p>
           </div>
         </div>
         <div class="form-group">
-          <label class="col-md-1 control-label">上次登录:</label>
+          <label class="col-md-2 control-label">{{$t('editProfile.lastLogin')}}</label>
           <div class="col-md-2">
             <p class="form-control-static">{{personalUserInfo.last_login}}</p>
           </div>
@@ -39,41 +39,41 @@
           <div class="modal-content">
             <div class="modal-header">
               <button type="button" @click="closeModal" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-              <h4 class="modal-title diy-title" id="myModalLabel">{{showModel ? '请填写用户名' : '请填写手机号'}}</h4>
+              <h4 class="modal-title diy-title" id="myModalLabel">{{showModel ? $t('message.username') : $t('message.phone')}}</h4>
             </div>
             <div class="modal-body">
               <!-- 修改用户名 -->
               <form class="form-horizontal form-space" v-if="showModel">
                 <div class="form-group">
-                  <label for="inputEmail3" class="col-md-3 control-label">用户名：</label>
+                  <label for="inputEmail3" class="col-md-3 control-label">{{$t('register.username')}}</label>
                   <div class="col-md-9">
-                    <input type="text" class="form-control" name="username" @blur='showsetFormMsg(setForm.username, 0)' v-model="setForm.username" id="inputEmail3" placeholder="请输入用户名">
+                    <input type="text" class="form-control" name="username" @blur='showsetFormMsg(setForm.username, 0)' v-model="setForm.username" maxlength="16" id="inputEmail3" :placeholder="$t('placeholder.username')">
                   </div>
                 </div>
                 <label class="col-md-3 control-label"></label>
                 <p class="prompt col-md-9" style="margin-top:0px !important;">{{unamePrompt}}</p>
-                <button type="button" class="btn btn-primary btn-block login-button"  v-bind:disabled="!setForm.username" @click="setusername" data-target="#myModal" data-toggle="">确认
+                <button type="button" class="btn btn-primary btn-block login-button"  v-bind:disabled="!setForm.username" @click="setusername" data-target="#myModal" data-toggle="">{{$t('button.confirm')}}
                 </button>
               </form>
               <!-- 修改手机号 -->
               <form class="form-horizontal form-space" v-if="!showModel">
                 <div class="form-group">
-                  <label for="inputEmail3" class="col-md-3 control-label">手机号：</label>
+                  <label for="inputEmail3" class="col-md-3 control-label">{{$t('register.phone')}}</label>
                   <div class="col-md-9">
-                    <input type="text" class="form-control" id="inputEmail3" @blur='showsetFormMsg(setForm.phone, 1)' v-model="setForm.phone" placeholder="请输入手机号">
+                    <input type="text" class="form-control" id="inputEmail3" @blur='showsetFormMsg(setForm.phone, 1)' v-model="setForm.phone" :placeholder="$t('placeholder.phone')">
                   </div>
                 </div>
                 <p class="prompt col-md-offset-3 col-md-9" style="margin-top:0px !important;">{{phonePrompt}}</p>
                 <div class="form-group" style="margin-top: 37px;">
-                  <label for="inputCaptcha3" class="col-md-3 control-label">验证码：</label>
+                  <label for="inputCaptcha3" class="col-md-3 control-label">{{$t('register.vcode')}}</label>
                   <div class="col-md-6">
-                    <input type="text" class="form-control" v-model="setForm.captcha" @blur='showsetFormMsg(setForm.captcha, 2)' id="inputCaptcha3" placeholder="请输入验证码">
+                    <input type="text" class="form-control" v-model="setForm.captcha" @blur='showsetFormMsg(setForm.captcha, 2)' id="inputCaptcha3" :placeholder="$t('placeholder.vcode')">
                   </div>
                   <button type="button" class="btn btn-default get-captcha" style="height:34px;line-height:34px;" @click="getPhoneControl" v-bind:disabled="hasphone" :class="{'btn-success':!hasphone}">
                     <span v-show="hasControl">{{countdown}}</span>{{getcontroltxt}}</button>
                 </div>
                 <p class="prompt col-md-offset-3 col-md-9" style="margin-top:0px !important;">{{phoneControlPrompt}}</p>
-                <button type="button" class="btn btn-primary btn-block login-button"  v-bind:disabled="!setForm.username" @click="setusername" data-target="#myModal" data-toggle="">确认
+                <button type="button" class="btn btn-primary btn-block login-button"  v-bind:disabled="!setForm.phone" @click="setusername" data-target="#myModal" data-toggle="">{{$t('button.confirm')}}
                 </button>
               </form>
             </div>
@@ -98,7 +98,7 @@ export default {
       countdown: 30,
       hasControl: false,
       timer: null,
-      getcontroltxt: '获取验证码',
+      getcontroltxt: this.$t('prompt.acquireVcode'),
       phonePrompt: '',
       phoneControlPrompt: '',
       canSetU: false,
@@ -155,10 +155,7 @@ export default {
           this.setForm.phone = input
         }
       } else if (id === 2) {
-        if (input === undefined || input.length === 0) {
-          this.phoneControlPrompt = '验证码不能为空'
-          return false
-        } else {
+        if (input.length > 0) {
           this.phoneControlPrompt = ''
         }
       }
@@ -186,9 +183,9 @@ export default {
                 'avatar': data.data.avatar,
                 'isLogin': true
               })
-              if(rememberToken('remember_token')){
+              if (rememberToken('remember_token')) {
                 setToken('b-Token', data.data, {expires: 7})
-              }else{
+              } else {
                 setToken('b-Token', data.data)
               }
               this.personalUser(data.data.username)
@@ -198,6 +195,10 @@ export default {
           })
         }
       } else {
+        if (this.setForm.captcha === undefined || this.setForm.captcha.length === 0) {
+          this.phoneControlPrompt = '验证码不能为空'
+          return false
+        }
         post(`/api/setting/phone`, this.setForm).then(data => {
           if (data.resultcode === 0) {
             instance = new Toast({
@@ -226,7 +227,7 @@ export default {
       post('/api/phoneCaptcha', { 'phone': phone }).then((data) => {
         if (data.resultcode === 0) {
           if (data.message === 'failed') {
-            alert('手机号已注册')
+            alert(this.$t('message.phoneRegistered'))
             this.hasphone = true
             return false
           }
@@ -234,10 +235,10 @@ export default {
           this.timer = setInterval(function () {
             that.countdown--
             that.hasControl = true
-            that.getcontroltxt = '重新获取'
+            that.getcontroltxt = that.$t('prompt.reacquire')
             this.kaiguan = false
             if (that.countdown < 1) {
-              that.getcontroltxt = '获取验证码'
+              that.getcontroltxt = that.$t('prompt.acquireVcode')
               that.hasphone = false
               that.countdown = 30
               that.hasControl = false
@@ -266,7 +267,7 @@ export default {
     personalUser (uname) {
       get(`/api/u/${uname}`).then(data => {
         if (data.message === '未登录') {
-          alert('请先去登录')
+          alert(this.$t('message.loginFirst'))
           this.$router.push({ path: '/login' })
         } else {
           this.personalUserInfo = data.data

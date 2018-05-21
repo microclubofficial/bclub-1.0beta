@@ -44,31 +44,31 @@
   <div>
     <div class="panel panel-primary login-box">
       <div class="panel-heading login-title">
-        <h3 class="panel-title text-center">找回密码</h3>
+        <h3 class="panel-title text-center">{{$t('forgetPassword.retrieve')}}</h3>
       </div>
       <div class="panel-body">
         <div class="confirm-box" style="padding:0 150px 0 100px;">
-          <h4>请设置新密码</h4>
+          <h4>{{$t('forgetPassword.newPassword')}}</h4>
           <form class="form-horizontal">
             <div class="form-group">
-              <label for="inputPassword3" class="col-md-3 control-label">新&nbsp;&nbsp;密&nbsp;&nbsp;码：</label>
+              <label for="inputPassword3" class="col-md-3 control-label">{{$t('editProfile.newPassword')}}</label>
               <div class="col-md-9">
-                <input class="form-control" name="password" type="password" placeholder="请设置新密码" @blur='showRegisterMsg(findForm.password, 0)' v-model="findForm.password">
+                <input class="form-control" name="password" type="password" :placeholder="$t('placeholder.password')" @blur='showRegisterMsg(findForm.password, 0)' v-model="findForm.password">
               </div>
               <label class="col-md-3 control-label"></label>
               <p class="prompt col-md-9">{{upwdPrompt}}</p>
             </div>
             <div class="form-group">
-              <label for="inputRepassword3" class="col-md-3 control-label">确认密码：</label>
+              <label for="inputRepassword3" class="col-md-3 control-label">{{$t('editProfile.confirmPassword')}}</label>
               <div class="col-md-9">
-                <input class="form-control" name="repassword" type="password" placeholder="请确认密码" @blur='showRegisterMsg(findForm.confirm_password, 1)' v-model="findForm.confirm_password">
+                <input class="form-control" name="repassword" type="password" :placeholder="$t('placeholder.repassword')" @blur='showRegisterMsg(findForm.confirm_password, 1)' v-model="findForm.confirm_password">
               </div>
               <label class="col-md-3 control-label"></label>
               <p class="prompt col-md-9">{{confirm_upwdPrompt}}</p>
             </div>
             <label class="col-md-3 control-label"></label>
             <p class="prompt col-md-9" style="margin-top:0px !important;">{{emailPrompt}}</p>
-            <button type="button" class="btn btn-primary btn-block login-button" @click="setnewpwd">确认
+            <button type="button" class="btn btn-primary btn-block login-button" @click="setnewpwd">{{$t('button.confirm')}}
             </button>
           </form>
         </div>

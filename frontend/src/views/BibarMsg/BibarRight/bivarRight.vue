@@ -2,32 +2,32 @@
 <div class="pt20">
  <!--简介-->
             <article class="bibar-box bibar-boxindex3" v-if="$route.path !== '/'">
-                <div class="bibar-boxtitle" style="margin-bottom:10px;"> <span class="name">简介</span> </div>
+                <div class="bibar-boxtitle" style="margin-bottom:10px;"> <span class="name">{{$t('sideBar.introduction')}}</span> </div>
                 <div class="bibar-boxbody">
                     <div class="bibar-indexintro">
-                        <p>{{briefC.length > 0 ? briefC : '暂无简介'}}</p>
+                        <p v-html='briefC !== "" ? briefC : "暂无信息" '></p>
                     </div>
-                    <a href="#" v-if='briefC.length > 0' class="bibar-indexintromore text-theme" @click="showText = !showText">{{more}}<i class="iconfont" v-if='!showText'>&#xe692;</i><i class="iconfont" v-if='showText'>&#xe693;</i></a>
-                    <div class="bibar-indexinftrList">
+                    <a href="#" v-if='briefC !== ""' class="bibar-indexintromore text-theme" @click="showText = !showText">{{this.showText === false ? $t('button.unfold') : $t('button.fold')}}<i class="iconfont" v-if='!showText'>&#xe692;</i><i class="iconfont" v-if='showText'>&#xe693;</i></a>
+                    <div class="bibar-indexinftrList" v-if='briefC.length > 0'>
                         <dl>
-                            <dt>发行时间</dt>
-                            <dd>{{brief.publicTime}}</dd>
+                            <dt :class="{'enwidth':language == 'en'}">{{$t('sideBar.publicTime')}}</dt>
+                            <dd :class="{'enpadding':language == 'en'}">{{brief.publicTime}}</dd>
                         </dl>
                         <!--<dl>
                             <dt>众筹价格</dt>
                             <dd>--</dd>
                         </dl>-->
                         <dl>
-                            <dt>白皮书</dt>
-                            <dd><a :href='brief.whitepaper' :title="brief.whitepaper" target="_blank" class="text-theme">{{brief.whitepaper ? brief.whitepaper : '--'}}</a></dd>
+                            <dt :class="{'enwidth':language == 'en'}">{{$t('sideBar.whitePaper')}}</dt>
+                            <dd :class="{'enpadding':language == 'en'}"><a :href='brief.whitepaper' :title="brief.whitepaper" target="_blank" class="text-theme">{{brief.whitepaper ? brief.whitepaper : '--'}}</a></dd>
                         </dl>
                         <dl>
-                            <dt>官网</dt>
-                            <dd><a :href='websites' :title="websites" target="_blank" class="text-theme">{{websites}}</a></dd>
+                            <dt :class="{'enwidth':language == 'en'}">{{$t('sideBar.officialWebsite')}}</dt>
+                            <dd :class="{'enpadding':language == 'en'}"><a :href='websites' :title="websites" target="_blank" class="text-theme">{{websites}}</a></dd>
                         </dl>
                         <dl>
-                            <dt>区块查询</dt>
-                            <dd>
+                            <dt :class="{'enwidth':language == 'en'}">{{$t('sideBar.blockQuery')}}</dt>
+                            <dd :class="{'enpadding':language == 'en'}">
                               <a :href='item' :title="item" class="text-theme" target="_blank" style="display:block;" v-for='(item,index) in brief.Explorers' :key="index">{{item}}</a>
                             </dd>
                         </dl>
@@ -88,7 +88,8 @@
   <div class="indexrightscroll-top">
     <!--热门-->
     <div class="bibar-box bibar-boxindex3">
-      <div class="bibar-boxtitle"> <span class="name">热门币</span><div style="display:inline-block;float:right;"><a href="javascript:void(0)" v-if='showNext' class="fr" @click="changeBtb(1)">后10位</a><a href="javascript:void(0)" class="fr" v-if='showPre' @click="changeBtb(0)">前10位</a></div></div>
+
+      <div class="bibar-boxtitle"> <span class="name">{{$t('sideBar.hotCoins')}}</span><div style="display:inline-block;float:right;"><a href="javascript:void(0)" v-if='showNext' class="fr" @click="changeBtb(1)">{{$t('sideBar.nextTen')}}</a><a href="javascript:void(0)" class="fr" v-if='showPre' @click="changeBtb(0)">{{$t('sideBar.prevTen')}}</a></div></div>
       <div class="bibar-boxbody">
         <ul class="bibar-indexRMlist">
           <li class="bibar-indexRMitem row" v-for="(tmp,index) in hotList" :key="index" @click='toBibarDetail(tmp)'>
@@ -116,6 +117,7 @@
 <script>
 import $ from 'jquery'
 import {get} from '../../../utils/http'
+import { getToken } from '../../../utils/auth'
 export default{
   props: ['bId'],
   data: function () {
@@ -139,15 +141,20 @@ export default{
       // 上下一页
       showPre: false,
       showNext: true,
-      showText: false
+      showText: false,
+      buttonText: '',
+      // 当前语言
+      language: 'zh'
     }
   },
   created: function () {
+    this.language = getToken('language')
+
     $('#myTab li:eq(1) a').tab('show')
     // 影响力
-    this.sideFun(this.sidePage)
+    // this.sideFun(this.sidePage)
     // 分析师
-    this.analystFun(this.analystPage)
+    // this.analystFun(this.analystPage)
     // 热门币
     this.bibarHot(this.hotbPage)
     // 简介
@@ -159,17 +166,14 @@ export default{
   },
   computed: {
     briefC: function () {
-      if (this.showText === false) {
-        return this.briefTxt.substring(0, 80) + '...'
+      if (this.briefTxt !== '') {
+        if (this.showText === false) {
+          return this.briefTxt.substring(0, 80) + '...'
+        } else {
+          return this.briefTxt
+        }
       } else {
-        return this.briefTxt
-      }
-    },
-    more: function () {
-      if (this.showText === false) {
-        return '展开'
-      } else {
-        return '收起'
+        return ''
       }
     }
   },
@@ -180,32 +184,32 @@ export default{
       }
     },
     // 影响力
-    sideFun (pno) {
-      get(`/api/side/influence/${pno}`).then(data => {
-        this.sideList = data.data.reply
-        this.pageCount = data.data.page_count
-      })
-    },
+    // sideFun (pno) {
+    //   get(`/api/side/influence/${pno}`).then(data => {
+    //     this.sideList = data.data.reply
+    //     this.pageCount = data.data.page_count
+    //   })
+    // },
     // 影响力翻页
-    changePage (id) {
-      if (id === 0) {
-        if (this.sidePage > 1 && this.sidePage < this.pageCount) {
-          this.sidePage--
-          this.sideFun(this.sidePage)
-        }
-      } else if (id === 1) {
-        if (this.sidePage < this.pageCount) {
-          this.sidePage++
-          this.sideFun(this.sidePage)
-        }
-      }
-    },
+    // changePage (id) {
+    //   if (id === 0) {
+    //     if (this.sidePage > 1 && this.sidePage < this.pageCount) {
+    //       this.sidePage--
+    //       this.sideFun(this.sidePage)
+    //     }
+    //   } else if (id === 1) {
+    //     if (this.sidePage < this.pageCount) {
+    //       this.sidePage++
+    //       this.sideFun(this.sidePage)
+    //     }
+    //   }
+    // },
     // 分析师
-    analystFun (pno) {
-      get(`/api/side/analyst/${pno}`).then(data => {
-        this.analystList = data.data.analyst
-      })
-    },
+    // analystFun (pno) {
+    //   get(`/api/side/analyst/${pno}`).then(data => {
+    //     this.analystList = data.data.analyst
+    //   })
+    // },
     // 热门币
     bibarHot (pno) {
       get(`/api/blist/${pno}/${this.hotCount}`).then(data => {
@@ -220,7 +224,11 @@ export default{
         if (this.hotbPage > 1 && this.hotbPage < this.hotPageCount) {
           this.hotbPage--
           this.bibarHot(this.hotbPage)
-          this.showPre = true
+          if (this.hotbPage === 1) {
+            this.showPre = false
+          } else {
+            this.showPre = true
+          }
         } else {
           this.showPre = false
         }
@@ -253,15 +261,14 @@ export default{
     // 简介
     briefFun (id) {
       this.showText = false
+      this.briefTxt = ''
       get(`/api/side/tokenintroduce/${id}`).then(data => {
         if (data.resultcode === 1) {
           this.brief = data.data
           // console.log(this.brief)
           this.websites = this.brief.websites[0]
-          if (this.brief.descriptions.zh.length === 1) {
-            this.briefTxt = this.brief.descriptions.zh[0]
-          } else {
-            this.briefTxt = this.brief.descriptions.zh[0] + this.brief.descriptions.zh[1]
+          for (let i = 0; i < this.brief.descriptions.zh.length; i++) {
+            this.briefTxt += `<p>${this.brief.descriptions.zh[i]}</p>`
           }
         }
       })
@@ -271,6 +278,7 @@ export default{
 </script>
 
 <style scoped>
+
 .nav>li>a {
     padding: 8px 12px !important;
 }
@@ -305,5 +313,12 @@ export default{
 }
 .bibar-boxbody .bibar-indexRMlist li:hover{
   background-color: #f3f3f3;
+}
+.bibar-indexinftrList dl dt.enwidth{
+  width:100%;
+}
+.bibar-indexinftrList dl dd.enpadding{
+  width:160px;
+  padding-left:15px;
 }
 </style>

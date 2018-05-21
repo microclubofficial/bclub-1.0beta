@@ -25,8 +25,9 @@
             <a href="javascript:void(0)" class="name">{{articleDetail.author}}</a>
           </div>
           <div class="avatar_subtitle">
-            <a href="" target="_blank" class="time">{{articleDetail.diff_time}}前</a>
-            <span class="source">·&nbsp;来自币吧</span>
+            <!--<a href="" target="_blank" class="time">{{articleDetail.diff_time}}前</a>
+            <span class="source">·&nbsp;来自币吧</span>-->
+            <a href="javascript:void(0)" @click='toBibar(articleDetail)'> <span class="time">{{articleDetail.diff_time !== '0秒' ? articleDetail.diff_time + '前' : '刚刚发布'}} - 来自{{articleDetail.token !== null ? articleDetail.zh_token : '币吧'}}</span> </a>
           </div>
         </div>
       </div>
@@ -67,7 +68,7 @@
             <ul class="bibar-indexNewsItem-infro">
               <li class="set-choseOne" style="margin-top: 3px"> <a href="javascript:void(0);" class="icon-quan mr15" :class='{active:articleDetail.is_good_bool}'  @click="changeNumAriticle(0,articleDetail)" ><i class="iconfont">&#xe603;</i><span class="is-good">{{articleDetail.is_good}}</span></a> <a href="javascript:void(0);" :class='{active:articleDetail.is_bad_bool}' class="icon-quan set-choseOne" @click="changeNumAriticle(1,articleDetail)"><i class="iconfont">&#xe731;</i><span class="is-bad">{{articleDetail.is_bad}}</span></a> </li>
               <li class="set-choseStar" @click="collectionTopic(articleDetail)"> <a href="javascript:void(0)" class="btn-article-retweet" :class='{collectionActive:articleDetail.collect_bool}'>
-          <i class="iconfont icon-star">&#xe6a7;</i>收藏
+          <i class="iconfont icon-star">&#xe6a7;</i>{{$t('list.collect')}}
         </a> </li>
               <!-- <li> <a href="javascript:void(0);"><i class="iconfont icon-fenxiang"></i> 分享</a> </li> -->
               <!-- <li class="set-choseShang"> <a href="javascript:void(0);"><i class="iconfont icon-dashang"></i> 打赏<span>438</span></a> </li> -->
@@ -110,7 +111,7 @@
               <img src="../../assets/img/loading.png" alt="">
             </div>
             <div class="comment-all">
-              <h3>全部评论({{repliesCcount}})</h3>
+              <h3>{{$t('list.allComments')}}({{repliesCcount}})</h3>
               <!-- <div class="comment-sort">
                 <a href="#" class="active">最近</a>
                 <a href="#">最早</a>
@@ -125,23 +126,24 @@
                     </a>
                     <div class="comment-item-main">
                       <div class="comment-item-hd">
-                        <a href="#" class="user-name">{{item.author}}</a>
+                        <span href="#" class="name">{{item.author}}</span>
                         <!--<span class="time">{{item.diff_time}}前发布</span>-->
                         <span class="time">{{item.diff_time !== '0秒' ? item.diff_time + '前' : '刚刚'}}发布</span>
                       </div>
                       <!-- @ 样式 -->
-                      <!--<p class="replyAuthor" v-if="item.at_user !== ''"><span style="position:absolute;">@{{item.at_user}}:</span><span class="replyBackConten" style="display:inline-block;margin-left:70px;font-weight: normal;" v-html="replyFun(item.reference)"></span></p>-->
                       <p class="replyAuthor" v-if="item.at_user !== ''">@{{item.at_user}}:&nbsp;<span class="replyBackConten" style="display:inline-block;font-weight: normal;" v-html="replyFun(item.reference)"></span></p>
                       <!-- <p>{{item}}</p> -->
                       <!-- <p>{{item}}</p> -->
-                      <div class="detailContent" v-html="item.content">{{item.content}}</div>
+                      <div class="detailContent" v-html="commentContent(item.content)"></div>
+                      <!--展开-->
+              <a style="font-size:16px; float:right; display: block;" v-if='item.content.length > 300' href="#" class="bibar-indexintromore text-theme" @click="changeMore(item.id)">{{item.id === moreId ? '收起' : '展开'}}<i style="font-size:16px;" class="iconfont" v-if='more === "展开"'>&#xe692;</i><i style="font-size:16px;" class="iconfont" v-if='more === "收起"'>&#xe693;</i></a>
                     </div>
                     <div class="set" style="margin-left: 57px;">
                       <ul class="bibar-indexNewsItem-infro">
                         <li class="set-choseOne"> <a href="javascript:void(0);" class="icon-quan mr15" :class='{active:item.is_good_bool}'  @click="changeNum(0,now,item.id,item)"><i class="iconfont">&#xe603;</i><span class="is-good">{{item.is_good}}</span></a><a href="javascript:void(0);" :class='{active:item.is_bad_bool}' class="icon-quan" @click="changeNum(1,now,item.id,item)"><i class="iconfont">&#xe731;</i><span class="is-bad">{{item.is_bad}}</span></a> </li>
                         <li class="set-discuss" @click="replyComment(item.id,now)">
                           <a href="javascript:void(0);">
-                            <i class="iconfont icon-pinglun"></i> 回复
+                            <i class="iconfont icon-pinglun"></i> {{$t('list.reply')}}
                           </a>
                         </li>
                       </ul>
@@ -159,7 +161,7 @@
            <span class="comment-img-delete"></span>
         <!--富文本-->
            <div class="editor-textarea" v-show="talkReplyTxt" @click="talkReplyEditor">
-             <div class="editor-placeholder">回复...</div>
+             <div class="editor-placeholder">{{$t('list.reply')}}...</div>
            </div>
            <div class="editor-toolbar">
               <BibarReport ref='childShowApi' :toApi='toRId' :replyAuthor='item.author' :replyContent='item.content' @backhotReplies = 'showReplyContent' :mainReplay='articleDetail.id' v-show="showReportReplay"></BibarReport>
@@ -232,7 +234,9 @@ export default {
       // 加载
       showLoader: false,
       showLoaderComment: false,
-      crumb: []
+      crumb: [],
+      more: '展开',
+      moreId: ''
     }
   },
   computed: {
@@ -276,11 +280,19 @@ export default {
         })
       })
       var that = this
-      document.querySelector('#app').addEventListener('scroll', function () {
-        if (this.scrollHeight - this.scrollTop === this.clientHeight) {
-          that.loadDetailPage()
-        }
-      })
+      if (this.pageCount === 1) {
+        this.bottomText = '没有啦'
+        this.listLoding = false
+        this.noLoading = true
+        // this.loadingImg = '../../assets/img/noLoading.png'
+        return false
+      } else {
+        document.querySelector('#app').addEventListener('scroll', function () {
+          if (this.scrollHeight - this.scrollTop === this.clientHeight) {
+            that.loadDetailPage()
+          }
+        })
+      }
     })
     $('.editor').css({'padding-bottom': '35px'})
     $('.editor-toolbar').find('.report ').css({'right': '260px', 'bottom': '2px'})
@@ -431,13 +443,6 @@ export default {
         return newTxt
       }
     },
-    replyFun (val) {
-      let reply = val.replace(/<p>|<\/p>/g, '')
-      if (/^\/static.*/ig.test(reply)) {
-        return '图片评论' + `<a style='color:#0181FF' href='${reply}'><i class='iconfont'>&#xe694;</i>查看图片</a>`
-      }
-      return reply
-    },
     // 处理正文
     detailFun (val) {
       if (/<img.*>/gi.test(val)) {
@@ -467,6 +472,58 @@ export default {
           instance.close()
         }, 1000)
       })
+    },
+    // 来自去币讯
+    toBibar (tmp) {
+      if (tmp.token === null) {
+        return
+      }
+      this.$router.push({
+        path: `/msgDetail/${tmp.token}`,
+        query: {
+          b: JSON.stringify({'zh': tmp.zh_token})
+        }
+      })
+    },
+    // 艾特图片处理
+    replyFun (val) {
+      let reply = val.replace(/<p[^>]*>|<\/p>|<h-char[^>]*>|<\/h-char>|<h-inner>|<\/h-inner>/g, '')
+      if (reply.indexOf('img') > 0) {
+        let imgLength = 0
+        let imgArr = reply.match(/<img[^>]*>/gi)
+        for (let i = 0; i < imgArr.length; i++) {
+          imgLength += imgArr[i].length
+        }
+        return reply.substring(0, 50 + imgLength)
+      } else if (/^\/static.*/ig.test(reply)) {
+        return '图片评论' + `<a style='color:#0181FF' href='${reply}'><i class='iconfont'>&#xe694;</i>查看图片</a>`
+      } else if (reply.length > 100) {
+        return reply.substring(0, 50) + '...'
+      } else {
+        return reply
+      }
+    },
+    // 评论回复文字处理
+    commentContent (val) {
+      val = val.replace(/<p[^>]*>|<\/p>|<h-char[^>]*>|<\/h-char>|<h-inner>|<\/h-inner>/g, '')
+      if (this.more === '展开') {
+        if (val.length > 300) {
+          return val.substring(0, 300) + '...'
+        } else {
+          return val
+        }
+      } else {
+        return val
+      }
+    },
+    changeMore (id) {
+      if (id !== this.moreId) {
+        this.moreId = id
+        this.more = '收起'
+      } else {
+        this.more = '展开'
+        this.moreId = ''
+      }
     }
   }
 }
@@ -483,6 +540,8 @@ export default {
     word-wrap: break-word;
     word-break: break-all;
     overflow: hidden;
+    font-size: 16px;
+    line-height: 28px;
   }
   /*图片放大效果*/
   .detail-main-content img{
@@ -492,7 +551,7 @@ export default {
   }
   /*正文内容*/
   .detailContent{
-    margin: 15px 0 15px 15px;
+    margin: 15px 0 15px 0;
     font-size: 16px;
   }
   /*正文点赞样式*/
@@ -616,7 +675,7 @@ export default {
 .article_author .top_left {
     width: 50px;
     height: 50px;
-    border-radius: 50%;
+    // border-radius: 50%;
     overflow: hidden;
   }
 .article_author .top_left img {
@@ -751,6 +810,13 @@ a.avatar img {
 }
 .comment-item-hd{
     margin-bottom: 4px;
+}
+.comment-item-hd .name{
+    font-size: 16px;
+    white-space: nowrap;
+    font-weight: bold;
+    /* display: block; */
+    margin-bottom: 6px;
 }
 .comment-item-hd .user-name {
     font-size: 15px;

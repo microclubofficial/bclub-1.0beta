@@ -185,7 +185,12 @@ export default{
   methods: {
     // 去币详情页
     toBibarDetail (tmp) {
-      this.$router.push(`/msgDetail/${tmp.id}`)
+      this.$router.push({
+        path: `/msgDetail/${tmp.id}`,
+        query: {
+          b: JSON.stringify({'zh': tmp.name_ch})
+        }
+      })
     }
   }
 }

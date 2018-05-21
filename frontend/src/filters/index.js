@@ -119,15 +119,19 @@ export function formatNum (value, num) {
   // console.log(value)
   num = num > 0 && num <= 20 ? num : 0
   value = parseFloat((value + '').replace(/[^\d.-]/g, '')).toFixed(num) + ''
-  let l = value.split('.')[0].split('').reverse()
-  let r = value.split('.')[1]
-  // console.log(typeof r)
-  let t = ''
-  for (let i = 0; i < l.length; i++) {
-    t += l[i] + ((i + 1) % 3 === 0 && (i + 1) !== l.length ? ',' : '')
+  if (value > 0) {
+    let l = value.split('.')[0].split('').reverse()
+    let r = value.split('.')[1]
+    // console.log(typeof r)
+    let t = ''
+    for (let i = 0; i < l.length; i++) {
+      t += l[i] + ((i + 1) % 3 === 0 && (i + 1) !== l.length ? ',' : '')
+    }
+    let str = t.split('').reverse().join('') + '.' + r
+    return str
+  } else {
+    return '--'
   }
-  let str = t.split('').reverse().join('') + '.' + r
-  return str.replace(/(?:\.0*|(\.\d+?)0+)$/, '')
 }
 
 // 人民币转换
@@ -136,17 +140,22 @@ export function cnyFun (value, rate, num) {
     if (isNaN(value)) {
       return
     }
-    let rateNum = (parseFloat(value) * rate).toFixed(num).toString()
-    // let lenCny = rateNum.split('.')[0].length
-    let len = rateNum.split('.')[0]
-    // console.log(len, rate)
-    // let lenCny = len.length
-    let cny = ''
-    for (let i = 0; i < len.length; i++) {
-      cny += len[i] + ((i + 1) % 3 === 0 && (i + 1) !== len.length ? ',' : '')
+    let rateNum = (parseFloat(value) * rate).toFixed(num)
+    if (rateNum > 0) {
+      rateNum = rateNum.toString()
+      // let lenCny = rateNum.split('.')[0].length
+      let len = rateNum.split('.')[0]
+      // console.log(len, rate)
+      // let lenCny = len.length
+      let cny = ''
+      for (let i = 0; i < len.length; i++) {
+        cny += len[i] + ((i + 1) % 3 === 0 && (i + 1) !== len.length ? ',' : '')
+      }
+      cny = cny.split('').reverse().join('') + '.' + rateNum.split('.')[1]
+      return cny
+    } else {
+      return '--'
     }
-    cny = cny.split('').reverse().join('') + '.' + rateNum.split('.')[1]
-    return cny
   }
   // if (lenCny <= 3) {
   //   return rateNum
@@ -165,13 +174,18 @@ export function bitcoinFun (value, rate, num) {
   if (value === undefined) {
     return
   }
-  let rateNum = (parseInt(value) * rate).toFixed(num).toString()
-  let len = rateNum.length
-  if (len <= 3) {
-    return rateNum
+  let rateNum = (parseInt(value) * rate).toFixed(num)
+  if (rateNum > 0) {
+    rateNum = rateNum.toString()
+    let len = rateNum.length
+    if (len <= 3) {
+      return rateNum
+    } else {
+      let r = len % 3
+      return r > 0 ? rateNum.slice(0, r) + ',' + rateNum.slice(r, len).match(/\d{3}/g).join(',') : rateNum.slice(r, len).match(/\d{3}/g).join(',')
+    }
   } else {
-    let r = len % 3
-    return r > 0 ? rateNum.slice(0, r) + ',' + rateNum.slice(r, len).match(/\d{3}/g).join(',') : rateNum.slice(r, len).match(/\d{3}/g).join(',')
+    return '--'
   }
 }
 
@@ -198,69 +212,6 @@ export function lengthFun (value, num) {
 }
 
 // 省略字符串
-
-// 人民币转换
-export function cnyFunStr (value, rate, num) {
-  if (value === undefined) {
-    return
-  }
-  let rateW = null
-  let rateNum = null
-  let len = null
-  let r = null
-  if ((value * rate + '').length >= 9) {
-    rateW = parseInt(value) / 100000000
-    rateNum = rateW.toFixed(num).toString()
-    len = rateNum.split('.')[0].length
-    if (len <= 3) {
-      return rateNum + '亿'
-    } else {
-      r = len % 3
-      if (rateNum.slice(r, len).match(/\d{3}/g) === null) {
-        return
-      }
-      return r > 0 ? rateNum.slice(0, r) + ',' + rateNum.slice(r, len).match(/\d{3}/g).join(',') + '亿' : rateNum + '亿'
-    }
-  } else if ((value * rate + '').length >= 7 && (value + '').length < 9) {
-    rateW = parseInt(value) / 1000000
-    rateNum = rateW.toFixed(num).toString()
-    len = rateNum.length
-    if (len <= 3) {
-      return rateNum
-    } else {
-      r = len % 3
-      if (rateNum.slice(r, len).match(/\d{3}/g) === null) {
-        return
-      }
-      return r > 0 ? rateNum.slice(0, r) + ',' + rateNum + '百万' : rateNum + '百万'
-    }
-  } else if ((value + '').length >= 5 && (value + '').length < 7) {
-    rateW = (parseInt(value) * rate) / 10000
-    rateNum = rateW.toFixed(num).toString()
-    len = rateNum.length
-    if (len <= 3) {
-      return rateNum
-    } else {
-      r = len % 3
-      if (rateNum.slice(r, len).match(/\d{3}/g) === null) {
-        return
-      }
-      return r > 0 ? rateNum.slice(0, r) + ',' + rateNum.slice(r, len).match(/\d{3}/g).join(',') + '万' : rateNum + '万'
-    }
-  } else {
-    rateNum = (parseInt(value) * rate).toFixed(num).toString()
-    len = rateNum.length
-    if (len <= 3) {
-      return rateNum
-    } else {
-      r = len % 3
-      if (rateNum.slice(r, len).match(/\d{3}/g) === null) {
-        return
-      }
-      return r > 0 ? rateNum.slice(0, r) + ',' + rateNum.slice(r, len).match(/\d{3}/g).join(',') : rateNum.slice(r, len).match(/\d{3}/g).join(',')
-    }
-  }
-}
 
 // 处理图片
 export function needContent (val) {

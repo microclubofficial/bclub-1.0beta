@@ -9,7 +9,7 @@
         <section class="bibar-Mainleft bx-mainLeft">
             <btb @btbFun='frombtb' :bId="bitId"></btb>
             <!-- 富文本区 -->
-            <div class="mainBibar-editor" v-if='initHide'>
+            <div class="mainBibar-editor" v-if='user_token'>
               <BibarPostContent :tokenBibar='tokenName' @backFtContent = 'BibarContentFun' ></BibarPostContent>
             </div>
             <!--新闻-->
@@ -17,7 +17,7 @@
                 <div class="bibar-indexNews">
                     <div class="bibar-indexNews-TAB">
                         <ul class="bibar-tabs-listSty2">
-                            <li class="bibar-tabs-item active"> <a href="#bibar-newstab1" data-toggle="tab">讨论</a></li>
+                            <li class="bibar-tabs-item active"> <a href="#bibar-newstab1" data-toggle="tab">{{$t('column.discussion')}}</a></li>
                             <!--<li class="bibar-tabs-item" :key='index' v-for="(tmp,index) in newList" :class="{active:state==index}" @click="changeActive(index)"> <a href="#bibar-newstab1" data-toggle="tab">{{tmp}}</a></li>-->
                         </ul>
                     </div>
@@ -40,6 +40,7 @@ import MainHeader from '../../common/header.vue'
 import btb from '../BibarChart/BTB.vue'
 import BibarRight from '../BibarRight/bivarRight.vue'
 import BibarPostContent from '../../homePage/bibarPostContent.vue'
+import {getToken} from '../../../utils/auth.js'
 
 export default{
   data: function () {
@@ -55,7 +56,9 @@ export default{
       initShow: false,
       showLoader: true,
       // token
-      tokenName: ''
+      tokenName: '',
+      // 登录状态
+      user_token: ''
     }
   },
   components: {
@@ -77,7 +80,9 @@ export default{
     this.hrefCollapse = `#${this.collapseId}`
   },
   mounted () {
-    this.loadShow()
+    if (getToken()) {
+      this.user_token = JSON.parse(getToken())
+    }
     // 币种
     this.bitId = this.$route.params.currency
     // 富文本样式
@@ -101,16 +106,6 @@ export default{
     },
     BibarContentFun (data) {
       this.$refs.showBibarContent.showBibarContentFun(data)
-    },
-    // 退登状态
-    loadShow () {
-      if (!this.userInfo.isLogin) {
-        this.initShow = true
-        this.initHide = false
-      } else {
-        this.initShow = false
-        this.initHide = true
-      }
     },
     frombtb (data) {
       this.tokenName = data

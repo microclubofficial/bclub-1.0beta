@@ -1,14 +1,21 @@
 <template>
     <div>
         <div class="container bindEmail">
-            <form>
+            <form v-if='!successbind'>
                 <div class="form-group">
-                    <label class="col-sm-12" for="exampleInputEmail1">请输入要绑定的邮箱</label>
-                    <input type="email" style="width:25%;margin-top:10px" class="form-control col-sm-3" v-model="bindForm.email" id="exampleInputEmail1" placeholder="Email" @blur='showBindEmailMsg(bindForm.email, 0)'>
+                    <label class="col-sm-12" for="exampleInputEmail1">{{$t('editProfile.bindEmail')}}</label>
+                    <input type="email" style="width:25%;margin-top:10px" class="form-control col-sm-3" v-model="bindForm.email" id="exampleInputEmail1" :placeholder="$t('placeholder.email')" @blur='showBindEmailMsg(bindForm.email, 0)'>
                     <span class="prompt col-sm-9" style="margin-left: 0 !important;height:34px;margin-top:20px; display:block;">{{emailPrompt}}</span>
                 </div>
-                <button type="button" style="margin-top:10px;" v-bind:disabled="!bindForm.email" @click="bindEmailFun" class="btn findEmail btn-primary">确认</button>
+                <button type="button" style="margin-top:10px;" v-bind:disabled="!bindForm.email" @click="bindEmailFun" class="btn findEmail btn-primary">{{$t('button.confirm')}}</button>
             </form>
+            <!--完成验证后样式-->
+            <div class="successBind" style="margin:50px 0;" v-if='successbind'>
+              <p>
+                已绑定邮箱<span style="font-weight: bold;margin: 0 20px 0 10px;">{{bindForm.email}}</span>
+                <button type="button" @click='SbindEmail' class="btn btn-primary">修改邮箱</button>
+              </p>
+            </div>
             <!--发邮件模态框-->
                 <div class="modal fade emaiModal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                   <div class="modal-dialog">
@@ -20,9 +27,9 @@
                         一封邮件已发送，请注意查收
                       </div>
                       <div class="modal-footer">
-                        <button type="button" @click="bindEmailFun" class="btn btn-primary">重新发送
+                        <button type="button" @click="resendFun" class="btn btn-primary">重新发送
                         </button>
-                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                        <button type="button" @click="successBind" class="btn btn-default">
                           完成验证
                         </button>
                       </div>
@@ -33,7 +40,7 @@
     </div>
 </template>
 <script>
-import {post} from '../../../utils/http'
+import {post, get} from '../../../utils/http'
 import { Toast } from 'mint-ui'
 export default {
   data () {
@@ -41,7 +48,8 @@ export default {
       bindForm: {},
       emailPrompt: '',
       canFind: false,
-      showModal: false
+      showModal: false,
+      successbind: false
     }
   },
   mounted () {
@@ -85,6 +93,27 @@ export default {
           }
         })
       }
+    },
+    // 重新发送
+    resendFun () {
+      post(`/api/confirmed/password`, this.bindForm).then(data => {
+      })
+    },
+    // 完成验证状态
+    successBind () {
+      get(`/api/confirmed/email`).then(data => {
+        if (data.resultcode === 0) {
+          $('.emaiModal').modal('hide')
+          this.successbind = false
+        } else {
+          $('.emaiModal').modal('hide')
+          this.successbind = true
+        }
+      })
+    },
+    // 完成后修改邮箱
+    SbindEmail () {
+      this.successbind = false
     }
   }
 }

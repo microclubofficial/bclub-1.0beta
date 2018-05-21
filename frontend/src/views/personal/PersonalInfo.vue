@@ -22,10 +22,10 @@
         <div class="container">
             <ol class="breadcrumb">
                 <li>
-                    <router-link to='/'><i class="iconfont" style="margin-right:10px;">&#xe65a;</i>首页</router-link>
+                    <router-link to='/'><i class="iconfont" style="margin-right:10px;">&#xe65a;</i>{{$t('editProfile.index')}}</router-link>
                 </li>
                 <li class="active">
-                    <router-link class="hover" :to="{path:'/memberCenter'}">个人中心</router-link>
+                    <router-link class="hover" :to="{path:'/memberCenter'}">{{$t('personalCenter.personal')}}</router-link>
                 </li>
             </ol>
             <ul class="nav nav-tabs">
@@ -52,10 +52,10 @@ export default {
   data () {
     return {
       infoList: [
-        { 'name': 'editInfo', 'cnName': '个人资料', 'path': 'editInfo' },
-        { 'name': 'editAvatar', 'cnName': '修改头像', 'path': 'editAvatar' },
-        { 'name': 'editPassword', 'cnName': '修改密码', 'path': 'editPassword' },
-        { 'name': 'bindEmail', 'cnName': '绑定邮箱', 'path': 'bindEmail' }
+        { 'name': 'editInfo', 'cnName': this.$t('editProfile.profile'), 'path': 'editInfo' },
+        { 'name': 'editAvatar', 'cnName': this.$t('editProfile.avatar'), 'path': 'editAvatar' },
+        { 'name': 'editPassword', 'cnName': this.$t('editProfile.password'), 'path': 'editPassword' },
+        { 'name': 'bindEmail', 'cnName': this.$t('editProfile.email'), 'path': 'bindEmail' }
       ],
       nowIndex: 0,
       personalUser: []

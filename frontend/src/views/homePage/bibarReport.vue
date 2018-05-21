@@ -1,9 +1,9 @@
 <template>
     <div>
         <div ref="editor" style="text-align:left" class='editor'></div>
-        <button @click="getContent" v-show="toApi!==3 || toApi!==4" class="report btnm">发布</button>
-        <button @click="getContent" v-show="toApi===3 || toApi===4" class="report btnm">回复</button>
-        <button class="cancel" @click="isHideFun">取消</button>
+        <button @click="getContent" v-show="toApi!==3 || toApi!==4" class="report btnm">{{$t('button.publish')}}</button>
+        <button @click="getContent" v-show="toApi===3 || toApi===4" class="report btnm">{{$t('list.reply')}}</button>
+        <button class="cancel" @click="isHideFun">{{$t('button.cancel')}}</button>
         <!-- <div>{{backData}}</div> -->
     </div>
 </template>
@@ -62,7 +62,6 @@ export default {
             let reg = /<a.*?>(.*?)<\/a>/ig
             let result = reg.exec(this.topicData.content)
             this.topicData.content = this.topicData.content.replace(result[1], '<i class="iconfont">&#xe60e;</i>' + result[1] + '&nbsp;')
-            console.log(this.topicData.content)
           }
         }
       }
@@ -111,7 +110,6 @@ export default {
           }
         }
       }
-      console.log(this.topicData)
       if (this.topicData.content.length > 0 || this.topicData.url.length > 0) {
         post(`/api/${this.nowShowApi[this.toApi]}${this.toApi === 1 ? '/question' : this.toApi === 2 ? '/answer' : this.toApi === 3 ? '/comment' : ''}/replies/${this.toApi === 0 ? this.mainCommnet : this.toApi === 2 ? this.talkId : this.toApi === 3 ? this.contentId : this.toApi === 5 ? this.detailId : this.mainReplay}`, this.topicData).then(data => {
           //   评论发送完毕
@@ -173,7 +171,12 @@ export default {
       if (text === '' || link === '') {
         return ('无效的链接')
       } else {
-        return true
+        let reg = /[hH][tT][tT][pP]([sS]?):\/\/(\S+\.)+\S{2,}$/ig
+        if (!reg.test(link)) {
+          return ('请输入正确的链接地址')
+        } else {
+          return true
+        }
       }
     }
     // 表情配置

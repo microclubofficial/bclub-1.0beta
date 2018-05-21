@@ -16,8 +16,9 @@ export default {
     noNews: '暂无消息'
   },
   column: {
-    hotCoins: '热门币种',
-    all: '全部'
+    hotCoins: '热门币',
+    all: '全部',
+    discussion: '讨论'
   },
   login: {
     title: '用户登录',
@@ -45,16 +46,100 @@ export default {
     hasAccount: '已有账号？',
     goLogin: '去登录'
   },
+  forgetPassword: {
+    retrieve: '找回密码',
+    byPhone: '通过手机找回',
+    byEmail: '通过邮箱找回',
+    email: '邮 箱：',
+    newPassword: '请设置新密码'
+  },
   placeholder: {
     username: '请输入用户名',
     password: '请输入密码',
     repassword: '请确认密码',
     vcode: '请输入验证码',
     phone: '请输入手机号',
-    icode: '邀请码（选填）'
+    icode: '邀请码（选填）',
+    email: '请输入邮箱',
+    originalPassword: '请输入原密码',
+    newPassword: '请输入新密码'
   },
   prompt: {
     acquireVcode: '获取验证码',
     reacquire: '重新获取'
+  },
+  message: {
+    sthToSay: '有什么消息告诉大家...',
+    username: '请填写用户名',
+    phone: '请填写手机号',
+    phoneRegistered: '手机号已注册',
+    loginFirst: '请先登录'
+  },
+  button: {
+    publish: '发布',
+    cancel: '取消',
+    confirm: '确定',
+    edit: '修改',
+    longText: '长文',
+    fold: '收起',
+    unfold: '展开'
+  },
+  pages: {
+    first: '首页',
+    end: '尾页',
+    prev: '上一页',
+    next: '下一页'
+  },
+  list: {
+    ago: '前',
+    commented: '发表了评论',
+    from: '来自',
+    comment: '评论',
+    collect: '收藏',
+    reply: '回复',
+    allComments: '全部评论'
+  },
+  personalCenter: {
+    personal: '个人中心',
+    topic: '主题',
+    comment: '评论',
+    collection: '收藏',
+    editProfile: '编辑资料'
+  },
+  editProfile: {
+    index: '首页',
+    profile: '个人资料',
+    avatar: '修改头像',
+    password: '修改密码',
+    email: '绑定邮箱',
+    registerTime: '注册时间：',
+    lastLogin: '上次登录：',
+    setAvatar: '设置头像',
+    originalPassword: '原密码：',
+    newPassword: '新密码：',
+    confirmPassword: '确认密码：',
+    bindEmail: '请输入您要绑定的邮箱'
+  },
+  sideBar: {
+    introduction: '简介',
+    hotCoins: '热门币',
+    publicTime: '发行时间：',
+    whitePaper: '白皮书：',
+    officialWebsite: '官方网站：',
+    blockQuery: '区块查询：',
+    prevTen: '上10位',
+    nextTen: '下10位'
+  },
+  details: {
+    name: '名称',
+    price: '价格',
+    priceChange: '涨跌幅',
+    tradingVolume: '交易量',
+    tradingVolume24h: '交易量（24h）',
+    marketCap: '市值',
+    globalMarketRate: '占全球总市值',
+    totalSupply: '总发行量',
+    availableSupply: '流通数量',
+    circulationRate: '流通率'
   }
 }
