@@ -128,7 +128,7 @@ export function formatNum (value, num) {
       t += l[i] + ((i + 1) % 3 === 0 && (i + 1) !== l.length ? ',' : '')
     }
     let str = t.split('').reverse().join('') + '.' + r
-    return parseFloat(str)
+    return str
   } else {
     return '--'
   }
@@ -140,17 +140,22 @@ export function cnyFun (value, rate, num) {
     if (isNaN(value)) {
       return
     }
-    let rateNum = (parseFloat(value) * rate).toFixed(num).toString()
-    // let lenCny = rateNum.split('.')[0].length
-    let len = rateNum.split('.')[0]
-    // console.log(len, rate)
-    // let lenCny = len.length
-    let cny = ''
-    for (let i = 0; i < len.length; i++) {
-      cny += len[i] + ((i + 1) % 3 === 0 && (i + 1) !== len.length ? ',' : '')
+    let rateNum = (parseFloat(value) * rate).toFixed(num)
+    if (rateNum > 0) {
+      rateNum = rateNum.toString()
+      // let lenCny = rateNum.split('.')[0].length
+      let len = rateNum.split('.')[0]
+      // console.log(len, rate)
+      // let lenCny = len.length
+      let cny = ''
+      for (let i = 0; i < len.length; i++) {
+        cny += len[i] + ((i + 1) % 3 === 0 && (i + 1) !== len.length ? ',' : '')
+      }
+      cny = cny.split('').reverse().join('') + '.' + rateNum.split('.')[1]
+      return cny
+    } else {
+      return '--'
     }
-    cny = cny.split('').reverse().join('') + '.' + rateNum.split('.')[1]
-    return cny
   }
   // if (lenCny <= 3) {
   //   return rateNum
@@ -169,13 +174,18 @@ export function bitcoinFun (value, rate, num) {
   if (value === undefined) {
     return
   }
-  let rateNum = (parseInt(value) * rate).toFixed(num).toString()
-  let len = rateNum.length
-  if (len <= 3) {
-    return rateNum
+  let rateNum = (parseInt(value) * rate).toFixed(num)
+  if (rateNum > 0) {
+    rateNum = rateNum.toString()
+    let len = rateNum.length
+    if (len <= 3) {
+      return rateNum
+    } else {
+      let r = len % 3
+      return r > 0 ? rateNum.slice(0, r) + ',' + rateNum.slice(r, len).match(/\d{3}/g).join(',') : rateNum.slice(r, len).match(/\d{3}/g).join(',')
+    }
   } else {
-    let r = len % 3
-    return r > 0 ? rateNum.slice(0, r) + ',' + rateNum.slice(r, len).match(/\d{3}/g).join(',') : rateNum.slice(r, len).match(/\d{3}/g).join(',')
+    return '--'
   }
 }
 

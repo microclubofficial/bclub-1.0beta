@@ -182,7 +182,9 @@ export default {
       initHide: false,
       initShow: false,
       toEditorBid: '',
-      showLoader: false
+      showLoader: false,
+      // 登录状态
+      user_token: ''
     }
   },
   computed: {
