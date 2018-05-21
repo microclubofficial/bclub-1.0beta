@@ -593,6 +593,7 @@ export default{
         return
       }
       let now = val.replace(/<p[^>]*>|<\/p>|<span[^>]*>|<\/span>|<br>|<h[1-6][^>]*>|<\/h[1-6]>|<h-char[^>]*>|<img[^>]*>|<\/h-char>|<h-inner>|<\/h-inner>/g, '')
+      now = now.replace(/&nbsp;*/g, '')
       // now = $(now).text()
       if (now.length > 300) {
         return now.substring(0, 300) + '...'
@@ -879,7 +880,6 @@ svg:not(:root) {
     margin-top: 15px;
     padding-bottom: 15px;
     font-size: 15px;
-    border-bottom: 1px solid #edf0f5;
 }
 .comment-sort {
     position: absolute;
