@@ -675,7 +675,7 @@ export default {
 .article_author .top_left {
     width: 50px;
     height: 50px;
-    border-radius: 50%;
+    // border-radius: 50%;
     overflow: hidden;
   }
 .article_author .top_left img {
