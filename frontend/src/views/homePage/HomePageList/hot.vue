@@ -589,6 +589,9 @@ export default{
     },
     // 处理图片
     EditorContent (val) {
+      if (val === undefined) {
+        return
+      }
       let now = val.replace(/<p[^>]*>|<\/p>|<span[^>]*>|<\/span>|<br>|<h[1-6][^>]*>|<\/h[1-6]>|<h-char[^>]*>|<img[^>]*>|<\/h-char>|<h-inner>|<\/h-inner>/g, '')
       // now = $(now).text()
       if (now.length > 300) {
@@ -598,6 +601,9 @@ export default{
     },
     // 艾特图片处理
     replyFun (val) {
+      if (val === undefined) {
+        return
+      }
       let reply = val.replace(/<p[^>]*>|<\/p>|<h-char[^>]*>|<\/h-char>|<h-inner>|<\/h-inner>/g, '')
       if (reply.indexOf('img') > 0) {
         let imgLength = 0
@@ -616,6 +622,9 @@ export default{
     },
     // 评论回复文字处理
     commentContent (val) {
+      if (val === undefined) {
+        return
+      }
       val = val.replace(/<p[^>]*>|<\/p>|<h-char[^>]*>|<\/h-char>|<h-inner>|<\/h-inner>/g, '')
       if (val.length > 300) {
         if (this.more === '展开') {
