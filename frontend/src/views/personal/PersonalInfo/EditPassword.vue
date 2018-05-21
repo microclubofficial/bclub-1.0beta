@@ -48,7 +48,18 @@ export default {
   methods: {
     //   验证
     showFindPwdMsg (input, id) {
-      if (id === 0 || id === 1) {
+      if (id === 0) {
+        if (input.length > 0) {
+          post(`/api/confirmed/password`, this.setPwd).then(data => {
+            if (data.resultcode === 0) {
+              this.oldpwdPrompt = '原密码错误'
+              return false
+            } else {
+              this.oldpwdPrompt = ''
+            }
+          })
+        }
+      } else if (id === 0 || id === 1) {
         var upwdreg = /^[a-zA-Z0-9_]{6,}$/
         if (!upwdreg.test(input) && input !== undefined && input.length > 0) {
           if (id === 0) {

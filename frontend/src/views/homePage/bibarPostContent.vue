@@ -107,7 +107,6 @@ export default {
       //   bId: this.$route.params.currency,
       //   bName: JSON.parse(this.$route.query.b).zh
       // })
-      console.log(this.topicData)
       if (this.topicData.content.length > 0 || this.topicData.picture.length > 0) {
         post(`/api/topic`, this.topicData).then(data => {
           this.editorContent = ''
@@ -206,7 +205,12 @@ export default {
       if (text === '' || link === '') {
         return ('无效的链接')
       } else {
-        return true
+        let reg = /[hH][tT][tT][pP]([sS]?):\/\/(\S+\.)+\S{2,}$/ig
+        if (!reg.test(link)) {
+          return ('请输入正确的链接地址')
+        } else {
+          return true
+        }
       }
     }
     // 表情配置

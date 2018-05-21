@@ -51,8 +51,7 @@
 <script>
 import NavLogin from './navlogin.vue'
 import isLogin from './isLogin.vue'
-import { setToken, getToken, rememberToken } from '../../utils/auth'
-import Cookies from 'js-cookie'
+import { setToken, getToken } from '../../utils/auth'
 export default {
   props: {
     message: Boolean
@@ -77,14 +76,14 @@ export default {
     if (getToken()) {
       this.user_token = JSON.parse(getToken())
     }
-    if (getToken('language')){
+    if (getToken('language')) {
       this.language = getToken('language')
       // console.log(this.language)
     }
     // this.remember_token = rememberToken('remember_token')
   },
   methods: {
-    switchLang(lang){
+    switchLang (lang) {
       setToken('language', lang)
       this.language = lang
       location.reload()

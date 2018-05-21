@@ -126,7 +126,7 @@
                     </a>
                     <div class="comment-item-main">
                       <div class="comment-item-hd">
-                        <a href="#" class="user-name">{{item.author}}</a>
+                        <span href="#" class="name">{{item.author}}</span>
                         <!--<span class="time">{{item.diff_time}}前发布</span>-->
                         <span class="time">{{item.diff_time !== '0秒' ? item.diff_time + '前' : '刚刚'}}发布</span>
                       </div>
@@ -475,6 +475,9 @@ export default {
     },
     // 来自去币讯
     toBibar (tmp) {
+      if (tmp.token === null) {
+        return
+      }
       this.$router.push({
         path: `/msgDetail/${tmp.token}`,
         query: {
@@ -537,6 +540,8 @@ export default {
     word-wrap: break-word;
     word-break: break-all;
     overflow: hidden;
+    font-size: 16px;
+    line-height: 28px;
   }
   /*图片放大效果*/
   .detail-main-content img{
@@ -546,7 +551,7 @@ export default {
   }
   /*正文内容*/
   .detailContent{
-    margin: 15px 0 15px 15px;
+    margin: 15px 0 15px 0;
     font-size: 16px;
   }
   /*正文点赞样式*/
@@ -805,6 +810,13 @@ a.avatar img {
 }
 .comment-item-hd{
     margin-bottom: 4px;
+}
+.comment-item-hd name{
+    font-size: 16px;
+    white-space: nowrap;
+    font-weight: bold;
+    /* display: block; */
+    margin-bottom: 6px;
 }
 .comment-item-hd .user-name {
     font-size: 15px;

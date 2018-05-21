@@ -155,10 +155,7 @@ export default {
           this.setForm.phone = input
         }
       } else if (id === 2) {
-        if (input === undefined || input.length === 0) {
-          this.phoneControlPrompt = '验证码不能为空'
-          return false
-        } else {
+        if (input.length > 0) {
           this.phoneControlPrompt = ''
         }
       }
@@ -186,9 +183,9 @@ export default {
                 'avatar': data.data.avatar,
                 'isLogin': true
               })
-              if(rememberToken('remember_token')){
+              if (rememberToken('remember_token')) {
                 setToken('b-Token', data.data, {expires: 7})
-              }else{
+              } else {
                 setToken('b-Token', data.data)
               }
               this.personalUser(data.data.username)
@@ -198,6 +195,10 @@ export default {
           })
         }
       } else {
+        if (this.setForm.captcha === undefined || this.setForm.captcha.length === 0) {
+          this.phoneControlPrompt = '验证码不能为空'
+          return false
+        }
         post(`/api/setting/phone`, this.setForm).then(data => {
           if (data.resultcode === 0) {
             instance = new Toast({

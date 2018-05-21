@@ -30,16 +30,16 @@
                     <div class="col-sm-6">
                         <dl>
                             <dt>{{$t('details.marketCap')}} :</dt>
-                            <dd> <i class="iconfont icon-USD">&#xe634;</i>{{bibarData.marketCap | cnyFun(CNY_RATE,2)}}
-                                <div class="sprit-12 bg-green ml10">第{{bibarData.level}}名</div>
+                            <dd> <i class="iconfont icon-USD" v-if='(parseFloat(bibarData.marketCap) * CNY_RATE).toFixed(2) > 0'>&#xe634;</i>{{bibarData.marketCap | cnyFun(CNY_RATE,2)}}
+                                <div v-if='(parseFloat(bibarData.marketCap) * CNY_RATE).toFixed(2) > 0' class="sprit-12 bg-green ml10">第{{bibarData.level}}名</div>
                             </dd>
-                            <dd> <i class="iconfont icon-yueden">&#xe6ca;</i> <i class="iconfont icon-rmb icon-CNY">&#xe736;</i>{{bibarData.marketCap | formatNum(2)}} </dd>
-                            <dd> <i class="iconfont icon-yueden">&#xe6ca;</i> <i class="iconfont icon-BTC">&#xe63a;</i> {{bibarData.marketCap | bitcoinFun(BTC_RATE)}} </dd>
+                            <dd> <i v-if="parseFloat((bibarData.marketCap + '').replace(/[^\d.-]/g, '')).toFixed(2) + '' > 0" class="iconfont icon-yueden">&#xe6ca;</i> <i v-if="parseFloat((bibarData.marketCap + '').replace(/[^\d.-]/g, '')).toFixed(2) + '' > 0" class="iconfont icon-rmb icon-CNY">&#xe736;</i>{{bibarData.marketCap | formatNum(2)}} </dd>
+                            <dd> <i v-if="(parseInt(bibarData.marketCap) * BTC_RATE).toFixed(2) > 0" class="iconfont icon-yueden">&#xe6ca;</i> <i v-if="(parseInt(bibarData.marketCap) * BTC_RATE).toFixed(2) > 0" class="iconfont icon-BTC">&#xe63a;</i> {{bibarData.marketCap | bitcoinFun(BTC_RATE)}} </dd>
                         </dl>
                         <dl>
                             <dt>{{$t('details.globalMarketRate')}} :</dt>
-                            <dd> {{bibarData.global_market_rate}}
-                                <div class="bibar-uipress"><span :style="{width:market + 'px'}"></span></div>
+                            <dd> {{bibarData.global_market_rate > 0 ? bibarData.global_market_rate : '--'}}
+                                <div v-if='bibarData.global_market_rate > 0' class="bibar-uipress"><span :style="{width:market + 'px'}"></span></div>
                             </dd>
                         </dl>
                         <dl>
@@ -50,20 +50,20 @@
                     <div class="col-sm-6">
                         <dl>
                             <dt>{{$t('details.tradingVolume24h')}} :</dt>
-                            <dd> <i class="iconfont icon-USD">&#xe634;</i>{{bibarData.volume_ex | cnyFun(CNY_RATE,2)}}
-                                <div class="sprit-12 bg-green ml10">第{{bibarData.volume_level}}名</div>
+                            <dd> <i v-if='(parseFloat(bibarData.volume_ex) * CNY_RATE).toFixed(2) > 0' class="iconfont icon-USD">&#xe634;</i>{{bibarData.volume_ex | cnyFun(CNY_RATE,2)}}
+                                <div v-if='(parseFloat(bibarData.volume_ex) * CNY_RATE).toFixed(2) > 0' class="sprit-12 bg-green ml10">第{{bibarData.volume_level}}名</div>
                             </dd>
-                            <dd> <i class="iconfont icon-yueden">&#xe6ca;</i><i class="iconfont icon-CNY">&#xe736;</i> {{bibarData.volume_ex | formatNum(2)}}</dd>
-                            <dd> <i class="iconfont icon-yueden">&#xe6ca;</i><i class="iconfont icon-btb icon-BTC">&#xe63a;</i>{{bibarData.volume_ex | bitcoinFun(BTC_RATE)}} </dd>
+                            <dd> <i v-if="parseFloat((bibarData.volume_ex + '').replace(/[^\d.-]/g, '')).toFixed(2) + '' > 0" class="iconfont icon-yueden">&#xe6ca;</i><i v-if="parseFloat((bibarData.volume_ex + '').replace(/[^\d.-]/g, '')).toFixed(2) + '' > 0" class="iconfont icon-CNY">&#xe736;</i> {{bibarData.volume_ex | formatNum(2)}}</dd>
+                            <dd> <i v-if="(parseInt(bibarData.volume_ex) * BTC_RATE).toFixed(2) > 0" class="iconfont icon-yueden">&#xe6ca;</i><i v-if="(parseInt(bibarData.volume_ex) * BTC_RATE).toFixed(2) > 0" class="iconfont icon-btb icon-BTC">&#xe63a;</i>{{bibarData.volume_ex | bitcoinFun(BTC_RATE)}} </dd>
                         </dl>
                         <dl>
                             <dt>{{$t('details.availableSupply')}} :</dt>
-                            <dd>{{bibarData.available_supply | formatNum(2)}}&nbsp;&nbsp;<span class="logonameChinese">{{bibarData.symbol}}</span></dd>
+                            <dd>{{bibarData.available_supply | formatNum(2)}}&nbsp;&nbsp;<span v-if="parseFloat((bibarData.available_supply + '').replace(/[^\d.-]/g, '')).toFixed(2) + '' > 0" class="logonameChinese">{{bibarData.symbol}}</span></dd>
                         </dl>
                         <dl>
                             <dt>{{$t('details.circulationRate')}} :</dt>
-                            <dd> {{bibarData.Circulation_rate}}
-                                <div class="bibar-uipress"><span :style="{width:rate + 'px'}"></span></div>
+                            <dd> {{bibarData.Circulation_rate > 0 ? bibarData.Circulation_rate : '--'}}
+                                <div v-if='bibarData.Circulation_rate > 0' class="bibar-uipress"><span :style="{width:rate + 'px'}"></span></div>
                             </dd>
                         </dl>
                     </div>
@@ -160,18 +160,15 @@ export default {
       }
       this.showLoader = true
       $.getJSON(`/api/currency_news/${this.nowId}`, function (data) {
+        this.showLoader = false
         // main数据
         that.bibarData = data.data
         // 父组件传值
         that.$emit('btbFun', that.bibarData.zhName)
         // 总市值进度条
-        if (that.bibarData.global_market_rate > 0) {
-          that.market = parseFloat(that.bibarData.global_market_rate.split(/%/g)[0])
-        }
+        that.market = parseFloat(that.bibarData.global_market_rate.split(/%/g)[0])
         // 流通率进度条
-        if (that.bibarData.Circulation_rate > 0) {
-          that.rate = parseFloat(that.bibarData.Circulation_rate.split(/%/g)[0])
-        }
+        that.rate = parseFloat(that.bibarData.Circulation_rate.split(/%/g)[0])
         // 人民币汇率
         that.CNY_RATE = parseFloat(that.bibarData.CNY_RATE)
         // 比特币汇率

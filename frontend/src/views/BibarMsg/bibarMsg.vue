@@ -183,7 +183,10 @@ export default {
       initShow: false,
       toEditorBid: '',
       showLoader: false,
-      language: 'zh'
+      // 当前语言
+      language: 'zh',
+      // 登录状态
+      user_token: ''
     }
   },
   computed: {

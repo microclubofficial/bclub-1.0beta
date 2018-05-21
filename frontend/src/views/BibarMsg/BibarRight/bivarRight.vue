@@ -5,7 +5,7 @@
                 <div class="bibar-boxtitle" style="margin-bottom:10px;"> <span class="name">{{$t('sideBar.introduction')}}</span> </div>
                 <div class="bibar-boxbody">
                     <div class="bibar-indexintro">
-                        <p v-html='briefC !== "" ? briefC : "--" '></p>
+                        <p v-html='briefC !== "" ? briefC : "暂无信息" '></p>
                     </div>
                     <a href="#" v-if='briefC !== ""' class="bibar-indexintromore text-theme" @click="showText = !showText">{{this.showText === false ? $t('button.fold') : $t('button.unfold')}}<i class="iconfont" v-if='!showText'>&#xe692;</i><i class="iconfont" v-if='showText'>&#xe693;</i></a>
                     <div class="bibar-indexinftrList" v-if='briefC.length > 0'>
@@ -88,6 +88,7 @@
   <div class="indexrightscroll-top">
     <!--热门-->
     <div class="bibar-box bibar-boxindex3">
+
       <div class="bibar-boxtitle"> <span class="name">{{$t('sideBar.hotCoins')}}</span><div style="display:inline-block;float:right;"><a href="javascript:void(0)" v-if='showNext' class="fr" @click="changeBtb(1)">{{$t('sideBar.nextTen')}}</a><a href="javascript:void(0)" class="fr" v-if='showPre' @click="changeBtb(0)">{{$t('sideBar.prevTen')}}</a></div></div>
       <div class="bibar-boxbody">
         <ul class="bibar-indexRMlist">
@@ -218,7 +219,11 @@ export default{
         if (this.hotbPage > 1 && this.hotbPage < this.hotPageCount) {
           this.hotbPage--
           this.bibarHot(this.hotbPage)
-          this.showPre = true
+          if (this.hotbPage === 1) {
+            this.showPre = false
+          } else {
+            this.showPre = true
+          }
         } else {
           this.showPre = false
         }
