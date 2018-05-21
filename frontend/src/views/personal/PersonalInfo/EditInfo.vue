@@ -47,7 +47,7 @@
                 <div class="form-group">
                   <label for="inputEmail3" class="col-md-3 control-label">{{$t('register.username')}}</label>
                   <div class="col-md-9">
-                    <input type="text" class="form-control" name="username" @blur='showsetFormMsg(setForm.username, 0)' v-model="setForm.username" id="inputEmail3" :placeholder="$t('placeholder.username')">
+                    <input type="text" class="form-control" name="username" @blur='showsetFormMsg(setForm.username, 0)' v-model="setForm.username" maxlength="16" id="inputEmail3" :placeholder="$t('placeholder.username')">
                   </div>
                 </div>
                 <label class="col-md-3 control-label"></label>
