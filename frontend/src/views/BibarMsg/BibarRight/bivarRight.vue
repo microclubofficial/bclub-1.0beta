@@ -2,15 +2,15 @@
 <div class="pt20">
  <!--简介-->
             <article class="bibar-box bibar-boxindex3" v-if="$route.path !== '/'">
-                <div class="bibar-boxtitle" style="margin-bottom:10px;"> <span class="name">简介</span> </div>
+                <div class="bibar-boxtitle" style="margin-bottom:10px;"> <span class="name">{{$t('sideBar.introduction')}}</span> </div>
                 <div class="bibar-boxbody">
                     <div class="bibar-indexintro">
                         <p v-html='briefC !== "" ? briefC : "暂无信息" '></p>
                     </div>
-                    <a href="#" v-if='briefC !== ""' class="bibar-indexintromore text-theme" @click="showText = !showText">{{more}}<i class="iconfont" v-if='!showText'>&#xe692;</i><i class="iconfont" v-if='showText'>&#xe693;</i></a>
+                    <a href="#" v-if='briefC !== ""' class="bibar-indexintromore text-theme" @click="showText = !showText">{{this.showText === false ? $t('button.fold') : $t('button.unfold')}}<i class="iconfont" v-if='!showText'>&#xe692;</i><i class="iconfont" v-if='showText'>&#xe693;</i></a>
                     <div class="bibar-indexinftrList" v-if='briefC.length > 0'>
                         <dl>
-                            <dt>发行时间</dt>
+                            <dt>{{$t('sideBar.publicTime')}}</dt>
                             <dd>{{brief.publicTime}}</dd>
                         </dl>
                         <!--<dl>
@@ -18,15 +18,15 @@
                             <dd>--</dd>
                         </dl>-->
                         <dl>
-                            <dt>白皮书</dt>
+                            <dt>{{$t('sideBar.whitePaper')}}</dt>
                             <dd><a :href='brief.whitepaper' :title="brief.whitepaper" target="_blank" class="text-theme">{{brief.whitepaper ? brief.whitepaper : '--'}}</a></dd>
                         </dl>
                         <dl>
-                            <dt>官网</dt>
+                            <dt>{{$t('sideBar.officialWebsite')}}</dt>
                             <dd><a :href='websites' :title="websites" target="_blank" class="text-theme">{{websites}}</a></dd>
                         </dl>
                         <dl>
-                            <dt>区块查询</dt>
+                            <dt>{{$t('sideBar.blockQuery')}}</dt>
                             <dd>
                               <a :href='item' :title="item" class="text-theme" target="_blank" style="display:block;" v-for='(item,index) in brief.Explorers' :key="index">{{item}}</a>
                             </dd>
@@ -88,7 +88,8 @@
   <div class="indexrightscroll-top">
     <!--热门-->
     <div class="bibar-box bibar-boxindex3">
-      <div class="bibar-boxtitle"> <span class="name">热门币</span><div style="display:inline-block;float:right;"><a href="javascript:void(0)" v-if='showNext' class="fr" @click="changeBtb(1)">后十位</a><a href="javascript:void(0)" class="fr" v-if='showPre' @click="changeBtb(0)">前十位</a></div></div>
+
+      <div class="bibar-boxtitle"> <span class="name">{{$t('sideBar.hotCoins')}}</span><div style="display:inline-block;float:right;"><a href="javascript:void(0)" v-if='showNext' class="fr" @click="changeBtb(1)">{{$t('sideBar.nextTen')}}</a><a href="javascript:void(0)" class="fr" v-if='showPre' @click="changeBtb(0)">{{$t('sideBar.prevTen')}}</a></div></div>
       <div class="bibar-boxbody">
         <ul class="bibar-indexRMlist">
           <li class="bibar-indexRMitem row" v-for="(tmp,index) in hotList" :key="index" @click='toBibarDetail(tmp)'>
@@ -139,7 +140,8 @@ export default{
       // 上下一页
       showPre: false,
       showNext: true,
-      showText: false
+      showText: false,
+      buttonText: ''
     }
   },
   created: function () {
@@ -167,13 +169,6 @@ export default{
         }
       } else {
         return ''
-      }
-    },
-    more: function () {
-      if (this.showText === false) {
-        return '展开'
-      } else {
-        return '收起'
       }
     }
   },

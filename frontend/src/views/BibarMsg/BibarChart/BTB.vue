@@ -29,7 +29,7 @@
                 <div class="bibar-indexDisplay-datamore">
                     <div class="col-sm-6">
                         <dl>
-                            <dt>市值</dt>
+                            <dt>{{$t('details.marketCap')}} :</dt>
                             <dd> <i class="iconfont icon-USD" v-if='(parseFloat(bibarData.marketCap) * CNY_RATE).toFixed(2) > 0'>&#xe634;</i>{{bibarData.marketCap | cnyFun(CNY_RATE,2)}}
                                 <div v-if='(parseFloat(bibarData.marketCap) * CNY_RATE).toFixed(2) > 0' class="sprit-12 bg-green ml10">第{{bibarData.level}}名</div>
                             </dd>
@@ -37,19 +37,19 @@
                             <dd> <i v-if="(parseInt(bibarData.marketCap) * BTC_RATE).toFixed(2) > 0" class="iconfont icon-yueden">&#xe6ca;</i> <i v-if="(parseInt(bibarData.marketCap) * BTC_RATE).toFixed(2) > 0" class="iconfont icon-BTC">&#xe63a;</i> {{bibarData.marketCap | bitcoinFun(BTC_RATE)}} </dd>
                         </dl>
                         <dl>
-                            <dt>占全球总市值</dt>
+                            <dt>{{$t('details.globalMarketRate')}} :</dt>
                             <dd> {{bibarData.global_market_rate > 0 ? bibarData.global_market_rate : '--'}}
                                 <div v-if='bibarData.global_market_rate > 0' class="bibar-uipress"><span :style="{width:market + 'px'}"></span></div>
                             </dd>
                         </dl>
                         <dl>
-                            <dt>总发行量</dt>
+                            <dt>{{$t('details.totalSupply')}} :</dt>
                             <dd>{{bibarData.supple | formatNum(2)}}&nbsp;&nbsp;<span class="logonameChinese">{{bibarData.symbol}}</span></dd>
                         </dl>
                     </div>
                     <div class="col-sm-6">
                         <dl>
-                            <dt>交易量(24h)</dt>
+                            <dt>{{$t('details.tradingVolume24h')}} :</dt>
                             <dd> <i v-if='(parseFloat(bibarData.volume_ex) * CNY_RATE).toFixed(2) > 0' class="iconfont icon-USD">&#xe634;</i>{{bibarData.volume_ex | cnyFun(CNY_RATE,2)}}
                                 <div v-if='(parseFloat(bibarData.volume_ex) * CNY_RATE).toFixed(2) > 0' class="sprit-12 bg-green ml10">第{{bibarData.volume_level}}名</div>
                             </dd>
@@ -57,11 +57,11 @@
                             <dd> <i v-if="(parseInt(bibarData.volume_ex) * BTC_RATE).toFixed(2) > 0" class="iconfont icon-yueden">&#xe6ca;</i><i v-if="(parseInt(bibarData.volume_ex) * BTC_RATE).toFixed(2) > 0" class="iconfont icon-btb icon-BTC">&#xe63a;</i>{{bibarData.volume_ex | bitcoinFun(BTC_RATE)}} </dd>
                         </dl>
                         <dl>
-                            <dt>流通数量</dt>
+                            <dt>{{$t('details.availableSupply')}} :</dt>
                             <dd>{{bibarData.available_supply | formatNum(2)}}&nbsp;&nbsp;<span v-if="parseFloat((bibarData.available_supply + '').replace(/[^\d.-]/g, '')).toFixed(2) + '' > 0" class="logonameChinese">{{bibarData.symbol}}</span></dd>
                         </dl>
                         <dl>
-                            <dt>流通率</dt>
+                            <dt>{{$t('details.circulationRate')}} :</dt>
                             <dd> {{bibarData.Circulation_rate > 0 ? bibarData.Circulation_rate : '--'}}
                                 <div v-if='bibarData.Circulation_rate > 0' class="bibar-uipress"><span :style="{width:rate + 'px'}"></span></div>
                             </dd>

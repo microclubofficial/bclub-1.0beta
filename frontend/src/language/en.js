@@ -17,7 +17,8 @@ export default {
   },
   column: {
     hotCoins: 'Hot Coins',
-    all: 'All'
+    all: 'All',
+    discussion: 'Discussion'
   },
   login: {
     title: 'Login',
@@ -79,7 +80,15 @@ export default {
     cancel: 'Cancel',
     confirm: 'Confirm',
     edit: 'Edit',
-    longText: 'Long text'
+    longText: 'Long text',
+    fold: 'Fold',
+    unfold: 'Unfold'
+  },
+  pages: {
+    first: 'First',
+    end: 'End',
+    prev: 'Prev',
+    next: 'Next'
   },
   list: {
     ago: 'ago',
@@ -104,11 +113,41 @@ export default {
     password: 'Edit password',
     email: 'Bind email',
     registerTime: 'Register time:',
-    lastLogin: 'Last Login:',
+    lastLogin: 'Last login:',
     setAvatar: 'Set avatar',
     originalPassword: 'orgPwd:',
     newPassword: 'newPwd:',
     confirmPassword: 'conPwd:',
     bindEmail: 'Enter your email to bind'
+  },
+  tableHead: {
+    name: 'Name',
+    price: 'Price',
+    priceChange: 'Price change',
+    tradingVolume: 'Trading volume',
+    marketValue: 'Market value',
+    circulationNumber: 'Circulation number'
+  },
+  sideBar: {
+    introduction: 'Introduction',
+    hotCoins: 'Hot coins',
+    publicTime: 'Public time:',
+    whitePaper: 'White paper:',
+    officialWebsite: 'Official website:',
+    blockQuery: 'Block query:',
+    prevTen: 'Prev 10',
+    nextTen: 'Next 10'
+  },
+  details: {
+    name: 'Name',
+    price: 'Price',
+    priceChange: 'Price change',
+    tradingVolume: 'Trading volume',
+    tradingVolume24h: 'Trading volume(24h)',
+    marketCap: 'Market cap',
+    globalMarketRate: 'Global market rate',
+    totalSupply: 'Total supply',
+    availableSupply: 'Available supply',
+    circulationRate: 'Circulation rate'
   }
 }

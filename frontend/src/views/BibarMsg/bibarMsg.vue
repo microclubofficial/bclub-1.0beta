@@ -55,12 +55,12 @@
                 <thead>
                   <tr>
                     <th style="padding-left:50px;">#</th>
-                    <th>名称</th>
-                    <th>价格</th>
-                    <th>涨跌幅</th>
-                    <th>交易量</th>
-                    <th>流通市值</th>
-                    <th>流通数量</th>
+                    <th>{{$t('details.name')}}</th>
+                    <th>{{$t('details.price')}}</th>
+                    <th>{{$t('details.priceChange')}}</th>
+                    <th>{{$t('details.tradingVolume')}}</th>
+                    <th>{{$t('details.marketCap')}}</th>
+                    <th>{{$t('details.availableSupply')}}</th>
                     <!--<th></th>-->
                   </tr>
                 </thead>
@@ -84,12 +84,12 @@
                         <i v-if="parseFloat((item.price * CNY + '').replace(/[^\d.-]/g, '')).toFixed(2) + '' > 0" class="iconfont icon-CNY">&#xe634;</i>{{item.price * CNY | formatNum(2)}}
                       </a>
                     </td>
-                    <td :class="item.change_1h >= 0 ? 'text-green' : 'text-red'">{{item.change_1h | bfb(2)}}</td>
-                    <td>
+                    <td :class="{'text-green':item.change_1h >= 0, 'text-red':item.change_1h < 0, 'text-center':language == 'en'}">{{item.change_1h | bfb(2)}}</td>
+                    <td :class="{'text-center':language == 'en'}">
                       <i class="iconfont icon-CNY" v-if='cnyFunStr(item.volume,CNY,2) > 0 || cnyFunStr(item.volume,CNY,2) === ""'>&#xe634;</i> {{cnyFunStr(item.volume,CNY,2)}}</td>
-                    <td :title="item.marketcap">
+                    <td :title="item.marketcap" :class="{'text-center':language == 'en'}">
                       <i class="iconfont icon-CNY" v-if='cnyFunStr(item.marketcap,CNY,2) > 0 || cnyFunStr(item.marketcap,CNY,2) === ""'>&#xe634;</i> {{cnyFunStr(item.marketcap,CNY,2)}}</td>
-                    <td>{{cnyFunStr(item.available_supply,CNY,2)}}</td>
+                    <td :class="{'text-center':language == 'en'}">{{cnyFunStr(item.available_supply,CNY,2)}}</td>
                     <!--<td @click="toggleChart(index)">
                       <i style="font-size:16px; color:#909499; cursor:pointer;" class="iconfont">&#xe604;</i>
                     </td>-->
@@ -110,14 +110,14 @@
               <ul class="mo-paging">
                 <!-- prev -->
                 <!-- first -->
-                <li :class="['paging-item', 'paging-item--first', {'paging-item--disabled' : cpno === 1}]" @click="first">首页</li>
-                <li class="paging-item paging-item--prev" :class="{'paging-item--disabled' : cpno === 1}" @click="prev">上一页</li>
+                <li :class="['paging-item', 'paging-item--first', {'paging-item--disabled' : cpno === 1}]" @click="first">{{$t('pages.first')}}</li>
+                <li class="paging-item paging-item--prev" :class="{'paging-item--disabled' : cpno === 1}" @click="prev">{{$t('pages.prev')}}</li>
                 <li :class="['paging-item', {'paging-item--current' : cpno === tmp}]" :key="index" v-for="(tmp, index) in showPageBtn" @click="go(tmp)">{{tmp}}</li>
                 <!--<li :class="['paging-item', 'paging-item--more']" @click="next" v-if="showNextMore">...</li>-->
                 <!-- next -->
-                <li :class="['paging-item', 'paging-item--next', {'paging-item--disabled' : cpno === cpageCount}]" @click="next">下一页</li>
+                <li :class="['paging-item', 'paging-item--next', {'paging-item--disabled' : cpno === cpageCount}]" @click="next">{{$t('pages.next')}}</li>
                 <!-- last -->
-                <li :class="['paging-item', 'paging-item--last', {'paging-item--disabled' : cpno === cpageCount}]" @click="last">尾页</li>
+                <li :class="['paging-item', 'paging-item--last', {'paging-item--disabled' : cpno === cpageCount}]" @click="last">{{$t('pages.end')}}</li>
               </ul>
             </div>
           </div>
@@ -158,7 +158,7 @@ import BibarLeft from '../homePage/bibarLeft/bibarSideLeft.vue'
 import BibarRight from './BibarRight/bivarRight.vue'
 import BibarPostContent from '../homePage/bibarPostContent.vue'
 import { get } from '../../utils/http'
-
+import { getToken } from '../../utils/auth'
 export default {
   data: function () {
     return {
@@ -183,6 +183,8 @@ export default {
       initShow: false,
       toEditorBid: '',
       showLoader: false,
+      // 当前语言
+      language: 'zh',
       // 登录状态
       user_token: ''
     }
@@ -214,6 +216,8 @@ export default {
     BibarLeft
   },
   created () {
+    this.language = getToken('language')
+    // console.log(this.language)
     this.collapseId = `collapse${this.i++}`
     this.hrefCollapse = `#${this.collapseId}`
     this.showLoader = true
