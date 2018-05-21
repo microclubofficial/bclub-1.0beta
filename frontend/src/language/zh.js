@@ -16,8 +16,9 @@ export default {
     noNews: '暂无消息'
   },
   column: {
-    hotCoins: '热门币种',
-    all: '全部'
+    hotCoins: '热门币',
+    all: '全部',
+    discussion: '讨论'
   },
   login: {
     title: '用户登录',
@@ -79,7 +80,15 @@ export default {
     cancel: '取消',
     confirm: '确定',
     edit: '修改',
-    longText: '长文'
+    longText: '长文',
+    fold: '收起',
+    unfold: '展开'
+  },
+  pages: {
+    first: '首页',
+    end: '尾页',
+    prev: '上一页',
+    next: '下一页'
   },
   list: {
     ago: '前',
@@ -110,5 +119,27 @@ export default {
     newPassword: '新密码：',
     confirmPassword: '确认密码：',
     bindEmail: '请输入您要绑定的邮箱'
+  },
+  sideBar: {
+    introduction: '简介',
+    hotCoins: '热门币',
+    publicTime: '发行时间：',
+    whitePaper: '白皮书：',
+    officialWebsite: '官方网站：',
+    blockQuery: '区块查询：',
+    prevTen: '上10位',
+    nextTen: '下10位'
+  },
+  details: {
+    name: '名称',
+    price: '价格',
+    priceChange: '涨跌幅',
+    tradingVolume: '交易量',
+    tradingVolume24h: '交易量（24h）',
+    marketCap: '市值',
+    globalMarketRate: '占全球总市值',
+    totalSupply: '总发行量',
+    availableSupply: '流通数量',
+    circulationRate: '流通率'
   }
 }

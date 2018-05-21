@@ -17,7 +17,7 @@
                 <div class="bibar-indexNews">
                     <div class="bibar-indexNews-TAB">
                         <ul class="bibar-tabs-listSty2">
-                            <li class="bibar-tabs-item active"> <a href="#bibar-newstab1" data-toggle="tab">讨论</a></li>
+                            <li class="bibar-tabs-item active"> <a href="#bibar-newstab1" data-toggle="tab">{{$t('column.discussion')}}</a></li>
                             <!--<li class="bibar-tabs-item" :key='index' v-for="(tmp,index) in newList" :class="{active:state==index}" @click="changeActive(index)"> <a href="#bibar-newstab1" data-toggle="tab">{{tmp}}</a></li>-->
                         </ul>
                     </div>

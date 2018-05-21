@@ -855,8 +855,8 @@ i.icon-BTC{font-size: 14px; font-weight: bold;}
 .bibar-indextrend.red{background: linear-gradient(to right,#ff0022,#da001b); color: #fff;}
 .bibar-indexDisplay-datamore{padding: 10px; overflow: hidden;}
 .bibar-indexDisplay-datamore dl{font-size: 14px;}
-.bibar-indexDisplay-datamore dl dt{width: 100px; line-height: 24px; float: left;}
-.bibar-indexDisplay-datamore dl dd{margin-left: 100px; font-weight: bold; line-height: 24px;}
+.bibar-indexDisplay-datamore dl dt{width: 150px; line-height: 24px; float: left;}
+.bibar-indexDisplay-datamore dl dd{margin-left: 150px; font-weight: bold; line-height: 24px;}
 .bibar-indexDisplay-datamore dl dd .bibar-uipress{top: 0px;margin-left: 25px;}
 /*.bibar-indexDisplay-chart{margin: 5px 0px;}*/
 .bibar-indexDisplay-chartTAB{overflow: hidden;margin: 5px 0px;}
@@ -965,7 +965,7 @@ button[disabled]{cursor: not-allowed;}
 /* .indexNewslimitHeight{height:96px;} */
 /*首页右侧*/
 .bibar-boxindex3{padding: 20px 20px 15px;}
-.bibar-boxtitle > div > a{margin: 3px 8px 0;}
+.bibar-boxtitle > div > a{margin: 3px 6px 0;}
 .bibar-boxtitle .name{font-size: 14px; font-weight: bolder;}
 .bibar-boxbody{}
 .bibar-indexintro{overflow: hidden; transition: height 2s;-webkit-transition: height linear 2s;}
