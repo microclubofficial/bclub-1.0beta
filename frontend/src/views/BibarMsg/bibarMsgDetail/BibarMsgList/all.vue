@@ -594,6 +594,7 @@ export default{
     // 处理图片
     EditorContent (val) {
       let now = val.replace(/<p[^>]*>|<\/p>|<span[^>]*>|<\/span>|<br>|<h[1-6][^>]*>|<\/h[1-6]>|<h-char[^>]*>|<img[^>]*>|<\/h-char>|<h-inner>|<\/h-inner>/g, '')
+      now = now.replace(/&nbsp;*/g, '')
       // now = $(now).text()
       if (now.length > 300) {
         return now.substring(0, 300) + '...'

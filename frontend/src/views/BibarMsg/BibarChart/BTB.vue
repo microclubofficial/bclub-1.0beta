@@ -38,8 +38,8 @@
                         </dl>
                         <dl>
                             <dt>{{$t('details.globalMarketRate')}} :</dt>
-                            <dd> {{bibarData.global_market_rate > 0 ? bibarData.global_market_rate : '--'}}
-                                <div v-if='bibarData.global_market_rate > 0' class="bibar-uipress"><span :style="{width:market + 'px'}"></span></div>
+                            <dd> {{market > 0 ? bibarData.global_market_rate : '--'}}
+                                <div v-if='market > 0' class="bibar-uipress"><span :style="{width:market + 'px'}"></span></div>
                             </dd>
                         </dl>
                         <dl>
@@ -62,8 +62,8 @@
                         </dl>
                         <dl>
                             <dt>{{$t('details.circulationRate')}} :</dt>
-                            <dd> {{bibarData.Circulation_rate > 0 ? bibarData.Circulation_rate : '--'}}
-                                <div v-if='bibarData.Circulation_rate > 0' class="bibar-uipress"><span :style="{width:rate + 'px'}"></span></div>
+                            <dd> {{rate > 0 ? bibarData.Circulation_rate : '--'}}
+                                <div v-if='rate > 0' class="bibar-uipress"><span :style="{width:rate + 'px'}"></span></div>
                             </dd>
                         </dl>
                     </div>

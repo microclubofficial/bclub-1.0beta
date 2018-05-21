@@ -92,7 +92,7 @@ export default {
         this.topicData.picture = image[0]
         this.topicData.picture = this.topicData.picture.slice(this.topicData.picture.indexOf('/'), this.topicData.picture.lastIndexOf('=') - 7)
       }
-      if (this.$route.path !== '/') {
+      if (this.$route.path !== '/' && this.$route.path.indexOf('details') === -1) {
         this.topicData.token = this.$route.params.currency
         if (this.tokenBibar) {
           this.topicData.tokenname = this.tokenBibar

@@ -7,7 +7,7 @@
                     <div class="bibar-indexintro">
                         <p v-html='briefC !== "" ? briefC : "暂无信息" '></p>
                     </div>
-                    <a href="#" v-if='briefC !== ""' class="bibar-indexintromore text-theme" @click="showText = !showText">{{this.showText === false ? $t('button.fold') : $t('button.unfold')}}<i class="iconfont" v-if='!showText'>&#xe692;</i><i class="iconfont" v-if='showText'>&#xe693;</i></a>
+                    <a href="#" v-if='briefC !== ""' class="bibar-indexintromore text-theme" @click="showText = !showText">{{this.showText === false ? $t('button.unfold') : $t('button.fold')}}<i class="iconfont" v-if='!showText'>&#xe692;</i><i class="iconfont" v-if='showText'>&#xe693;</i></a>
                     <div class="bibar-indexinftrList" v-if='briefC.length > 0'>
                         <dl>
                             <dt :class="{'enwidth':language == 'en'}">{{$t('sideBar.publicTime')}}</dt>
@@ -261,6 +261,7 @@ export default{
     // 简介
     briefFun (id) {
       this.showText = false
+      this.briefTxt = ''
       get(`/api/side/tokenintroduce/${id}`).then(data => {
         if (data.resultcode === 1) {
           this.brief = data.data

@@ -811,7 +811,7 @@ a.avatar img {
 .comment-item-hd{
     margin-bottom: 4px;
 }
-.comment-item-hd name{
+.comment-item-hd .name{
     font-size: 16px;
     white-space: nowrap;
     font-weight: bold;

@@ -40,7 +40,7 @@
     </div>
 </template>
 <script>
-import {post} from '../../../utils/http'
+import {post, get} from '../../../utils/http'
 import { Toast } from 'mint-ui'
 export default {
   data () {
@@ -96,13 +96,20 @@ export default {
     },
     // 重新发送
     resendFun () {
-      post(`/api/setting/email`, this.bindForm).then(data => {
+      post(`/api/confirmed/password`, this.bindForm).then(data => {
       })
     },
     // 完成验证状态
     successBind () {
-      $('.emaiModal').modal('hide')
-      this.successbind = true
+      get(`/api/confirmed/email`).then(data => {
+        if (data.resultcode === 0) {
+          $('.emaiModal').modal('hide')
+          this.successbind = false
+        } else {
+          $('.emaiModal').modal('hide')
+          this.successbind = true
+        }
+      })
     },
     // 完成后修改邮箱
     SbindEmail () {
