@@ -1,4 +1,5 @@
 from flask.views import MethodView
+from flask_babel import gettext as _
 from forums.func import get_json, object_as_dict, Avatar
 from forums.api.topic.models import Topic, Reply
 from sqlalchemy import func
@@ -25,7 +26,8 @@ class SideInfluence(MethodView):
             reply['reply_count'] = i[1]
             data.append(reply)
         influence_data = {'reply':data, 'sum_count': sum_count, 'page_count': page_count}
-        return get_json(1, '影响力', influence_data)
+        msg = _('influence')
+        return get_json(1, msg, influence_data)
 
 class SideAnalyst(MethodView):
     def get(self, page):
@@ -51,4 +53,5 @@ class SideAnalyst(MethodView):
             thumb['sum_is_good'] = i[1]
             data.append(thumb)
         analyst_data = {'analyst':data, 'sum_count': sum_count, 'page_count': page_count}
-        return get_json(1, '分析师', analyst_data)
+        msg = _('analyst')
+        return get_json(1, msg, analyst_data)

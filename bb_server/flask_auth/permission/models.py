@@ -135,6 +135,8 @@ class UserMixin(object):
 
     def is_writable(self, code):
         return 2**1 >= code
+    def is_writable(self, code):
+        return 2**1 >= code
 
     def is_readable(self, code):
         return 2**0 >= code

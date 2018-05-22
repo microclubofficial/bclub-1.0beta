@@ -11,7 +11,7 @@
 # Description:
 # **************************************************************************
 from flask import Markup, redirect, render_template, request, url_for, current_app
-from flask_babelex import gettext as _
+from flask_babel import refresh, gettext as _
 from flask_login import current_user, login_required
 
 from flask_auth.form import form_validate
@@ -39,6 +39,7 @@ from forums.api.collect.models import Collect
 from sqlalchemy import func
 import math
 import json
+from forums.extension.babel import get_locale
 
 per_page = 5
 
@@ -62,7 +63,6 @@ class TopicAskView(IsAuthMethodView):
         data = {'title': _('Ask - '), 'form': form}
         return render_template('topic/ask.html', **data)
 
-
 class TopicEditView(IsAuthMethodView):
     decorators = (edit_permission, )
 
@@ -76,7 +76,6 @@ class TopicEditView(IsAuthMethodView):
         data = {'title': _('Edit -'), 'form': form, 'topic': topic}
         return render_template('topic/edit.html', **data)
 
-
 class TopicPreviewView(IsAuthMethodView):
     @login_required
     def post(self):
@@ -86,7 +85,6 @@ class TopicPreviewView(IsAuthMethodView):
         if content_type == Topic.CONTENT_TYPE_MARKDOWN:
             return safe_markdown(content)
         return content
-
 
 class TopicListView(MethodView):
     decorators = (topic_list_permission, )
@@ -135,9 +133,9 @@ class TopicListView(MethodView):
             Avatar(topics_data, user)
             topic.append(topics_data)
         data = {'classification': title, 'topics': topic, 'topic_count':topic_count, 'page_count':page_count}
-        return get_json(1, '文章列表', data)
+        msg = _('Topic List')
+        return get_json(1, msg, data)
 
-    #@form_validate(form_board, error=error_callback, f='')
     def post(self):
         user = request.user
         #form = TopicForm()
@@ -185,7 +183,8 @@ class TopicListView(MethodView):
         #topic.board.post_count = 1
         #topic.author.topic_count = 1
         #topic.reply_count = 1
-        return get_json(1, '发表成功', topic)
+        msg = _('success')
+        return get_json(1, msg, topic)
         #return redirect(url_for('topic.topic', topicId=topic.id))
 
 class TopicView(MethodView):
@@ -239,7 +238,8 @@ class TopicView(MethodView):
             'page_count': page_count
         }
         #topic.read_count = 1
-        return get_json(1,'文章详情',data)
+        msg = _('Topic Details')
+        return get_json(1, msg, data)
         #return render_template('topic/topic.html', **data)
 
     @form_validate(form_board)
@@ -297,7 +297,8 @@ class ReplyListView(MethodView):
             Avatar(replies_data, user)
             data.append(replies_data)
         data.append({'page_count':page_count, 'reply_count':reply_count}) 
-        return get_json(1, '评论信息', data)
+        msg = _('Replies Information')
+        return get_json(1, msg, data)
 
     decorators = (reply_list_permission, )
     #@form_validate(ReplyForm, error=error_callback, f='')
@@ -330,7 +331,8 @@ class ReplyListView(MethodView):
         # count
         #topic.board.post_count = 1
         #reply.author.reply_count = 1Topic.query
-        return get_json(1, '评论成功', replies_data)
+        msg = _('success')
+        return get_json(1, msg, replies_data)
 
 '''   
 class ReplyView(MethodView):
@@ -401,7 +403,7 @@ class LikeView(MethodView):
         return HTTPResponse(
             HTTPResponse.NORMAL_STATUS, data=serializer.data).to_response()
 
-class ThumbView(IsAuthMethodView):
+class ThumbView(MethodView):
     #decorators = (thumd_permission, )
 
     def get(self, id, thumb):
@@ -440,5 +442,6 @@ class ThumbView(IsAuthMethodView):
         data = {}
         data['is_good'], data['is_good_bool'] = Count(session.is_good)
         data['is_bad'], data['is_bad_bool'] = Count(session.is_bad)
-        return get_json(1, '成功', data)
+        msg =_('success')
+        return get_json(1, msg, data)
 

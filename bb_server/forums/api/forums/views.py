@@ -11,7 +11,7 @@
 # Description:
 # **************************************************************************
 from flask import render_template, request
-from flask_babelex import gettext as _
+from flask_babel import gettext as _
 
 from forums.api.topic.models import Topic
 from forums.common.views import BaseMethodView as MethodView

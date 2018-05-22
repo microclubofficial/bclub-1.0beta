@@ -11,7 +11,7 @@
 # Description:
 # **************************************************************************
 from flask import redirect, session, url_for
-from flask_babelex import lazy_gettext as _
+from flask_babel import lazy_gettext as _
 from flask_wtf import FlaskForm as Form
 from flask_wtf.file import FileAllowed, FileField, FileRequired
 from wtforms import (BooleanField, PasswordField, RadioField, SelectField,
@@ -81,7 +81,7 @@ WITHIN = [(0, _('All Topics')), (1, _('One Day')), (2, _('One Week')),
 
 ORDERBY = [(0, _('Publish')), (1, _('Author'))]
 
-DESC = [(0, _('Desc')), (1, _('Asc'))]
+DESC = [(0, _('Desc')), (1, _('Asc'))] 
 
 
 class SortForm(Form):

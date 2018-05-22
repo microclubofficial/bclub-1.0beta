@@ -11,7 +11,7 @@
 # Description:
 # **************************************************************************
 from flask import redirect, render_template, request, url_for
-from flask_babelex import gettext as _
+from flask_babel import gettext as _
 from flask_login import current_user
 
 from flask_auth.form import form_validate
@@ -166,8 +166,10 @@ class CollectView(MethodView):
                 Avatar(topics_data, user)
                 topics.append(topics_data)
             data = {'topics': topics, 'sum_count':sum_count, 'page_count':page_count}
-            return get_json(1, '收藏列表', data)
-        return get_json(1, '收藏列表', {})
+            msg = _('CollectList')
+            return get_json(1, msg, data)
+        msg = _('CollectList')
+        return get_json(1, msg, {})
 
     def post(self, topicId):
         user = request.user
@@ -180,7 +182,8 @@ class CollectView(MethodView):
                 collect.save()
                 data={}
                 data['collect_bool'] = False
-                return get_json(1, '取消收藏成功', data)
+                msg = _('Cancel Collect')
+                return get_json(1, msg, data)
             else:
                 topiclist.append(topicId)
                 collect.topic_id = json.dumps(topiclist)
@@ -190,4 +193,5 @@ class CollectView(MethodView):
         collect.save()
         data={}
         data['collect_bool'] = True
-        return get_json(1, '收藏成功', data)
+        msg = _('success')
+        return get_json(1, msg, data)

@@ -25,7 +25,6 @@ import os
 import sys
 
 app = create_app('config')
-
 app.wsgi_app = ProxyFix(app.wsgi_app)
 
 cli = FlaskGroup(add_default_commands=False, create_app=lambda r: app)
@@ -109,32 +108,7 @@ def initdb():
     db.session.commit()
 
 
-@cli.command()
-@click.option('-l', '--lang', default='zh')
-def babel_init(lang):
-    babel_conf = "translations/babel.cfg"
-    src_path = ["forums", "templates"]
-    os.system('pybabel extract -F {0} -k lazy_gettext -o messages.pot {1}'.
-              format(babel_conf, ' '.join(src_path)))
-    os.system('pybabel init -i messages.pot -d translations -l {0}'.format(
-        lang))
-    os.unlink('messages.pot')
-
-
-@cli.command()
-def babel_update():
-    babel_conf = "translations/babel.cfg"
-    src_path = ["forums", "templates"]
-    os.system('pybabel extract -F {0} -k lazy_gettext -o messages.pot {1}'.
-              format(babel_conf, ' '.join(src_path)))
-    os.system('pybabel update -i messages.pot -d translations')
-    os.unlink('messages.pot')
-
-
-@cli.command()
-def babel_compile():
-    os.system('pybabel compile -d translations')
-
+ 
 
 @cli.command()
 @click.option('-u', '--username')

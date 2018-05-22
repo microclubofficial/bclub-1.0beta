@@ -12,7 +12,7 @@
 # **************************************************************************
 from collections import namedtuple
 from functools import partial, wraps
-
+from flask_babel import gettext as _
 from flask import abort, current_app, flash, redirect, request, url_for
 from flask_login import current_user, login_required
 from flask_principal import (Need, Permission, RoleNeed, UserNeed,
@@ -57,7 +57,8 @@ def is_confirmed(func):
     def _is_confirmed(*args, **kwargs):
         if not current_user.is_authenticated:
             #return redirect(url_for('auth.login', next=request.path))
-            return get_json(0, '未登录', {})
+            msg = _('Not logged in')
+            return get_json(0, msg, {})
         #if confirm_permission.can():
         return func(*args, **kwargs)
         #flash('请验证你的帐号', 'warning')
@@ -69,7 +70,7 @@ def is_guest(func):
     def _is_guest(*args, **kwargs):
         if not current_user.is_authenticated:
             return func(*args, **kwargs)
-        flash('你已登陆，请勿重复登陆')
+        flash(_('You have login ,needn\'t login again'))
         return redirect('/')
 
     return _is_guest
