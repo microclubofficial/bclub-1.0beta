@@ -96,22 +96,22 @@ export default{
     //   失去焦点
     showRegisterMsg (input, id) {
       if (id === 0) {
-        var upwdreg = /^[a-zA-Z0-9_]{6,}$/
+        var upwdreg = /^[a-zA-Z0-9~!@#$%^&*()_+`\-={}:";'<>?,./]{6,18}$/
         if (!upwdreg.test(input) && input !== undefined && input.length > 0) {
-          this.upwdPrompt = '密码长度不能小于6位(大小写字母、数字)'
+          this.upwdPrompt = this.$t('prompt.passwordLength')
           return false
         } else if (input === undefined || input.length === 0) {
-          this.upwdPrompt = '密码不能为空'
+          this.upwdPrompt = this.$t('prompt.passwordRequired')
           return false
         } else {
           this.upwdPrompt = ''
         }
       } else if (id === 1) {
         if (input !== this.findForm.password && input !== undefined && input.length > 0) {
-          this.confirm_upwdPrompt = '两次输入密码不一致'
+          this.confirm_upwdPrompt = this.$t('prompt.passwordDifferent')
           return false
         } else if (input === undefined || input.length === 0) {
-          this.confirm_upwdPrompt = '确认密码不能为空'
+          this.confirm_upwdPrompt = this.$t('prompt.passwordRequired')
           return false
         } else {
           this.confirm_upwdPrompt = ''

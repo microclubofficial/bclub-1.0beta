@@ -39,7 +39,7 @@
           <div class="modal-content">
             <div class="modal-header">
               <button type="button" @click="closeModal" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-              <h4 class="modal-title diy-title" id="myModalLabel">{{showModel ? $t('message.username') : $t('message.phone')}}</h4>
+              <h4 class="modal-title diy-title" id="myModalLabel">{{showModel ? $t('editProfile.username') : $t('editProfile.phone')}}</h4>
             </div>
             <div class="modal-body">
               <!-- 修改用户名 -->
@@ -47,7 +47,7 @@
                 <div class="form-group">
                   <label for="inputEmail3" class="col-md-3 control-label">{{$t('register.username')}}</label>
                   <div class="col-md-9">
-                    <input type="text" class="form-control" name="username" @blur='showsetFormMsg(setForm.username, 0)' v-model="setForm.username" maxlength="16" id="inputEmail3" :placeholder="$t('placeholder.username')">
+                    <input type="text" class="form-control" name="username" @change='showsetFormMsg(setForm.username, 0)' v-model="setForm.username" maxlength="16" id="inputEmail3" :placeholder="$t('placeholder.username')">
                   </div>
                 </div>
                 <label class="col-md-3 control-label"></label>
@@ -60,14 +60,14 @@
                 <div class="form-group">
                   <label for="inputEmail3" class="col-md-3 control-label">{{$t('register.phone')}}</label>
                   <div class="col-md-9">
-                    <input type="text" class="form-control" id="inputEmail3" @blur='showsetFormMsg(setForm.phone, 1)' v-model="setForm.phone" :placeholder="$t('placeholder.phone')">
+                    <input type="text" class="form-control" id="inputEmail3" @change='showsetFormMsg(setForm.phone, 1)' v-model="setForm.phone" :placeholder="$t('placeholder.phone')">
                   </div>
                 </div>
                 <p class="prompt col-md-offset-3 col-md-9" style="margin-top:0px !important;">{{phonePrompt}}</p>
                 <div class="form-group" style="margin-top: 37px;">
                   <label for="inputCaptcha3" class="col-md-3 control-label">{{$t('register.vcode')}}</label>
                   <div class="col-md-6">
-                    <input type="text" class="form-control" v-model="setForm.captcha" @blur='showsetFormMsg(setForm.captcha, 2)' id="inputCaptcha3" :placeholder="$t('placeholder.vcode')">
+                    <input type="text" class="form-control" v-model="setForm.captcha" @change='showsetFormMsg(setForm.captcha, 2)' id="inputCaptcha3" :placeholder="$t('placeholder.vcode')">
                   </div>
                   <button type="button" class="btn btn-default get-captcha" style="height:34px;line-height:34px;" @click="getPhoneControl" v-bind:disabled="hasphone" :class="{'btn-success':!hasphone}">
                     <span v-show="hasControl">{{countdown}}</span>{{getcontroltxt}}</button>
@@ -117,21 +117,21 @@ export default {
   mounted () {
   },
   methods: {
-    //   验证
+    // 验证
     showsetFormMsg (input, id) {
       if (id === 0) {
-        if (input.indexOf(' ') >= 0) {
-          this.unamePrompt = '不能输入空格'
+        if (input !== undefined && input.indexOf(' ') >= 0) {
+          this.unamePrompt = this.$t('prompt.spaceForbidden')
           this.canSetU = false
           return false
         } else {
-          var unamereg = /^[a-zA-Z0-9_\u4e00-\u9fa5]{3,16}$/
+          var unamereg = /^[a-zA-Z0-9_.\-\u4e00-\u9fa5]{3,16}$/
           if (!unamereg.test(input) && input !== undefined && input.length > 0) {
-            this.unamePrompt = '用户名长度在3-16位之间'
+            this.unamePrompt = this.$t('prompt.usernameLength')
             this.canSetU = false
             return false
           } else if (input === undefined || input.length === 0) {
-            this.unamePrompt = '用户名不能为空'
+            this.unamePrompt = this.$t('prompt.usernameRequired')
             this.canSetU = false
             return false
           } else {
@@ -140,13 +140,13 @@ export default {
           }
         }
       } else if (id === 1) {
-        var ponereg = /^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$/
-        if (!ponereg.test(input) && input !== undefined && input.length > 0) {
-          this.phonePrompt = '手机号码格式不正确'
+        var phonereg = /^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$/
+        if (!phonereg.test(input) && input !== undefined && input.length > 0) {
+          this.phonePrompt = this.$t('prompt.phoneError')
           this.hasphone = true
           return false
         } else if (input === undefined || input.length === 0) {
-          this.phonePrompt = '手机号码不能为空'
+          this.phonePrompt = this.$t('prompt.phoneRequired')
           this.hasphone = true
           return false
         } else {
@@ -166,6 +166,7 @@ export default {
       if (this.showModel) {
         if (this.canSetU) {
           post(`/api/setting/username`, this.setForm).then(data => {
+            this.setForm.username = ''
             if (data.resultcode === 0) {
               alert(data.message)
               return false
@@ -196,10 +197,12 @@ export default {
         }
       } else {
         if (this.setForm.captcha === undefined || this.setForm.captcha.length === 0) {
-          this.phoneControlPrompt = '验证码不能为空'
+          this.phoneControlPrompt = this.$t('prompt.captchaRequired')
           return false
         }
         post(`/api/setting/phone`, this.setForm).then(data => {
+          this.setForm.phone = ''
+          this.setForm.captcha = ''
           if (data.resultcode === 0) {
             instance = new Toast({
               message: data.message,
@@ -227,7 +230,7 @@ export default {
       post('/api/phoneCaptcha', { 'phone': phone }).then((data) => {
         if (data.resultcode === 0) {
           if (data.message === 'failed') {
-            alert(this.$t('message.phoneRegistered'))
+            alert(this.$t('prompt.phoneRegistered'))
             this.hasphone = true
             return false
           }
@@ -267,7 +270,7 @@ export default {
     personalUser (uname) {
       get(`/api/u/${uname}`).then(data => {
         if (data.message === '未登录') {
-          alert(this.$t('message.loginFirst'))
+          alert(this.$t('prompt.loginFirst'))
           this.$router.push({ path: '/login' })
         } else {
           this.personalUserInfo = data.data

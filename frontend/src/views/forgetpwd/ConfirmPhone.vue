@@ -87,8 +87,8 @@
               <button type="button" class="btn btn-default get-captcha" style="width:15%" @click="getPhoneControl" v-bind:disabled="hasphone" :class="{'btn-success':!hasphone}">
                 {{getcontroltxt}}<span v-show="hasControl"> {{countdown}}</span></button>
             </div>
-            <!--<label class="col-md-3 control-label"></label>-->
-            <p class="prompt col-md-offset-3 col-md-9" style="margin-top:0px !important;">{{phoneControlPrompt}}</p>
+            <label class="col-md-3 control-label"></label>
+            <p class="prompt col-md-9" style="margin-top:0px !important;">{{phoneControlPrompt}}</p>
             <button type="button" class="btn btn-primary col-md-offset-2 col-md-7 login-button" @click='showModel' data-target="#myModal" data-toggle="">{{$t('button.confirm')}}
             </button>
           </form>
@@ -162,7 +162,7 @@ export default {
     showRegisterMsg(input, id) {
       if (id === 0) {
         if (input === undefined || input.length === 0) {
-          this.phonePrompt = '手机号码不能为空'
+          this.phonePrompt = this.$t('prompt.phoneRequired')
           this.hasphone = true
           return false
         } else {
@@ -172,28 +172,28 @@ export default {
         }
       } else if (id === 1) {
         if (input === undefined || input.length === 0) {
-          this.phoneControlPrompt = '验证码不能为空'
+          this.phoneControlPrompt = this.$t('prompt.captchaRequired')
           return false
         } else {
           this.phoneControlPrompt = ''
         }
       } else if (id === 2) {
-        var upwdreg = /^[a-zA-Z0-9_]{6,}$/
+        var upwdreg = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[~!@#$%^&*()_+`\-={}:";'<>?,.\/]).{6,18}$/
         if (!upwdreg.test(input) && input !== undefined && input.length > 0) {
-          this.upwdPrompt = '密码长度不能小于6位'
+          this.upwdPrompt = this.$t('prompt.passwordLength')
           return false
         } else if (input === undefined || input.length === 0) {
-          this.upwdPrompt = '密码不能为空'
+          this.upwdPrompt = this.$t('prompt.passwordRequired')
           return false
         } else {
           this.upwdPrompt = ''
         }
       } else if (id === 3) {
         if (input !== this.findForm.password && input !== undefined && input.length > 0) {
-          this.confirm_upwdPrompt = '两次输入密码不一致'
+          this.confirm_upwdPrompt = this.$t('prompt.passwordDifferent')
           return false
         } else if (input === undefined || input.length === 0) {
-          this.confirm_upwdPrompt = '确认密码不能为空'
+          this.confirm_upwdPrompt = this.$t('prompt.passwordRequired')
           return false
         } else {
           this.confirm_upwdPrompt = ''
@@ -221,7 +221,7 @@ export default {
             }
           }, 1000)
         } else if (data.resultcode === 0) {
-          this.phonePrompt = '手机号码未注册'
+          this.phonePrompt = this.$t('prompt.phoneNotRegistered')
         }
       }).catch(error => {
         console.log(error)

@@ -4,16 +4,15 @@
             <form v-if='!successbind'>
                 <div class="form-group">
                     <label class="col-sm-12" for="exampleInputEmail1">{{$t('editProfile.bindEmail')}}</label>
-                    <input type="email" style="width:25%;margin-top:10px" class="form-control col-sm-3" v-model="bindForm.email" id="exampleInputEmail1" :placeholder="$t('placeholder.email')" @blur='showBindEmailMsg(bindForm.email, 0)'>
+                    <input type="email" style="width:25%;margin-top:10px" class="form-control col-sm-3" v-model="bindForm.email" id="exampleInputEmail1" :placeholder="$t('placeholder.email')" @change='showBindEmailMsg(bindForm.email, 0)'>
                     <span class="prompt col-sm-9" style="margin-left: 0 !important;height:34px;margin-top:20px; display:block;">{{emailPrompt}}</span>
                 </div>
                 <button type="button" style="margin-top:10px;" v-bind:disabled="!bindForm.email" @click="bindEmailFun" class="btn findEmail btn-primary">{{$t('button.confirm')}}</button>
             </form>
             <!--完成验证后样式-->
             <div class="successBind" style="margin:50px 0;" v-if='successbind'>
-              <p>
-                已绑定邮箱<span style="font-weight: bold;margin: 0 20px 0 10px;">{{bindForm.email}}</span>
-                <button type="button" @click='SbindEmail' class="btn btn-primary">修改邮箱</button>
+              <p>{{$t('editProfile.bindedEmail')}}<span style="font-weight: bold;margin: 0 20px 0 10px;">{{bindForm.email}}</span>
+                <button type="button" @click='SbindEmail' class="btn btn-primary">{{$t('button.edit')}}</button>
               </p>
             </div>
             <!--发邮件模态框-->
@@ -24,13 +23,13 @@
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                       </div>
                       <div class="modal-body">
-                        一封邮件已发送，请注意查收
+                        <p >{{$t('prompt.emailSent')}}</p>
                       </div>
                       <div class="modal-footer">
-                        <button type="button" @click="resendFun" class="btn btn-primary">重新发送
+                        <button type="button" @click="resendFun" class="btn btn-primary">{{$t('button.resend')}}
                         </button>
                         <button type="button" @click="successBind" class="btn btn-default">
-                          完成验证
+                          {{$t('button.verify')}}
                         </button>
                       </div>
                     </div><!-- /.modal-content -->
@@ -60,11 +59,11 @@ export default {
       let emailreg = /^[A-Za-z0-9.\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
       if (id === 0) {
         if (input === undefined || input.length === 0) {
-          this.emailPrompt = '邮箱不能为空'
+          this.emailPrompt = this.$t('prompt.emailRequired')
           this.canFind = false
           return false
         } else if (!emailreg.test(input) && input !== undefined && input.length > 0) {
-          this.emailPrompt = '邮箱格式不正确'
+          this.emailPrompt = this.$t('prompt.emailError')
           this.canFind = false
           return false
         } else {
@@ -96,8 +95,7 @@ export default {
     },
     // 重新发送
     resendFun () {
-      post(`/api/confirmed/password`, this.bindForm).then(data => {
-      })
+      this.bindEmailFun()
     },
     // 完成验证状态
     successBind () {

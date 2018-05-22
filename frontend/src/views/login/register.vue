@@ -69,7 +69,7 @@
   }
   .prompt{
     float: left;
-    margin-left: 4%;
+    /*margin-left: 4%;*/
     margin-top: 10px;
     color: red;
     padding-left:20px;
@@ -86,43 +86,43 @@
           <div class="form-group">
             <label class="col-md-3 control-label"><span class="text-red">* </span>{{$t('register.username')}}</label>
             <div class="col-md-9">
-              <input  class="form-control" maxlength="16" name="username" type="text" :placeholder="$t('placeholder.username')" @blur='showRegisterMsg(userForm.username, 0)'  v-model="userForm.username">
+              <input  class="form-control" maxlength="16" name="username" type="text" :placeholder="$t('placeholder.username')" @change='showRegisterMsg(userForm.username, 0)'  v-model="userForm.username">
             </div>
-            <label class="col-md-3 control-label"></label>
-            <p class="prompt">{{unamePrompt}}</p>
+            <!--<label class="col-md-3 control-label"></label>-->
+            <p class="prompt col-md-offset-3 col-md-9">{{unamePrompt}}</p>
           </div>
           <div class="form-group">
             <label class="col-md-3 control-label"><span class="text-red">* </span>{{$t('register.password')}}</label>
             <div class="col-md-9">
-              <input class="form-control" name="password" type="password" :placeholder="$t('placeholder.password')" @blur='showRegisterMsg(userForm.password, 1)' v-model="userForm.password">
+              <input class="form-control" name="password" type="password" :placeholder="$t('placeholder.password')" @change='showRegisterMsg(userForm.password, 1)' v-model="userForm.password">
             </div>
-            <label class="col-md-3 control-label"></label>
-            <p class="prompt">{{upwdPrompt}}</p>
+            <!--<label class="col-md-3 control-label"></label>-->
+            <p class="prompt col-md-offset-3 col-md-9">{{upwdPrompt}}</p>
           </div>
           <div class="form-group">
             <label class="col-md-3 control-label"><span class="text-red">* </span>{{$t('register.repassword')}}</label>
             <div class="col-md-9">
-              <input class="form-control" name="repassword" type="password" :placeholder="$t('placeholder.repassword')" @blur='showRegisterMsg(userForm.confirm_password, 2)' v-model="userForm.confirm_password">
+              <input class="form-control" name="repassword" type="password" :placeholder="$t('placeholder.repassword')" @change='showRegisterMsg(userForm.confirm_password, 2)' v-model="userForm.confirm_password">
             </div>
-            <label class="col-md-3 control-label"></label>
-            <p class="prompt">{{confirm_upwdPrompt}}</p>
+            <!--<label class="col-md-3 control-label"></label>-->
+            <p class="prompt col-md-offset-3 col-md-9">{{confirm_upwdPrompt}}</p>
           </div>
           <div class="form-group">
             <label class="col-md-3 control-label"><span class="text-red">* </span>{{$t('register.phone')}}</label>
             <div class="col-md-9">
-              <input class="form-control" name="phone" type="text" :placeholder="$t('placeholder.phone')" v-model="userForm.phone" @blur='showRegisterMsg(userForm.phone, 3)'>
+              <input class="form-control" name="phone" type="text" :placeholder="$t('placeholder.phone')" v-model="userForm.phone" @change='showRegisterMsg(userForm.phone, 3)'>
             </div>
-            <label class="col-md-3 control-label"></label>
-             <p class="prompt">{{phonePrompt}}</p>
+            <!--<label class="col-md-3 control-label"></label>-->
+             <p class="prompt col-md-offset-3 col-md-9">{{phonePrompt}}</p>
           </div>
           <div class="form-group">
               <label for="inputCaptcha3" class="col-md-3 control-label"><span class="text-red">* </span>{{$t('register.vcode')}}</label>
               <div class="col-md-9 captcha-box">
-                  <input type="text" class="form-control" v-model="userForm.captcha" @blur='showRegisterMsg(userForm.phone, 5)' id="inputCaptcha3" :placeholder="$t('placeholder.vcode')">
+                  <input type="text" class="form-control" v-model="userForm.captcha" @change='showRegisterMsg(userForm.phone, 5)' id="inputCaptcha3" :placeholder="$t('placeholder.vcode')">
                   <button type="button" class="col-md-3 get-captcha" v-bind:disabled="hasphone" :class="{'text-gray':hasphone}" @click="getPhoneControl"><span v-show="hasControl">{{countdown}}</span><i> | </i>{{getcontroltxt}}</button>
               </div>
-            <label class="col-md-3 control-label"></label>
-            <p class="prompt">{{captchaPrompt}}</p>
+            <!--<label class="col-md-3 control-label"></label>-->
+            <p class="prompt col-md-offset-3 col-md-9">{{captchaPrompt}}</p>
           </div>
           <div class="form-group">
             <label class="col-md-3 control-label">&nbsp;&nbsp;&nbsp;{{$t('register.icode')}}</label>
@@ -169,46 +169,46 @@ export default {
     // 失去焦点验证
     showRegisterMsg (input, id) {
       if (id === 0) {
-        var unamereg = /^[a-zA-Z0-9_\u4e00-\u9fa5]{3,16}$/
+        var unamereg = /^[a-zA-Z0-9_.\-\u4e00-\u9fa5]{3,16}$/
         if (!unamereg.test(input) && input !== undefined && input.length > 0) {
-          this.unamePrompt = '用户名在3-16位之间(数字、大小写字母、下划线、中文)'
+          this.unamePrompt = this.$t('prompt.usernameLength')
           // console.log(input.length)
           return false
         } else if (input === undefined || input.length === 0) {
-          this.unamePrompt = '用户名不能为空'
+          this.unamePrompt = this.$t('prompt.usernameRequired')
           return false
         } else {
           this.unamePrompt = ''
         }
       } else if (id === 1) {
-        var upwdreg = /^[a-zA-Z0-9_]{6,}$/
+        var upwdreg = /^[a-zA-Z0-9~!@#$%^&*()_+`\-={}:";'<>?,./]{6,18}$/
         if (!upwdreg.test(input) && input !== undefined && input.length > 0) {
-          this.upwdPrompt = '密码长度不能小于6位(大小写字母、数字)'
+          this.upwdPrompt = this.$t('prompt.passwordLength')
           return false
         } else if (input === undefined || input.length === 0) {
-          this.upwdPrompt = '密码不能为空'
+          this.upwdPrompt = this.$t('prompt.passwordRequired')
           return false
         } else {
           this.upwdPrompt = ''
         }
       } else if (id === 2) {
         if (input !== this.userForm.password && input !== undefined && input.length > 0) {
-          this.confirm_upwdPrompt = '两次输入密码不一致'
+          this.confirm_upwdPrompt = this.$t('prompt.passwordDifferent')
           return false
         } else if (input === undefined || input.length === 0) {
-          this.confirm_upwdPrompt = '确认密码不能为空'
+          this.confirm_upwdPrompt = this.$t('prompt.passwordRequired')
           return false
         } else {
           this.confirm_upwdPrompt = ''
         }
       } else if (id === 3) {
-        var ponereg = /^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$/
-        if (!ponereg.test(input) && input !== undefined && input.length > 0) {
-          this.phonePrompt = '手机号码格式不正确'
+        var phonereg = /^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$/
+        if (!phonereg.test(input) && input !== undefined && input.length > 0) {
+          this.phonePrompt = this.$t('prompt.phoneError')
           this.hasphone = true
           return false
         } else if (input === undefined || input.length === 0) {
-          this.phonePrompt = '手机号码不能为空'
+          this.phonePrompt = this.$t('prompt.phoneRequired')
           this.hasphone = true
           return false
         } else {
@@ -217,7 +217,7 @@ export default {
         }
       } else if (id === 5) {
         if (input === undefined || input.length === 0) {
-          this.captchaPrompt = '验证码不能为空'
+          this.captchaPrompt = this.$t('prompt.captchaRequired')
           return false
         } else {
           this.captchaPrompt = ''

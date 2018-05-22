@@ -90,10 +90,10 @@ export default {
       var emailreg = /^[A-Za-z0-9.\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
       if (id === 0) {
         if (input === undefined || input.length === 0) {
-          this.emailPrompt = '邮箱地址不能为空'
+          this.emailPrompt = this.$t('prompt.emailRequired')
           return false
         } else if (!emailreg.test(input) && input !== undefined && input.length > 0) {
-          this.emailPrompt = '邮箱格式不正确'
+          this.emailPrompt = this.$t('prompt.emailError')
           return false
         } else {
           this.emailPrompt = ''
