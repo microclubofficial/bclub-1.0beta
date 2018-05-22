@@ -161,18 +161,18 @@
                 </div>
               </div>
               <!-- 分页条 -->
-            <div class="pages" v-if='showPage && index === i'>
+            <div class="pages">
               <ul class="mo-paging">
                 <!-- prev -->
                 <!-- first -->
-                <li :class="['paging-item', 'paging-item--first', {'paging-item--disabled' : cpno === 1}]" @click="first">首页</li>
-                <li class="paging-item paging-item--prev" :class="{'paging-item--disabled' : cpno === 1}" @click="prev">上一页</li>
-                <li :class="['paging-item', {'paging-item--current' : cpno === tmp}]" :key="index" v-for="(tmp, index) in showPageBtn" @click="go(tmp)">{{tmp}}</li>
+                <li :class="['paging-item', 'paging-item--first', {'paging-item--disabled' : cpno === 1}]" @click="first(tmp.id)">{{$t('pages.first')}}</li>
+                <li class="paging-item paging-item--prev" :class="{'paging-item--disabled' : cpno === 1}" @click="prev(tmp.id)">{{$t('pages.prev')}}</li>
+                <li :class="['paging-item', {'paging-item--current' : cpno === page}]" :key="index" v-for="(page, index) in showPageBtn" @click="go(page,tmp.id)">{{page}}</li>
                 <!--<li :class="['paging-item', 'paging-item--more']" @click="next" v-if="showNextMore">...</li>-->
                 <!-- next -->
-                <li :class="['paging-item', 'paging-item--next', {'paging-item--disabled' : cpno === cpageCount}]" @click="next">下一页</li>
+                <li :class="['paging-item', 'paging-item--next', {'paging-item--disabled' : cpno === cpageCount}]" @click="next(tmp.id)">{{$t('pages.next')}}</li>
                 <!-- last -->
-                <li :class="['paging-item', 'paging-item--last', {'paging-item--disabled' : cpno === cpageCount}]" @click="last">尾页</li>
+                <li :class="['paging-item', 'paging-item--last', {'paging-item--disabled' : cpno === cpageCount}]" @click="last(tmp.id)">{{$t('pages.end')}}</li>
               </ul>
             </div>
             </div>
@@ -689,7 +689,6 @@ export default{
         get(`/api/topic/replies/early/${tmpId}/1`).then(data => {
           if (!this.nowData[tmpId]) this.$set(this.nowData, tmpId, data.data)
           else this.nowData[tmpId] = data.data
-          console.log(this.nowData[tmpId])
         })
       }
     },
@@ -718,7 +717,7 @@ export default{
         this.go(this.cpageCount)
       }
     },
-    go (page) {
+    go (page, id) {
       if (page === '···') {
         return
       }
@@ -728,8 +727,9 @@ export default{
         this.cpno = page
       }
       // debugger
-      get(`/api/topic/${this.replyId}/${page}`).then(data => {
-        this.nowData[this.replyId] = data.data.replies
+      get(`/api/topic/${id}/${page}`).then(data => {
+        if (!this.nowData[id]) this.$set(this.nowData, id, data.data.replies)
+        else this.nowData[id] = data.data.replies
       })
     },
     // 回复人文字处理

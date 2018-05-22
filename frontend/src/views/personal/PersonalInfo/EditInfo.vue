@@ -47,7 +47,7 @@
                 <div class="form-group">
                   <label for="inputEmail3" class="col-md-3 control-label">{{$t('register.username')}}</label>
                   <div class="col-md-9">
-                    <input type="text" class="form-control" name="username" @blur='showsetFormMsg(setForm.username, 0)' v-model="setForm.username" maxlength="16" id="inputEmail3" :placeholder="$t('placeholder.username')">
+                    <input type="text" class="form-control" name="username" @change='showsetFormMsg(setForm.username, 0)' v-model="setForm.username" maxlength="16" id="inputEmail3" :placeholder="$t('placeholder.username')">
                   </div>
                 </div>
                 <label class="col-md-3 control-label"></label>
@@ -60,14 +60,14 @@
                 <div class="form-group">
                   <label for="inputEmail3" class="col-md-3 control-label">{{$t('register.phone')}}</label>
                   <div class="col-md-9">
-                    <input type="text" class="form-control" id="inputEmail3" @blur='showsetFormMsg(setForm.phone, 1)' v-model="setForm.phone" :placeholder="$t('placeholder.phone')">
+                    <input type="text" class="form-control" id="inputEmail3" @change='showsetFormMsg(setForm.phone, 1)' v-model="setForm.phone" :placeholder="$t('placeholder.phone')">
                   </div>
                 </div>
                 <p class="prompt col-md-offset-3 col-md-9" style="margin-top:0px !important;">{{phonePrompt}}</p>
                 <div class="form-group" style="margin-top: 37px;">
                   <label for="inputCaptcha3" class="col-md-3 control-label">{{$t('register.vcode')}}</label>
                   <div class="col-md-6">
-                    <input type="text" class="form-control" v-model="setForm.captcha" @blur='showsetFormMsg(setForm.captcha, 2)' id="inputCaptcha3" :placeholder="$t('placeholder.vcode')">
+                    <input type="text" class="form-control" v-model="setForm.captcha" @change='showsetFormMsg(setForm.captcha, 2)' id="inputCaptcha3" :placeholder="$t('placeholder.vcode')">
                   </div>
                   <button type="button" class="btn btn-default get-captcha" style="height:34px;line-height:34px;" @click="getPhoneControl" v-bind:disabled="hasphone" :class="{'btn-success':!hasphone}">
                     <span v-show="hasControl">{{countdown}}</span>{{getcontroltxt}}</button>
@@ -120,14 +120,14 @@ export default {
     //   验证
     showsetFormMsg (input, id) {
       if (id === 0) {
-        if (input.indexOf(' ') >= 0) {
+        if (input !== undefined && input.indexOf(' ') >= 0) {
           this.unamePrompt = '不能输入空格'
           this.canSetU = false
           return false
         } else {
-          var unamereg = /^[a-zA-Z0-9_\u4e00-\u9fa5]{3,16}$/
+          var unamereg = /^[\u0391-\uFFE5-a-zA-Z0-9_.-]{3,16}$/
           if (!unamereg.test(input) && input !== undefined && input.length > 0) {
-            this.unamePrompt = '用户名长度在3-16位之间'
+            this.unamePrompt = '用户名格式不对'
             this.canSetU = false
             return false
           } else if (input === undefined || input.length === 0) {
@@ -166,6 +166,7 @@ export default {
       if (this.showModel) {
         if (this.canSetU) {
           post(`/api/setting/username`, this.setForm).then(data => {
+            this.setForm.username = ''
             if (data.resultcode === 0) {
               alert(data.message)
               return false
@@ -200,6 +201,8 @@ export default {
           return false
         }
         post(`/api/setting/phone`, this.setForm).then(data => {
+          this.setForm.phone = ''
+          this.setForm.captcha = ''
           if (data.resultcode === 0) {
             instance = new Toast({
               message: data.message,

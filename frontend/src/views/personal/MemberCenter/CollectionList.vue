@@ -164,20 +164,19 @@
                 </div>
               </div>
               <!-- 分页条 -->
-            <div class="pages" v-if='showPage'>
+            <div class="pages" v-if='showPage && index === i'>
               <ul class="mo-paging">
-              <!-- prev -->
-        <li class="paging-item paging-item--prev" :class="{'paging-item--disabled' : cpno === 1}" @click="prev">上一页</li>
-        <!-- first -->
-        <li :class="['paging-item', 'paging-item--first', {'paging-item--disabled' : cpno === 1}]" @click="first">首页</li>
-        <li :class="['paging-item', 'paging-item--more']" v-if="showPrevMore">...</li>
-        <li :class="['paging-item', {'paging-item--current' : cpno === tmp}]" :key="index" v-for="(tmp, index) in showPageBtn"  @click="go(tmp)">{{tmp}}</li>
-        <li :class="['paging-item', 'paging-item--more']" v-if="showNextMore">...</li>
-        <!-- next -->
-        <li :class="['paging-item', 'paging-item--next', {'paging-item--disabled' : cpno === cpageCount}]" @click="next">下一页</li>
-        <!-- last -->
-        <li :class="['paging-item', 'paging-item--last', {'paging-item--disabled' : cpno === cpageCount}]"  @click="last">尾页</li>
-        </ul>
+                <!-- prev -->
+                <!-- first -->
+                <li :class="['paging-item', 'paging-item--first', {'paging-item--disabled' : cpno === 1}]" @click="first">{{$t('pages.first')}}</li>
+                <li class="paging-item paging-item--prev" :class="{'paging-item--disabled' : cpno === 1}" @click="prev">{{$t('pages.prev')}}</li>
+                <li :class="['paging-item', {'paging-item--current' : cpno === tmp}]" :key="index" v-for="(tmp, index) in showPageBtn" @click="go(tmp)">{{tmp}}</li>
+                <!--<li :class="['paging-item', 'paging-item--more']" @click="next" v-if="showNextMore">...</li>-->
+                <!-- next -->
+                <li :class="['paging-item', 'paging-item--next', {'paging-item--disabled' : cpno === cpageCount}]" @click="next">{{$t('pages.next')}}</li>
+                <!-- last -->
+                <li :class="['paging-item', 'paging-item--last', {'paging-item--disabled' : cpno === cpageCount}]" @click="last">{{$t('pages.end')}}</li>
+              </ul>
             </div>
             </div>
           </div>
@@ -204,6 +203,7 @@
 import {get, post} from '../../../utils/http'
 import BibarReport from '../../homePage/bibarReport.vue'
 import { Toast } from 'mint-ui'
+import {getToken} from '../../../utils/auth.js'
 export default{
   data: function () {
     return {
@@ -260,7 +260,8 @@ export default{
       showLoaderComment: false,
       more: '展开',
       moreId: '',
-      sortNow: 0
+      sortNow: 0,
+      user_token: ''
     }
   },
   components: {
@@ -289,34 +290,35 @@ export default{
     }
   },
   created: function () {
+    if (getToken()) {
+      this.user_token = JSON.parse(getToken())
+    }
+    if (this.user_token === '') {
+      this.$router.push('/')
+    }
     // 文章分页
     this.$store.dispatch('clear_backForNav')
     this.showLoader = true
     get(`/api/collectlist/${this.tpno}`).then(data => {
-      if (data.message === '未登录') {
-        alert('请先去登录')
-        this.$router.push({ path: '/login' })
+      this.articles = data.data.topics
+      this.showLoader = false
+      this.pageCount = data.data.page_count
+      if (this.articles !== undefined && this.articles.length > 0) {
+        this.loadingShow = true
+      }
+      var that = this
+      if (this.pageCount === 1) {
+        this.bottomText = '没有啦'
+        this.listLoding = false
+        this.noLoading = true
+        // this.loadingImg = '../../assets/img/noLoading.png'
+        return false
       } else {
-        this.articles = data.data.topics
-        this.showLoader = false
-        this.pageCount = data.data.page_count
-        if (this.articles !== undefined && this.articles.length > 0) {
-          this.loadingShow = true
-        }
-        var that = this
-        if (this.pageCount === 1) {
-          this.bottomText = '没有啦'
-          this.listLoding = false
-          this.noLoading = true
-          // this.loadingImg = '../../assets/img/noLoading.png'
-          return false
-        } else {
-          document.querySelector('#app').addEventListener('scroll', function () {
-            if (this.clientHeight + this.scrollTop === this.scrollHeight) {
-              that.loadTopicPage()
-            }
-          })
-        }
+        document.querySelector('#app').addEventListener('scroll', function () {
+          if (this.clientHeight + this.scrollTop === this.scrollHeight) {
+            that.loadTopicPage()
+          }
+        })
       }
     })
   },

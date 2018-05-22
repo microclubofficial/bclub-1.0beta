@@ -5,21 +5,21 @@
                 <div class="form-group">
             <label class="col-sm-2 control-label">{{$t('editProfile.originalPassword')}}</label>
             <div class="col-sm-3">
-              <input class="form-control" name="password" type="password" :placeholder="$t('placeholder.originalPassword')" @blur='showFindPwdMsg(setPwd.OldPassword, 0)' v-model="setPwd.OldPassword">
+              <input class="form-control" name="password" type="password" :placeholder="$t('placeholder.originalPassword')" @change='showFindPwdMsg(setPwd.OldPassword, 0)' v-model="setPwd.OldPassword">
             </div>
             <p class="prompt">{{oldpwdPrompt}}</p>
           </div>
                 <div class="form-group">
             <label class="col-sm-2 control-label">{{$t('editProfile.newPassword')}}</label>
             <div class="col-sm-3">
-              <input class="form-control" name="password" type="password" :placeholder="$t('placeholder.newPassword')" @blur='showFindPwdMsg(setPwd.NewPassword, 1)' v-model="setPwd.NewPassword">
+              <input class="form-control" name="password" type="password" :placeholder="$t('placeholder.newPassword')" @change='showFindPwdMsg(setPwd.NewPassword, 1)' v-model="setPwd.NewPassword">
             </div>
             <p class="prompt">{{newpwdPrompt}}</p>
           </div>
           <div class="form-group">
             <label class="col-sm-2 control-label">{{$t('editProfile.confirmPassword')}}</label>
             <div class="col-sm-3">
-              <input class="form-control" name="repassword" type="password" :placeholder="$t('placeholder.repassword')" @blur='showFindPwdMsg(setPwd.confirm_password, 2)' v-model="setPwd.confirm_password">
+              <input class="form-control" name="repassword" type="password" :placeholder="$t('placeholder.repassword')" @change='showFindPwdMsg(setPwd.confirm_password, 2)' v-model="setPwd.confirm_password">
             </div>
             <p class="prompt">{{confirm_upwdPrompt}}</p>
           </div>
@@ -98,10 +98,7 @@ export default {
     setPwdFun () {
       let instance
       post(`/api/setting/password`, this.setPwd).then(data => {
-        if (data.resultcode === 0) {
-          alert(data.message)
-          return false
-        } else if (data.resultcode === 1) {
+        if (data.resultcode === 1) {
           instance = new Toast({
             message: data.message,
             iconClass: 'glyphicon glyphicon-ok',

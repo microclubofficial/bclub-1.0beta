@@ -89,7 +89,7 @@
 
 .prompt {
   float: left;
-  margin-left: 4%;
+  /*margin-left: 4%;*/
   margin-top: 10px;
   color: red;
 }
@@ -116,31 +116,31 @@
               <div class="form-group">
                 <label class="col-md-3 control-label">{{$t('login.username')}}</label>
                 <div class="col-md-9">
-                  <input class="form-control" name="username" type="text" :placeholder="$t('placeholder.username')" @blur='showRegisterMsg(userForm.username, 0)' v-model="userForm.username">
+                  <input class="form-control" name="username" type="text" :placeholder="$t('placeholder.username')" @change='showRegisterMsg(userForm.username, 0)' v-model="userForm.username">
                 </div>
-                <label class="col-md-3 control-label"></label>
-                <p class="prompt">{{unamePrompt}}</p>
+                <!--<label class="col-md-3 control-label"></label>-->
+                <p class="prompt col-md-offset-3 col-md-9">{{unamePrompt}}</p>
               </div>
               <div class="form-group">
                 <label class="col-md-3 control-label">{{$t('login.password')}}</label>
                 <div class="col-md-9">
-                  <input class="form-control" name="password" type="password" :placeholder="$t('placeholder.password')" @blur='showRegisterMsg(userForm.password, 1)' v-model="userForm.password">
+                  <input class="form-control" name="password" type="password" :placeholder="$t('placeholder.password')" @change='showRegisterMsg(userForm.password, 1)' v-model="userForm.password">
                 </div>
-                <label class="col-sm-3 control-label"></label>
-                <p class="prompt">{{upwdPrompt}}</p>
+                <!--<label class="col-sm-3 control-label"></label>-->
+                <p class="prompt col-md-offset-3 col-md-9">{{upwdPrompt}}</p>
               </div>
               <div class="form-group">
                 <label class="col-md-3 control-label">{{$t('login.vcode')}}</label>
                 <div class="col-md-9">
                   <div class="input-group">
-                    <input class="form-control" name="captcha" @blur='showRegisterMsg(userForm.captcha, 2)' :placeholder="$t('placeholder.vcode')" type="text" v-model="userForm.captcha" @keyup.enter="handleLogin">
+                    <input class="form-control" name="captcha" @change='showRegisterMsg(userForm.captcha, 2)' :placeholder="$t('placeholder.vcode')" type="text" v-model="userForm.captcha" @keyup.enter="handleLogin">
                     <span class="input-group-addon" style="padding:0;border-left:none;">
                       <img ref="captcha" :src="controlImg" :alt="$t('placeholder.vcode')" width="120" height="30" @click="changeControl()">
                     </span>
                   </div>
                 </div>
-                <label class="col-md-3 control-label"></label>
-                <p class="prompt">{{captchaPrompt}}</p>
+                <!--<label class="col-md-3 control-label"></label>-->
+                <p class="prompt col-md-offset-3 col-md-9">{{captchaPrompt}}</p>
               </div>
               <div class="form-group">
                 <div class="col-md-offset-3 col-md-9">
@@ -163,21 +163,21 @@
               <div class="form-group">
                 <label class="col-md-3 control-label">{{$t('login.phone')}}</label>
                 <div class="col-md-9">
-                  <input class="form-control" name="phone" type="text" :placeholder="$t('placeholder.phone')" v-model="phoneForm.phone" @blur='showRegisterMsg(phoneForm.phone, 3)'>
+                  <input class="form-control" name="phone" type="text" :placeholder="$t('placeholder.phone')" v-model="phoneForm.phone" @change='showRegisterMsg(phoneForm.phone, 3)'>
                 </div>
-                <label class="col-md-3 control-label"></label>
-                <p class="prompt col-md-9">{{phonePrompt}}</p>
+                <!--<label class="col-md-3 control-label"></label>-->
+                <p class="prompt col-md-offset-3 col-md-6">{{phonePrompt}}</p>
               </div>
               <div class="form-group">
                 <label for="inputCaptcha3" class="col-md-3 control-label">{{$t('login.vcode')}}</label>
                 <div class="col-md-9 captcha-box">
-                  <input type="text" class="form-control" v-model="phoneForm.phonecaptcha" @blur='showRegisterMsg(phoneForm.phonecaptcha, 4)' id="inputCaptcha3" :placeholder="$t('placeholder.vcode')">
+                  <input type="text" class="form-control" v-model="phoneForm.phonecaptcha" @change='showRegisterMsg(phoneForm.phonecaptcha, 4)' id="inputCaptcha3" :placeholder="$t('placeholder.vcode')">
                   <button type="button" class="col-md-3 get-captcha" v-bind:disabled="hasphone" :class="{'text-gray':hasphone}" @click="getPhoneControl">
                     <span v-show="hasControl">{{countdown}}</span>
                     <i> | </i>{{getcontroltxt}}</button>
                 </div>
-                <label class="col-md-3 control-label"></label>
-                <p class="prompt">{{captchaPrompt}}</p>
+                <!--<label class="col-md-3 control-label"></label>-->
+                <p class="prompt col-md-offset-3 col-md-6">{{captchaPrompt}}</p>
               </div>
               <div class="form-group">
                 <div class="col-md-offset-3 col-md-9">
@@ -376,15 +376,15 @@ export default {
       })
     },
     // 切换验证码
-    changeControl() {
+    changeControl () {
       this.controlImg = this.controlImg + '?d=' + Date.now()
     },
     // 去忘记密码
-    toForgetPwd() {
+    toForgetPwd () {
       this.$router.push('/forgetPwd')
     },
     // 获取手机验证码
-    getPhoneControl() {
+    getPhoneControl () {
       let phone = parseFloat(this.phoneForm.phone)
       post('/api/phoneCaptcha/login', { 'phone': phone }).then((data) => {
         if (data.resultcode === 0) {
@@ -394,13 +394,13 @@ export default {
         if (data.resultcode === 1) {
           this.hasphone = true
           let that = this
-          this.timer = setInterval(function() {
+          this.timer = setInterval(function () {
             that.countdown--
             that.hasControl = true
             that.getcontroltxt = that.$t('prompt.reacquire')
             this.kaiguan = false
             if (that.countdown < 1) {
-              that.getcontroltxt = that.$t('prompt.reacquire')
+              that.getcontroltxt = that.$t('prompt.acquireVcode')
               that.hasphone = false
               that.countdown = 30
               that.hasControl = false
@@ -415,7 +415,7 @@ export default {
       })
     },
     // 显示当前tab
-    changeTab(now) {
+    changeTab (now) {
       if (now === 0) {
         this.showTab = true
       } else {
