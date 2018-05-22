@@ -119,7 +119,7 @@
                       <!-- <p>{{item}}</p> -->
                       <p v-html="commentContent(item.content)"></p>
                       <!--展开-->
-              <a style="font-size:16px; float:right; display: block;"  v-if='item.content !== undefined && item.content.length > 300' href="#" class="bibar-indexintromore text-theme" @click="changeMore(item.id)">{{item.id === moreId ? '收起' : '展开'}}<i style="font-size:16px;" class="iconfont" v-if='more === "展开"'>&#xe692;</i><i style="font-size:16px;" class="iconfont" v-if='more === "收起"'>&#xe693;</i></a>
+              <a style="font-size:16px;"  v-if='item.content !== undefined && item.content.length > 300' href="#" class="bibar-indexintromore text-theme" @click="changeMore(item.id)">{{item.id === moreId ? '收起' : '展开'}}<i style="font-size:16px;" class="iconfont" v-if='more === "展开"'>&#xe692;</i><i style="font-size:16px;" class="iconfont" v-if='more === "收起"'>&#xe693;</i></a>
                     </div>
                     <div class="set" style="margin-left:42px;">
                       <ul class="bibar-indexNewsItem-infro">
@@ -1000,6 +1000,7 @@ a.avatar img {
     word-break: break-all;
     overflow: hidden;
     margin: 10px 0;
+    display: inline;
 }
 .bibar-indexNewsItem-infro>li{
     float: left;

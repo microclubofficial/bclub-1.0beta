@@ -34,7 +34,7 @@
                 </a>
               </li>
               <li class="set-choseStar" @click="collectionTopic(tmp)"> <a :class='{collectionActive:tmp.collect_bool}' href="javascript:void(0);"><i class="iconfont icon-star">&#xe6a7;</i>{{$t('list.collect')}}</a> </li>
-              <li class="set-delList" @click="delTopic(tmp)"> <a href="javascript:void(0);"><i class="iconfont icon-del">&#xe78d;</i>{{$t('list.del')}}</a> </li>
+              <li  v-if='tmp.bool_delete' class="set-delList" @click="delTopic(tmp, index)"> <a href="javascript:void(0);"><i class="iconfont icon-del">&#xe78d;</i>{{$t('list.del')}}</a> </li>
               <!-- <li> <a href="javascript:void(0);"><i class="iconfont icon-fenxiang"></i> 分享</a> </li> -->
               <!-- <li class="set-choseShang"> <a href="javascript:void(0);"><i class="iconfont icon-dashang"></i> 打赏<span>438</span></a> </li> -->
               <!--<li>-->
@@ -120,7 +120,7 @@
                       <p class="replyAuthor" v-if="item.at_user !== ''">@{{item.at_user}}:&nbsp;<span class="replyBackConten" style="font-weight: normal;" v-html="replyFun(item.reference)"></span></p>
                       <!-- <p>{{item}}</p> -->
                       <p v-html="commentContent(item.content)"></p>
-                      <a style="font-size:16px; float:right; display: block;" v-if='item.content !== undefined && item.content.length > 300' href="#" class="bibar-indexintromore text-theme" @click="changeMore(item.id)">{{item.id === moreId ? '收起' : '展开'}}<i style="font-size:16px;" class="iconfont" v-if='more === "展开"'>&#xe692;</i><i style="font-size:16px;" class="iconfont" v-if='more === "收起"'>&#xe693;</i></a>
+                      <a style="font-size:16px;" v-if='item.content !== undefined && item.content.length > 300' href="#" class="bibar-indexintromore text-theme" @click="changeMore(item.id)">{{item.id === moreId ? '收起' : '展开'}}<i style="font-size:16px;" class="iconfont" v-if='more === "展开"'>&#xe692;</i><i style="font-size:16px;" class="iconfont" v-if='more === "收起"'>&#xe693;</i></a>
                     </div>
                     <div class="set" style="margin-left:42px">
                       <ul class="bibar-indexNewsItem-infro">
@@ -131,7 +131,7 @@
                             <i class="iconfont icon-pinglun"></i> {{$t('list.reply')}}
                           </a>
                         </li>
-                        <li class="set-delList" @click="delTopic(tmp)"> <a href="javascript:void(0);"><i class="iconfont icon-del">&#xe78d;</i>{{$t('list.del')}}</a> </li>
+                        <li v-if='item.bool_delete' @click='delComment(item,now,tmp)' class="set-delList"> <a href="javascript:void(0);"><i class="iconfont icon-del">&#xe78d;</i>{{$t('list.del')}}</a> </li>
                       </ul>
                     </div>
                      <!-- 回复 -->
@@ -161,18 +161,18 @@
                 </div>
               </div>
               <!-- 分页条 -->
-            <div class="pages">
+            <div class="pages" v-if='showPage && index === i'>
               <ul class="mo-paging">
                 <!-- prev -->
                 <!-- first -->
-                <li :class="['paging-item', 'paging-item--first', {'paging-item--disabled' : cpno === 1}]" @click="first(tmp.id)">{{$t('pages.first')}}</li>
-                <li class="paging-item paging-item--prev" :class="{'paging-item--disabled' : cpno === 1}" @click="prev(tmp.id)">{{$t('pages.prev')}}</li>
-                <li :class="['paging-item', {'paging-item--current' : cpno === page}]" :key="index" v-for="(page, index) in showPageBtn" @click="index === i ? go(page,tmp.id) : false">{{page}}</li>
+                <li :class="['paging-item', 'paging-item--first', {'paging-item--disabled' : cpno[tmp.id] === 1}]" @click="first(tmp.id)">{{$t('pages.first')}}</li>
+                <li class="paging-item paging-item--prev" :class="{'paging-item--disabled' : cpno[tmp.id] === 1}" @click="prev(tmp.id)">{{$t('pages.prev')}}</li>
+                <li :class="['paging-item', {'paging-item--current' : cpno[tmp.id] === page}]" :key="index" v-for="(page, index) in showPageBtn" @click="go(page,tmp.id)">{{page}}</li>
                 <!--<li :class="['paging-item', 'paging-item--more']" @click="next" v-if="showNextMore">...</li>-->
                 <!-- next -->
-                <li :class="['paging-item', 'paging-item--next', {'paging-item--disabled' : cpno === cpageCount}]" @click="next(tmp.id)">{{$t('pages.next')}}</li>
+                <li :class="['paging-item', 'paging-item--next', {'paging-item--disabled' : cpno[tmp.id] === cpageCount}]" @click="next(tmp.id)">{{$t('pages.next')}}</li>
                 <!-- last -->
-                <li :class="['paging-item', 'paging-item--last', {'paging-item--disabled' : cpno === cpageCount}]" @click="last(tmp.id)">{{$t('pages.end')}}</li>
+                <li :class="['paging-item', 'paging-item--last', {'paging-item--disabled' : cpno[tmp.id] === cpageCount}]" @click="last(tmp.id)">{{$t('pages.end')}}</li>
               </ul>
             </div>
             </div>
@@ -245,7 +245,7 @@ export default{
       isBad: 0,
       // 分页
       replyId: '',
-      cpno: 1,
+      cpno: {},
       cpageLimit: 10,
       cpageCount: 0,
       showPrevMore: false,
@@ -283,11 +283,12 @@ export default{
         }
         return pageArr
       }
-      if (this.cpno <= 2) return [1, 2, 3, '···', this.cpageCount]
-      if (this.cpno >= this.cpageCount - 1) return [1, '···', this.cpageCount - 2, this.cpageCount - 1, this.cpageCount]
-      if (this.cpno === 3) return [1, 2, 3, 4, '···', this.cpageCount]
-      if (this.cpno === this.cpageCount - 2) return [1, '···', this.cpageCount - 3, this.cpageCount - 2, this.cpageCount - 1, this.cpageCount]
-      return [1, '···', this.cpno - 1, this.cpno, this.cpno + 1, '···', this.cpageCount]
+      // if (!this.cpno[i]) this.cpno[i] = 1
+      if (this.cpno[this.pageId] <= 2) return [1, 2, 3, '···', this.cpageCount]
+      if (this.cpno[this.pageId] >= this.cpageCount - 1) return [1, '···', this.cpageCount - 2, this.cpageCount - 1, this.cpageCount]
+      if (this.cpno[this.pageId] === 3) return [1, 2, 3, 4, '···', this.cpageCount]
+      if (this.cpno[this.pageId] === this.cpageCount - 2) return [1, '···', this.cpageCount - 3, this.cpageCount - 2, this.cpageCount - 1, this.cpageCount]
+      return [1, '···', this.cpno[this.pageId] - 1, this.cpno[this.pageId], this.cpno[this.pageId] + 1, '···', this.cpageCount]
     }
   },
   created: function () {
@@ -442,11 +443,18 @@ export default{
     showDiscuss (index, id) {
       this.replyId = id
       this.showLoaderComment = true
-      get(`/api/topic/${id}/${this.cpno}`).then(data => {
+      if (!this.cpno[id]) {
+        this.cpno[id] = 1
+      }
+      this.pageId = id
+      get(`/api/topic/${id}/${this.cpno[id]}`).then(data => {
         if (!this.nowData[id]) this.$set(this.nowData, id, data.data.replies)
         else this.nowData[id] = data.data.replies
         this.showLoaderComment = false
         this.cpageCount = data.data.page_count
+        if (this.cpageCount > 1) {
+          this.showPage = true
+        }
         this.$nextTick(() => {
           $('.comment-item-main').find('img').addClass('zoom-in')
           $('[data-w-e]').removeClass('zoom-in')
@@ -626,6 +634,14 @@ export default{
         return
       }
       val = val.replace(/<p[^>]*>|<\/p>|<h-char[^>]*>|<\/h-char>|<h-inner>|<\/h-inner>/g, '')
+      if (val.indexOf('img') > 0) {
+        let imgCommentLength = 0
+        let imgArr = val.match(/<img[^>]*>/gi)
+        for (let i = 0; i < imgArr.length; i++) {
+          imgCommentLength += imgArr[i].length
+        }
+      }
+      // console.log(imgCommentLength)
       if (val.length > 300) {
         if (this.more === '展开') {
           return val.substring(0, 300) + '...'
@@ -682,28 +698,41 @@ export default{
         })
       }
     },
-    // 删除
-    delTopic (tmp) {
-      console.log(tmp)
+    // 删除文章
+    delTopic (tmp, index) {
+      post(`/api/topic/delete/${tmp.id}`).then(data => {
+        if (data.resultcode === 1) {
+          this.articles.splice(index, 1)
+        }
+      })
+    },
+    // 删除评论
+    delComment (item, now, tmp) {
+      post(`/api/reply/delete/${item.id}`).then(data => {
+        if (data.resultcode === 1) {
+          this.nowData[tmp.id].splice(now, 1)
+          this.articles[this.i].replies_count = this.articles[this.i].replies_count - 1
+        }
+      })
     },
     // 分页
     prev (id) {
-      if (this.cpno > 1) {
-        this.go(this.cpno - 1, id)
+      if (this.cpno[id] > 1) {
+        this.go(this.cpno[id] - 1, id)
       }
     },
     next (id) {
-      if (this.cpno < this.cpageCount) {
-        this.go(this.cpno + 1, id)
+      if (this.cpno[id] < this.cpageCount) {
+        this.go(this.cpno[id] + 1, id)
       }
     },
     first (id) {
-      if (this.cpno !== 1) {
+      if (this.cpno[id] !== 1) {
         this.go(1, id)
       }
     },
     last (id) {
-      if (this.cpno !== this.cpageCount) {
+      if (this.cpno[id] !== this.cpageCount) {
         this.go(this.cpageCount, id)
       }
     },
@@ -713,9 +742,10 @@ export default{
       }
       this.chartShow = 0
       this.summaryList = []
-      if (this.cpno !== page) {
-        this.cpno = page
+      if (this.cpno[id] !== page) {
+        this.cpno[id] = page
       }
+      this.pageId = id
       // debugger
       get(`/api/topic/${id}/${page}`).then(data => {
         if (!this.nowData[id]) this.$set(this.nowData, id, data.data.replies)
@@ -958,7 +988,7 @@ svg:not(:root) {
 }
 .comment-item{
     padding: 15px 0 10px;
-    border-bottom: 1px solid #edf0f5;
+    /*border-bottom: 1px solid #edf0f5;*/
     margin: 15px 0;
 }
 .comment-item .avatar {
@@ -1002,6 +1032,7 @@ a.avatar img {
     word-break: break-all;
     overflow: hidden;
     margin: 10px 0;
+    display: inline;
 }
 /*.comment-item-main a{color: #0181ff;}*/
 .comment-item-main img{

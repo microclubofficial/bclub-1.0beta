@@ -797,6 +797,7 @@ a.avatar img {
     word-break: break-all;
     overflow: hidden;
     margin: 10px 0;
+    display: inline;
 }
 .bibar-indexNewsItem-infro>li{
     float: left;

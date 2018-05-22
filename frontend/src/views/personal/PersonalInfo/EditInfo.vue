@@ -140,7 +140,7 @@ export default {
           }
         }
       } else if (id === 1) {
-        var ponereg = /^([a-zA-Z])|(\d)|([~!@#$%^&*()_+`\-={}:";'<>?,./]).{6,18}$/
+        var ponereg = /^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$/
         if (!ponereg.test(input) && input !== undefined && input.length > 0) {
           this.phonePrompt = '手机号码格式不正确'
           this.hasphone = true

@@ -24,7 +24,7 @@
             <p class="prompt">{{confirm_upwdPrompt}}</p>
           </div>
           <div class="form-group">
-                    <button class="col-md-offset-3 col-md-1 forphone btnm confirm" v-bind:disabled="!setPwd.OldPassword" @click='setPwdFun' data-target="#myModal" data-toggle="">{{$t('button.confirm')}}
+                    <button type="button" class="col-md-offset-3 col-md-1 forphone btnm confirm" v-bind:disabled="!setPwd.OldPassword" @click='setPwdFun' data-target="#myModal" data-toggle="">{{$t('button.confirm')}}
                     </button>
                 </div>
             </form>
@@ -60,7 +60,7 @@ export default {
           })
         }
       } else if (id === 0 || id === 1) {
-        var upwdreg = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[~!@#$%^&*()_+`\-={}:";'<>?,.\/]).{6,18}$/
+        var upwdreg = /^[a-zA-Z0-9~!@#$%^&*()_+`\-={}:";'<>?,./]{6,18}$/
         if (!upwdreg.test(input) && input !== undefined && input.length > 0) {
           if (id === 0) {
             this.oldpwdPrompt = '密码长度在6-18位'
@@ -74,8 +74,10 @@ export default {
         } else if (input === undefined || input.length === 0) {
           if (id === 0) {
             this.oldpwdPrompt = '原密码不能为空'
+            return false
           } else if (id === 1) {
             this.newpwdPrompt = '新密码不能为空'
+            return false
           }
           return false
         } else {
@@ -96,17 +98,17 @@ export default {
     },
     // 修改密码
     setPwdFun () {
-      let instance
+      // let instance
       post(`/api/setting/password`, this.setPwd).then(data => {
         if (data.resultcode === 1) {
-          instance = new Toast({
-            message: data.message,
-            iconClass: 'glyphicon glyphicon-ok',
-            duration: 1000
-          })
-          setTimeout(() => {
-            instance.close()
-          }, 1000)
+          // instance = new Toast({
+          //   message: data.message,
+          //   iconClass: 'glyphicon glyphicon-ok',
+          //   duration: 1000
+          // })
+          // setTimeout(() => {
+          //   instance.close()
+          // }, 1000)
           this.$router.push('/login')
         }
       })
