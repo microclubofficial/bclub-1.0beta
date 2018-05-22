@@ -70,12 +70,17 @@ export default {
     passwordLength: '密码长度在6-18位',
     passwordRequired: '密码不能为空',
     passwordDifferent: '两次输入的密码不一致',
+    orgpwdError: '原密码错误',
     phoneError: '手机号码格式不正确',
     phoneRequired: '手机号码不能为空',
     phoneRegistered: '手机号已注册',
     phoneNotRegistered: '手机号未注册',
     captchaRequired: '验证码不能为空',
-    loginFirst: '请先登录'
+    emailRequired: '邮箱地址不能为空',
+    emailError: '邮箱格式不正确',
+    spaceForbidden: '不能输入空格',
+    loginFirst: '请先登录',
+    emailSent: '一封邮件已发送，请至邮箱查收完成验证'
   },
   message: {
     sthToSay: '有什么消息告诉大家...'
@@ -87,7 +92,9 @@ export default {
     edit: '修改',
     longText: '长文',
     fold: '收起',
-    unfold: '展开'
+    unfold: '展开',
+    resend: '重新发送',
+    verify: '完成验证'
   },
   pages: {
     first: '首页',
@@ -101,7 +108,7 @@ export default {
     from: '来自',
     comment: '评论',
     collect: '收藏',
-    del: '删除',
+    delete: '删除',
     reply: '回复',
     allComments: '全部评论'
   },
@@ -126,7 +133,8 @@ export default {
     originalPassword: '原密码：',
     newPassword: '新密码：',
     confirmPassword: '确认密码：',
-    bindEmail: '请输入您要绑定的邮箱'
+    bindEmail: '请输入您要绑定的邮箱',
+    bindedEmail: '已绑定邮箱：'
   },
   sideBar: {
     introduction: '简介',

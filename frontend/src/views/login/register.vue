@@ -169,7 +169,7 @@ export default {
     // 失去焦点验证
     showRegisterMsg (input, id) {
       if (id === 0) {
-        var unamereg = /^[a-zA-Z0-9_\.\-\u4e00-\u9fa5]{3,16}$/
+        var unamereg = /^[a-zA-Z0-9_.\-\u4e00-\u9fa5]{3,16}$/
         if (!unamereg.test(input) && input !== undefined && input.length > 0) {
           this.unamePrompt = this.$t('prompt.usernameLength')
           // console.log(input.length)

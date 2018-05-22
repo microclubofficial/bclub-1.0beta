@@ -3,8 +3,8 @@ export default {
     index: 'Index'
   },
   nav: {
-    index: 'Index',
-    coinNews: 'Coin news',
+    index: 'Home',
+    coinNews: 'Coin News',
     isRegister: 'Has no account? Register now!',
     login: 'Login',
     newTopic: 'New topic',
@@ -67,15 +67,20 @@ export default {
     reacquire: 'Reacquire',
     usernameLength: 'Username is between 3 and 16 bits',
     usernameRequired: 'Username is required',
-    passwordLength: 'Password is between 3 and 18 bits',
+    passwordLength: 'Password is between 6 and 18 bits',
     passwordRequired: 'Password is required',
     passwordDifferent: 'Entered passwords differ from the another',
+    orgpwdError: 'The original password is not correct',
     phoneError: 'The format of phone number is not correct',
     phoneRequired: 'Phone number is required',
     phoneRegistered: 'The phone has been registered!',
     phoneNotRegistered: 'The phone has not been registered!',
     captchaRequired: 'Captcha is required',
-    loginFirst: 'Please login first!'
+    emailRequired: 'Email is required',
+    emailError: 'The format of email is not correct',
+    spaceForbidden: 'Spaces are not allowed',
+    loginFirst: 'Please login first!',
+    emailSent: 'An email has been sent. Please check and verify it.'
   },
   message: {
     sthToSay: 'Something to say...'
@@ -87,7 +92,9 @@ export default {
     edit: 'Edit',
     longText: 'Long text',
     fold: 'Fold',
-    unfold: 'Unfold'
+    unfold: 'Unfold',
+    resend: 'Resend',
+    verify: 'Verify'
   },
   pages: {
     first: 'First',
@@ -101,7 +108,7 @@ export default {
     from: 'from',
     comment: 'Comment',
     collect: 'Collect',
-    del: 'delete',
+    delete: 'Delete',
     reply: 'Reply',
     allComments: 'All comments'
   },
@@ -113,7 +120,7 @@ export default {
     editProfile: 'Edit profile'
   },
   editProfile: {
-    index: 'Index',
+    index: 'Home',
     profile: 'Your profile',
     avatar: 'Edit avatar',
     password: 'Edit password',
@@ -126,7 +133,8 @@ export default {
     originalPassword: 'orgPwd:',
     newPassword: 'newPwd:',
     confirmPassword: 'conPwd:',
-    bindEmail: 'Enter your email to bind'
+    bindEmail: 'Enter your email to bind',
+    bindedEmail: 'Binded email:'
   },
   tableHead: {
     name: 'Name',

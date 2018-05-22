@@ -34,7 +34,7 @@
                 </a>
               </li>
               <li class="set-choseStar" @click="collectionTopic(tmp)"> <a :class='{collectionActive:tmp.collect_bool}' href="javascript:void(0);"><i class="iconfont icon-star">&#xe6a7;</i>{{$t('list.collect')}}</a> </li>
-              <li class="set-delList" @click="delTopic(tmp)"> <a href="javascript:void(0);"><i class="iconfont icon-del">&#xe78d;</i>{{$t('list.del')}}</a> </li>
+              <li class="set-delList" @click="delTopic(tmp)"> <a href="javascript:void(0);"><i class="iconfont icon-del">&#xe78d;</i>{{$t('list.delete')}}</a> </li>
               <!-- <li> <a href="javascript:void(0);"><i class="iconfont icon-fenxiang"></i> 分享</a> </li> -->
               <!-- <li class="set-choseShang"> <a href="javascript:void(0);"><i class="iconfont icon-dashang"></i> 打赏<span>438</span></a> </li> -->
               <!--<li>-->
@@ -131,7 +131,7 @@
                             <i class="iconfont icon-pinglun"></i> {{$t('list.reply')}}
                           </a>
                         </li>
-                        <li class="set-delList" @click="delTopic(tmp)"> <a href="javascript:void(0);"><i class="iconfont icon-del">&#xe78d;</i>{{$t('list.del')}}</a> </li>
+                        <li class="set-delList" @click="delTopic(tmp)"> <a href="javascript:void(0);"><i class="iconfont icon-del">&#xe78d;</i>{{$t('list.delete')}}</a> </li>
                       </ul>
                     </div>
                      <!-- 回复 -->
@@ -167,7 +167,7 @@
                 <!-- first -->
                 <li :class="['paging-item', 'paging-item--first', {'paging-item--disabled' : cpno === 1}]" @click="first(tmp.id)">{{$t('pages.first')}}</li>
                 <li class="paging-item paging-item--prev" :class="{'paging-item--disabled' : cpno === 1}" @click="prev(tmp.id)">{{$t('pages.prev')}}</li>
-                <li :class="['paging-item', {'paging-item--current' : cpno === page}]" :key="index" v-for="(page, index) in showPageBtn" @click="go(page,tmp.id)">{{page}}</li>
+                <li :class="['paging-item', {'paging-item--current' : cpno === page}]" :key="index" v-for="(page, index) in showPageBtn" @click="index === i ? go(page,tmp.id) : false">{{page}}</li>
                 <!--<li :class="['paging-item', 'paging-item--more']" @click="next" v-if="showNextMore">...</li>-->
                 <!-- next -->
                 <li :class="['paging-item', 'paging-item--next', {'paging-item--disabled' : cpno === cpageCount}]" @click="next(tmp.id)">{{$t('pages.next')}}</li>
@@ -447,11 +447,6 @@ export default{
         else this.nowData[id] = data.data.replies
         this.showLoaderComment = false
         this.cpageCount = data.data.page_count
-        if (this.cpageCount > 1) {
-          this.showPage = true
-        } else {
-          this.showPage = false
-        }
         this.$nextTick(() => {
           $('.comment-item-main').find('img').addClass('zoom-in')
           $('[data-w-e]').removeClass('zoom-in')
@@ -660,11 +655,6 @@ export default{
           else this.nowData[tmpId] = data.data.replies
           this.showLoaderComment = false
           this.cpageCount = data.data.page_count
-          if (this.cpageCount > 1) {
-            this.showPage = true
-          } else {
-            this.showPage = false
-          }
           this.$nextTick(() => {
             $('.comment-item-main').find('img').addClass('zoom-in')
             $('[data-w-e]').removeClass('zoom-in')
@@ -697,24 +687,24 @@ export default{
       console.log(tmp)
     },
     // 分页
-    prev () {
+    prev (id) {
       if (this.cpno > 1) {
-        this.go(this.cpno - 1)
+        this.go(this.cpno - 1, id)
       }
     },
-    next () {
+    next (id) {
       if (this.cpno < this.cpageCount) {
-        this.go(this.cpno + 1)
+        this.go(this.cpno + 1, id)
       }
     },
-    first () {
+    first (id) {
       if (this.cpno !== 1) {
-        this.go(1)
+        this.go(1, id)
       }
     },
-    last () {
+    last (id) {
       if (this.cpno !== this.cpageCount) {
-        this.go(this.cpageCount)
+        this.go(this.cpageCount, id)
       }
     },
     go (page, id) {

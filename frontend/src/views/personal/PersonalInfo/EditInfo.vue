@@ -117,21 +117,21 @@ export default {
   mounted () {
   },
   methods: {
-    //   验证
+    // 验证
     showsetFormMsg (input, id) {
       if (id === 0) {
         if (input !== undefined && input.indexOf(' ') >= 0) {
-          this.unamePrompt = '不能输入空格'
+          this.unamePrompt = this.$t('prompt.spaceForbidden')
           this.canSetU = false
           return false
         } else {
-          var unamereg = /^[a-zA-Z0-9_\.\-\u4e00-\u9fa5]{3,16}$/
+          var unamereg = /^[a-zA-Z0-9_.\-\u4e00-\u9fa5]{3,16}$/
           if (!unamereg.test(input) && input !== undefined && input.length > 0) {
-            this.unamePrompt = '用户名格式不对'
+            this.unamePrompt = this.$t('prompt.usernameLength')
             this.canSetU = false
             return false
           } else if (input === undefined || input.length === 0) {
-            this.unamePrompt = '用户名不能为空'
+            this.unamePrompt = this.$t('prompt.usernameRequired')
             this.canSetU = false
             return false
           } else {
@@ -140,13 +140,13 @@ export default {
           }
         }
       } else if (id === 1) {
-        var ponereg = /^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$/
-        if (!ponereg.test(input) && input !== undefined && input.length > 0) {
-          this.phonePrompt = '手机号码格式不正确'
+        var phonereg = /^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$/
+        if (!phonereg.test(input) && input !== undefined && input.length > 0) {
+          this.phonePrompt = this.$t('prompt.phoneError')
           this.hasphone = true
           return false
         } else if (input === undefined || input.length === 0) {
-          this.phonePrompt = '手机号码不能为空'
+          this.phonePrompt = this.$t('prompt.phoneRequired')
           this.hasphone = true
           return false
         } else {
@@ -197,7 +197,7 @@ export default {
         }
       } else {
         if (this.setForm.captcha === undefined || this.setForm.captcha.length === 0) {
-          this.phoneControlPrompt = '验证码不能为空'
+          this.phoneControlPrompt = this.$t('prompt.captchaRequired')
           return false
         }
         post(`/api/setting/phone`, this.setForm).then(data => {
