@@ -167,7 +167,7 @@
                 <!-- first -->
                 <li :class="['paging-item', 'paging-item--first', {'paging-item--disabled' : cpno === 1}]" @click="first(tmp.id)">{{$t('pages.first')}}</li>
                 <li class="paging-item paging-item--prev" :class="{'paging-item--disabled' : cpno === 1}" @click="prev(tmp.id)">{{$t('pages.prev')}}</li>
-                <li :class="['paging-item', {'paging-item--current' : cpno === page}]" :key="index" v-for="(page, index) in showPageBtn" @click="go(page,tmp.id)">{{page}}</li>
+                <li :class="['paging-item', {'paging-item--current' : cpno === page}]" :key="index" v-for="(page, index) in showPageBtn" @click="index === i ? go(page,tmp.id) : false">{{page}}</li>
                 <!--<li :class="['paging-item', 'paging-item--more']" @click="next" v-if="showNextMore">...</li>-->
                 <!-- next -->
                 <li :class="['paging-item', 'paging-item--next', {'paging-item--disabled' : cpno === cpageCount}]" @click="next(tmp.id)">{{$t('pages.next')}}</li>

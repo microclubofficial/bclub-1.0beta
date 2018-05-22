@@ -125,7 +125,7 @@ export default {
           this.canSetU = false
           return false
         } else {
-          var unamereg = /^[a-zA-Z0-9_\.\-\u4e00-\u9fa5]{3,16}$/
+          var unamereg = /^[a-zA-Z0-9_.\-\u4e00-\u9fa5]{3,16}$/
           if (!unamereg.test(input) && input !== undefined && input.length > 0) {
             this.unamePrompt = '用户名格式不对'
             this.canSetU = false
@@ -140,7 +140,7 @@ export default {
           }
         }
       } else if (id === 1) {
-        var ponereg = /^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$/
+        var ponereg = /^([a-zA-Z])|(\d)|([~!@#$%^&*()_+`\-={}:";'<>?,./]).{6,18}$/
         if (!ponereg.test(input) && input !== undefined && input.length > 0) {
           this.phonePrompt = '手机号码格式不正确'
           this.hasphone = true

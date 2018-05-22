@@ -24,8 +24,8 @@
             <p class="prompt">{{confirm_upwdPrompt}}</p>
           </div>
           <div class="form-group">
-                    <div class="col-md-offset-3 col-md-1 forphone btnm confirm" @click='setPwdFun' data-target="#myModal" data-toggle="">{{$t('button.confirm')}}
-                    </div>
+                    <button class="col-md-offset-3 col-md-1 forphone btnm confirm" v-bind:disabled="!setPwd.OldPassword" @click='setPwdFun' data-target="#myModal" data-toggle="">{{$t('button.confirm')}}
+                    </button>
                 </div>
             </form>
         </div>
