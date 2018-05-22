@@ -17,13 +17,13 @@ babel = Babel()
 
 @babel.localeselector
 def get_locale():
-    user = getattr(g, 'user', None)
+    if request.path.startswith('/admin'):
+        return 'zh'
+    #user = getattr(g, 'user', None)
     lang = request.cookies.get('language')
     if lang:
         return lang
-    if user is not None:
-        if request.path.startswith('/admin'):
-            return 'zh_Hans_CN'
+    #if user is not None:  
     return request.accept_languages.best_match(current_app.config['LANGUAGES']
                                                .keys())
 
