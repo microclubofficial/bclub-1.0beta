@@ -132,10 +132,10 @@ export default {
   sideBar: {
     introduction: 'Introduction',
     hotCoins: 'Hot coins',
-    publicTime: 'Public time:',
-    whitePaper: 'White paper:',
-    officialWebsite: 'Official website:',
-    blockQuery: 'Block query:',
+    publicTime: 'Public time :',
+    whitePaper: 'White paper :',
+    officialWebsite: 'Official website :',
+    blockQuery: 'Block query :',
     prevTen: 'Prev 10',
     nextTen: 'Next 10'
   },

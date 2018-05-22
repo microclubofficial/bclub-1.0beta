@@ -10,24 +10,24 @@
                     <a href="#" v-if='briefC !== ""' class="bibar-indexintromore text-theme" @click="showText = !showText">{{this.showText === false ? $t('button.unfold') : $t('button.fold')}}<i class="iconfont" v-if='!showText'>&#xe692;</i><i class="iconfont" v-if='showText'>&#xe693;</i></a>
                     <div class="bibar-indexinftrList" v-if='briefC.length > 0'>
                         <dl>
-                            <dt>{{$t('sideBar.publicTime')}}</dt>
-                            <dd>{{brief.publicTime}}</dd>
+                            <dt :class="{'enwidth':language == 'en'}">{{$t('sideBar.publicTime')}}</dt>
+                            <dd :class="{'enpadding':language == 'en'}">{{brief.publicTime}}</dd>
                         </dl>
                         <!--<dl>
                             <dt>众筹价格</dt>
                             <dd>--</dd>
                         </dl>-->
                         <dl>
-                            <dt>{{$t('sideBar.whitePaper')}}</dt>
-                            <dd><a :href='brief.whitepaper' :title="brief.whitepaper" target="_blank" class="text-theme">{{brief.whitepaper ? brief.whitepaper : '--'}}</a></dd>
+                            <dt :class="{'enwidth':language == 'en'}">{{$t('sideBar.whitePaper')}}</dt>
+                            <dd :class="{'enpadding':language == 'en'}"><a :href='brief.whitepaper' :title="brief.whitepaper" target="_blank" class="text-theme">{{brief.whitepaper ? brief.whitepaper : '--'}}</a></dd>
                         </dl>
                         <dl>
-                            <dt>{{$t('sideBar.officialWebsite')}}</dt>
-                            <dd><a :href='websites' :title="websites" target="_blank" class="text-theme">{{websites}}</a></dd>
+                            <dt :class="{'enwidth':language == 'en'}">{{$t('sideBar.officialWebsite')}}</dt>
+                            <dd :class="{'enpadding':language == 'en'}"><a :href='websites' :title="websites" target="_blank" class="text-theme">{{websites}}</a></dd>
                         </dl>
                         <dl>
-                            <dt>{{$t('sideBar.blockQuery')}}</dt>
-                            <dd>
+                            <dt :class="{'enwidth':language == 'en'}">{{$t('sideBar.blockQuery')}}</dt>
+                            <dd :class="{'enpadding':language == 'en'}">
                               <a :href='item' :title="item" class="text-theme" target="_blank" style="display:block;" v-for='(item,index) in brief.Explorers' :key="index">{{item}}</a>
                             </dd>
                         </dl>
@@ -117,6 +117,7 @@
 <script>
 import $ from 'jquery'
 import {get} from '../../../utils/http'
+import { getToken } from '../../../utils/auth'
 export default{
   props: ['bId'],
   data: function () {
@@ -141,10 +142,14 @@ export default{
       showPre: false,
       showNext: true,
       showText: false,
-      buttonText: ''
+      buttonText: '',
+      // 当前语言
+      language: 'zh'
     }
   },
   created: function () {
+    this.language = getToken('language')
+
     $('#myTab li:eq(1) a').tab('show')
     // 影响力
     // this.sideFun(this.sidePage)
@@ -273,6 +278,7 @@ export default{
 </script>
 
 <style scoped>
+
 .nav>li>a {
     padding: 8px 12px !important;
 }
@@ -307,5 +313,12 @@ export default{
 }
 .bibar-boxbody .bibar-indexRMlist li:hover{
   background-color: #f3f3f3;
+}
+.bibar-indexinftrList dl dt.enwidth{
+  width:100%;
+}
+.bibar-indexinftrList dl dd.enpadding{
+  width:160px;
+  padding-left:15px;
 }
 </style>
