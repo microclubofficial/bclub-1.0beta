@@ -1,8 +1,6 @@
 export default {
   route: {
-    dashboard: '首页',
-    logon: '登录',
-    i18n: '国际化'
+    index: '首页'
   },
   nav: {
     index: '首页',
@@ -66,14 +64,21 @@ export default {
   },
   prompt: {
     acquireVcode: '获取验证码',
-    reacquire: '重新获取'
+    reacquire: '重新获取',
+    usernameLength: '用户名在3-16位',
+    usernameRequired: '用户名不能为空',
+    passwordLength: '密码长度在6-18位',
+    passwordRequired: '密码不能为空',
+    passwordDifferent: '两次输入的密码不一致',
+    phoneError: '手机号码格式不正确',
+    phoneRequired: '手机号码不能为空',
+    phoneRegistered: '手机号已注册',
+    phoneNotRegistered: '手机号未注册',
+    captchaRequired: '验证码不能为空',
+    loginFirst: '请先登录'
   },
   message: {
-    sthToSay: '有什么消息告诉大家...',
-    username: '请填写用户名',
-    phone: '请填写手机号',
-    phoneRegistered: '手机号已注册',
-    loginFirst: '请先登录'
+    sthToSay: '有什么消息告诉大家...'
   },
   button: {
     publish: '发布',
@@ -113,6 +118,8 @@ export default {
     avatar: '修改头像',
     password: '修改密码',
     email: '绑定邮箱',
+    username: '修改用户名',
+    phone: '修改手机号',
     registerTime: '注册时间：',
     lastLogin: '上次登录：',
     setAvatar: '设置头像',
