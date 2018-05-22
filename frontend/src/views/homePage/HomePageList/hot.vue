@@ -447,11 +447,6 @@ export default{
         else this.nowData[id] = data.data.replies
         this.showLoaderComment = false
         this.cpageCount = data.data.page_count
-        if (this.cpageCount > 1) {
-          this.showPage = true
-        } else {
-          this.showPage = false
-        }
         this.$nextTick(() => {
           $('.comment-item-main').find('img').addClass('zoom-in')
           $('[data-w-e]').removeClass('zoom-in')
@@ -660,11 +655,6 @@ export default{
           else this.nowData[tmpId] = data.data.replies
           this.showLoaderComment = false
           this.cpageCount = data.data.page_count
-          if (this.cpageCount > 1) {
-            this.showPage = true
-          } else {
-            this.showPage = false
-          }
           this.$nextTick(() => {
             $('.comment-item-main').find('img').addClass('zoom-in')
             $('[data-w-e]').removeClass('zoom-in')
@@ -697,24 +687,24 @@ export default{
       console.log(tmp)
     },
     // 分页
-    prev () {
+    prev (id) {
       if (this.cpno > 1) {
-        this.go(this.cpno - 1)
+        this.go(this.cpno - 1, id)
       }
     },
-    next () {
+    next (id) {
       if (this.cpno < this.cpageCount) {
-        this.go(this.cpno + 1)
+        this.go(this.cpno + 1, id)
       }
     },
-    first () {
+    first (id) {
       if (this.cpno !== 1) {
-        this.go(1)
+        this.go(1, id)
       }
     },
-    last () {
+    last (id) {
       if (this.cpno !== this.cpageCount) {
-        this.go(this.cpageCount)
+        this.go(this.cpageCount, id)
       }
     },
     go (page, id) {
