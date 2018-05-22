@@ -101,6 +101,7 @@ export default {
     from: '来自',
     comment: '评论',
     collect: '收藏',
+    del: '删除',
     reply: '回复',
     allComments: '全部评论'
   },

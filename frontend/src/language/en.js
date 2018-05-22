@@ -101,6 +101,7 @@ export default {
     from: 'from',
     comment: 'Comment',
     collect: 'Collect',
+    del: 'delete',
     reply: 'Reply',
     allComments: 'All comments'
   },

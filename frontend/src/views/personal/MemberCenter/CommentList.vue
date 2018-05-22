@@ -33,6 +33,7 @@
                 </a>
               </li>
               <li class="set-choseStar" @click="collectionTopic(tmp)"><a :class='{collectionActive:tmp.collect_bool}' href="javascript:void(0);"><i class="iconfont icon-star">&#xe6a7;</i>{{$t('list.collect')}}</a> </li>
+              <li class="set-delList" @click="delTopic(tmp)"> <a href="javascript:void(0);"><i class="iconfont icon-del">&#xe78d;</i>{{$t('list.del')}}</a> </li>
               <!-- <li> <a href="javascript:void(0);"><i class="iconfont icon-fenxiang"></i> 分享</a> </li> -->
               <!-- <li class="set-choseShang"> <a href="javascript:void(0);"><i class="iconfont icon-dashang"></i> 打赏<span>438</span></a> </li> -->
               <li>
@@ -78,11 +79,11 @@
           <div class="comment-container">
             <div class="comment-all">
               <h3>{{$t('list.allComments')}}({{tmp.replies_count}})</h3>
-              <!-- <div class="comment-sort">
-                <a href="#" class="active">最近</a>
-                <a href="#">最早</a>
-                <a href="#">赞</a>
-              </div> -->
+              <div class="comment-sort">
+                <a href="javascript:void(0)" @click='sortList(0, tmp.id)' :class="{active:sortNow === 0}">最近</a>
+                <a href="javascript:void(0)" @click='sortList(1, tmp.id)' :class="{active:sortNow === 1}">最早</a>
+                <a href="javascript:void(0)" @click='sortList(2, tmp.id)' :class="{active:sortNow === 2}">赞</a>
+              </div>
               <!-- 回复内容 -->
                   <!-- <div class="comment-item" data-index='' data-id='' v-for="(tmp,rIndex) in replyContent" :key='rIndex'>
                   <div>
@@ -119,7 +120,7 @@
                       <!-- <p>{{item}}</p> -->
                       <p v-html="commentContent(item.content)"></p>
                       <!--展开-->
-              <a style="font-size:16px; float:right; display: block;" v-if='item.content.length > 300' href="#" class="bibar-indexintromore text-theme" @click="changeMore(item.id)">{{item.id === moreId ? '收起' : '展开'}}<i style="font-size:16px;" class="iconfont" v-if='more === "展开"'>&#xe692;</i><i style="font-size:16px;" class="iconfont" v-if='more === "收起"'>&#xe693;</i></a>
+              <a style="font-size:16px; float:right; display: block;"  v-if='item.content !== undefined && item.content.length > 300' href="#" class="bibar-indexintromore text-theme" @click="changeMore(item.id)">{{item.id === moreId ? '收起' : '展开'}}<i style="font-size:16px;" class="iconfont" v-if='more === "展开"'>&#xe692;</i><i style="font-size:16px;" class="iconfont" v-if='more === "收起"'>&#xe693;</i></a>
                     </div>
                     <div class="set" style="margin-left:42px;">
                       <ul class="bibar-indexNewsItem-infro">
@@ -130,6 +131,7 @@
                             <i class="iconfont icon-pinglun"></i> {{$t('list.reply')}}
                           </a>
                         </li>
+                        <li class="set-delList" @click="delTopic(tmp)"> <a href="javascript:void(0);"><i class="iconfont icon-del">&#xe78d;</i>{{$t('list.del')}}</a> </li>
                       </ul>
                     </div>
                      <!-- 回复 -->
@@ -162,20 +164,19 @@
                 </div>
               </div>
               <!-- 分页条 -->
-            <div class="pages" v-if='showPage'>
+            <div class="pages" v-if='showPage && index === i'>
               <ul class="mo-paging">
-              <!-- prev -->
-        <li class="paging-item paging-item--prev" :class="{'paging-item--disabled' : cpno === 1}" @click="prev">上一页</li>
-        <!-- first -->
-        <li :class="['paging-item', 'paging-item--first', {'paging-item--disabled' : cpno === 1}]" @click="first">首页</li>
-        <li :class="['paging-item', 'paging-item--more']" v-if="showPrevMore">...</li>
-        <li :class="['paging-item', {'paging-item--current' : cpno === tmp}]" :key="index" v-for="(tmp, index) in showPageBtn"  @click="go(tmp)">{{tmp}}</li>
-        <li :class="['paging-item', 'paging-item--more']" v-if="showNextMore">...</li>
-        <!-- next -->
-        <li :class="['paging-item', 'paging-item--next', {'paging-item--disabled' : cpno === cpageCount}]" @click="next">下一页</li>
-        <!-- last -->
-        <li :class="['paging-item', 'paging-item--last', {'paging-item--disabled' : cpno === cpageCount}]"  @click="last">尾页</li>
-        </ul>
+                <!-- prev -->
+                <!-- first -->
+                <li :class="['paging-item', 'paging-item--first', {'paging-item--disabled' : cpno === 1}]" @click="first">{{$t('pages.first')}}</li>
+                <li class="paging-item paging-item--prev" :class="{'paging-item--disabled' : cpno === 1}" @click="prev">{{$t('pages.prev')}}</li>
+                <li :class="['paging-item', {'paging-item--current' : cpno === tmp}]" :key="index" v-for="(tmp, index) in showPageBtn" @click="go(tmp)">{{tmp}}</li>
+                <!--<li :class="['paging-item', 'paging-item--more']" @click="next" v-if="showNextMore">...</li>-->
+                <!-- next -->
+                <li :class="['paging-item', 'paging-item--next', {'paging-item--disabled' : cpno === cpageCount}]" @click="next">{{$t('pages.next')}}</li>
+                <!-- last -->
+                <li :class="['paging-item', 'paging-item--last', {'paging-item--disabled' : cpno === cpageCount}]" @click="last">{{$t('pages.end')}}</li>
+              </ul>
             </div>
             </div>
           </div>
@@ -202,6 +203,7 @@
 import {get, post} from '../../../utils/http'
 import BibarReport from '../../homePage/bibarReport.vue'
 import { Toast } from 'mint-ui'
+import {getToken} from '../../../utils/auth.js'
 export default{
   data: function () {
     return {
@@ -254,7 +256,9 @@ export default{
       showLoader: false,
       showLoaderComment: false,
       more: '展开',
-      moreId: ''
+      moreId: '',
+      sortNow: 0,
+      user_token: ''
     }
   },
   components: {
@@ -280,6 +284,12 @@ export default{
     }
   },
   created: function () {
+    if (getToken()) {
+      this.user_token = JSON.parse(getToken())
+    }
+    if (this.user_token === '') {
+      this.$router.push('/')
+    }
     // 文章分页
     this.$store.dispatch('clear_backForNav')
     this.showLoader = true
@@ -433,10 +443,10 @@ export default{
       this.replyId = id
       this.showLoaderComment = true
       get(`/api/topic/${id}/${this.cpno}`).then(data => {
-        if (!this.nowData[id]) { 
-          this.$set(this.nowData, id, data.data.replies) 
-        } else { 
-          this.nowData[id] = data.data.replies 
+        if (!this.nowData[id]) {
+          this.$set(this.nowData, id, data.data.replies)
+        } else {
+          this.nowData[id] = data.data.replies
         }
         this.showLoaderComment = false
         this.cpageCount = data.data.page_count
@@ -553,6 +563,9 @@ export default{
     },
     // 处理图片
     EditorContent (val) {
+      if (val === undefined) {
+        return
+      }
       let now = val.replace(/<p[^>]*>|<\/p>|<span[^>]*>|<\/span>|<br>|<h[1-6][^>]*>|<\/h[1-6]>|<h-char[^>]*>|<img[^>]*>|<\/h-char>|<h-inner>|<\/h-inner>/g, '')
       now = now.replace(/&nbsp;*/g, '')
       // now = $(now).text()
@@ -563,6 +576,9 @@ export default{
     },
     // 艾特图片处理
     replyFun (val) {
+      if (val === undefined) {
+        return
+      }
       let reply = val.replace(/<p[^>]*>|<\/p>|<h-char[^>]*>|<\/h-char>|<h-inner>|<\/h-inner>/g, '')
       if (reply.indexOf('img') > 0) {
         let imgLength = 0
@@ -581,6 +597,9 @@ export default{
     },
     // 评论回复文字处理
     commentContent (val) {
+      if (val === undefined) {
+        return
+      }
       val = val.replace(/<p[^>]*>|<\/p>|<h-char[^>]*>|<\/h-char>|<h-inner>|<\/h-inner>/g, '')
       if (val.length > 300) {
         if (this.more === '展开') {
@@ -612,6 +631,48 @@ export default{
           b: JSON.stringify({'zh': tmp.zh_token})
         }
       })
+    },
+    // 数据排序
+    sortList (id, tmpId) {
+      // 最近
+      if (id === 0) {
+        this.sortNow = id
+        get(`/api/topic/${tmpId}/1`).then(data => {
+          if (!this.nowData[tmpId]) this.$set(this.nowData, tmpId, data.data.replies)
+          else this.nowData[tmpId] = data.data.replies
+          this.showLoaderComment = false
+          this.cpageCount = data.data.page_count
+          if (this.cpageCount > 1) {
+            this.showPage = true
+          } else {
+            this.showPage = false
+          }
+          this.$nextTick(() => {
+            $('.comment-item-main').find('img').addClass('zoom-in')
+            $('[data-w-e]').removeClass('zoom-in')
+            $('.comment-item-main').on('click', 'img', function () {
+              if (!$(this)[0].hasAttribute('data-w-e')) {
+              // if (!$(this)[0].indexOf('alt="[') === -1) {
+                if (!$(this).hasClass('zoom-out')) {
+                  if ($(this).hasClass('zoom-in')) {
+                    $(this).removeClass('zoom-in')
+                  }
+                  $(this).addClass('zoom-out')
+                } else if ($(this).hasClass('zoom-out')) {
+                  $(this).removeClass('zoom-out')
+                  $(this).addClass('zoom-in')
+                }
+              }
+            })
+          })
+        })
+      } else if (id === 1) {
+        this.sortNow = id
+        get(`/api/topic/replies/early/${tmpId}/1`).then(data => {
+          if (!this.nowData[tmpId]) this.$set(this.nowData, tmpId, data.data)
+          else this.nowData[tmpId] = data.data
+        })
+      }
     },
     // 分页
     prev () {
