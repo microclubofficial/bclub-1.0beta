@@ -169,46 +169,46 @@ export default {
     // 失去焦点验证
     showRegisterMsg (input, id) {
       if (id === 0) {
-        var unamereg = /^[a-zA-Z0-9_\u4e00-\u9fa5]{3,16}$/
+        var unamereg = /^[a-zA-Z0-9_\.\u4e00-\u9fa5]{3,16}$/
         if (!unamereg.test(input) && input !== undefined && input.length > 0) {
-          this.unamePrompt = '用户名在3-16位之间(数字、大小写字母、下划线、中文)'
+          this.unamePrompt = this.$t('prompt.usernameLength')
           // console.log(input.length)
           return false
         } else if (input === undefined || input.length === 0) {
-          this.unamePrompt = '用户名不能为空'
+          this.unamePrompt = this.$t('prompt.usernameRequired')
           return false
         } else {
           this.unamePrompt = ''
         }
       } else if (id === 1) {
-        var upwdreg = /^[a-zA-Z0-9_]{6,}$/
+        var upwdreg = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[~!@#$%^&*()_+`\-={}:";'<>?,.\/]).{6,18}$/
         if (!upwdreg.test(input) && input !== undefined && input.length > 0) {
-          this.upwdPrompt = '密码长度不能小于6位(大小写字母、数字)'
+          this.upwdPrompt = this.$t('prompt.passwordLength')
           return false
         } else if (input === undefined || input.length === 0) {
-          this.upwdPrompt = '密码不能为空'
+          this.upwdPrompt = this.$t('prompt.passwordRequired')
           return false
         } else {
           this.upwdPrompt = ''
         }
       } else if (id === 2) {
         if (input !== this.userForm.password && input !== undefined && input.length > 0) {
-          this.confirm_upwdPrompt = '两次输入密码不一致'
+          this.confirm_upwdPrompt = this.$t('prompt.passwordDifferent')
           return false
         } else if (input === undefined || input.length === 0) {
-          this.confirm_upwdPrompt = '确认密码不能为空'
+          this.confirm_upwdPrompt = this.$t('prompt.passwordRequired')
           return false
         } else {
           this.confirm_upwdPrompt = ''
         }
       } else if (id === 3) {
-        var ponereg = /^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$/
-        if (!ponereg.test(input) && input !== undefined && input.length > 0) {
-          this.phonePrompt = '手机号码格式不正确'
+        var phonereg = /^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$/
+        if (!phonereg.test(input) && input !== undefined && input.length > 0) {
+          this.phonePrompt = this.$t('prompt.phoneError')
           this.hasphone = true
           return false
         } else if (input === undefined || input.length === 0) {
-          this.phonePrompt = '手机号码不能为空'
+          this.phonePrompt = this.$t('prompt.phoneRequired')
           this.hasphone = true
           return false
         } else {
@@ -217,7 +217,7 @@ export default {
         }
       } else if (id === 5) {
         if (input === undefined || input.length === 0) {
-          this.captchaPrompt = '验证码不能为空'
+          this.captchaPrompt = this.$t('prompt.captchaRequired')
           return false
         } else {
           this.captchaPrompt = ''

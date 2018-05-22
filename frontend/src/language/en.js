@@ -1,8 +1,6 @@
 export default {
   route: {
-    dashboard: 'Dashboard',
-    logon: 'logon',
-    i18n: 'I18'
+    index: 'Index'
   },
   nav: {
     index: 'Index',
@@ -66,14 +64,21 @@ export default {
   },
   prompt: {
     acquireVcode: 'Acquire',
-    reacquire: 'Reacquire'
+    reacquire: 'Reacquire',
+    usernameLength: 'Username is between 3 and 16 bits',
+    usernameRequired: 'Username is required',
+    passwordLength: 'Password is between 3 and 18 bits',
+    passwordRequired: 'Password is required',
+    passwordDifferent: 'Entered passwords differ from the another',
+    phoneError: 'The format of phone number is not correct',
+    phoneRequired: 'Phone number is required',
+    phoneRegistered: 'The phone has been registered!',
+    phoneNotRegistered: 'The phone has not been registered!',
+    captchaRequired: 'Captcha is required',
+    loginFirst: 'Please login first!'
   },
   message: {
-    sthToSay: 'Something to say...',
-    username: 'Please enter your username',
-    phone: 'Please enter your phone number',
-    phoneRegistered: 'The phone has been registered!',
-    loginFirst: 'Please login first!'
+    sthToSay: 'Something to say...'
   },
   button: {
     publish: 'Publish',
@@ -112,6 +117,8 @@ export default {
     avatar: 'Edit avatar',
     password: 'Edit password',
     email: 'Bind email',
+    username: 'Edit username',
+    phone: 'Edit phone number',
     registerTime: 'Register time:',
     lastLogin: 'Last login:',
     setAvatar: 'Set avatar',

@@ -39,7 +39,7 @@
           <div class="modal-content">
             <div class="modal-header">
               <button type="button" @click="closeModal" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-              <h4 class="modal-title diy-title" id="myModalLabel">{{showModel ? $t('message.username') : $t('message.phone')}}</h4>
+              <h4 class="modal-title diy-title" id="myModalLabel">{{showModel ? $t('editProfile.username') : $t('editProfile.phone')}}</h4>
             </div>
             <div class="modal-body">
               <!-- 修改用户名 -->
@@ -125,7 +125,7 @@ export default {
           this.canSetU = false
           return false
         } else {
-          var unamereg = /^[a-zA-Z0-9_\u4e00-\u9fa5]{3,16}$/
+          var unamereg = /^[a-zA-Z0-9_\.\u4e00-\u9fa5]{3,16}$/
           if (!unamereg.test(input) && input !== undefined && input.length > 0) {
             this.unamePrompt = '用户名长度在3-16位之间'
             this.canSetU = false
@@ -227,7 +227,7 @@ export default {
       post('/api/phoneCaptcha', { 'phone': phone }).then((data) => {
         if (data.resultcode === 0) {
           if (data.message === 'failed') {
-            alert(this.$t('message.phoneRegistered'))
+            alert(this.$t('prompt.phoneRegistered'))
             this.hasphone = true
             return false
           }
@@ -267,7 +267,7 @@ export default {
     personalUser (uname) {
       get(`/api/u/${uname}`).then(data => {
         if (data.message === '未登录') {
-          alert(this.$t('message.loginFirst'))
+          alert(this.$t('prompt.loginFirst'))
           this.$router.push({ path: '/login' })
         } else {
           this.personalUserInfo = data.data

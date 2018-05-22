@@ -96,9 +96,9 @@ export default{
     //   失去焦点
     showRegisterMsg (input, id) {
       if (id === 0) {
-        var upwdreg = /^[a-zA-Z0-9_]{6,}$/
+        var upwdreg = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[~!@#$%^&*()_+`\-={}:";'<>?,.\/]).{6,18}$/
         if (!upwdreg.test(input) && input !== undefined && input.length > 0) {
-          this.upwdPrompt = '密码长度不能小于6位(大小写字母、数字)'
+          this.upwdPrompt = '密码长度在6-18位'
           return false
         } else if (input === undefined || input.length === 0) {
           this.upwdPrompt = '密码不能为空'

@@ -60,12 +60,12 @@ export default {
           })
         }
       } else if (id === 0 || id === 1) {
-        var upwdreg = /^[a-zA-Z0-9_]{6,}$/
+        var upwdreg = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[~!@#$%^&*()_+`\-={}:";'<>?,.\/]).{6,18}$/
         if (!upwdreg.test(input) && input !== undefined && input.length > 0) {
           if (id === 0) {
-            this.oldpwdPrompt = '原密码长度不能小于6位'
+            this.oldpwdPrompt = '密码长度在6-18位'
           } else if (id === 1) {
-            this.newpwdPrompt = '新密码长度不能小于6位'
+            this.newpwdPrompt = '密码长度在6-18位'
           }
           return false
         } else if (id === 1 && (input === this.setPwd.OldPassword)) {
