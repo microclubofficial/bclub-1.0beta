@@ -60,7 +60,7 @@ export default {
           })
         }
       } else if (id === 0 || id === 1) {
-        var upwdreg = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[~!@#$%^&*()_+`\-={}:";'<>?,.\/]).{6,18}$/
+        var upwdreg = /^[a-zA-Z0-9~!@#$%^&*()_+`\-={}:";'<>?,./]{6,18}$/
         if (!upwdreg.test(input) && input !== undefined && input.length > 0) {
           if (id === 0) {
             this.oldpwdPrompt = '密码长度在6-18位'
