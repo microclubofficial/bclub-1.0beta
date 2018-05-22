@@ -19,8 +19,7 @@ from string import ascii_letters, digits
 from flask.views import MethodView
 from flask_login import current_user, login_required
 from flask_auth.serializer import Serializer
-from flask_auth.babel import domain
-from flask_auth.babel import gettext as _
+from flask_babel import gettext as _
 from flask_auth.models import db
 from forums.extension import redis_data
 import requests
@@ -137,7 +136,6 @@ class LogoutView(MethodView):
 
 class RegisterView(MethodView):
     def get(self):
-        domain.as_default()
         msg = _('register')
         return get_json(1, msg, {})
 
@@ -193,8 +191,6 @@ class ForgetView(MethodView):
     decorators = [guest_required]
 
     def get(self):
-        print()
-        domain.as_default()
         msg = _('forget password')
         return get_json(1, msg, {})
 
@@ -228,7 +224,6 @@ class ForgetTokenView(MethodView):
 
 class SetPasswordView(MethodView):
     def get(self):
-        domain.as_default()
         msg = _('Change Password')
         return get_json(1, msg, {})
     
@@ -255,8 +250,6 @@ class PhoneForgetView(MethodView):
     decorators = [guest_required]
 
     def get(self):
-        print()
-        domain.as_default()
         msg = _('forget password')
         return get_json(1, msg, {})
 

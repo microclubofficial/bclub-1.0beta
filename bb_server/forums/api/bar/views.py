@@ -3,7 +3,7 @@ from flask.views import MethodView
 from forums.func import get_json
 from forums.api.user.models import User
 from forums.func import get_json, object_as_dict, time_diff, Avatar, FindAndCount, Count, json_loads
-from .models import Bar, Questions, Answers, Comments#, Replys  
+from .models import Bar, Questions, Answers, Comments
 from .permissions import reply_list_permission
 import json
 import math

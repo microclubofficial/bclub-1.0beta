@@ -11,7 +11,7 @@
 # Description:
 # **************************************************************************
 from flask import redirect, session, url_for
-from flask_babelex import lazy_gettext as _
+from flask_babel import lazy_gettext as _
 from flask_wtf import FlaskForm as Form
 from flask_wtf.file import FileAllowed, FileField, FileRequired
 from wtforms import (BooleanField, PasswordField, RadioField, SelectField,

@@ -11,7 +11,7 @@
 # Description:
 # **************************************************************************
 from flask import jsonify
-from .babel import gettext as _
+from flask_babel import gettext as _
 
 
 class HTTPResponse(object):

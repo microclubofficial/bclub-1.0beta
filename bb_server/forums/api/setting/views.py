@@ -15,6 +15,7 @@ from flask_login import current_user, logout_user, login_user
 from forums.api.forms import (ProfileForm, PasswordForm, PrivacyForm,
                               AvatarForm, BabelForm)
 from forums.common.views import IsAuthMethodView as MethodView
+from flask_babel import gettext as _
 from flask_auth.form import form_validate
 from flask_auth.auth.views import check_captcha, check_phone
 from forums.func import get_json, Avatar
@@ -61,15 +62,17 @@ class ChangePasswordView(MethodView):
         new_password = data.get('NewPassword')
         confirm_password = data.get('confirm_password')
         if not user.check_password(old_password):
-            return get_json(0, '原密码错误', {})
+            msg = _('Original password error')
+            return get_json(0, msg, {})
         elif new_password != confirm_password:
-            return get_json(0, '两次密码不相同', {})
+            msg = _('Two passwords are different')
+            return get_json(0, msg, {})
         else:    
             user.set_password(new_password)
             user.save()
             current_user.logout()
-            return get_json(1, '修改密码成功，请重新登录', {})
-        
+            msg = _('Password changed successfully, please log in again')
+            return get_json(1, msg, {})
 
 class ChangePhoneView(MethodView):
     def post(self):
@@ -78,14 +81,16 @@ class ChangePhoneView(MethodView):
         phone = post_data['phone']
         captcha = post_data['captcha']
         if check_phone(phone):
-            msg = '手机已被注册'
+            msg = _('The phone has been registered')
             return get_json(0, msg, {})
         if not check_captcha(phone, captcha):
-            return get_json(0, '验证码错误', {})
+            msg = _('The captcha is error')
+            return get_json(0, msg, {})
         user.phone = phone
         user.save()
         redis_data.delete(phone)
-        return get_json(1, '手机号已更换', phone)
+        msg = _('The phone has changed')
+        return get_json(1, msg, phone)
 
 class ChangeUsernameView(MethodView):
     def post(self):
@@ -93,14 +98,15 @@ class ChangeUsernameView(MethodView):
         post_data = request.json
         username = post_data.get('username')
         if User.query.filter_by(username = username).exists():
-            msg = '用户名已存在'
+            msg = _('The username has been registered')
             return get_json(0, msg, {})
         user.username = username
         user.save()
         data = {}
         data['username'] = user.username
         Avatar(data, user)
-        return get_json(1, '用户名已更换', data)        
+        msg = _('The username has changed')
+        return get_json(1, msg, data)        
 
 class PrivacyView(MethodView):
     def get(self):

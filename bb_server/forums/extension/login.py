@@ -11,7 +11,7 @@
 # Description:
 # ********************************************************************************
 from flask_login import LoginManager
-from flask_babelex import lazy_gettext as _
+from flask_babel import lazy_gettext as _
 
 login_manager = LoginManager()
 

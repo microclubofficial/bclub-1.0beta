@@ -13,6 +13,7 @@
 from flask import (url_for, redirect, send_from_directory, current_app,
                    request, Response)
 from flask.views import MethodView
+from flask_babel import gettext as _
 from flask_login import login_required, current_user
 from flask_auth.form import form_validate
 from forums.api.forms import AvatarForm
@@ -58,7 +59,8 @@ class AvatarView(MethodView):
                 user.avatar = '/' + avatar_path + '/' + filename + '.png'
                 user.save()
                 data = {"username": user.username, "avatar": user.avatar}
-                return get_json(1, '更换头像成功', data)
+                msg = _('success')
+                return get_json(1, msg, data)
 
 
 class AvatarFileView(MethodView):
@@ -95,8 +97,10 @@ class GetFileView(MethodView):
                 files.file_path = '/' + file_path + '/' + newfilename
                 Files.save(file)
             else:
-                return get_json(0, '格式错误', {})
-        return get_json(1, '上传成功', object_as_dict(files))
+                msg = _('Wrong Format')
+                return get_json(0, msg, {})
+            msg = _('success')
+        return get_json(1, msg, object_as_dict(files))
 
 class PhotoView(MethodView):
     def post(self):
@@ -108,7 +112,8 @@ class PhotoView(MethodView):
                 image = Image.open(BytesIO(response.content))
                 file_dict[i] = image
             except:
-                return get_json(0, '格式错误', {})
+                msg = _('Wrong Format')
+                return get_json(0, msg, {})
         data = {}
         for filename in file_dict:
             Files = file_dict[filename]
@@ -129,5 +134,7 @@ class PhotoView(MethodView):
                 Files.save(file)
                 data[filename] = '/' + file_path + '/' + newfilename
             else:
-                return get_json(0, '格式错误', {})
-        return get_json(1, '上传成功', data)
+                msg = _('Wrong Format')
+                return get_json(0, msg, {})
+        msg = _('success')
+        return get_json(1, msg, data)

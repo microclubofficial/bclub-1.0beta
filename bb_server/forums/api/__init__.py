@@ -23,6 +23,7 @@ from forums.api.search import urls as search_url
 from forums.api.block_data import urls as data_url
 from forums.api.bar import urls as bar_url
 from forums.api.side import urls as side_url
+from forums.api.confirm import urls as confirm_url
 
 def init_app(app):
     forums_url.init_app(app)
@@ -38,6 +39,8 @@ def init_app(app):
     data_url.init_app(app)
     bar_url.init_app(app)
     side_url.init_app(app)
+    confirm_url.init_app(app)
+    
     # blueprints = [
     #     'forums.api.forums.urls'
     #     # 'forums.api.auth.urls',

@@ -2,6 +2,7 @@ from flask.views import MethodView
 from forums.func import get_json, object_as_dict
 from .models import B_Picture
 from forums.extension import redis_data
+from flask_babel import gettext as _
 import requests
 import math
 import json
@@ -30,32 +31,41 @@ class Currency_News(MethodView):
         else:
             data['Circulation_rate'] = ('%.2f%%' % (data['available_supply']/data['supple'] * 100))
         data['picture'] = 'https://blockchains.oss-cn-shanghai.aliyuncs.com/static/coinInfo/%s.png'%(token)
-        return get_json(1, 'success', data)
+        msg = _('success')
+        return get_json(1, msg, data)
 
 class K_Line(MethodView):
     def get(self, token):
         if redis_data.exists(token):
             data = json.loads(redis_data.get(token))
-            return get_json(1, 'success', data)
+            msg = _('success')
+            return get_json(1, msg, data)
         headers = {'Content-Type':'application/json'}
         kline = requests.get('https://block.cc/api/v1/marketKline/%s'%(token), headers = headers)
         try:
             kline.json()['data']['name']
             data = kline.json()['data']
             redis_data.set(token, json.dumps(data), ex=3600) 
-            return get_json(1, 'success', data)
+            msg = _('success')
+            return get_json(1, msg, data)
         except:
-            return get_json(0, '数据错误，请重新请求', {})
+            msg = _('Data error, please re-request')
+            return get_json(0, msg, {})
 
 class B_List(MethodView):
     def get(self, page, limit):
         offset = (int(page)-1)*int(limit)
         blist = requests.get('https://api.tokenclub.com/v2/ticker/summary?type=0&offset=%s&limit=%s'%(offset, limit))
-        blist = blist.json()['data']
+        try:
+            blist = blist.json()['data']
+        except:
+            msg = _('Request failed, please try again later')
+            return get_json(0, msg, {})
         blist['page_count'] = int(math.ceil(int(blist['count'])/int(limit)))
         for i in blist['summaryList']:
             i['picture'] = 'https://blockchains.oss-cn-shanghai.aliyuncs.com/static/coinInfo/%s.png'%(i['id'])
-        return get_json(1, 'success', blist) 
+        msg = _('Data error, please re-request')
+        return get_json(1, msg, blist) 
 
 class Picture(MethodView):
     def get(self):
@@ -75,7 +85,8 @@ class Picture(MethodView):
             data.append(Blist)
         for p in range(3):
             data[p]['picture'] = picturelist[p]
-        return get_json(1, '币讯图片', data)
+        msg = _('Token Pictures')
+        return get_json(1, msg, data)
 
 class SideBar(MethodView):
     def get(self, token):
@@ -90,4 +101,5 @@ class SideBar(MethodView):
                 data[i] = time.strftime('%Y-%m-%d',time.localtime(details[i]/1000))
             else:
                 data[i] = details[i]
-        return get_json(1, 'success', data)
+        msg = _('success')
+        return get_json(1, msg, data)

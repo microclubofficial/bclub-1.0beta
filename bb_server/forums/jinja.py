@@ -15,7 +15,7 @@ from config import SITE
 
 from bleach import clean
 from flask import Markup, g
-from flask_babelex import format_datetime
+from flask_babel import format_datetime
 from misaka import HtmlRenderer, Markdown
 
 

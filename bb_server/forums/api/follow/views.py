@@ -20,6 +20,7 @@ from forums.common.response import HTTPResponse
 from forums.common.views import IsAuthMethodView as MethodView
 from forums.api.message.models import MessageClient
 from forums.func import object_as_dict, get_json
+from flask_babel import gettext as _
 from .models import Follower
 import json
 import requests
@@ -62,7 +63,8 @@ class FollowingTokenView(MethodView):
     def get(self):
         user = request.user
         if not Follower.query.filter_by(author_id = user.id).exists():
-            return get_json(1, '关注列表', {})
+            msg = _('FollowList')
+            return get_json(1, msg, {})
         follwer = Follower.query.filter_by(author_id = user.id).first_or_404()
         tokenlist = json.loads(follwer.follwer)
         tokenslist = []
@@ -74,7 +76,8 @@ class FollowingTokenView(MethodView):
             for j in keys:
                 data[j] = details[j]
             tokenslist.append(data)
-        return get_json(1, '关注列表', tokenslist)
+        msg = _('FollowList')
+        return get_json(1, msg, tokenslist)
 
     def post(self, token):
         user = request.user
@@ -82,14 +85,16 @@ class FollowingTokenView(MethodView):
             follwer = Follower.query.filter_by(author_id = user.id).first()
             tokenlist = json.loads(follwer.follower)
             if token in tokenlist:
-                return get_json(0, '您已关注%s,请勿重新关注'%token, {})
+                msg = _('You have followed %(token)s,don\'t need again',token=token)
+                return get_json(0, msg, {})
             tokenlist.append(token)
             follwer.follower = json.dumps(tokenlist)
         else:
             follwer = Follower(author_id=user.id)
             follwer.follwer = json.dumps([token])
         follwer.save()
-        return get_json(1, 'success', {})
+        msg = _('success')
+        return get_json(1, msg, {})
         
     def delete(self):
         user = request.user

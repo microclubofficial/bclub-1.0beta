@@ -1,4 +1,4 @@
-# Translations template for PROJECT.
+# Chinese translations for PROJECT.
 # Copyright (C) 2018 ORGANIZATION
 # This file is distributed under the same license as the PROJECT project.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2018.
@@ -8,9 +8,11 @@ msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2018-05-21 17:37+0800\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2018-05-21 17:38+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: zh\n"
+"Language-Team: zh <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -34,101 +36,101 @@ msgstr ""
 
 #: flask_auth/auth/views.py:52
 msgid "Username"
-msgstr ""
+msgstr "用户名"
 
 #: flask_auth/auth/views.py:53
 msgid "Password"
-msgstr ""
+msgstr "密码"
 
 #: flask_auth/auth/views.py:54
 msgid "Phone"
-msgstr ""
+msgstr "手机号码"
 
 #: flask_auth/auth/views.py:55
 msgid "PhoneCaptcha"
-msgstr ""
+msgstr "手机验证码"
 
 #: flask_auth/auth/views.py:56 flask_auth/templates/maple/captcha.html:3
 msgid "Captcha"
-msgstr ""
+msgstr "验证码:"
 
 #: flask_auth/auth/views.py:57
 msgid "Confirm_password"
-msgstr ""
+msgstr "验证密码"
 
 #: flask_auth/auth/views.py:59
 #, python-format
 msgid "The %(key)s is required"
-msgstr ""
+msgstr "%(key)s不能为空"
 
 #: flask_auth/auth/views.py:91 forums/common/response.py:33
 msgid "Username or Password Error"
-msgstr ""
+msgstr "用户名或密码错误"
 
 #: flask_auth/auth/views.py:96 flask_auth/auth/views.py:118
 #: flask_auth/auth/views.py:164 flask_auth/auth/views.py:264
 #: forums/api/forms.py:65 forums/api/setting/views.py:87
 msgid "The captcha is error"
-msgstr ""
+msgstr "验证码错误"
 
 #: flask_auth/auth/views.py:101 flask_auth/auth/views.py:124
 msgid "You have login"
-msgstr ""
+msgstr "您已登录"
 
 #: flask_auth/auth/views.py:115 flask_auth/auth/views.py:261
 msgid "The phone is error"
-msgstr ""
+msgstr "手机号错误"
 
 #: flask_auth/auth/views.py:133
 msgid "You have logout"
-msgstr ""
+msgstr "登出成功"
 
 #: flask_auth/auth/views.py:139
 msgid "register"
-msgstr ""
+msgstr "注册"
 
 #: flask_auth/auth/views.py:155 forums/api/setting/views.py:84
 msgid "The phone has been registered"
-msgstr ""
+msgstr "手机号已被注册"
 
 #: flask_auth/auth/views.py:158 forums/api/setting/views.py:101
 msgid "The username has been registered"
-msgstr ""
+msgstr "用户名已注册"
 
 #: flask_auth/auth/views.py:161 flask_auth/auth/views.py:240
 #: forums/api/setting/views.py:68
 msgid "Two passwords are different"
-msgstr ""
+msgstr "两次密码不相同"
 
 #: flask_auth/auth/views.py:178
 msgid "You have registered"
-msgstr ""
+msgstr "您已注册"
 
 #: flask_auth/auth/views.py:194 flask_auth/auth/views.py:253
 msgid "forget password"
-msgstr ""
+msgstr "忘记密码"
 
 #: flask_auth/auth/views.py:202 forums/common/response.py:37
 msgid "The email is error"
-msgstr ""
+msgstr "邮箱未注册"
 
 #: flask_auth/auth/views.py:205 flask_auth/auth/views.py:286
 msgid ""
 "An email has been sent to you.Please receive and update your password in "
 "time"
-msgstr ""
+msgstr "一封邮件已发送到你的邮箱,请及时查收"
 
 #: flask_auth/auth/views.py:213
 msgid "Please set a new password"
-msgstr ""
+msgstr "请重置密码"
 
 #: flask_auth/auth/views.py:220 flask_auth/auth/views.py:304
 msgid "The confirm link has been out of time.Please confirm your email again"
-msgstr ""
+msgstr "验证链接已过期,请重新验证你的帐号"
 
 #: flask_auth/auth/views.py:227
 msgid "Change Password"
-msgstr ""
+msgstr "修改密码"
 
 #: flask_auth/auth/views.py:246 flask_auth/auth/views.py:267
 #: flask_auth/auth/views.py:279 forums/api/block_data/views.py:34
@@ -139,159 +141,159 @@ msgstr ""
 #: forums/api/topic/views.py:449 forums/api/upload/views.py:62
 #: forums/api/upload/views.py:102 forums/api/upload/views.py:139
 msgid "success"
-msgstr ""
+msgstr "成功"
 
 #: flask_auth/auth/views.py:277
 msgid "The email has been registered"
-msgstr ""
+msgstr "邮箱已被注册"
 
 #: flask_auth/auth/views.py:295
 msgid "Please confirm  your email"
-msgstr ""
+msgstr "请验证邮箱"
 
 #: flask_auth/auth/views.py:321
 msgid "The message has been sent"
-msgstr ""
+msgstr "一条短信已发出"
 
 #: flask_auth/auth/views.py:323
 msgid "failed"
-msgstr ""
+msgstr "失败"
 
 #: forums/permission.py:60
 msgid "Not logged in"
-msgstr ""
+msgstr "未登录"
 
 #: forums/api/forms.py:48
 msgid "Username:"
-msgstr ""
+msgstr "用户名"
 
 #: forums/api/forms.py:51
 msgid "Password:"
-msgstr ""
+msgstr "密码"
 
 #: forums/api/forms.py:54
 msgid "Captcha:"
-msgstr ""
+msgstr "验证码"
 
 #: forums/api/forms.py:72
 msgid "Email:"
-msgstr ""
+msgstr "邮箱"
 
 #: forums/api/forms.py:76
 msgid "Remember me"
-msgstr ""
+msgstr "记住我"
 
 #: forums/api/forms.py:79 forums/api/topic/views.py:100
 #: templates/topic/topic_good.html:13 templates/topic/topic_list.html:4
 #: templates/topic/topic_list.html:6 templates/topic/topic_list.html:8
 #: templates/topic/topic_top.html:13
 msgid "All Topics"
-msgstr ""
+msgstr "所有文章"
 
 #: forums/api/forms.py:79
 msgid "One Day"
-msgstr ""
+msgstr "一天"
 
 #: forums/api/forms.py:79
 msgid "One Week"
-msgstr ""
+msgstr "一周"
 
 #: forums/api/forms.py:80
 msgid "One Month"
-msgstr ""
+msgstr "一个月"
 
 #: forums/api/forms.py:80
 msgid "One Year"
-msgstr ""
+msgstr "一年"
 
 #: forums/api/forms.py:82
 msgid "Publish"
-msgstr ""
+msgstr "发表时间"
 
 #: forums/api/forms.py:82 templates/forums/_macro.html:48
 #: templates/topic/_list_macro.html:13
 msgid "Author"
-msgstr ""
+msgstr "发表作者"
 
 #: forums/api/forms.py:84
 msgid "Desc"
-msgstr ""
+msgstr "降序"
 
 #: forums/api/forms.py:84
 msgid "Asc"
-msgstr ""
+msgstr "升序"
 
 #: forums/api/forms.py:88
 msgid "Choice"
-msgstr ""
+msgstr "选择"
 
 #: forums/api/forms.py:94
 msgid "search"
-msgstr ""
+msgstr "搜索"
 
 #: forums/api/forms.py:98
 msgid "message"
-msgstr ""
+msgstr "私信"
 
 #: forums/api/forms.py:102
 msgid "Title:"
-msgstr ""
+msgstr "标题："
 
 #: forums/api/forms.py:103 forums/api/forms.py:112
 msgid "Content:"
-msgstr ""
+msgstr "内容："
 
 #: forums/api/forms.py:104
 msgid "Category:"
-msgstr ""
+msgstr "分类："
 
 #: forums/api/forms.py:106
 msgid "token"
-msgstr ""
+msgstr "币"
 
 #: forums/api/forms.py:108
 msgid "ContentType"
-msgstr ""
+msgstr "标记语言"
 
 #: forums/api/forms.py:116
 msgid "Name:"
-msgstr ""
+msgstr "收藏夹名："
 
 #: forums/api/forms.py:117
 msgid "Description:"
-msgstr ""
+msgstr "描述:"
 
 #: forums/api/forms.py:129
 msgid "Upload Avatar:"
-msgstr ""
+msgstr "上传头像"
 
 #: forums/api/forms.py:136
 msgid "Online status:"
-msgstr ""
+msgstr "在线状态:"
 
 #: forums/api/forms.py:137
 msgid "Topic List:"
-msgstr ""
+msgstr "主题列表:"
 
 #: forums/api/forms.py:139
 msgid "Reply List:"
-msgstr ""
+msgstr "回复列表:"
 
 #: forums/api/forms.py:140
 msgid "Notebook List:"
-msgstr ""
+msgstr "笔记列表:"
 
 #: forums/api/forms.py:141
 msgid "Collect List:"
-msgstr ""
+msgstr "收藏列表:"
 
 #: forums/api/forms.py:145
 msgid "Introduce:"
-msgstr ""
+msgstr "个人介绍:"
 
 #: forums/api/forms.py:146
 msgid "School:"
-msgstr ""
+msgstr "所在学校:"
 
 #: forums/api/forms.py:147
 msgid "Signature:"
@@ -319,41 +321,41 @@ msgstr ""
 
 #: forums/api/block_data/views.py:52 forums/api/block_data/views.py:67
 msgid "Data error, please re-request"
-msgstr ""
+msgstr "数据错误，请重新请求"
 
 #: forums/api/block_data/views.py:62
 msgid "Request failed, please try again later"
-msgstr ""
+msgstr "请求失败，请重新请求"
 
 #: forums/api/block_data/views.py:88
 msgid "Token Pictures"
-msgstr ""
+msgstr "币标签"
 
 #: forums/api/collect/views.py:169 forums/api/collect/views.py:171
 #: templates/base/link.html:66
 msgid "CollectList"
-msgstr ""
+msgstr "收藏列表"
 
 #: forums/api/collect/views.py:185
 msgid "Cancel Collect"
-msgstr ""
+msgstr "取消收藏"
 
 #: forums/api/confirm/views.py:11 forums/api/setting/views.py:65
 msgid "Original password error"
-msgstr ""
+msgstr "原密码错误"
 
 #: forums/api/confirm/views.py:21
 msgid "Email does not exist"
-msgstr ""
+msgstr "邮箱未注册"
 
 #: forums/api/follow/views.py:66 forums/api/follow/views.py:79
 msgid "FollowList"
-msgstr ""
+msgstr "关注列表"
 
 #: forums/api/follow/views.py:88
 #, python-format
 msgid "You have followed %(token)s,don't need again"
-msgstr ""
+msgstr "您已关注%(token)s，请勿重复关注"
 
 #: forums/api/forums/views.py:37
 msgid "About - "
@@ -369,23 +371,23 @@ msgstr ""
 
 #: forums/api/setting/views.py:74
 msgid "Password changed successfully, please log in again"
-msgstr ""
+msgstr "修改密码成功，请重新登录"
 
 #: forums/api/setting/views.py:92
 msgid "The phone has changed"
-msgstr ""
+msgstr "手机号已更换"
 
 #: forums/api/setting/views.py:108
 msgid "The username has changed"
-msgstr ""
+msgstr "用户名已更换"
 
 #: forums/api/side/views.py:29
 msgid "influence"
-msgstr ""
+msgstr "影响力"
 
 #: forums/api/side/views.py:56
 msgid "analyst"
-msgstr ""
+msgstr "分析师"
 
 #: forums/api/topic/views.py:63
 msgid "Ask - "
@@ -397,84 +399,84 @@ msgstr ""
 
 #: forums/api/topic/views.py:103
 msgid "Topics"
-msgstr ""
+msgstr "文章"
 
 #: forums/api/topic/views.py:139 forums/api/user/views.py:97
 msgid "Topic List"
-msgstr ""
+msgstr "文章列表"
 
 #: forums/api/topic/views.py:245
 msgid "Topic Details"
-msgstr ""
+msgstr "文章详情"
 
 #: forums/api/topic/views.py:304
 msgid "Replies Information"
-msgstr ""
+msgstr "评论信息"
 
 #: forums/api/upload/views.py:100 forums/api/upload/views.py:115
 #: forums/api/upload/views.py:137
 msgid "Wrong Format"
-msgstr ""
+msgstr "格式错误"
 
 #: forums/api/user/models.py:184
 msgid "ALLOW ALL USER"
-msgstr ""
+msgstr "允许所有人"
 
 #: forums/api/user/models.py:184
 msgid "ALLOW AUTHENTICATED USER"
-msgstr ""
+msgstr "只允许登陆用户"
 
 #: forums/api/user/models.py:185
 msgid "ALLOW OWN"
-msgstr ""
+msgstr "仅自己"
 
 #: forums/api/user/models.py:189
 msgid "Chinese"
-msgstr ""
+msgstr "中文"
 
 #: forums/api/user/models.py:189
 msgid "English"
-msgstr ""
+msgstr "英文"
 
 #: forums/api/user/views.py:43
 msgid "All Users"
-msgstr ""
+msgstr "所有用户"
 
 #: forums/api/user/views.py:93 forums/api/user/views.py:171
 msgid "administrator"
-msgstr ""
+msgstr "管理员"
 
 #: forums/api/user/views.py:95 forums/api/user/views.py:173
 msgid "normal user"
-msgstr ""
+msgstr "普通用户"
 
 #: forums/api/user/views.py:145
 msgid "List of topics reviewed"
-msgstr ""
+msgstr "评论文章列表"
 
 #: forums/api/user/views.py:175
 msgid "personal"
-msgstr ""
+msgstr "本人"
 
 #: forums/api/user/views.py:177
 msgid "not personal"
-msgstr ""
+msgstr "非本人"
 
 #: forums/api/user/views.py:178
 msgid "Personal Information"
-msgstr ""
+msgstr "个人信息"
 
 #: forums/common/response.py:34
 msgid "Captcha Error"
-msgstr ""
+msgstr "验证码错误"
 
 #: forums/common/response.py:35
 msgid "The email has been registered!"
-msgstr ""
+msgstr "邮箱已被注册"
 
 #: forums/common/response.py:36
 msgid "The username has been registered!"
-msgstr ""
+msgstr "用户名已注册"
 
 #: forums/common/response.py:39
 msgid "Token is out of time,please get token again!"
@@ -482,89 +484,89 @@ msgstr ""
 
 #: forums/common/response.py:42
 msgid "Other error"
-msgstr ""
+msgstr "其他错误"
 
 #: forums/extension/login.py:29
 msgid "Please login to access this page."
-msgstr ""
+msgstr "这个页面要求登陆，请登陆。"
 
 #: templates/auth/forget.html:1
 msgid "Forget Password - "
-msgstr ""
+msgstr "忘记密码 - "
 
 #: templates/auth/forget.html:5 templates/auth/forget.html:8
 msgid "Forget Password"
-msgstr ""
+msgstr "忘记密码"
 
 #: templates/auth/login.html:1
 msgid "Login - "
-msgstr ""
+msgstr "登录 - "
 
 #: templates/auth/login.html:5 templates/auth/login.html:8
 #: templates/base/base.html:73 templates/topic/reply/form.html:15
 msgid "Login"
-msgstr ""
+msgstr "登录"
 
 #: templates/auth/register.html:1
 msgid "Register - "
-msgstr ""
+msgstr "注册 - "
 
 #: templates/auth/register.html:5 templates/auth/register.html:8
 #: templates/base/base.html:72
 msgid "Register"
-msgstr ""
+msgstr "注册"
 
 #: templates/base/base.html:56 templates/base/header.html:35
 msgid "Home Page"
-msgstr ""
+msgstr "主页"
 
 #: templates/base/base.html:57 templates/base/header.html:36
 msgid "Setting"
-msgstr ""
+msgstr "帐号设置"
 
 #: templates/base/base.html:59 templates/base/header.html:38
 msgid "Logout"
-msgstr ""
+msgstr "注销"
 
 #: templates/base/base.html:63
 msgid "NoticeList"
-msgstr ""
+msgstr "通知"
 
 #: templates/base/form.html:14
 msgid "save"
-msgstr ""
+msgstr "保存"
 
 #: templates/base/head.html:4 templates/base/head.html:6
 msgid "Index"
-msgstr ""
+msgstr "社区主页"
 
 #: templates/base/header.html:67 templates/forums/index.html:10
 msgid "Forums"
-msgstr ""
+msgstr "社区"
 
 #: templates/base/header.html:68 templates/forums/index.html:11
 msgid "Wiki"
-msgstr ""
+msgstr "文档"
 
 #: templates/base/header.html:69 templates/forums/index.html:12
 msgid "Blog"
-msgstr ""
+msgstr "博客"
 
 #: templates/base/header.html:70 templates/base/link.html:10
 msgid "TagList"
-msgstr ""
+msgstr "节点"
 
 #: templates/base/header.html:71 templates/forums/index.html:13
 msgid "Good"
-msgstr ""
+msgstr "精华文章"
 
 #: templates/base/link.html:2
 msgid "UserList"
-msgstr ""
+msgstr "用户列表"
 
 #: templates/base/link.html:18
 msgid "TopicList"
-msgstr ""
+msgstr "所有主题"
 
 #: templates/base/link.html:27
 msgid "BoardList"
@@ -572,47 +574,47 @@ msgstr ""
 
 #: templates/base/link.html:52 templates/follow/following_tags.html:4
 msgid "Following Tags"
-msgstr ""
+msgstr "关注的节点"
 
 #: templates/base/link.html:55 templates/follow/following_topics.html:4
 msgid "Following Topics"
-msgstr ""
+msgstr "关注的文章"
 
 #: templates/base/link.html:58 templates/follow/following_users.html:4
 msgid "Following Users"
-msgstr ""
+msgstr "关注的用户"
 
 #: templates/base/link.html:61 templates/follow/following_collects.html:4
 msgid "Following Collects"
-msgstr ""
+msgstr "关注的收藏"
 
 #: templates/base/panel.html:5
 msgid "Ask Questions"
-msgstr ""
+msgstr "提问"
 
 #: templates/base/panel.html:10
 msgid "Collects"
-msgstr ""
+msgstr "收藏"
 
 #: templates/base/panel.html:13
 msgid "Followings"
-msgstr ""
+msgstr "关注"
 
 #: templates/base/panel.html:24
 msgid "now register"
-msgstr ""
+msgstr "现在注册"
 
 #: templates/base/panel.html:28
 msgid "If you have a account,please"
-msgstr ""
+msgstr "已经注册"
 
 #: templates/base/panel.html:28
 msgid "login"
-msgstr ""
+msgstr "登录"
 
 #: templates/base/panel.html:71
 msgid "Hot Tags"
-msgstr ""
+msgstr "热门节点"
 
 #: templates/base/panel.html:72
 msgid "Recent Tags"

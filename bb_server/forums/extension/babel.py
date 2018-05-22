@@ -11,35 +11,27 @@
 # Description:
 # ********************************************************************************
 from flask import request, g, current_app
-from flask_babelex import Babel, Domain
-import os
+from flask_babel import Babel
 
-translations = os.path.abspath(
-    os.path.join(
-        os.path.dirname(__file__), os.pardir, os.pardir, 'translations'))
-domain = Domain(translations)
-babel = Babel(default_domain=domain)
-
+babel = Babel()
 
 @babel.localeselector
-def locale():
+def get_locale():
     user = getattr(g, 'user', None)
+    lang = request.cookies.get('language')
+    if lang:
+        return lang
     if user is not None:
         if request.path.startswith('/admin'):
             return 'zh_Hans_CN'
-        if g.user.is_authenticated:
-            return 'zh'
     return request.accept_languages.best_match(current_app.config['LANGUAGES']
                                                .keys())
 
-
 @babel.timezoneselector
-def timezone():
+def get_timezone():
     user = getattr(g, 'user', None)
     if user is not None:
-        if g.user.is_authenticated:
-            return user.setting.timezone
-
+        return user.timezone
 
 def init_app(app):
     babel.init_app(app)
