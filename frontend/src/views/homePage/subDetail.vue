@@ -787,7 +787,7 @@ svg:not(:root) {
 .comment-item{
     padding: 15px 0 22px;
     /* margin: 15px 0; */
-    border-bottom: 1px solid #edf0f5;
+    /*border-bottom: 1px solid #edf0f5;*/
     border-top: 0 !important;
 }
 .comment-item .avatar {
@@ -830,6 +830,7 @@ a.avatar img {
     word-break: break-all;
     overflow: hidden;
     margin: 10px 0;
+    display: inline;
 }
 .bibar-indexNewsItem-infro>li{
     float: left;

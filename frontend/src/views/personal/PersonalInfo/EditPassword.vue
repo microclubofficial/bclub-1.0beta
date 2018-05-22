@@ -24,7 +24,7 @@
             <p class="prompt">{{confirm_upwdPrompt}}</p>
           </div>
           <div class="form-group">
-                    <button class="col-md-offset-3 col-md-1 forphone btnm confirm" v-bind:disabled="!setPwd.OldPassword" @click='setPwdFun' data-target="#myModal" data-toggle="">{{$t('button.confirm')}}
+                    <button type="button" class="col-md-offset-3 col-md-1 forphone btnm confirm" v-bind:disabled="!setPwd.OldPassword" @click='setPwdFun' data-target="#myModal" data-toggle="">{{$t('button.confirm')}}
                     </button>
                 </div>
             </form>
@@ -96,17 +96,17 @@ export default {
     },
     // 修改密码
     setPwdFun () {
-      let instance
+      // let instance
       post(`/api/setting/password`, this.setPwd).then(data => {
         if (data.resultcode === 1) {
-          instance = new Toast({
-            message: data.message,
-            iconClass: 'glyphicon glyphicon-ok',
-            duration: 1000
-          })
-          setTimeout(() => {
-            instance.close()
-          }, 1000)
+          // instance = new Toast({
+          //   message: data.message,
+          //   iconClass: 'glyphicon glyphicon-ok',
+          //   duration: 1000
+          // })
+          // setTimeout(() => {
+          //   instance.close()
+          // }, 1000)
           this.$router.push('/login')
         }
       })
