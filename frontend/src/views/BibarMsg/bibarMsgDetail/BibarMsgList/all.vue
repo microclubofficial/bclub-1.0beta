@@ -35,7 +35,7 @@
               <li class="set-choseStar" @click="collectionTopic(index,tmp)"> <a :class='{collectionActive:tmp.collect_bool}' href="javascript:void(0);"><i class="iconfont icon-star">&#xe6a7;</i>{{$t('list.collect')}}</a> </li>
               <!-- <li> <a href="javascript:void(0);"><i class="iconfont icon-fenxiang"></i> 分享</a> </li> -->
               <!-- <li class="set-choseShang"> <a href="javascript:void(0);"><i class="iconfont icon-dashang"></i> 打赏<span>438</span></a> </li> -->
-              <li class="set-delList" @click="delTopic(tmp)"> <a href="javascript:void(0);"><i class="iconfont icon-del">&#xe78d;</i>{{$t('list.delete')}}</a> </li>
+              <li  v-if='tmp.bool_delete' class="set-delList" @click="delTopic(tmp, index)"> <a href="javascript:void(0);"><i class="iconfont icon-del">&#xe78d;</i>{{$t('list.delete')}}</a> </li>
               <li>
                 <!-- <div class="dropdown">
                   <a href="javascript:void(0);" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="iconfont icon-genduo"></i> 更多</a>
@@ -115,7 +115,7 @@
                         <p href="#" class="user-name">{{item.author}}<span class="time">{{item.diff_time !== '0秒' ? item.diff_time + '前' : '刚刚'}}发布</span></p>
                       </div>
                       <!-- @ 样式 -->
-                      <p class="replyAuthor" v-if="item.at_user !== ''">@{{item.at_user}}:&nbsp;<span class="replyBackConten" style="display:inline-block;font-weight: normal;" v-html="replyFun(item.reference)"></span></p>
+                      <div class="replyAuthor" v-if="item.at_user !== ''">@{{item.at_user}}:&nbsp;<span class="replyBackConten" style="display:inline-block;font-weight: normal;" v-html="replyFun(item.reference)"></span></div>
                       <!-- <p>{{item}}</p> -->
                       <p v-html="commentContent(item.content,item.id)"></p>
                       <!--展开-->
@@ -130,7 +130,7 @@
                             <i class="iconfont icon-pinglun"></i> {{$t('list.reply')}}
                           </a>
                         </li>
-                        <li class="set-delList" @click="delTopic(tmp)"> <a href="javascript:void(0);"><i class="iconfont icon-del">&#xe78d;</i>{{$t('list.delete')}}</a> </li>
+                        <li v-if='item.bool_delete' @click='delComment(item,now,tmp)' class="set-delList"> <a href="javascript:void(0);"><i class="iconfont icon-del">&#xe78d;</i>{{$t('list.delete')}}</a> </li>
                       </ul>
                     </div>
                      <!-- 回复 -->
@@ -160,7 +160,7 @@
                 </div>
               </div>
               <!-- 分页条 -->
-            <div class="pages" v-if='cpageCountObj[tmp.id] > 0'>
+            <div class="pages" v-if='cpageCountObj[tmp.id] > 1'>
               <ul class="mo-paging">
                 <!-- prev -->
                 <!-- first -->
@@ -696,9 +696,26 @@ export default{
         get(`/api/topic/replies/early/${tmpId}/1`).then(data => {
           if (!this.nowData[tmpId]) this.$set(this.nowData, tmpId, data.data)
           else this.nowData[tmpId] = data.data
-          console.log(this.nowData[tmpId])
         })
       }
+    },
+    delTopic (tmp, index) {
+      post(`/api/topic/delete/${tmp.id}`).then(data => {
+        if (data.resultcode === 1) {
+          this.bibarArticles.splice(index, 1)
+          this.i = ''
+          $('.bibar-hot').css({'display': 'none'})
+        }
+      })
+    },
+    // 删除评论
+    delComment (item, now, tmp) {
+      post(`/api/reply/delete/${item.id}`).then(data => {
+        if (data.resultcode === 1) {
+          this.nowData[tmp.id].splice(now, 1)
+          this.bibarArticles[this.i].replies_count = this.bibarArticles[this.i].replies_count - 1
+        }
+      })
     },
     // 分页
     prev (id) {
@@ -838,7 +855,7 @@ export default{
     line-height: 50px !important;
     padding-left: 20px !important;
     font-weight: 700;
-    margin-right: 2px;
+    margin: 15px 2px 15px 0;
 }
 .glyphicon{
   font-size: 20px;

@@ -905,7 +905,7 @@ i.icon-BTC{font-size: 14px; font-weight: bold;}
 .set:after{visibility: hidden;display: block;font-size: 0;content: " ";clear: both;height: 0;}
 .set>ul{margin: 0px; padding: 0px;}
 .set>ul>li:first-child{padding-left: 0;}
-.bibar-list .set>ul>li{float: left; padding:0 20px; position: relative;}
+.bibar-list .set>ul>li{float: left; padding-right:40px; position: relative;}
 .bibar-list .set>ul>li:after{
     position: absolute;
     content: '';
@@ -923,9 +923,6 @@ i.icon-BTC{font-size: 14px; font-weight: bold;}
     height: 0px;
     width: 0px;
     background-color: #F6F5F5;
-}
-.bibar-list .set>ul>li:first-child a:first-child::after{
-    left: 60px;
 }
 .set>ul>li:first-child a:first-child::after{
     position: absolute;

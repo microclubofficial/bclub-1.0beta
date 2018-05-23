@@ -165,7 +165,7 @@
               </div>
               <!-- 分页条 -->
             <!-- 分页条 -->
-            <div class="pages" v-if='cpageCountObj[tmp.id] > 0'>
+            <div class="pages" v-if='cpageCountObj[tmp.id] > 1'>
               <ul class="mo-paging">
                 <!-- prev -->
                 <!-- first -->

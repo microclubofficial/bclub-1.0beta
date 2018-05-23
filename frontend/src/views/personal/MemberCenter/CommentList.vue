@@ -165,7 +165,7 @@
               </div>
               <!-- 分页条 -->
             <!-- 分页条 -->
-            <div class="pages" v-if='cpageCountObj[tmp.id] > 0'>
+            <div class="pages" v-if='cpageCountObj[tmp.id] > 1'>
               <ul class="mo-paging">
                 <!-- prev -->
                 <!-- first -->
@@ -356,10 +356,9 @@ export default{
               item.is_bad = data.data.is_bad
               item.is_bad_bool = data.data.is_bad_bool
               item.is_good_bool = data.data.is_good_bool
-            } else if (data.message === '未登录') {
-              this.$router.push('/login')
             } else {
               alert(data.message)
+              this.$router.push('/login')
             }
           })
           // 吐槽
@@ -371,11 +370,9 @@ export default{
               item.is_bad = data.data.is_bad
               item.is_bad_bool = data.data.is_bad_bool
               item.is_good_bool = data.data.is_good_bool
-            } else if (data.message === '未登录') {
-              alert(data.message)
-              this.$router.push('/login')
             } else {
               alert(data.message)
+              this.$router.push('/login')
             }
           })
         }
@@ -390,10 +387,9 @@ export default{
               item.is_bad = data.data.is_bad
               item.is_bad_bool = data.data.is_bad_bool
               item.is_good_bool = data.data.is_good_bool
-            } else if (data.message === '未登录') {
-              this.$router.push('/login')
             } else {
               alert(data.message)
+              this.$router.push('/login')
             }
           })
           // 吐槽
@@ -405,10 +401,9 @@ export default{
               item.is_bad = data.data.is_bad
               item.is_bad_bool = data.data.is_bad_bool
               item.is_good_bool = data.data.is_good_bool
-            } else if (data.message === '未登录') {
-              this.$router.push('/login')
             } else {
               alert(data.message)
+              this.$router.push('/login')
             }
           })
         }

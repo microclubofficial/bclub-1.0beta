@@ -70,11 +70,7 @@
               <li class="set-choseStar" @click="collectionTopic(articleDetail)"> <a href="javascript:void(0)" class="btn-article-retweet" :class='{collectionActive:articleDetail.collect_bool}'>
           <i class="iconfont icon-star">&#xe6a7;</i>{{$t('list.collect')}}
         </a> </li>
-<<<<<<< HEAD
-        <!--<li class="set-delList" @click="delTopic(tmp)"> <a href="javascript:void(0);"><i class="iconfont icon-del">&#xe78d;</i>{{$t('list.del')}}</a> </li>-->
-=======
-        <li class="set-delList" @click="delTopic(tmp)"> <a href="javascript:void(0);"><i class="iconfont icon-del">&#xe78d;</i>{{$t('list.delete')}}</a> </li>
->>>>>>> 576ed691e9989caf09ba7c2f4196080a7a44111a
+        <!--<li class="set-delList" @click="delTopic(tmp)"> <a href="javascript:void(0);"><i class="iconfont icon-del">&#xe78d;</i>{{$t('list.delete')}}</a> </li>-->
               <!-- <li> <a href="javascript:void(0);"><i class="iconfont icon-fenxiang"></i> 分享</a> </li> -->
               <!-- <li class="set-choseShang"> <a href="javascript:void(0);"><i class="iconfont icon-dashang"></i> 打赏<span>438</span></a> </li> -->
               <li>
@@ -118,9 +114,9 @@
             <div class="comment-all">
               <h3>{{$t('list.allComments')}}({{repliesCcount}})</h3>
               <div class="comment-sort">
-                <a href="javascript:void(0)" @click='sortList(0, tmp.id)' :class="{active:sortNow === 0}">最近</a>
-                <a href="javascript:void(0)" @click='sortList(1, tmp.id)' :class="{active:sortNow === 1}">最早</a>
-                <a href="javascript:void(0)" @click='sortList(2, tmp.id)' :class="{active:sortNow === 2}">赞</a>
+                <a href="javascript:void(0)" @click='sortList(articleDetail.id,0)' :class="{active:sortNow === 0}">最近</a>
+                <a href="javascript:void(0)" @click='sortList(articleDetail.id,1)' :class="{active:sortNow === 1}">最早</a>
+                <a href="javascript:void(0)" @click='sortList(articleDetail.id,2)' :class="{active:sortNow === 2}">赞</a>
               </div>
                 <div class="comment-list">
                   <!-- <pull-to> -->
@@ -136,7 +132,7 @@
                         <span class="time">{{item.diff_time !== '0秒' ? item.diff_time + '前' : '刚刚'}}发布</span>
                       </div>
                       <!-- @ 样式 -->
-                      <div class="replyAuthor" v-if="item.at_user !== ''">@{{item.at_user}}:&nbsp;<span class="replyBackConten" style="display:inline-block;font-weight: normal;" v-html="replyFun(item.reference)"></span></div>
+                      <div class="replyAuthor" v-if="item.at_user !== ''">@{{item.at_user}}:&nbsp;<span class="replyBackConten" style="display:inline;font-weight: normal;" v-html="replyFun(item.reference)"></span></div>
                       <!-- <p>{{item}}</p> -->
                       <!-- <p>{{item}}</p> -->
                       <div class="detailContent" v-html="commentContent(item.content,item.id)"></div>
@@ -151,7 +147,7 @@
                             <i class="iconfont icon-pinglun"></i> {{$t('list.reply')}}
                           </a>
                         </li>
-                        <li class="set-delList" @click="delTopic(tmp)"> <a href="javascript:void(0);"><i class="iconfont icon-del">&#xe78d;</i>{{$t('list.delete')}}</a> </li>
+                        <li class="set-delList" v-if='item.bool_delete' @click="delComment(item,now,articleDetail)"> <a href="javascript:void(0);"><i class="iconfont icon-del">&#xe78d;</i>{{$t('list.delete')}}</a> </li>
                       </ul>
                     </div>
                     <!-- 回复 -->
@@ -169,7 +165,7 @@
            <div class="editor-textarea" v-show="talkReplyTxt" @click="talkReplyEditor">
              <div class="editor-placeholder">{{$t('list.reply')}}...</div>
            </div>
-           <div class="editor-toolbar">
+           <div class="editor-toolbar clearfloat">
               <BibarReport ref='childShowApi' :toApi='toRId' :replyAuthor='item.author' :replyContent='item.content' @backhotReplies = 'showReplyContent' :mainReplay='articleDetail.id' v-show="showReportReplay"></BibarReport>
           </div>
          <span class="img-upload-delete">
@@ -244,7 +240,8 @@ export default {
       more: '展开',
       moreId: '',
       sortNow: 0,
-      imgCommentLength: {}
+      imgCommentLength: {},
+      sortId: ''
     }
   },
   computed: {
@@ -264,44 +261,8 @@ export default {
       this.showLoader = false
       this.articleDetail = data.data.topic
       this.repliesCcount = data.data.replies_count
-      this.nowData = data.data.replies
-      if (this.nowData.length === 0) {
-        this.loadingShow = false
-      }
-      this.pageCount = data.data.page_count
-      this.$nextTick(() => {
-        $('.article_bd').find('img').css({'margin': '10px auto', 'display': 'block', 'text-align': 'center', 'max-width': '60%'})
-        // $('.article_bd').find('p').css({'font-size': '16px', 'margin': '25px 0', 'text-align': 'justify', 'line-height': '1.8'})
-        $('.detailContent').find('img').addClass('zoom-in')
-        $('.detailContent').on('click', 'img', function () {
-          if (!$(this)[0].hasAttribute('data-w-e')) {
-            if (!$(this).hasClass('zoom-out')) {
-              if ($(this).hasClass('zoom-in')) {
-                $(this).removeClass('zoom-in')
-              }
-              $(this).addClass('zoom-out')
-            } else if ($(this).hasClass('zoom-out')) {
-              $(this).removeClass('zoom-out')
-              $(this).addClass('zoom-in')
-            }
-          }
-        })
-      })
-      var that = this
-      if (this.pageCount === 1) {
-        this.bottomText = '没有啦'
-        this.listLoding = false
-        this.noLoading = true
-        // this.loadingImg = '../../assets/img/noLoading.png'
-        return false
-      } else {
-        document.querySelector('#app').addEventListener('scroll', function () {
-          if (this.scrollHeight - this.scrollTop === this.clientHeight) {
-            that.loadDetailPage()
-          }
-        })
-      }
     })
+    this.sortList(this.did, 0)
     $('.editor').css({'padding-bottom': '35px'})
     $('.editor-toolbar').find('.report ').css({'right': '260px', 'bottom': '2px'})
     $('.editor-toolbar').find('.cancel ').css({'right': '315px', 'bottom': '6px'})
@@ -328,6 +289,56 @@ export default {
         // this.loadingImg = '../../assets/img/noLoading.png'
         return false
       }
+    },
+    sortList (id, sort) {
+      if (sort === 0) {
+        this.sortId = 'replies'
+      } else if (sort === 1) {
+        this.sortId = 'replies/early'
+      } else {
+        this.sortId = 'replies/good'
+      }
+      this.sortNow = sort
+      get(`/api/topic/${this.sortId}/${id}/${this.pno}`).then(data => {
+        this.showLoader = false
+        this.nowData = data.data.replies
+        if (this.nowData.length === 0) {
+          this.loadingShow = false
+        }
+        this.pageCount = data.data.page_count
+        this.$nextTick(() => {
+          $('.article_bd').find('img').css({'margin': '10px auto', 'display': 'block', 'text-align': 'center', 'max-width': '60%'})
+          // $('.article_bd').find('p').css({'font-size': '16px', 'margin': '25px 0', 'text-align': 'justify', 'line-height': '1.8'})
+          $('.detailContent').find('img').addClass('zoom-in')
+          $('.detailContent').on('click', 'img', function () {
+            if (!$(this)[0].hasAttribute('data-w-e')) {
+              if (!$(this).hasClass('zoom-out')) {
+                if ($(this).hasClass('zoom-in')) {
+                  $(this).removeClass('zoom-in')
+                }
+                $(this).addClass('zoom-out')
+              } else if ($(this).hasClass('zoom-out')) {
+                $(this).removeClass('zoom-out')
+                $(this).addClass('zoom-in')
+              }
+            }
+          })
+        })
+        var that = this
+        if (this.pageCount === 1) {
+          this.bottomText = '没有啦'
+          this.listLoding = false
+          this.noLoading = true
+          // this.loadingImg = '../../assets/img/noLoading.png'
+          return false
+        } else {
+          document.querySelector('#app').addEventListener('scroll', function () {
+            if (this.scrollHeight - this.scrollTop === this.clientHeight) {
+              that.loadDetailPage()
+            }
+          })
+        }
+      })
     },
     // 正文点赞吐槽
     changeNumAriticle (isNum, articleDetail) {
@@ -498,13 +509,16 @@ export default {
     },
     // 艾特图片处理
     replyFun (val) {
-      if (val === undefined) {
+      if (val === undefined && val === null) {
         return
       }
       let reply = val.replace(/<p[^>]*>|<\/p>|<h-char[^>]*>|<\/h-char>|<h-inner>|<\/h-inner>/g, '')
       if (reply.indexOf('img') > 0) {
         let imgLength = 0
         let imgArr = reply.match(/<img[^>]*>/gi)
+        if (imgArr === null) {
+          return
+        }
         for (let i = 0; i < imgArr.length; i++) {
           imgLength += imgArr[i].length
         }
@@ -512,7 +526,7 @@ export default {
       } else if (/^\/static.*/ig.test(reply)) {
         return '图片评论' + `<a style='color:#0181FF' href='${reply}'><i class='iconfont'>&#xe694;</i>查看图片</a>`
       } else if (reply.length > 100) {
-        return reply.substring(0, 50) + '...'
+        return reply.substring(0, 40) + '...'
       } else {
         return reply
       }
@@ -552,47 +566,17 @@ export default {
         this.moreId = ''
       }
     },
-    // 数据排序
-    sortList (id, tmpId) {
-      // 最近
-      if (id === 0) {
-        this.sortNow = id
-        get(`/api/topic/${tmpId}/1`).then(data => {
-          if (!this.nowData[tmpId]) this.$set(this.nowData, tmpId, data.data.replies)
-          else this.nowData[tmpId] = data.data.replies
-          this.showLoaderComment = false
-          this.cpageCount = data.data.page_count
-          if (this.cpageCount > 1) {
-            this.showPage = true
-          } else {
-            this.showPage = false
-          }
-          this.$nextTick(() => {
-            $('.comment-item-main').find('img').addClass('zoom-in')
-            $('[data-w-e]').removeClass('zoom-in')
-            $('.comment-item-main').on('click', 'img', function () {
-              if (!$(this)[0].hasAttribute('data-w-e')) {
-              // if (!$(this)[0].indexOf('alt="[') === -1) {
-                if (!$(this).hasClass('zoom-out')) {
-                  if ($(this).hasClass('zoom-in')) {
-                    $(this).removeClass('zoom-in')
-                  }
-                  $(this).addClass('zoom-out')
-                } else if ($(this).hasClass('zoom-out')) {
-                  $(this).removeClass('zoom-out')
-                  $(this).addClass('zoom-in')
-                }
-              }
-            })
-          })
-        })
-      } else if (id === 1) {
-        this.sortNow = id
-        get(`/api/topic/replies/early/${tmpId}/1`).then(data => {
-          if (!this.nowData[tmpId]) this.$set(this.nowData, tmpId, data.data)
-          else this.nowData[tmpId] = data.data
-        })
-      }
+    // 删除评论
+    delComment (item, now, tmp) {
+      post(`/api/reply/delete/${item.id}`).then(data => {
+        if (data.resultcode === 1) {
+          this.nowData.splice(now, 1)
+          this.repliesCcount = this.repliesCcount - 1
+        } else {
+          alert(data.message)
+          this.$router.push('/login')
+        }
+      })
     }
   }
 }
@@ -639,7 +623,7 @@ export default {
     line-height: 50px !important;
     padding-left: 20px !important;
     font-weight: 700;
-    margin: 20px 2px 20px 0;
+    margin: 15px 2px 15px 0;
 }
 .detail-editor-toolbar>.wangeditor{
     width: 90%;
