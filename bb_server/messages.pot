@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2018-05-21 17:37+0800\n"
+"POT-Creation-Date: 2018-05-23 11:03+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -135,8 +135,9 @@ msgstr ""
 #: forums/api/block_data/views.py:41 forums/api/block_data/views.py:49
 #: forums/api/block_data/views.py:104 forums/api/collect/views.py:196
 #: forums/api/confirm/views.py:13 forums/api/follow/views.py:96
-#: forums/api/topic/views.py:190 forums/api/topic/views.py:338
-#: forums/api/topic/views.py:449 forums/api/upload/views.py:62
+#: forums/api/topic/views.py:186 forums/api/topic/views.py:246
+#: forums/api/topic/views.py:317 forums/api/topic/views.py:330
+#: forums/api/topic/views.py:370 forums/api/upload/views.py:62
 #: forums/api/upload/views.py:102 forums/api/upload/views.py:139
 msgid "success"
 msgstr ""
@@ -149,12 +150,33 @@ msgstr ""
 msgid "Please confirm  your email"
 msgstr ""
 
+#: flask_auth/auth/views.py:317
+#, python-format
+msgid "Your verification code is %s, valid for 5 minutes."
+msgstr ""
+
 #: flask_auth/auth/views.py:321
 msgid "The message has been sent"
 msgstr ""
 
 #: flask_auth/auth/views.py:323
 msgid "failed"
+msgstr ""
+
+#: forums/func.py:28
+msgid " second"
+msgstr ""
+
+#: forums/func.py:30
+msgid " minute"
+msgstr ""
+
+#: forums/func.py:32
+msgid " hour"
+msgstr ""
+
+#: forums/func.py:34
+msgid " day"
 msgstr ""
 
 #: forums/permission.py:60
@@ -181,7 +203,7 @@ msgstr ""
 msgid "Remember me"
 msgstr ""
 
-#: forums/api/forms.py:79 forums/api/topic/views.py:100
+#: forums/api/forms.py:79 forums/api/topic/views.py:97
 #: templates/topic/topic_good.html:13 templates/topic/topic_list.html:4
 #: templates/topic/topic_list.html:6 templates/topic/topic_list.html:8
 #: templates/topic/topic_top.html:13
@@ -391,24 +413,36 @@ msgstr ""
 msgid "Ask - "
 msgstr ""
 
-#: forums/api/topic/views.py:77
+#: forums/api/topic/views.py:76
 msgid "Edit -"
 msgstr ""
 
-#: forums/api/topic/views.py:103
+#: forums/api/topic/views.py:100
 msgid "Topics"
 msgstr ""
 
-#: forums/api/topic/views.py:139 forums/api/user/views.py:97
+#: forums/api/topic/views.py:136 forums/api/user/views.py:97
 msgid "Topic List"
 msgstr ""
 
-#: forums/api/topic/views.py:245
+#: forums/api/topic/views.py:180 forums/api/topic/views.py:309
+msgid "0 second"
+msgstr ""
+
+#: forums/api/topic/views.py:235
 msgid "Topic Details"
 msgstr ""
 
-#: forums/api/topic/views.py:304
+#: forums/api/topic/views.py:243
+msgid "You do not have permission to delete this article."
+msgstr ""
+
+#: forums/api/topic/views.py:283
 msgid "Replies Information"
+msgstr ""
+
+#: forums/api/topic/views.py:327
+msgid "You do not have permission to delete this reply."
 msgstr ""
 
 #: forums/api/upload/views.py:100 forums/api/upload/views.py:115

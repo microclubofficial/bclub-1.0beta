@@ -1,6 +1,7 @@
 from flask import jsonify, current_app, request
 from sqlalchemy import inspect
 from flask_login import current_user
+from flask_babel import gettext as _
 import datetime
 import json
 
@@ -24,13 +25,13 @@ def time_diff(update_time):
     now = datetime.datetime.now()
     diff = now - update_time
     if int(diff.seconds)<=60:
-        return str(diff.seconds)+'秒'
+        return str(diff.seconds)+_(' second')
     elif int(diff.seconds)<=3600:
-        return str(int(diff.seconds//60))+'分钟'
+        return str(int(diff.seconds//60))+_(' minute')
     elif int(diff.days)==0:
-        return str(int(diff.seconds//3600))+'小时'
+        return str(int(diff.seconds//3600))+_(' hour')
     elif int(diff.days)<=7:
-        return str(int(diff.days))+'天'
+        return str(int(diff.days))+_(' day')
     return str(update_time)
 
 def FindAndCount(Sql,**kwargs):

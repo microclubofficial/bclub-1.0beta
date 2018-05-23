@@ -314,7 +314,7 @@ class ConfirmPhoneView(MethodView):
         if (request.path.endswith('login') and check_phone(phone)) or (request.path.endswith('phoneCaptcha') and not check_phone(phone)):
             captcha = ''.join(sample(digits, 6))
             url = "http://www.kanyanbao.com/websocket/aip/send_sms.json"
-            data = {"phone":phone, "content":'您的验证码是%s,五分钟内有效。'%captcha}
+            data = {"phone":phone, "content":_('Your verification code is %s, valid for 5 minutes.')%captcha}
             headers = {'Content-Type':'application/json'}
             ori = requests.post(url, headers = headers, json = data)
             redis_data.set(phone, captcha, ex=300)

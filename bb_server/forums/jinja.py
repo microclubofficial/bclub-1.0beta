@@ -61,7 +61,7 @@ def timesince(dt, default="just now"):
 
 
 def show_time():
-    from flask_babelex import format_datetime
+    from flask_babel import format_datetime
     if g.user.is_authenticated:
         return 'LOCALE:' + format_datetime(datetime.now())
     else:

@@ -37,10 +37,10 @@ class Topic(RestfulView):
         return True
 
     @is_confirmed
-    def delete(self, topicId):
-        permission = TopicPermission(topicId)
-        if not permission.can():
-            return self.callback()
+    def post(self, topicId):
+        #permission = TopicPermission(topicId)
+        #if not permission.can():
+        #    return self.callback()
         return True
 
 
@@ -56,7 +56,7 @@ class Reply(RestfulView):
         return True
 
     @is_confirmed
-    def delete(self, replyId):
+    def post(self, replyId):
         return True
 
 

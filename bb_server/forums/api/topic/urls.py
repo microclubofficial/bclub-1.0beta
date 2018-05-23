@@ -12,7 +12,7 @@
 # **************************************************************************
 from flask import Blueprint
 
-from .views import (LikeView, ReplyListView, TopicAskView,ThumbView,
+from .views import (ReplyView, ReplyListView, TopicAskView, ThumbView,
                     TopicEditView, TopicListView, TopicPreviewView, TopicView)
 
 site = Blueprint('topic', __name__, url_prefix='/api' )
@@ -22,6 +22,7 @@ pull_topic = TopicListView.as_view('pull_list')
 topic_good_list = TopicListView.as_view('good')
 topic_token_list = TopicListView.as_view('topic_token_list')
 topic = TopicView.as_view('topic')
+delete_topic = TopicView.as_view('delete_topic')
 ask_view = TopicAskView.as_view('ask')
 edit_view = TopicEditView.as_view('edit')
 preview_view = TopicPreviewView.as_view('preview')
@@ -31,7 +32,7 @@ reply_early = ReplyListView.as_view('reply_early')
 reply_good = ReplyListView.as_view('reply_good')
 put_reply = ReplyListView.as_view('put_reply')
 #reply = ReplyView.as_view('reply')
-like_view = LikeView.as_view('reply_like')
+reply_delete = ReplyView.as_view('reply_delete')
 topic_thumb = ThumbView.as_view('topic_thumb')
 reply_thumb = ThumbView.as_view('reply_thumb')
 
@@ -42,13 +43,14 @@ site.add_url_rule('/topic', view_func=pull_topic)
 site.add_url_rule('/topic/token/<token>/<int:page>', view_func=topic_token_list)
 site.add_url_rule('/topic/good', view_func=topic_good_list)
 site.add_url_rule('/topic/<int:topicId>/<int:page>', view_func=topic)
+site.add_url_rule('/topic/delete/<int:topicId>', view_func=delete_topic)
 site.add_url_rule('/topic/edit/<int:topicId>', view_func=edit_view)
 site.add_url_rule('/topic/replies/<int:topicId>/<int:page>', view_func=reply_list)
 site.add_url_rule('/topic/replies/early/<int:topicId>/<int:page>', view_func=reply_early)
 site.add_url_rule('/topic/replies/good/<int:topicId>/<int:page>', view_func=reply_good)
 site.add_url_rule('/topic/replies/<int:topicId>', view_func=put_reply)
 site.add_url_rule('/comment/replies/<int:topicId>', view_func=put_reply)
-site.add_url_rule('/replies/<int:replyId>/like', view_func=like_view)
+site.add_url_rule('/reply/delete/<int:replyId>', view_func=reply_delete)
 site.add_url_rule('/topic/<thumb>/<int:id>', view_func=topic_thumb)
 site.add_url_rule('/reply/<thumb>/<int:id>', view_func=reply_thumb)
 
