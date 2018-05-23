@@ -114,6 +114,7 @@ export default {
             alert('先去登录')
             this.$router.push('/login')
           } else {
+            console.log(data)
             if (data.data.content !== '') {
               let backFt = {}
               backFt.author_id = data.data.author_id
@@ -133,6 +134,7 @@ export default {
               backFt.picture = data.data.picture
               backFt.reply_user = null
               backFt.replies_count = 0
+              backFt.bool_delete = data.data.bool_delete
               if (this.showDilog) {
                 this.$emit('backFtNav', backFt)
                 this.showDilog = false

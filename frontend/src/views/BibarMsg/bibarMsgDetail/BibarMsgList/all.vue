@@ -117,9 +117,9 @@
                       <!-- @ 样式 -->
                       <p class="replyAuthor" v-if="item.at_user !== ''">@{{item.at_user}}:&nbsp;<span class="replyBackConten" style="display:inline-block;font-weight: normal;" v-html="replyFun(item.reference)"></span></p>
                       <!-- <p>{{item}}</p> -->
-                      <p v-html="commentContent(item.content)"></p>
+                      <p v-html="commentContent(item.content,item.id)"></p>
                       <!--展开-->
-              <a style="font-size:16px;"  v-if='item.content !== undefined && item.content.length > 300' href="#" class="bibar-indexintromore text-theme" @click="changeMore(item.id)">{{item.id === moreId ? '收起' : '展开'}}<i style="font-size:16px;" class="iconfont" v-if='more === "展开"'>&#xe692;</i><i style="font-size:16px;" class="iconfont" v-if='more === "收起"'>&#xe693;</i></a>
+              <a style="font-size:16px; white-space:nowrap;"  v-if='item.content !== undefined && item.content.length - imgCommentLength[item.id] > 200' href="#" class="bibar-indexintromore text-theme" @click="changeMore(item.id)">{{item.id === moreId ? '收起' : '展开'}}<i style="font-size:16px;" class="iconfont" v-if='more === "展开"'>&#xe692;</i><i style="font-size:16px;" class="iconfont" v-if='more === "收起"'>&#xe693;</i></a>
                     </div>
                     <div class="set" style="margin-left:42px;">
                       <ul class="bibar-indexNewsItem-infro">
@@ -160,18 +160,18 @@
                 </div>
               </div>
               <!-- 分页条 -->
-            <div class="pages" v-if='showPage && index === i'>
+            <div class="pages" v-if='cpageCountObj[tmp.id] > 0'>
               <ul class="mo-paging">
                 <!-- prev -->
                 <!-- first -->
-                <li :class="['paging-item', 'paging-item--first', {'paging-item--disabled' : cpno === 1}]" @click="first">{{$t('pages.first')}}</li>
-                <li class="paging-item paging-item--prev" :class="{'paging-item--disabled' : cpno === 1}" @click="prev">{{$t('pages.prev')}}</li>
-                <li :class="['paging-item', {'paging-item--current' : cpno === tmp}]" :key="index" v-for="(tmp, index) in showPageBtn" @click="go(tmp)">{{tmp}}</li>
+                <li :class="['paging-item', 'paging-item--first', {'paging-item--disabled' : cpno[tmp.id] === 1}]" @click="first(tmp.id)">{{$t('pages.first')}}</li>
+                <li class="paging-item paging-item--prev" :class="{'paging-item--disabled' : cpno[tmp.id] === 1}" @click="prev(tmp.id)">{{$t('pages.prev')}}</li>
+                <li :class="['paging-item', {'paging-item--current' : cpno[tmp.id] === page}]" :key="index" v-for="(page, index) in pageNumber[tmp.id]" @click="go(page,tmp.id)">{{page}}</li>
                 <!--<li :class="['paging-item', 'paging-item--more']" @click="next" v-if="showNextMore">...</li>-->
                 <!-- next -->
-                <li :class="['paging-item', 'paging-item--next', {'paging-item--disabled' : cpno === cpageCount}]" @click="next">{{$t('pages.next')}}</li>
+                <li :class="['paging-item', 'paging-item--next', {'paging-item--disabled' : cpno[tmp.id] === cpageCountObj[tmp.id]}]" @click="next(tmp.id)">{{$t('pages.next')}}</li>
                 <!-- last -->
-                <li :class="['paging-item', 'paging-item--last', {'paging-item--disabled' : cpno === cpageCount}]" @click="last">{{$t('pages.end')}}</li>
+                <li :class="['paging-item', 'paging-item--last', {'paging-item--disabled' : cpno[tmp.id] === cpageCountObj[tmp.id]}]" @click="last(tmp.id)">{{$t('pages.end')}}</li>
               </ul>
             </div>
             </div>
@@ -244,7 +244,7 @@ export default{
       isBad: 0,
       // 分页
       replyId: 0,
-      cpno: 1,
+      cpno: {},
       cpageLimit: 10,
       cpageCount: 0,
       showPrevMore: false,
@@ -260,7 +260,10 @@ export default{
       // 展开
       more: '展开',
       moreId: '',
-      sortNow: 0
+      sortNow: 0,
+      pageNumber: {},
+      cpageCountObj: {},
+      imgCommentLength: {}
     }
   },
   components: {
@@ -275,20 +278,6 @@ export default{
     },
     chartId () {
       return this.$store.state.chartId.chartId
-    },
-    showPageBtn () {
-      let pageArr = []
-      if (this.cpageCount <= 5) {
-        for (let i = 1; i <= this.cpageCount; i++) {
-          pageArr.push(i)
-        }
-        return pageArr
-      }
-      if (this.cpno <= 2) return [1, 2, 3, '···', this.cpageCount]
-      if (this.cpno >= this.cpageCount - 1) return [1, '···', this.cpageCount - 2, this.cpageCount - 1, this.cpageCount]
-      if (this.cpno === 3) return [1, 2, 3, 4, '···', this.cpageCount]
-      if (this.cpno === this.cpageCount - 2) return [1, '···', this.cpageCount - 3, this.cpageCount - 2, this.cpageCount - 1, this.cpageCount]
-      return [1, '···', this.cpno - 1, this.cpno, this.cpno + 1, '···', this.cpageCount]
     }
   },
   watch: {
@@ -459,11 +448,17 @@ export default{
       this.changeIndex = false
       this.replyId = id
       this.showLoaderComment = true
-      get(`/api/topic/${id}/${this.cpno}`).then(data => {
+      if (!this.cpno[id]) {
+        this.cpno[id] = 1
+      }
+      get(`/api/topic/${id}/${this.cpno[id]}`).then(data => {
         if (!this.nowData[id]) this.$set(this.nowData, id, data.data.replies)
         else this.nowData[id] = data.data.replies
+        if (!this.pageNumber[id]) this.$set(this.pageNumber, id, this.showPageBtn(id, data.data.page_count))
+        else this.pageNumber[id] = this.showPageBtn(id, data.data.page_count)
         this.showLoaderComment = false
         this.cpageCount = data.data.page_count
+        this.cpageCountObj[id] = this.cpageCount
         if (this.cpageCount > 1) {
           this.showPage = true
         } else {
@@ -628,14 +623,24 @@ export default{
       }
     },
     // 评论回复文字处理
-    commentContent (val) {
+    commentContent (val, id) {
       if (val === undefined) {
         return
       }
       val = val.replace(/<p[^>]*>|<\/p>|<h-char[^>]*>|<\/h-char>|<h-inner>|<\/h-inner>/g, '')
-      if (this.more === '展开') {
-        if (val.length > 300) {
-          return val.substring(0, 300) + '...'
+      // let imgArr = val.match(/<img[^>]*>/gi)
+      if (!this.imgCommentLength[id]) {
+        this.imgCommentLength[id] = 0
+      }
+      // if (val.indexOf('img') > 0) {
+      //   for (let i = 0; i < imgArr.length; i++) {
+      //     this.imgCommentLength[id] += imgArr[i].length
+      //   }
+      // }
+      this.imgCommentLength[id] = val.lastIndexOf('data-w-e="1">')
+      if (val.length - this.imgCommentLength[id] > 200) {
+        if (this.more === '展开') {
+          return val.substring(0, 200 + this.imgCommentLength[id]) + '...'
         } else {
           return val
         }
@@ -696,39 +701,40 @@ export default{
       }
     },
     // 分页
-    prev () {
-      if (this.cpno > 1) {
-        this.go(this.cpno - 1)
+    prev (id) {
+      if (this.cpno[id] > 1) {
+        this.go(this.cpno[id] - 1, id)
       }
     },
-    next () {
-      if (this.cpno < this.cpageCount) {
-        this.go(this.cpno + 1)
+    next (id) {
+      if (this.cpno[id] < this.cpageCount) {
+        this.go(this.cpno[id] + 1, id)
       }
     },
-    first () {
-      if (this.cpno !== 1) {
-        this.go(1)
+    first (id) {
+      if (this.cpno[id] !== 1) {
+        this.go(1, id)
       }
     },
-    last () {
-      if (this.cpno !== this.cpageCount) {
-        this.go(this.cpageCount)
+    last (id) {
+      if (this.cpno[id] !== this.cpageCount) {
+        this.go(this.cpageCount, id)
       }
     },
-    go (page) {
+    go (page, id) {
       if (page === '...') {
         return
       }
       this.chartShow = 0
       this.summaryList = []
-      if (this.cpno !== page) {
-        this.cpno = page
+      if (this.cpno[id] !== page) {
+        this.cpno[id] = page
       }
       this.showLoaderComment = true
-      get(`/api/topic/${this.replyId}/${page}`).then(data => {
+      get(`/api/topic/${id}/${page}`).then(data => {
         this.showLoaderComment = false
-        this.nowData[this.replayId] = data.data.replies
+        if (!this.nowData[id]) this.$set(this.nowData, id, data.data.replies)
+        else this.nowData[id] = data.data.replies
       })
     },
     // 回复人文字处理
@@ -742,6 +748,21 @@ export default{
         }
         return newTxt
       }
+    },
+    showPageBtn (id, tatal) {
+      let pageArr = []
+      if (tatal <= 5) {
+        for (let i = 1; i <= tatal; i++) {
+          pageArr.push(i)
+        }
+        return pageArr
+      }
+      // if (!this.cpno[i]) this.cpno[i] = 1
+      if (this.cpno[id] <= 2) return [1, 2, 3, '···', tatal]
+      if (this.cpno[id] >= tatal - 1) return [1, '···', tatal - 2, tatal - 1, tatal]
+      if (this.cpno[id] === 3) return [1, 2, 3, 4, '···', tatal]
+      if (this.cpno[id] === tatal - 2) return [1, '···', tatal - 3, tatal - 2, tatal - 1, tatal]
+      return [1, '···', this.cpno[id] - 1, this.cpno[id], this.cpno[id] + 1, '···', tatal]
     }
   }
   // watch: {
