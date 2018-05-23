@@ -8,8 +8,8 @@
       <div class="span6">
         <ul class="breadcrumb">
           <li v-for='(item, index) in crumb' :key="index" :class='{crumbActive:item.path === "last"}'>
-          <router-link :class='{crumbActive:item.path === "last"}' :to="item.path === '' ? '/' : item.path"><i class="iconfont" v-if='item.label === "首页"' style="margin-right:10px;">&#xe65a;</i>{{item.label}}</router-link>
-            <span class="divider" v-if='item.path !== "last"'>></span>
+          <router-link :class='{crumbActive:item.path === "last"}' :to="item.path === '' ? '/' : item.path"><i class="iconfont" v-if="item.label === $t('breadcrumb.home')" style="margin-right:10px;">&#xe65a;</i>{{item.label}}</router-link>
+            <!--<span class="divider" v-if='item.path !== "last"'>></span>-->
           </li>
         </ul>
       </div>
@@ -27,7 +27,7 @@
           <div class="avatar_subtitle">
             <!--<a href="" target="_blank" class="time">{{articleDetail.diff_time}}前</a>
             <span class="source">·&nbsp;来自币吧</span>-->
-            <a href="javascript:void(0)" @click='toBibar(articleDetail)'> <span class="time">{{articleDetail.diff_time !== '0秒' ? articleDetail.diff_time + '前' : '刚刚发布'}} - 来自{{articleDetail.token !== null ? articleDetail.zh_token : '币吧'}}</span> </a>
+            <a href="javascript:void(0)" @click='toBibar(articleDetail)'> <span class="time">{{articleDetail.diff_time !== 0 ? articleDetail.diff_time + $t('list.ago') : $t('list.justNow')}} - {{$t('list.from')}}{{articleDetail.token !== null ? articleDetail.zh_token : $t('list.bclub')}}</span> </a>
           </div>
         </div>
       </div>
@@ -70,7 +70,7 @@
               <li class="set-choseStar" @click="collectionTopic(articleDetail)"> <a href="javascript:void(0)" class="btn-article-retweet" :class='{collectionActive:articleDetail.collect_bool}'>
           <i class="iconfont icon-star">&#xe6a7;</i>{{$t('list.collect')}}
         </a> </li>
-        <!--<li class="set-delList" @click="delTopic(tmp)"> <a href="javascript:void(0);"><i class="iconfont icon-del">&#xe78d;</i>{{$t('list.delete')}}</a> </li>-->
+        <li class="set-delList" @click="delTopic(tmp)"> <a href="javascript:void(0);"><i class="iconfont icon-del">&#xe78d;</i>{{$t('list.delete')}}</a> </li>
               <!-- <li> <a href="javascript:void(0);"><i class="iconfont icon-fenxiang"></i> 分享</a> </li> -->
               <!-- <li class="set-choseShang"> <a href="javascript:void(0);"><i class="iconfont icon-dashang"></i> 打赏<span>438</span></a> </li> -->
               <li>
@@ -114,9 +114,9 @@
             <div class="comment-all">
               <h3>{{$t('list.allComments')}}({{repliesCcount}})</h3>
               <div class="comment-sort">
-                <a href="javascript:void(0)" @click='sortList(articleDetail.id,0)' :class="{active:sortNow === 0}">最近</a>
-                <a href="javascript:void(0)" @click='sortList(articleDetail.id,1)' :class="{active:sortNow === 1}">最早</a>
-                <a href="javascript:void(0)" @click='sortList(articleDetail.id,2)' :class="{active:sortNow === 2}">赞</a>
+                <a href="javascript:void(0)" @click='sortList(articleDetail.id,0)' :class="{active:sortNow === 0}">{{$t('list.newest')}}</a>
+                <a href="javascript:void(0)" @click='sortList(articleDetail.id,1)' :class="{active:sortNow === 1}">{{$t('list.earliest')}}</a>
+                <a href="javascript:void(0)" @click='sortList(articleDetail.id,2)' :class="{active:sortNow === 2}">{{$t('list.likeMost')}}</a>
               </div>
                 <div class="comment-list">
                   <!-- <pull-to> -->
@@ -129,7 +129,7 @@
                       <div class="comment-item-hd">
                         <span href="#" class="name">{{item.author}}</span>
                         <!--<span class="time">{{item.diff_time}}前发布</span>-->
-                        <span class="time">{{item.diff_time !== '0秒' ? item.diff_time + '前' : '刚刚'}}发布</span>
+                        <span class="time">{{item.diff_time !== 0 ? item.diff_time + $t('list.ago') : $t('list.justNow')}}</span>
                       </div>
                       <!-- @ 样式 -->
                       <div class="replyAuthor" v-if="item.at_user !== ''">@{{item.at_user}}:&nbsp;<span class="replyBackConten" style="display:inline;font-weight: normal;" v-html="replyFun(item.reference)"></span></div>
@@ -220,7 +220,7 @@ export default {
       toId: 0,
       pageCount: 0,
       pno: 1,
-      bottomText: '加载中...',
+      bottomText: '',
       listLoding: true,
       noLoading: false,
       loadingShow: true,
@@ -278,12 +278,12 @@ export default {
             this.showLoaderComment = false
             this.nowData = this.nowData.concat(data.data.replies)
             this.pno++
-            this.bottomText = '加载中...'
+            this.bottomText = this.$t('prompt.loading')
             // this.loadingImg = '../../assets/img/listLoding.png'
           })
         }, 1000)
       } else {
-        this.bottomText = '没有啦'
+        this.bottomText = this.$t('prompt.noMore')
         this.listLoding = false
         this.noLoading = true
         // this.loadingImg = '../../assets/img/noLoading.png'
@@ -509,11 +509,11 @@ export default {
     },
     // 艾特图片处理
     replyFun (val) {
-      if (val === undefined && val === null) {
+      if (val === undefined || val === null) {
         return
       }
-      let reply = val.replace(/<p[^>]*>|<\/p>|<h-char[^>]*>|<\/h-char>|<h-inner>|<\/h-inner>/g, '')
-      if (reply.indexOf('img') > 0) {
+      let reply = val.replace(/<p[^>]*>|<\/p>|<h-char[^>]*>|<\/h-char>|<h-inner[^>]*>|<\/h-inner>/g, '')
+      if (reply.indexOf('data-w-e') > 0) {
         let imgLength = 0
         let imgArr = reply.match(/<img[^>]*>/gi)
         if (imgArr === null) {
@@ -522,7 +522,9 @@ export default {
         for (let i = 0; i < imgArr.length; i++) {
           imgLength += imgArr[i].length
         }
-        return reply.substring(0, 50 + imgLength)
+        console.log(imgLength)
+        console.log(reply.substring(imgLength))
+        return reply.substring(0, 40 + imgLength)
       } else if (/^\/static.*/ig.test(reply)) {
         return '图片评论' + `<a style='color:#0181FF' href='${reply}'><i class='iconfont'>&#xe694;</i>查看图片</a>`
       } else if (reply.length > 100) {
@@ -536,7 +538,7 @@ export default {
       if (val === undefined) {
         return
       }
-      val = val.replace(/<p[^>]*>|<\/p>|<h-char[^>]*>|<\/h-char>|<h-inner>|<\/h-inner>/g, '')
+      val = val.replace(/<p[^>]*>|<\/p>|<h-char[^>]*>|<\/h-char>|<h-inner[^>]*>|<\/h-inner>|<br>/g, '')
       // let imgArr = val.match(/<img[^>]*>/gi)
       if (!this.imgCommentLength[id]) {
         this.imgCommentLength[id] = 0
@@ -799,7 +801,7 @@ export default {
   position: relative;
 }
 .comment-all>h3 {
-    margin-top: 15px;
+    margin-top: 30px;
     font-size: 15px;
 }
 .comment-sort {
@@ -838,7 +840,7 @@ export default {
 }
 .comment-item{
     padding: 15px 0 10px;
-    border-top: 1px solid #edf0f5;
+    // border-bottom: 1px solid #edf0f5;
     margin: 15px 0;
 }
 .comment-item .avatar {

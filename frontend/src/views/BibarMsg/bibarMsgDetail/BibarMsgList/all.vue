@@ -10,7 +10,7 @@
         <div class="bibar-indexNewsItem">
           <div class="speech" v-if="tmp.reply_user !== null"> <span><span class="time">{{tmp.reply_time}}</span>{{$t('list.ago')}} {{tmp.reply_user}} {{$t('list.commented')}}</span><i class="iconfont icon-dot"></i></div>
           <div class="user">
-             <div class="bibar-author"> <a href="#"> <span class="photo"><img :src="tmp.avatar"></span> <span class="name">{{tmp.author}}</span> <span class="time">{{tmp.diff_time !== '0秒' ? tmp.diff_time + '前' : '刚刚发布'}} - {{$t('list.from')}}{{tmp.token !== null ? tmp.zh_token : '币吧'}}</span> </a> </div>
+             <div class="bibar-author"> <a href="#"> <span class="photo"><img :src="tmp.avatar"></span> <span class="name">{{tmp.author}}</span> <span class="time">{{tmp.diff_time !== 0 ? tmp.diff_time + $t('list.ago') : $t('list.justNow')}} - {{$t('list.from')}}{{tmp.token !== null ? tmp.zh_token : $t('list.bclub')}}</span> </a> </div>
             <div class="bibar-list">
               <div class="tit"><a href="javascript:void(0)" @click="goDetail(tmp.id)">{{tmp.title}}</a></div>
           <div class="txt indexNewslimitHeight" @click="goDetail(tmp.id)">
@@ -82,9 +82,9 @@
             <div class="comment-all">
               <h3>{{$t('list.allComments')}}({{tmp.replies_count}})</h3>
                <div class="comment-sort">
-                <a href="javascript:void(0)" @click='sortList(0, tmp.id)' :class="{active:sortNow === 0}">最近</a>
-                <a href="javascript:void(0)" @click='sortList(1, tmp.id)' :class="{active:sortNow === 1}">最早</a>
-                <a href="javascript:void(0)" @click='sortList(2, tmp.id)' :class="{active:sortNow === 2}">赞</a>
+                <a href="javascript:void(0)" @click='sortList(0, tmp.id)' :class="{active:sortNow === 0}">{{$t('list.newest')}}</a>
+                <a href="javascript:void(0)" @click='sortList(1, tmp.id)' :class="{active:sortNow === 1}">{{$t('list.earliest')}}</a>
+                <a href="javascript:void(0)" @click='sortList(2, tmp.id)' :class="{active:sortNow === 2}">{{$t('list.likeMost')}}</a>
               </div>
               <!-- 回复内容 -->
                   <!-- <div class="comment-item" data-index='' data-id='' v-for="(tmp,rIndex) in replyContent" :key='rIndex'>
@@ -227,7 +227,7 @@ export default{
       upId: 0,
       tpno: 1,
       pageCount: 0,
-      bottomText: '加载中...',
+      bottomText: '',
       listLoding: true,
       noLoading: false,
       up: 0,
@@ -312,11 +312,12 @@ export default{
       this.bibarArticles = data.data.topics
       this.pageCount = data.data.page_count
       if (this.bibarArticles.length > 0) {
+        this.bottomText = this.$t('prompt.loading')
         this.loadingShow = true
       }
       let that = this
       if (this.pageCount === 1) {
-        this.bottomText = '没有啦'
+        this.bottomText = this.$t('prompt.noMore')
         this.listLoding = false
         this.noLoading = true
         // this.loadingImg = '../../assets/img/noLoading.png'
@@ -343,12 +344,12 @@ export default{
           get(`/api/topic/token/${this.$route.params.currency}/${this.tpno}`).then(data => {
             this.showLoader = false
             this.bibarArticles = this.bibarArticles.concat(data.data.topics)
-            this.bottomText = '加载中...'
+            this.bottomText = this.$t('prompt.loading')
             // this.loadingImg = '../../assets/img/listLoding.png'
           })
         }, 1000)
       } else {
-        this.bottomText = '没有啦'
+        this.bottomText = this.$t('prompt.noMore')
         this.listLoding = false
         this.noLoading = true
         // this.loadingImg = '../../assets/img/noLoading.png'
@@ -436,8 +437,8 @@ export default{
         path: `/details/${this.lid}`,
         query: {
           a: JSON.stringify([
-            {label: '首页', path: '/'},
-            {label: '币讯', path: '/bibarLayout'},
+            {label: this.$t('breadcrumb.home'), path: '/'},
+            {label: this.$t('breadcrumb.coinNews'), path: '/bibarLayout'},
             {label: JSON.parse(this.$route.query.b).zh, path: 'last'}
           ])
         }
@@ -603,21 +604,26 @@ export default{
     },
     // 艾特图片处理
     replyFun (val) {
-      if (val === undefined) {
+      if (val === undefined || val === null) {
         return
       }
-      let reply = val.replace(/<p[^>]*>|<\/p>|<h-char[^>]*>|<\/h-char>|<h-inner>|<\/h-inner>/g, '')
-      if (reply.indexOf('img') > 0) {
+      let reply = val.replace(/<p[^>]*>|<\/p>|<h-char[^>]*>|<\/h-char>|<h-inner[^>]*>|<\/h-inner>/g, '')
+      if (reply.indexOf('data-w-e') > 0) {
         let imgLength = 0
         let imgArr = reply.match(/<img[^>]*>/gi)
+        if (imgArr === null) {
+          return
+        }
         for (let i = 0; i < imgArr.length; i++) {
           imgLength += imgArr[i].length
         }
-        return reply.substring(0, 50 + imgLength)
+        console.log(imgLength)
+        console.log(reply.substring(imgLength))
+        return reply.substring(0, 40 + imgLength)
       } else if (/^\/static.*/ig.test(reply)) {
         return '图片评论' + `<a style='color:#0181FF' href='${reply}'><i class='iconfont'>&#xe694;</i>查看图片</a>`
       } else if (reply.length > 100) {
-        return reply.substring(0, 50) + '...'
+        return reply.substring(0, 40) + '...'
       } else {
         return reply
       }
@@ -627,7 +633,7 @@ export default{
       if (val === undefined) {
         return
       }
-      val = val.replace(/<p[^>]*>|<\/p>|<h-char[^>]*>|<\/h-char>|<h-inner>|<\/h-inner>/g, '')
+      val = val.replace(/<p[^>]*>|<\/p>|<h-char[^>]*>|<\/h-char>|<h-inner[^>]*>|<\/h-inner>|<br>/g, '')
       // let imgArr = val.match(/<img[^>]*>/gi)
       if (!this.imgCommentLength[id]) {
         this.imgCommentLength[id] = 0
@@ -995,7 +1001,7 @@ svg:not(:root) {
 }
 .comment-item{
     padding: 15px 0 10px;
-    border-top: 1px solid #edf0f5;
+    /*border-bottom: 1px solid #edf0f5;*/
     margin: 15px 0;
 }
 .comment-item .avatar {

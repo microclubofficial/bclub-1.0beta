@@ -13,6 +13,12 @@ export default {
     logout: '退出登录',
     noNews: '暂无消息'
   },
+  breadcrumb: {
+    home: '首页',
+    all: '全部',
+    coinNews: '币讯',
+    personal: '个人中心'
+  },
   column: {
     hotCoins: '热门币',
     all: '全部',
@@ -80,7 +86,9 @@ export default {
     emailError: '邮箱格式不正确',
     spaceForbidden: '不能输入空格',
     loginFirst: '请先登录',
-    emailSent: '一封邮件已发送，请至邮箱查收完成验证'
+    emailSent: '一封邮件已发送，请至邮箱查收完成验证',
+    loading: '加载中...',
+    noMore: '没有啦'
   },
   message: {
     sthToSay: '有什么消息告诉大家...'
@@ -104,13 +112,18 @@ export default {
   },
   list: {
     ago: '前',
+    justNow: '刚刚发布',
     commented: '发表了评论',
     from: '来自',
+    bclub: '币吧',
     comment: '评论',
     collect: '收藏',
     delete: '删除',
     reply: '回复',
-    allComments: '全部评论'
+    allComments: '全部评论',
+    earliest: '最早',
+    newest: '最近',
+    likeMost: '赞'
   },
   personalCenter: {
     personal: '个人中心',

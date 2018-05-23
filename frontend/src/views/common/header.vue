@@ -4,7 +4,9 @@
     <header class="bibar-header">
       <section class="bibar-w1100">
         <!--Logo-->
-        <h1 class="bibar-headerlogo" title="币吧"><img src="../../assets/img/logo-BCLUB.png"></h1>
+        <h1 class="bibar-headerlogo">
+          <router-link :to="{path:'/'}"><img src="../../assets/img/logo-BCLUB.png"></router-link>
+        </h1>
         <!--菜单-->
         <nav class="bibar-headernav">
           <ul class="bibar-headernavlist">
@@ -80,7 +82,6 @@ export default {
       this.language = getToken('language')
       // console.log(this.language)
     }
-    // this.remember_token = rememberToken('remember_token')
   },
   methods: {
     switchLang (lang) {

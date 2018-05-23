@@ -13,6 +13,12 @@ export default {
     logout: 'Logout',
     noNews: 'No messages'
   },
+  breadcrumb: {
+    home: 'Home',
+    all: 'All',
+    coinNews: 'Coin News',
+    personal: 'Personal center'
+  },
   column: {
     hotCoins: 'Hot Coins',
     all: 'All',
@@ -80,7 +86,9 @@ export default {
     emailError: 'The format of email is not correct',
     spaceForbidden: 'Spaces are not allowed',
     loginFirst: 'Please login first!',
-    emailSent: 'An email has been sent. Please check and verify it.'
+    emailSent: 'An email has been sent. Please check and verify it.',
+    loading: 'Loading...',
+    noMore: 'No more'
   },
   message: {
     sthToSay: 'Something to say...'
@@ -103,14 +111,19 @@ export default {
     next: 'Next'
   },
   list: {
-    ago: 'ago',
+    ago: ' ago',
+    justNow: 'Published just now',
     commented: 'made a comment',
-    from: 'from',
+    from: 'from ',
+    bclub: 'Bclub',
     comment: 'Comment',
     collect: 'Collect',
     delete: 'Delete',
     reply: 'Reply',
-    allComments: 'All comments'
+    allComments: 'All comments',
+    earliest: 'Earliest',
+    newest: 'Newest',
+    likeMost: 'Like most'
   },
   personalCenter: {
     personal: 'Personal Center',

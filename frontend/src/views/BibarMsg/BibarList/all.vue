@@ -7,7 +7,7 @@
         <div class="bibar-indexNewsItem">
           <div class="speech" v-if="tmp.reply_user !== null"> <span><span class="time">{{tmp.reply_time}}</span>{{$t('list.ago')}} {{tmp.reply_user}} {{$t('list.commented')}}</span><i class="iconfont icon-dot"></i></div>
           <div class="user">
-            <div class="bibar-author"> <a href="#"> <span class="photo"><img :src="tmp.avatar"></span> <span class="name">{{tmp.author}}</span> <span class="time">{{tmp.diff_time}}前发布</span> </a> </div>
+            <div class="bibar-author"> <a href="#"> <span class="photo"><img :src="tmp.avatar"></span> <span class="name">{{tmp.author}}</span> <span class="time">{{tmp.diff_time !== 0 ? tmp.diff_time + $t('list.ago') : $t('list.justNow')}}</span> </a> </div>
           </div>
           <div class="tit"><a href="javascript:void(0)" @click="goDetail(tmp.id)">{{tmp.title}}</a></div>
           <div class="txt indexNewslimitHeight" @click="goDetail(tmp.id)">
@@ -213,7 +213,7 @@ export default{
       upId: 0,
       tpno: 1,
       pageCount: 0,
-      bottomText: '加载中...',
+      bottomText: '',
       listLoding: true,
       noLoading: false,
       up: 0,
@@ -285,12 +285,12 @@ export default{
           this.tpno++
           get(`/api/topic/${this.tpno}`).then(data => {
             this.articles = this.articles.concat(data.data.topics)
-            this.bottomText = '加载中...'
+            this.bottomText = this.$t('prompt.loading')
             // this.loadingImg = '../../assets/img/listLoding.png'
           })
         }, 1000)
       } else {
-        this.bottomText = '没有啦'
+        this.bottomText = this.$t('prompt.noMore')
         this.listLoding = false
         this.noLoading = true
         // this.loadingImg = '../../assets/img/noLoading.png'
@@ -770,7 +770,7 @@ svg:not(:root) {
 }
 .comment-item{
     padding: 15px 0 10px;
-    border-top: 1px solid #edf0f5;
+    /*border-bottom: 1px solid #edf0f5;*/
     margin: 15px 0;
 }
 .comment-item .avatar {
