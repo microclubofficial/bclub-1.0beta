@@ -8,8 +8,8 @@
       <div class="span6">
         <ul class="breadcrumb">
           <li v-for='(item, index) in crumb' :key="index" :class='{crumbActive:item.path === "last"}'>
-          <router-link :class='{crumbActive:item.path === "last"}' :to="item.path === '' ? '/' : item.path"><i class="iconfont" v-if='item.label === "首页"' style="margin-right:10px;">&#xe65a;</i>{{item.label}}</router-link>
-            <span class="divider" v-if='item.path !== "last"'>></span>
+          <router-link :class='{crumbActive:item.path === "last"}' :to="item.path === '' ? '/' : item.path"><i class="iconfont" v-if="item.label === $t('breadcrumb.home')" style="margin-right:10px;">&#xe65a;</i>{{item.label}}</router-link>
+            <!--<span class="divider" v-if='item.path !== "last"'>></span>-->
           </li>
         </ul>
       </div>
@@ -27,7 +27,7 @@
           <div class="avatar_subtitle">
             <!--<a href="" target="_blank" class="time">{{articleDetail.diff_time}}前</a>
             <span class="source">·&nbsp;来自币吧</span>-->
-            <a href="javascript:void(0)" @click='toBibar(articleDetail)'> <span class="time">{{articleDetail.diff_time !== '0秒' ? articleDetail.diff_time + '前' : '刚刚发布'}} - 来自{{articleDetail.token !== null ? articleDetail.zh_token : '币吧'}}</span> </a>
+            <a href="javascript:void(0)" @click='toBibar(articleDetail)'> <span class="time">{{articleDetail.diff_time !== 0 ? articleDetail.diff_time + $t('list.ago') : $t('list.justNow')}} - {{$t('list.from')}}{{articleDetail.token !== null ? articleDetail.zh_token : $t('list.bclub')}}</span> </a>
           </div>
         </div>
       </div>
@@ -114,9 +114,9 @@
             <div class="comment-all">
               <h3>{{$t('list.allComments')}}({{repliesCcount}})</h3>
               <div class="comment-sort">
-                <a href="javascript:void(0)" @click='sortList(0, tmp.id)' :class="{active:sortNow === 0}">最近</a>
-                <a href="javascript:void(0)" @click='sortList(1, tmp.id)' :class="{active:sortNow === 1}">最早</a>
-                <a href="javascript:void(0)" @click='sortList(2, tmp.id)' :class="{active:sortNow === 2}">赞</a>
+                <a href="javascript:void(0)" @click='sortList(0, tmp.id)' :class="{active:sortNow === 0}">{{$t('list.newest')}}</a>
+                <a href="javascript:void(0)" @click='sortList(1, tmp.id)' :class="{active:sortNow === 1}">{{$t('list.earliest')}}</a>
+                <a href="javascript:void(0)" @click='sortList(2, tmp.id)' :class="{active:sortNow === 2}">{{$t('list.likeMost')}}</a>
               </div>
                 <div class="comment-list">
                   <!-- <pull-to> -->
@@ -129,7 +129,7 @@
                       <div class="comment-item-hd">
                         <span href="#" class="name">{{item.author}}</span>
                         <!--<span class="time">{{item.diff_time}}前发布</span>-->
-                        <span class="time">{{item.diff_time !== '0秒' ? item.diff_time + '前' : '刚刚'}}发布</span>
+                        <span class="time">{{item.diff_time !== 0 ? item.diff_time + $t('list.ago') : $t('list.justNow')}}</span>
                       </div>
                       <!-- @ 样式 -->
                       <div class="replyAuthor" v-if="item.at_user !== ''">@{{item.at_user}}:&nbsp;<span class="replyBackConten" style="display:inline-block;font-weight: normal;" v-html="replyFun(item.reference)"></span></div>

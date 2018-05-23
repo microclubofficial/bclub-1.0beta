@@ -82,7 +82,6 @@ export default {
       this.language = getToken('language')
       // console.log(this.language)
     }
-    // this.remember_token = rememberToken('remember_token')
   },
   methods: {
     switchLang (lang) {

@@ -10,7 +10,7 @@
         <div class="bibar-indexNewsItem">
           <div class="speech" v-if="tmp.reply_user !== null"> <span><span class="time">{{tmp.reply_time}}</span>{{$t('list.ago')}} {{tmp.reply_user}} {{$t('list.commented')}}</span><i class="iconfont icon-dot"></i></div>
           <div class="user">
-            <div class="bibar-author"> <a href="javascript:void(0)"> <span class="photo"><img :src="tmp.avatar"></span> <span class="name">{{tmp.author}}</span> <span class="time" @click='toBibar(tmp)'>{{tmp.diff_time !== '0秒' ? tmp.diff_time + '前' : '刚刚发布'}} - {{$t('list.from')}}{{tmp.token !== null ? tmp.zh_token : '币吧'}}</span> </a> </div>
+            <div class="bibar-author"> <a href="javascript:void(0)"> <span class="photo"><img :src="tmp.avatar"></span> <span class="name">{{tmp.author}}</span> <span class="time" @click='toBibar(tmp)'>{{tmp.diff_time !== 0 ? tmp.diff_time + $t('list.ago') : $t('list.justNow')}} - {{$t('list.from')}}{{tmp.token !== null ? tmp.zh_token : $t('list.bclub')}}</span> </a> </div>
             <div class="bibar-list">
               <div class="tit"><a href="javascript:void(0)" @click="goDetail(tmp.id)">{{tmp.title}}</a></div>
           <div class="txt indexNewslimitHeight" @click="goDetail(tmp.id)">
@@ -80,9 +80,9 @@
             <div class="comment-all">
               <h3>{{$t('list.allComments')}}({{tmp.replies_count}})</h3>
               <div class="comment-sort">
-                <a href="javascript:void(0)" @click='sortList(0, tmp.id)' :class="{active:sortNow === 0}">最近</a>
-                <a href="javascript:void(0)" @click='sortList(1, tmp.id)' :class="{active:sortNow === 1}">最早</a>
-                <a href="javascript:void(0)" @click='sortList(2, tmp.id)' :class="{active:sortNow === 2}">赞</a>
+                <a href="javascript:void(0)" @click='sortList(0, tmp.id)' :class="{active:sortNow === 0}">{{$t('list.newest')}}</a>
+                <a href="javascript:void(0)" @click='sortList(1, tmp.id)' :class="{active:sortNow === 1}">{{$t('list.earliest')}}</a>
+                <a href="javascript:void(0)" @click='sortList(2, tmp.id)' :class="{active:sortNow === 2}">{{$t('list.likeMost')}}</a>
               </div>
               <!-- 回复内容 -->
                   <!-- <div class="comment-item" data-index='' data-id='' v-for="(tmp,rIndex) in replyContent" :key='rIndex'>
@@ -414,9 +414,9 @@ export default{
         path: `/details/${this.lid}`,
         query: {
           a: JSON.stringify([
-            {label: '首页', path: '/'},
-            {label: '个人中心', path: `this.$route.path`},
-            {label: '全部', path: 'last'}
+            {label: this.$t('breadcrumb.home'), path: '/'},
+            {label: this.$t('breadcrumb.personal'), path: `this.$route.path`},
+            {label: this.$t('breadcrumb.all'), path: 'last'}
           ])
         }
       })

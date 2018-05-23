@@ -422,8 +422,8 @@ export default{
         path: `/details/${this.lid}`,
         query: {
           a: JSON.stringify([
-            {label: '首页', path: '/'},
-            {label: '全部', path: 'last'}
+            {label: this.$t('breadcrumb.home'), path: '/'},
+            {label: this.$t('breadcrumb.all'), path: 'last'}
           ])
         }
       })

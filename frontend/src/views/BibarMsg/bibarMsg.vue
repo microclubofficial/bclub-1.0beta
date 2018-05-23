@@ -306,6 +306,7 @@ export default {
     },
     // 去币详情
     toBibarDetail (tmp) {
+      // console.log(tmp)
       this.$router.push({
         path: `/msgDetail/${tmp.id}`,
         query: {

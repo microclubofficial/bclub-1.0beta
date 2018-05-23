@@ -13,6 +13,12 @@ export default {
     logout: '退出登录',
     noNews: '暂无消息'
   },
+  breadcrumb: {
+    home: '首页',
+    all: '全部',
+    coinNews: '币讯',
+    personal: '个人中心'
+  },
   column: {
     hotCoins: '热门币',
     all: '全部',

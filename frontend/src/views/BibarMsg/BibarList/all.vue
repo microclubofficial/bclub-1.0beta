@@ -7,7 +7,7 @@
         <div class="bibar-indexNewsItem">
           <div class="speech" v-if="tmp.reply_user !== null"> <span><span class="time">{{tmp.reply_time}}</span>{{$t('list.ago')}} {{tmp.reply_user}} {{$t('list.commented')}}</span><i class="iconfont icon-dot"></i></div>
           <div class="user">
-            <div class="bibar-author"> <a href="#"> <span class="photo"><img :src="tmp.avatar"></span> <span class="name">{{tmp.author}}</span> <span class="time">{{tmp.diff_time}}前发布</span> </a> </div>
+            <div class="bibar-author"> <a href="#"> <span class="photo"><img :src="tmp.avatar"></span> <span class="name">{{tmp.author}}</span> <span class="time">{{tmp.diff_time !== 0 ? tmp.diff_time + $t('list.ago') : $t('list.justNow')}}</span> </a> </div>
           </div>
           <div class="tit"><a href="javascript:void(0)" @click="goDetail(tmp.id)">{{tmp.title}}</a></div>
           <div class="txt indexNewslimitHeight" @click="goDetail(tmp.id)">
@@ -770,7 +770,7 @@ svg:not(:root) {
 }
 .comment-item{
     padding: 15px 0 10px;
-    border-top: 1px solid #edf0f5;
+    /*border-bottom: 1px solid #edf0f5;*/
     margin: 15px 0;
 }
 .comment-item .avatar {

@@ -13,6 +13,12 @@ export default {
     logout: 'Logout',
     noNews: 'No messages'
   },
+  breadcrumb: {
+    home: 'Home',
+    all: 'All',
+    coinNews: 'Coin News',
+    personal: 'Personal center'
+  },
   column: {
     hotCoins: 'Hot Coins',
     all: 'All',
