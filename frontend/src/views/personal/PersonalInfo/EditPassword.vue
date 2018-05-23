@@ -52,7 +52,7 @@ export default {
         if (input.length > 0) {
           post(`/api/confirmed/password`, this.setPwd).then(data => {
             if (data.resultcode === 0) {
-              this.oldpwdPrompt = '原密码错误'
+              this.oldpwdPrompt = this.$t('prompt.orgpwdError')
               return false
             } else {
               this.oldpwdPrompt = ''
@@ -63,21 +63,19 @@ export default {
         var upwdreg = /^[a-zA-Z0-9~!@#$%^&*()_+`\-={}:";'<>?,./]{6,18}$/
         if (!upwdreg.test(input) && input !== undefined && input.length > 0) {
           if (id === 0) {
-            this.oldpwdPrompt = '密码长度在6-18位'
+            this.oldpwdPrompt = this.$t('prompt.passwordLength')
           } else if (id === 1) {
-            this.newpwdPrompt = '密码长度在6-18位'
+            this.newpwdPrompt = this.$t('prompt.passwordLength')
           }
           return false
         } else if (id === 1 && (input === this.setPwd.OldPassword)) {
-          this.newpwdPrompt = '新密码不能和原密码一致'
+          this.newpwdPrompt = this.$t('prompt.passwordDifferent')
           return false
         } else if (input === undefined || input.length === 0) {
           if (id === 0) {
-            this.oldpwdPrompt = '原密码不能为空'
-            return false
+            this.oldpwdPrompt = this.$t('prompt.passwordRequired')
           } else if (id === 1) {
-            this.newpwdPrompt = '新密码不能为空'
-            return false
+            this.newpwdPrompt = this.$t('prompt.passwordRequired')
           }
           return false
         } else {
@@ -86,10 +84,10 @@ export default {
         }
       } else if (id === 2) {
         if (input !== this.setPwd.NewPassword && input !== undefined && input.length > 0) {
-          this.confirm_upwdPrompt = '两次输入密码不一致'
+          this.confirm_upwdPrompt = this.$t('prompt.passwordDifferent')
           return false
         } else if (input === undefined || input.length === 0) {
-          this.confirm_upwdPrompt = '确认密码不能为空'
+          this.confirm_upwdPrompt = this.$t('prompt.passwordRequired')
           return false
         } else {
           this.confirm_upwdPrompt = ''
@@ -125,7 +123,7 @@ export default {
 }
  .prompt{
     float: left;
-    margin-left: 4%;
+    /*margin-left: 4%;*/
     margin-top: 10px;
     color: red;
   }

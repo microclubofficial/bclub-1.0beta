@@ -181,7 +181,7 @@ export default {
           this.unamePrompt = ''
         }
       } else if (id === 1) {
-        var upwdreg = /^([a-zA-Z])|(\d)|([~!@#$%^&*()_+`\-={}:";'<>?,./]).{6,18}$/
+        var upwdreg = /^[a-zA-Z0-9~!@#$%^&*()_+`\-={}:";'<>?,./]{6,18}$/
         if (!upwdreg.test(input) && input !== undefined && input.length > 0) {
           this.upwdPrompt = this.$t('prompt.passwordLength')
           return false

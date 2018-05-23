@@ -35,7 +35,7 @@
               <li class="set-choseStar" @click="collectionTopic(index,tmp)"> <a :class='{collectionActive:tmp.collect_bool}' href="javascript:void(0);"><i class="iconfont icon-star">&#xe6a7;</i>{{$t('list.collect')}}</a> </li>
               <!-- <li> <a href="javascript:void(0);"><i class="iconfont icon-fenxiang"></i> 分享</a> </li> -->
               <!-- <li class="set-choseShang"> <a href="javascript:void(0);"><i class="iconfont icon-dashang"></i> 打赏<span>438</span></a> </li> -->
-              <li class="set-delList" @click="delTopic(tmp)"> <a href="javascript:void(0);"><i class="iconfont icon-del">&#xe78d;</i>{{$t('list.del')}}</a> </li>
+              <li class="set-delList" @click="delTopic(tmp)"> <a href="javascript:void(0);"><i class="iconfont icon-del">&#xe78d;</i>{{$t('list.delete')}}</a> </li>
               <li>
                 <!-- <div class="dropdown">
                   <a href="javascript:void(0);" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="iconfont icon-genduo"></i> 更多</a>
@@ -130,7 +130,7 @@
                             <i class="iconfont icon-pinglun"></i> {{$t('list.reply')}}
                           </a>
                         </li>
-                        <li class="set-delList" @click="delTopic(tmp)"> <a href="javascript:void(0);"><i class="iconfont icon-del">&#xe78d;</i>{{$t('list.del')}}</a> </li>
+                        <li class="set-delList" @click="delTopic(tmp)"> <a href="javascript:void(0);"><i class="iconfont icon-del">&#xe78d;</i>{{$t('list.delete')}}</a> </li>
                       </ul>
                     </div>
                      <!-- 回复 -->
