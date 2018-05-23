@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2018-05-23 11:03+0800\n"
+"POT-Creation-Date: 2018-05-23 13:56+0800\n"
 "PO-Revision-Date: 2018-05-23 11:03+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh\n"
@@ -165,20 +165,36 @@ msgstr "一条短信已发出"
 msgid "failed"
 msgstr "失败"
 
-#: forums/func.py:28
+#: forums/func.py:29
 msgid " second"
 msgstr "秒"
 
 #: forums/func.py:30
+msgid " seconds"
+msgstr "秒"
+
+#: forums/func.py:33
 msgid " minute"
 msgstr "分钟"
 
-#: forums/func.py:32
+#: forums/func.py:34
+msgid " minutes"
+msgstr "分钟"
+
+#: forums/func.py:37
 msgid " hour"
 msgstr "小时"
 
-#: forums/func.py:34
+#: forums/func.py:38
+msgid " hours"
+msgstr "小时"
+
+#: forums/func.py:41
 msgid " day"
+msgstr "天"
+
+#: forums/func.py:42
+msgid " days"
 msgstr "天"
 
 #: forums/permission.py:60
