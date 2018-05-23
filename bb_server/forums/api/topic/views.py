@@ -40,6 +40,7 @@ from sqlalchemy import func
 import math
 import json
 from forums.extension.babel import get_locale
+import numpy as np
 
 per_page = 5
 
@@ -138,17 +139,13 @@ class TopicListView(MethodView):
 
     def post(self):
         user = request.user
-        #form = TopicForm()
-        #post_data = form.data
         post_data = request.data
         title = post_data.pop('title', None)
         content = post_data.pop('content', None)
-        #tags = post_data.pop('tags', None)
         content_type = post_data.pop('content_type', 0)
         token = post_data.pop('token', None)
         zh_token = post_data.pop('tokenname', None)
         picture = post_data.pop('picture', None)
-        #board = post_data.pop('category', None)
         topic = Topic(
             title=json.dumps(title),
             content=json.dumps(content),
@@ -156,42 +153,23 @@ class TopicListView(MethodView):
             token = token,
             zh_token = zh_token,
             picture = picture)
-            #board_id=int(board))
-        #tags = tags.split(',')
-        #topic_tags = []
-        #for tag in tags:
-        #    tag = tag.strip()
-        #    topic_tag = Tags.query.filter_by(name=tag).first()
-        #    if topic_tag is None:
-        #        topic_tag = Tags(name=tag, description=tag)
-        #        topic_tag.save()
-        #    topic_tags.append(topic_tag)
-        #topic.tags = topic_tags
-        #user = User.query.filter_by(id=1).first()
         topic.author = user
         topic.save()
         topic = object_as_dict(topic)
         Avatar(topic, user)
-        #topic['content'] = json.loads(topic['content'])
         json_loads(topic, ['content', 'title'])
         topic['author'] = user.username
         topic['is_good'] = 0
         topic['is_bad'] = 0
-        topic['diff_time'] = _('0 second')
+        topic['diff_time'] = 0
         topic['bool_delete'] = bool_delete(user)
-        #topic.board.topic_count = 1
-        #topic.board.post_count = 1
-        #topic.author.topic_count = 1
-        #topic.reply_count = 1
         msg = _('success')
         return get_json(1, msg, topic)
-        #return redirect(url_for('topic.topic', topicId=topic.id))
 
 class TopicView(MethodView):
     decorators = (topic_permission, )
     
     def get(self, topicId, page):
-        #form = ReplyForm()
         start = (page-1)*per_page
         query_dict = request.data
         topic = Topic.query.filter_by(id=topicId).first_or_404()
@@ -234,7 +212,6 @@ class TopicView(MethodView):
         }
         msg = _('Topic Details')
         return get_json(1, msg, data)
-        #return render_template('topic/topic.html', **data)
 
     def post(self, topicId):
         user = request.user
@@ -252,17 +229,27 @@ class ReplyListView(MethodView):
         if 'early' in request.path:
             reply = Reply.query.filter_by(topic_id = topicId).order_by(('id')).limit(per_page).offset(start)
         elif 'good' in request.path:
-            is_goodlist = Reply.query.with_entities(Topic.is_good, Topic.id).filter_by().all()
+            is_goodlist = Reply.query.with_entities(Reply.is_good, Reply.id).filter_by().all()
+            a = []
             for i in is_goodlist:
                 i = list(i)
-                i[0] = len(json.dumps(i[0]))
-
-            reply = Reply.query.filter_by(topic_id = topicId).order_by(('-id')).limit(per_page).offset(start)
+                i[0] = len(json.loads(i[0]))
+                a.append(i)
+            b = []
+            for i in a:
+                b.append(i[0]) 
+            c = np.array(b)
+            d = np.argsort(c)[::-1][start:start+5]
+            reply = []
+            for i in d:
+                _reply = Reply.query.filter_by(id = a[i][1]).first()
+                reply.append(_reply)
+            #reply = Reply.query.filter_by(topic_id = topicId).order_by(('-id')).limit(per_page).offset(start)
         else:
             reply = Reply.query.filter_by(topic_id = topicId).order_by(('-id')).limit(per_page).offset(start)
         reply_count = FindAndCount(Reply, topic_id = topicId)
         page_count = int(math.ceil(reply_count/per_page))
-        data = []
+        replies = []
         for i in reply: 
             user = i.author
             #user = User.query.filter_by(id = i.author_id).first()
@@ -278,8 +265,8 @@ class ReplyListView(MethodView):
             replies_data['is_bad'], replies_data['is_bad_bool'] = Count(i.is_bad)
             replies_data['bool_delete'] = bool_delete(user)
             Avatar(replies_data, user)
-            data.append(replies_data)
-        data.append({'page_count':page_count, 'reply_count':reply_count}) 
+            replies.append(replies_data)
+        data = {'page_count':page_count, 'reply_count':reply_count, 'replies':replies}
         msg = _('Replies Information')
         return get_json(1, msg, data)
 
@@ -306,7 +293,7 @@ class ReplyListView(MethodView):
         replies_data['author'] = user.username
         replies_data['is_good'] = 0 
         replies_data['is_bad'] = 0
-        replies_data['diff_time'] = _('0 second')
+        replies_data['diff_time'] = 0
         replies_data['replies_count'] = reply_count
         replies_data['bool_delete'] = bool_delete(user)
         # noticetopicId
@@ -329,7 +316,7 @@ class ReplyView(MethodView):
         reply.delete()
         return get_json(1, _('success'), {})
 
-class ThumbView(MethodView):
+class ThumbView(IsAuthMethodView):
 
     def get(self, id, thumb):
         user = request.user
