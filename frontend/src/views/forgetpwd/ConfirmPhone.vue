@@ -65,20 +65,20 @@
   <div>
     <div class="panel panel-primary login-box">
       <div class="panel-heading login-title">
-        <h3 class="panel-title text-center">{{$t('forgetPassword.retrieve')}}</h3>
+        <h3 class="panel-title text-center">{{$t('forgetPassword.byPhone')}}</h3>
       </div>
       <div class="panel-body">
         <div class="confirm-box">
-          <h4>{{$t('forgetPassword.byPhone')}}</h4>
-          <form class="form-horizontal">
+          <!--<h4>{{$t('forgetPassword.byPhone')}}</h4>-->
+          <form class="form-horizontal" style="padding-left:8%;">
             <div class="form-group">
               <label for="inputEmail3" class="col-md-3 control-label">{{$t('register.phone')}}</label>
               <div class="col-md-6">
                 <input type="text" class="form-control" id="inputEmail3" @blur='showRegisterMsg(phoneObj.phone, 0)' v-model="phoneObj.phone" :placeholder="$t('placeholder.phone')">
               </div>
             </div>
-            <label class="col-md-3 control-label"></label>
-            <p class="prompt col-md-9" style="margin-top:0px !important;">{{phonePrompt}}</p>
+            <!--<label class="col-md-3 control-label"></label>-->
+            <p class="prompt col-md-offset-3 col-md-9" style="margin-top:0px!important;margin-left:25%!important;">{{phonePrompt}}</p>
             <div class="form-group" style="margin-top: 37px;">
               <label for="inputCaptcha3" class="col-md-3 control-label">{{$t('register.vcode')}}</label>
               <div class="col-md-4">
@@ -87,8 +87,8 @@
               <button type="button" class="btn btn-default get-captcha" style="width:15%" @click="getPhoneControl" v-bind:disabled="hasphone" :class="{'btn-success':!hasphone}">
                 {{getcontroltxt}}<span v-show="hasControl"> {{countdown}}</span></button>
             </div>
-            <label class="col-md-3 control-label"></label>
-            <p class="prompt col-md-9" style="margin-top:0px !important;">{{phoneControlPrompt}}</p>
+            <!--<label class="col-md-3 control-label"></label>-->
+            <p class="prompt col-md-offset-3 col-md-9" style="margin-top:0px!important;margin-left:25%!important;">{{phoneControlPrompt}}</p>
             <button type="button" class="btn btn-primary col-md-offset-2 col-md-7 login-button" @click='showModel' data-target="#myModal" data-toggle="">{{$t('button.confirm')}}
             </button>
           </form>

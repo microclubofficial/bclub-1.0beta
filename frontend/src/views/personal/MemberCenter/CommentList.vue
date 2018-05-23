@@ -233,7 +233,7 @@ export default{
       upId: 0,
       tpno: 1,
       pageCount: 0,
-      bottomText: '加载中...',
+      bottomText: '',
       listLoding: true,
       noLoading: false,
       up: 0,
@@ -306,7 +306,7 @@ export default{
         }
         var that = this
         if (this.pageCount === 1) {
-          this.bottomText = '没有啦'
+          this.bottomText = this.$t('prompt.noMore')
           this.listLoding = false
           this.noLoading = true
           // this.loadingImg = '../../assets/img/noLoading.png'
@@ -338,12 +338,12 @@ export default{
           get(`/api/u/replies/${this.userInfo.username}/${this.tpno}`).then(data => {
             this.articles = this.articles.concat(data.data.topics)
             this.showLoader = false
-            this.bottomText = '加载中...'
+            this.bottomText = this.$t('prompt.loading')
             // this.loadingImg = '../../assets/img/listLoding.png'
           })
         }, 1000)
       } else {
-        this.bottomText = '没有啦'
+        this.bottomText = this.$t('prompt.noMore')
         this.listLoding = false
         this.noLoading = true
         // this.loadingImg = '../../assets/img/noLoading.png'

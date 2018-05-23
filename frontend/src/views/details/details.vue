@@ -220,7 +220,7 @@ export default {
       toId: 0,
       pageCount: 0,
       pno: 1,
-      bottomText: '加载中...',
+      bottomText: '',
       listLoding: true,
       noLoading: false,
       loadingShow: true,
@@ -284,7 +284,7 @@ export default {
       })
       var that = this
       if (this.pageCount === 1) {
-        this.bottomText = '没有啦'
+        this.bottomText = this.$t('prompt.noMore')
         this.listLoding = false
         this.noLoading = true
         // this.loadingImg = '../../assets/img/noLoading.png'
@@ -312,12 +312,12 @@ export default {
             this.showLoaderComment = false
             this.nowData = this.nowData.concat(data.data.replies)
             this.pno++
-            this.bottomText = '加载中...'
+            this.bottomText = this.$t('prompt.loading')
             // this.loadingImg = '../../assets/img/listLoding.png'
           })
         }, 1000)
       } else {
-        this.bottomText = '没有啦'
+        this.bottomText = this.$t('prompt.noMore')
         this.listLoding = false
         this.noLoading = true
         // this.loadingImg = '../../assets/img/noLoading.png'
@@ -800,7 +800,7 @@ export default {
   position: relative;
 }
 .comment-all>h3 {
-    margin-top: 15px;
+    margin-top: 30px;
     font-size: 15px;
 }
 .comment-sort {
@@ -839,7 +839,7 @@ export default {
 }
 .comment-item{
     padding: 15px 0 10px;
-    border-top: 1px solid #edf0f5;
+    // border-bottom: 1px solid #edf0f5;
     margin: 15px 0;
 }
 .comment-item .avatar {
