@@ -133,6 +133,7 @@ export default {
               backData.url = data.data.url
               backData.reference = data.data.reference
               backData.replies_count = data.data.replies_count
+              backData.bool_delete = data.data.bool_delete
               let hotreplies = {}
               hotreplies = data.data
               // 热门回复

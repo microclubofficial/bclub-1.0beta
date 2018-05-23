@@ -70,7 +70,11 @@
               <li class="set-choseStar" @click="collectionTopic(articleDetail)"> <a href="javascript:void(0)" class="btn-article-retweet" :class='{collectionActive:articleDetail.collect_bool}'>
           <i class="iconfont icon-star">&#xe6a7;</i>{{$t('list.collect')}}
         </a> </li>
+<<<<<<< HEAD
+        <!--<li class="set-delList" @click="delTopic(tmp)"> <a href="javascript:void(0);"><i class="iconfont icon-del">&#xe78d;</i>{{$t('list.del')}}</a> </li>-->
+=======
         <li class="set-delList" @click="delTopic(tmp)"> <a href="javascript:void(0);"><i class="iconfont icon-del">&#xe78d;</i>{{$t('list.delete')}}</a> </li>
+>>>>>>> 576ed691e9989caf09ba7c2f4196080a7a44111a
               <!-- <li> <a href="javascript:void(0);"><i class="iconfont icon-fenxiang"></i> 分享</a> </li> -->
               <!-- <li class="set-choseShang"> <a href="javascript:void(0);"><i class="iconfont icon-dashang"></i> 打赏<span>438</span></a> </li> -->
               <li>
@@ -132,14 +136,14 @@
                         <span class="time">{{item.diff_time !== '0秒' ? item.diff_time + '前' : '刚刚'}}发布</span>
                       </div>
                       <!-- @ 样式 -->
-                      <p class="replyAuthor" v-if="item.at_user !== ''">@{{item.at_user}}:&nbsp;<span class="replyBackConten" style="display:inline-block;font-weight: normal;" v-html="replyFun(item.reference)"></span></p>
+                      <div class="replyAuthor" v-if="item.at_user !== ''">@{{item.at_user}}:&nbsp;<span class="replyBackConten" style="display:inline-block;font-weight: normal;" v-html="replyFun(item.reference)"></span></div>
                       <!-- <p>{{item}}</p> -->
                       <!-- <p>{{item}}</p> -->
-                      <div class="detailContent" v-html="commentContent(item.content)"></div>
+                      <div class="detailContent" v-html="commentContent(item.content,item.id)"></div>
                       <!--展开-->
-              <a style="font-size:16px;"  v-if='item.content !== undefined && item.content.length > 300' href="#" class="bibar-indexintromore text-theme" @click="changeMore(item.id)">{{item.id === moreId ? '收起' : '展开'}}<i style="font-size:16px;" class="iconfont" v-if='more === "展开"'>&#xe692;</i><i style="font-size:16px;" class="iconfont" v-if='more === "收起"'>&#xe693;</i></a>
+              <a style="font-size:16px; white-space:nowrap;"  v-if='item.content !== undefined && item.content.length - imgCommentLength[item.id] > 200' href="#" class="bibar-indexintromore text-theme" @click="changeMore(item.id)">{{item.id === moreId ? '收起' : '展开'}}<i style="font-size:16px;" class="iconfont" v-if='more === "展开"'>&#xe692;</i><i style="font-size:16px;" class="iconfont" v-if='more === "收起"'>&#xe693;</i></a>
                     </div>
-                    <div class="set" style="margin-left: 57px;">
+                    <div class="set clearfloat" style="margin-left: 57px;">
                       <ul class="bibar-indexNewsItem-infro">
                         <li class="set-choseOne"> <a href="javascript:void(0);" class="icon-quan mr15" :class='{active:item.is_good_bool}'  @click="changeNum(0,now,item.id,item)"><i class="iconfont">&#xe603;</i><span class="is-good">{{item.is_good}}</span></a><a href="javascript:void(0);" :class='{active:item.is_bad_bool}' class="icon-quan" @click="changeNum(1,now,item.id,item)"><i class="iconfont">&#xe731;</i><span class="is-bad">{{item.is_bad}}</span></a> </li>
                         <li class="set-discuss" @click="replyComment(item.id,now)">
@@ -239,7 +243,8 @@ export default {
       crumb: [],
       more: '展开',
       moreId: '',
-      sortNow: 0
+      sortNow: 0,
+      imgCommentLength: {}
     }
   },
   computed: {
@@ -513,14 +518,24 @@ export default {
       }
     },
     // 评论回复文字处理
-    commentContent (val) {
+    commentContent (val, id) {
       if (val === undefined) {
         return
       }
       val = val.replace(/<p[^>]*>|<\/p>|<h-char[^>]*>|<\/h-char>|<h-inner>|<\/h-inner>/g, '')
-      if (this.more === '展开') {
-        if (val.length > 300) {
-          return val.substring(0, 300) + '...'
+      // let imgArr = val.match(/<img[^>]*>/gi)
+      if (!this.imgCommentLength[id]) {
+        this.imgCommentLength[id] = 0
+      }
+      // if (val.indexOf('img') > 0) {
+      //   for (let i = 0; i < imgArr.length; i++) {
+      //     this.imgCommentLength[id] += imgArr[i].length
+      //   }
+      // }
+      this.imgCommentLength[id] = val.lastIndexOf('data-w-e="1">')
+      if (val.length - this.imgCommentLength[id] > 200) {
+        if (this.more === '展开') {
+          return val.substring(0, 200 + this.imgCommentLength[id]) + '...'
         } else {
           return val
         }
@@ -624,7 +639,7 @@ export default {
     line-height: 50px !important;
     padding-left: 20px !important;
     font-weight: 700;
-    margin-right: 2px;
+    margin: 20px 2px 20px 0;
 }
 .detail-editor-toolbar>.wangeditor{
     width: 90%;
