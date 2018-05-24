@@ -89,7 +89,10 @@ export default {
     loginFirst: 'Please login first!',
     emailSent: 'An email has been sent. Please check and verify it.',
     loading: 'Loading...',
-    noMore: 'No more'
+    noMore: 'No more',
+    emptyContent: 'Post content cannot be empty',
+    emptyLink: 'Link cannot be empty',
+    invalidLink: 'Invalid link'
   },
   message: {
     sthToSay: 'Something to say...',
@@ -104,7 +107,8 @@ export default {
     fold: 'Fold',
     unfold: 'Unfold',
     resend: 'Resend',
-    verify: 'Verify'
+    verify: 'Verify',
+    emoji: 'Emoji'
   },
   pages: {
     first: 'First',
