@@ -5,7 +5,7 @@
                 <div class="bibar-boxtitle" style="margin-bottom:10px;"> <span class="name">{{$t('sideBar.introduction')}}</span> </div>
                 <div class="bibar-boxbody">
                     <div class="bibar-indexintro">
-                        <p v-html='briefC !== "" ? briefC : "暂无信息" '></p>
+                        <p v-html= "briefC !== '' ? briefC : $t('message.noInformation') "></p>
                     </div>
                     <a href="#" v-if='briefC !== ""' class="bibar-indexintromore text-theme" @click="showText = !showText">{{this.showText === false ? $t('button.unfold') : $t('button.fold')}}<i class="iconfont" v-if='!showText'>&#xe692;</i><i class="iconfont" v-if='showText'>&#xe693;</i></a>
                     <div class="bibar-indexinftrList" v-if='briefC.length > 0'>
@@ -142,14 +142,10 @@ export default{
       showPre: false,
       showNext: true,
       showText: false,
-      buttonText: '',
-      // 当前语言
-      language: 'zh'
+      buttonText: ''
     }
   },
   created: function () {
-    this.language = getToken('language')
-
     $('#myTab li:eq(1) a').tab('show')
     // 影响力
     // this.sideFun(this.sidePage)
@@ -165,10 +161,17 @@ export default{
     }
   },
   computed: {
-    briefC: function () {
+    language () {
+      return this.$store.state.language.language
+    },
+    briefC () {
       if (this.briefTxt !== '') {
         if (this.showText === false) {
-          return this.briefTxt.substring(0, 80) + '...'
+          if(this.language == 'zh'){
+            return this.briefTxt.substring(0, 166) + '...'
+          }else if (this.language == 'en'){
+            return this.briefTxt.substring(0, 376) + '...'
+          }
         } else {
           return this.briefTxt
         }
@@ -267,8 +270,14 @@ export default{
           this.brief = data.data
           // console.log(this.brief)
           this.websites = this.brief.websites[0]
-          for (let i = 0; i < this.brief.descriptions.zh.length; i++) {
-            this.briefTxt += `<p>${this.brief.descriptions.zh[i]}</p>`
+          if (this.language == 'zh'){
+            for (let i = 0; i < this.brief.descriptions.zh.length; i++) {
+              this.briefTxt += `<p style="text-indent:2rem;">${this.brief.descriptions.zh[i]}</p>`
+            }
+          }else if (this.language == 'en'){
+            for (let j = 0; j < this.brief.descriptions.en.length; j++) {
+              this.briefTxt += `<p style="text-indent:1rem;text-align:justify;word-break: break-all;">${this.brief.descriptions.en[j]}</p>`
+            }
           }
         }
       })

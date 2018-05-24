@@ -91,7 +91,8 @@ export default {
     noMore: '没有啦'
   },
   message: {
-    sthToSay: '有什么消息告诉大家...'
+    sthToSay: '有什么消息告诉大家...',
+    noInformation: '暂无信息'
   },
   button: {
     publish: '发布',
@@ -170,5 +171,15 @@ export default {
     totalSupply: '总发行量',
     availableSupply: '流通数量',
     circulationRate: '流通率'
+  },
+  chart: {
+    zoom: '区间',
+    all: '所有',
+    month1: '1月',
+    month3: '3月',
+    month6: '6月',
+    year1: '1年',
+    price: '价格（CNY）',
+    volume: '交易量（24H）'
   }
 }

@@ -7,7 +7,7 @@
        <!--<img src="../../assets/img/pic-news02.png" alt="">-->
        <div class="bibarType-bot">
         <div class="bibarType-title">
-         <img :src="type.bpicture" alt=""><img style="width:18px; height:18px;" :src="type.b_picture" alt="">{{type.symbol}}-{{type.name_ch}}
+         <img :src="type.bpicture" alt=""><img style="width:18px; height:18px;" :src="type.b_picture" alt="">{{type.symbol}}&nbsp;-&nbsp;{{language == 'zh' ? type.name_ch : type.name_en}}
          <!--<span class="bibarType-talk-btn">加入讨论</span>-->
          </div>
         <!--<ul>
@@ -30,9 +30,15 @@ export default{
       bibarType: []
     }
   },
+  computed:{
+    language () {
+      return this.$store.state.language.language
+    }
+  },
   mounted: function () {
     get('/api/bpicture').then(data => {
       this.bibarType = data.data
+      // console.log(this.bibarType)
     })
   },
   methods: {

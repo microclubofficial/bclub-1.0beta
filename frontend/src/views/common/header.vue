@@ -61,8 +61,7 @@ export default {
   data: function () {
     return {
       user_token: '',
-      remember_token: '',
-      language: 'zh'
+      remember_token: ''
     }
   },
   components: {
@@ -72,6 +71,9 @@ export default {
   computed: {
     userInfo () {
       return this.$store.state.userInfo.userInfo
+    },
+    language () {
+      return this.$store.state.language.language
     }
   },
   created () {
@@ -79,14 +81,17 @@ export default {
       this.user_token = JSON.parse(getToken())
     }
     if (getToken('language')) {
-      this.language = getToken('language')
-      // console.log(this.language)
+      this.$store.commit('LANGUAGE', {
+        'language': getToken('language')
+      })
     }
   },
   methods: {
     switchLang (lang) {
       setToken('language', lang)
-      this.language = lang
+      this.$store.commit('LANGUAGE', {
+        'language': lang
+      })
       location.reload()
     },
     // toLoadMain () {

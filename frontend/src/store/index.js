@@ -11,6 +11,7 @@ import createPersist from 'vuex-localstorage'
 import chartId from './modules/chartId'
 import subId from './modules/subId'
 import longId from './modules/longId'
+import language from './modules/language'
 
 Vue.use(Vuex)
 
@@ -24,7 +25,8 @@ const store = new Vuex.Store({
     homePageList,
     chartId,
     subId,
-    longId
+    longId,
+    language
   },
   getters,
   plugins: [createPersist({
