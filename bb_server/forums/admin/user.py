@@ -61,7 +61,6 @@ class UserSettingView(BaseView):
         'timezone': UserSetting.TIMEZONE
     }
 
-
 def init_admin(admin):
     admin.add_view(
         UserView(

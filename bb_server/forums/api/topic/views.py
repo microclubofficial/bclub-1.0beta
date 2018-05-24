@@ -279,7 +279,13 @@ class ReplyListView(MethodView):
         content = post_data.pop('content', None)
         reference = post_data.pop('replyContent', None)
         at_user = post_data.pop('author', None)
-        reply = Reply(content=json.dumps(content), reference = json.dumps(reference), topic_id = topicId, at_user = at_user)
+        picture = post_data.pop('picture', None)
+        reply = Reply(
+            content=json.dumps(content),
+            reference = json.dumps(reference),
+            topic_id = topicId,
+            at_user = at_user,
+            picture = picture)
         #user = User.query.filter_by(id=1).first()
         reply.author_id = user.id
         reply.save()
@@ -356,4 +362,4 @@ class ThumbView(IsAuthMethodView):
         data['is_bad'], data['is_bad_bool'] = Count(session.is_bad)
         msg =_('success')
         return get_json(1, msg, data)
-
+        
