@@ -575,8 +575,9 @@ export default{
       let reply = val.replace(/<p[^>]*>|<\/p>|<h-char[^>]*>|<\/h-char>|<h-inner[^>]*>|<\/h-inner>/g, '')
       if (reply.indexOf('href') > 0) {
         let imgLength = 0
-        if (reply.indexOf('img') > 0) {
-          let imgArr = reply.match(/<img[^>]*>/gi)
+        if (reply.indexOf('data-w-e') > 0) {
+          let imgArr = []
+          imgArr = reply.match(/<img(?![^<>]*?data-w-e[^<>]*?>).*?>/g)
           if (imgArr === null) {
             return
           }
@@ -585,13 +586,14 @@ export default{
           }
         }
         let hrefLength = 0
-        let hrefArr = reply.match(/<a.*?>(.*?)<\/a>/ig)
+        let hrefArr = reply.match(/<a.*?>(.*?)<\/a>/ig)[0]
         if (hrefArr === null) {
           return
         }
-        for (let i = 0; i < hrefArr.length; i++) {
-          hrefLength += hrefArr[i].length
-        }
+        // for (let i = 0; i < hrefArr.length; i++) {
+        //   hrefLength += hrefArr[i].length
+        // }
+        hrefLength = hrefArr.length
         return reply.substring(0, 40 + hrefLength + imgLength) + '...'
       } else if (reply.indexOf('img') > 0) {
         let imgLength = 0
@@ -1015,7 +1017,7 @@ svg:not(:root) {
 }
 .comment-item{
     padding: 15px 0 10px;
-    border-bottom: 1px solid #edf0f5;
+    /*border-bottom: 1px solid #edf0f5;*/
     border-top: none;
     margin: 15px 0;
 }
