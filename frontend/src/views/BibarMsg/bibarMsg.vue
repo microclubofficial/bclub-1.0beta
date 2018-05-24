@@ -76,7 +76,7 @@
                     </td>
                     <td>
                       <a href="javascript:void(0)" @click='toBibarDetail(item)'>
-                        <span><img :src="item.picture" alt=""></span> {{item.name_ch}} - {{item.symbol}}
+                        <span><img :src="item.picture" alt=""></span>{{item.symbol}} - {{language == 'zh' ? item.name_ch : item.name_en}}
                       </a>
                     </td>
                     <td>
@@ -183,8 +183,6 @@ export default {
       initShow: false,
       toEditorBid: '',
       showLoader: false,
-      // 当前语言
-      language: 'zh',
       // 登录状态
       user_token: ''
     }
@@ -192,6 +190,9 @@ export default {
   computed: {
     userInfo () {
       return this.$store.state.userInfo.userInfo
+    },
+    language () {
+      return this.$store.state.language.language
     },
     showPageBtn () {
       let pageArr = []
@@ -216,8 +217,6 @@ export default {
     BibarLeft
   },
   created () {
-    this.language = getToken('language')
-    // console.log(this.language)
     this.collapseId = `collapse${this.i++}`
     this.hrefCollapse = `#${this.collapseId}`
     this.showLoader = true

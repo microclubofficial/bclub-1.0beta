@@ -12,7 +12,7 @@
                   <div class="bibar-indexDisplay">
                     <div class="bibar-indexDisplay-header">
                         <div class="logopic"><img :src="bibarData.picture"></div>
-                        <div class="logonameEnglish">{{bibarData.zhName}}</div>
+                        <div class="logonameEnglish">{{language == 'zh' ? bibarData.zhName : bibarData.name}}</div>
                         <div class="logonameChinese">{{bibarData.symbol}}</div>
                     </div>
                     <!--<a href="#" class="btn btn-default"><i class="iconfont icon-add-sm"></i> 关注</a>-->
@@ -31,7 +31,7 @@
                         <dl>
                             <dt>{{$t('details.marketCap')}} :</dt>
                             <dd> <i class="iconfont icon-USD" v-if='(parseFloat(bibarData.marketCap) * CNY_RATE).toFixed(2) > 0'>&#xe634;</i>{{bibarData.marketCap | cnyFun(CNY_RATE,2)}}
-                                <div v-if='(parseFloat(bibarData.marketCap) * CNY_RATE).toFixed(2) > 0' class="sprit-12 bg-green ml10">第{{bibarData.level}}名</div>
+                                <div v-if='(parseFloat(bibarData.marketCap) * CNY_RATE).toFixed(2) > 0' class="sprit-12 bg-green ml10">{{language == 'ch' ? '第'+bibarData.level+'名' : 'No. '+bibarData.level}}</div>
                             </dd>
                             <dd> <i v-if="parseFloat((bibarData.marketCap + '').replace(/[^\d.-]/g, '')).toFixed(2) + '' > 0" class="iconfont icon-yueden">&#xe6ca;</i> <i v-if="parseFloat((bibarData.marketCap + '').replace(/[^\d.-]/g, '')).toFixed(2) + '' > 0" class="iconfont icon-rmb icon-CNY">&#xe736;</i>{{bibarData.marketCap | formatNum(2)}} </dd>
                             <dd> <i v-if="(parseInt(bibarData.marketCap) * BTC_RATE).toFixed(2) > 0" class="iconfont icon-yueden">&#xe6ca;</i> <i v-if="(parseInt(bibarData.marketCap) * BTC_RATE).toFixed(2) > 0" class="iconfont icon-BTC">&#xe63a;</i> {{bibarData.marketCap | bitcoinFun(BTC_RATE)}} </dd>
@@ -51,7 +51,7 @@
                         <dl>
                             <dt>{{$t('details.tradingVolume24h')}} :</dt>
                             <dd> <i v-if='(parseFloat(bibarData.volume_ex) * CNY_RATE).toFixed(2) > 0' class="iconfont icon-USD">&#xe634;</i>{{bibarData.volume_ex | cnyFun(CNY_RATE,2)}}
-                                <div v-if='(parseFloat(bibarData.volume_ex) * CNY_RATE).toFixed(2) > 0' class="sprit-12 bg-green ml10">第{{bibarData.volume_level}}名</div>
+                                <div v-if='(parseFloat(bibarData.volume_ex) * CNY_RATE).toFixed(2) > 0' class="sprit-12 bg-green ml10">{{language == 'ch' ? '第'+bibarData.volume_level+'名' : 'No. '+bibarData.volume_level}}</div>
                             </dd>
                             <dd> <i v-if="parseFloat((bibarData.volume_ex + '').replace(/[^\d.-]/g, '')).toFixed(2) + '' > 0" class="iconfont icon-yueden">&#xe6ca;</i><i v-if="parseFloat((bibarData.volume_ex + '').replace(/[^\d.-]/g, '')).toFixed(2) + '' > 0" class="iconfont icon-CNY">&#xe736;</i> {{bibarData.volume_ex | formatNum(2)}}</dd>
                             <dd> <i v-if="(parseInt(bibarData.volume_ex) * BTC_RATE).toFixed(2) > 0" class="iconfont icon-yueden">&#xe6ca;</i><i v-if="(parseInt(bibarData.volume_ex) * BTC_RATE).toFixed(2) > 0" class="iconfont icon-btb icon-BTC">&#xe63a;</i>{{bibarData.volume_ex | bitcoinFun(BTC_RATE)}} </dd>
@@ -142,6 +142,9 @@ export default {
     },
     userInfo () {
       return this.$store.state.userInfo.userInfo
+    },
+    language () {
+      return this.$store.state.language.language
     }
   },
   methods: {
@@ -163,6 +166,7 @@ export default {
         this.showLoader = false
         // main数据
         that.bibarData = data.data
+        // console.log(that.bibarData)
         // 父组件传值
         that.$emit('btbFun', that.bibarData.zhName)
         // 总市值进度条
@@ -219,27 +223,27 @@ export default {
           buttons: [
             {
               type: 'all',
-              text: '所有'
+              text: this.$t('chart.all')
             },
             {
               type: 'month',
               count: 1,
-              text: '1月'
+              text: this.$t('chart.month1')
             },
             {
               type: 'month',
               count: 3,
-              text: '3月'
+              text: this.$t('chart.month3')
             },
             {
               type: 'month',
               count: 6,
-              text: '6月'
+              text: this.$t('chart.month6')
             },
             {
               type: 'year',
               count: 1,
-              text: '1年'
+              text: this.$t('chart.year1')
             }
           ]
         },
@@ -297,7 +301,7 @@ export default {
         series: [
           {
             type: 'spline',
-            name: '价格(CNY)',
+            name: this.$t('chart.price'),
             color: '#306FCE',
             lineColor: '#306FCE',
             navigatorOptions: {
@@ -308,7 +312,7 @@ export default {
           },
           {
             type: 'column',
-            name: '24交易量',
+            name: this.$t('chart.volume'),
             data: this.volumeData,
             yAxis: 1,
             color: '#44DFE4'

@@ -91,7 +91,8 @@ export default {
     noMore: 'No more'
   },
   message: {
-    sthToSay: 'Something to say...'
+    sthToSay: 'Something to say...',
+    noInformation: 'No information'
   },
   button: {
     publish: 'Publish',
@@ -178,5 +179,15 @@ export default {
     totalSupply: 'Total supply',
     availableSupply: 'Available supply',
     circulationRate: 'Circulation rate'
+  },
+  chart: {
+    zoom: 'Zoom',
+    all: 'All',
+    month1: '1M',
+    month3: '3M',
+    month6: '6M',
+    year1: '1Y',
+    price: 'Price(CNY)',
+    volume: 'Volume(24H)'
   }
 }

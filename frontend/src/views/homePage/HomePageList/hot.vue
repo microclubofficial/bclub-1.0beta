@@ -278,6 +278,9 @@ export default{
     },
     userInfo () {
       return this.$store.state.userInfo.userInfo
+    },
+    language () {
+      return this.$store.state.language.language
     }
   },
   created: function () {
