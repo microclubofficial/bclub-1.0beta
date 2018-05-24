@@ -578,9 +578,9 @@ export default{
       let reply = val.replace(/<p[^>]*>|<\/p>|<h-char[^>]*>|<\/h-char>|<h-inner[^>]*>|<\/h-inner>/g, '')
       if (reply.indexOf('href') > 0) {
         let imgLength = 0
-        if (reply.indexOf('data-w-e') > 0) {
+        if (reply.indexOf('img') > 0) {
           let imgArr = []
-          imgArr = reply.match(/<img(?![^<>]*?data-w-e[^<>]*?>).*?>/g)
+          imgArr = reply.match(/<img[^>]*>/gi)
           if (imgArr === null) {
             return
           }
@@ -613,23 +613,6 @@ export default{
       } else {
         return reply
       }
-      // if (reply.indexOf('img') > 0 && reply.indexOf('static') === -1) {
-      //   let imgLength = 0
-      //   let imgArr = reply.match(/<img[^>]*>/gi)
-      //   if (imgArr === null) {
-      //     return
-      //   }
-      //   for (let i = 0; i < imgArr.length; i++) {
-      //     imgLength += imgArr[i].length
-      //   }
-      //   return reply.substring(0, 40 + imgLength)
-      // } else if (/^\/static.*/ig.test(reply)) {
-      //   return '图片评论' + `<a style='color:#0181FF' href='${reply}'><i class='iconfont'>&#xe694;</i>查看图片</a>`
-      // } else if (reply.length > 100) {
-      //   return reply.substring(0, 40) + '...'
-      // } else {
-      //   return reply
-      // }
     },
     // 评论回复文字处理
     commentContent (val, id) {
