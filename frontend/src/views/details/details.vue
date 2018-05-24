@@ -489,6 +489,13 @@ export default {
       if (tmp.token === null) {
         return
       }
+      // var crumbName = ''
+      // if(this.language == 'zh'){
+      //   crumbName = tmp.zh_token
+      // }else if(this.language == 'en'){
+      //   crumbName = tmp.token
+      // }
+      // console.log(tmp)
       this.$router.push({
         path: `/msgDetail/${tmp.token}`,
         query: {

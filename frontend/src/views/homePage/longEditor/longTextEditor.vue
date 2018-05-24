@@ -7,7 +7,7 @@
 
 <script>
 import E from 'wangeditor'
-import {post} from '../../../utils/http.js'
+import { post } from '../../../utils/http.js'
 import { Toast } from 'mint-ui'
 export default{
   props: ['title'],

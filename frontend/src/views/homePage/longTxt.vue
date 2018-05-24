@@ -5,7 +5,7 @@
        <input type="hidden">
        <div class="expandingArea " id="textarea">
         <pre><span></span><br></pre>
-        <textarea maxlength="50" @input="descInput" v-model="Longtitle" placeholder="请输入标题" ></textarea>
+        <textarea maxlength="50" @input="descInput" v-model="Longtitle" :placeholder="$t('placeholder.title')" ></textarea>
       </div>
       <span class="area-lth">{{remnant}}/50</span>
        <!--<textarea id="Longtitle" class="long-text-title" v-model="Longtitle" placeholder="请输入标题" @input='autoHeight()'></textarea>-->

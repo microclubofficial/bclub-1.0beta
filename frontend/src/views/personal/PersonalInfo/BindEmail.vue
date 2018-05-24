@@ -72,6 +72,9 @@ export default {
           return false
         } else if (!emailreg.test(input) && input !== undefined && input.length > 0) {
           this.emailPrompt = this.$t('prompt.emailError')
+          // get('/api/setting/email', {'email': input}).then(data=>{
+          //   console.log(data)
+          // })
           this.canFind = false
           return false
         } else {
@@ -109,7 +112,8 @@ export default {
     successBind () {
       get(`/api/confirmed/email`).then(data => {
         if (data.resultcode === 0) {
-          $('.emaiModal').modal('hide')
+          alert(data.message)
+          $('.emaiModal').modal('show')
           this.successbind = false
         } else {
           $('.emaiModal').modal('hide')

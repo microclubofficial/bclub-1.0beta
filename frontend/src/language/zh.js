@@ -66,7 +66,8 @@ export default {
     icode: '邀请码（选填）',
     email: '请输入邮箱',
     originalPassword: '请输入原密码',
-    newPassword: '请输入新密码'
+    newPassword: '请输入新密码',
+    title: '请输入标题'
   },
   prompt: {
     acquireVcode: '获取验证码',
