@@ -189,6 +189,7 @@ img[data-w-e]{
 }
 .w-e-text-container{
   height: auto !important;
+  background: #fff;
 }
 .paging-item--more,.paging-item--current {
     cursor: default !important;

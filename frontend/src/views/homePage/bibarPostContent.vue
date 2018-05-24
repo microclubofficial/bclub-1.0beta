@@ -97,7 +97,10 @@ export default {
       // }
       // 处理首图
       if (/<img.*?(?:>|\/>)/gi.test(this.topicData.content)) {
-        let image = this.topicData.content.match(/<img.*?(?:>|\/>)/gi)[0].match(/(?<=(src="))[^"]*?(?=")/ig)[0]
+        let image = this.topicData.content.match(/<img(?![^<>]*?data-w-e[^<>]*?>).*?>/g)
+        if (image !== null) {
+          image = image[0].match(/(?<=(src="))[^"]*?(?=")/ig)[0]
+        }
         this.topicData.picture = image
       }
       // 处理路由

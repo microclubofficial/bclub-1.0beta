@@ -36,7 +36,7 @@
 <script>
 import 'babel-polyfill'
 import myUpload from '../uploadImg/upload.vue'
-import { setToken, rememberToken } from '../../../utils/auth'
+import { setToken, rememberToken, getToken } from '../../../utils/auth'
 export default {
   data () {
     return {
@@ -48,7 +48,8 @@ export default {
       headers: {
         smail: '*_~'
       },
-      imgDataUrl: ''
+      imgDataUrl: '',
+      user_token: ''
     }
   },
   components: {
@@ -60,6 +61,12 @@ export default {
     }
   },
   mounted () {
+    if (getToken()) {
+      this.user_token = JSON.parse(getToken())
+    }
+    if (this.user_token === '') {
+      this.$router.push('/')
+    }
   },
   methods: {
     toggleShow () {

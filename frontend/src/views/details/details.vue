@@ -474,25 +474,14 @@ export default {
     },
     // 收藏
     collectionTopic (articleDetail) {
-      let instance
       post(`/api/collect/${articleDetail.id}`).then(data => {
         if (data.data.collect_bool) {
           articleDetail.collect_bool = data.data.collect_bool
-          instance = new Toast({
-            message: data.message,
-            iconClass: 'glyphicon glyphicon-ok',
-            duration: 1000
-          })
+          alert(data.message)
         } else {
           articleDetail.collect_bool = data.data.collect_bool
-          instance = new Toast({
-            message: data.message,
-            duration: 1000
-          })
+          alert(data.message)
         }
-        setTimeout(() => {
-          instance.close()
-        }, 1000)
       })
     },
     // 来自去币讯
@@ -553,6 +542,7 @@ export default {
     },
     // 评论回复文字处理
     commentContent (val, id) {
+      // console.log(val)
       if (val === undefined) {
         return
       }
@@ -568,8 +558,9 @@ export default {
       // }
       this.imgCommentLength[id] = val.lastIndexOf('data-w-e="1">')
       if (val.length - this.imgCommentLength[id] > 200) {
-        if (this.more === '展开') {
-          return val.substring(0, 200 + this.imgCommentLength[id]) + '...'
+        if (id !== this.moreId) {
+          let imgVal = val.replace(/<img src="\/static[^>]+>/g, '')
+          return imgVal.substring(0, 200 + this.imgCommentLength[id] - 1) + '...'
         } else {
           return val
         }
