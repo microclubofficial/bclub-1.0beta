@@ -291,7 +291,6 @@ class ConfirmView(MethodView):
 
     def send_email(self, user, email):
         user.r_email = email
-        print(user.id,11111111111111111111111111111111)
         token = user.email_token
         confirm_url = url_for(
             'auth.confirm_token', token=token, _external=True)
