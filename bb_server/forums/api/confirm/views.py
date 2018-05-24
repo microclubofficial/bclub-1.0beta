@@ -15,9 +15,10 @@ class PasswordView(MethodView):
 
 class EmailView(MethodView):
     def get(self):
+        _email = request.data.get('email')
         user = request.user
         email = user.email
-        if not email:
+        if _email != email:
             msg = _('Please go to email to complete verification.')
             return get_json(0, msg, {})
         return get_json(1, 'success', email)    

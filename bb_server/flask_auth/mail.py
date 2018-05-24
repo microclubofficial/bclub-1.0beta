@@ -38,13 +38,21 @@ class Mail(object):
 
 
 class MailMixin(object):
-    @property
-    def email_token(self, email):
+    @property  
+    def r_email(self):
+        return self._r_email
+
+    @r_email.setter    
+    def r_email(self, email):
+        self._r_email = email
+
+    @property     
+    def email_token(self):    
         config = current_app.config
         secret_key = config.setdefault('SECRET_KEY', gen_secret_key(24))
         salt = config.setdefault('SECRET_KEY_SALT', gen_secret_key(24))
         serializer = URLSafeTimedSerializer(secret_key, salt=salt)
-        token = serializer.dumps([self.id, email])
+        token = serializer.dumps([self.id, self._r_email])
         return token
 
     @classmethod

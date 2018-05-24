@@ -211,7 +211,7 @@ class ForgetView(MethodView):
             'auth.forget_token', token=token, _external=True)
         html = render_template('templet/forget.html', confirm_url=confirm_url)
         subject = _('Please set a new password')
-        user.send_email(html=html, subject=subject)
+        user.send_email(email=user.email, html=html, subject=subject)
 
 class ForgetTokenView(MethodView):
     def get(self, token):
@@ -290,13 +290,14 @@ class ConfirmView(MethodView):
         return get_json(1, msg, {})
 
     def send_email(self, user, email):
+        user.r_email = email
+        print(user.id,11111111111111111111111111111111)
         token = user.email_token
         confirm_url = url_for(
             'auth.confirm_token', token=token, _external=True)
         html = render_template('templet/email.html', confirm_url=confirm_url)
         subject = _('Please confirm  your email')
-        user.email = email
-        user.send_email(html=html, subject=subject)
+        user.send_email(email=email, html=html, subject=subject)
         
 
 class ConfirmTokenView(MethodView):

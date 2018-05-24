@@ -135,8 +135,8 @@ class User(db.Model, UserMixin):
             return True
         return False
 
-    def send_email(self, *args, **kwargs):
-        kwargs.update(recipients=[self.email])
+    def send_email(self, email, *args, **kwargs):
+        kwargs.update(recipients=[email])
         mail.send_email(*args, **kwargs)
 
     def send_email_to_admin(self):
