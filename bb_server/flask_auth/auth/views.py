@@ -303,7 +303,9 @@ class ConfirmView(MethodView):
 class ConfirmTokenView(MethodView):
     def get(self, token):
         user = User.check_email_token(token)
+        print(user,222222222222222222222222222222222222222222222222222)
         if not user:
+            print(33333333333333333333333333333333333333333333333333)
             msg = _('The confirm link has been out of time.Please confirm your email again')
             flash(msg)
             return redirect('/')
