@@ -119,6 +119,7 @@
                       <!-- @ 样式 -->
                       <div class="replyAuthor" v-if="item.at_user !== ''">@{{item.at_user}}:&nbsp;<span class="replyBackConten" style="font-weight: normal;" v-html="replyFun(item.reference)"></span></div>
                       <!-- <p>{{item}}</p> -->
+                      <!--评论文-->
                       <p v-html="commentContent(item.content,item.id)"></p>
                       <a style="font-size:16px; white-space:nowrap;" v-if='item.content !== undefined && item.content.length - imgCommentLength[item.id]  > 200' href="#" class="bibar-indexintromore text-theme" @click="changeMore(item.id)">{{item.id === moreId ? '收起' : '展开'}}<i style="font-size:16px;" class="iconfont" v-if='more === "展开"'>&#xe692;</i><i style="font-size:16px;" class="iconfont" v-if='more === "收起"'>&#xe693;</i></a>
                     </div>
@@ -473,6 +474,7 @@ export default{
     },
     // 评论富文本框
     showContent (data) {
+      console.log(data)
       this.commentShow = true
       this.showReport = false
       this.nowData[this.replyId].unshift(data)
@@ -571,7 +573,27 @@ export default{
         return
       }
       let reply = val.replace(/<p[^>]*>|<\/p>|<h-char[^>]*>|<\/h-char>|<h-inner[^>]*>|<\/h-inner>/g, '')
-      if (reply.indexOf('data-w-e') > 0) {
+      if (reply.indexOf('href') > 0) {
+        let imgLength = 0
+        if (reply.indexOf('img') > 0) {
+          let imgArr = reply.match(/<img[^>]*>/gi)
+          if (imgArr === null) {
+            return
+          }
+          for (let i = 0; i < imgArr.length; i++) {
+            imgLength += imgArr[i].length
+          }
+        }
+        let hrefLength = 0
+        let hrefArr = reply.match(/<a.*?>(.*?)<\/a>/ig)
+        if (hrefArr === null) {
+          return
+        }
+        for (let i = 0; i < hrefArr.length; i++) {
+          hrefLength += hrefArr[i].length
+        }
+        return reply.substring(0, 40 + hrefLength + imgLength) + '...'
+      } else if (reply.indexOf('img') > 0) {
         let imgLength = 0
         let imgArr = reply.match(/<img[^>]*>/gi)
         if (imgArr === null) {
@@ -580,19 +602,33 @@ export default{
         for (let i = 0; i < imgArr.length; i++) {
           imgLength += imgArr[i].length
         }
-        console.log(imgLength)
-        console.log(reply.substring(imgLength))
         return reply.substring(0, 40 + imgLength)
-      } else if (/^\/static.*/ig.test(reply)) {
-        return '图片评论' + `<a style='color:#0181FF' href='${reply}'><i class='iconfont'>&#xe694;</i>查看图片</a>`
-      } else if (reply.length > 100) {
+      } else if (reply.length > 40) {
         return reply.substring(0, 40) + '...'
       } else {
         return reply
       }
+      // if (reply.indexOf('img') > 0 && reply.indexOf('static') === -1) {
+      //   let imgLength = 0
+      //   let imgArr = reply.match(/<img[^>]*>/gi)
+      //   if (imgArr === null) {
+      //     return
+      //   }
+      //   for (let i = 0; i < imgArr.length; i++) {
+      //     imgLength += imgArr[i].length
+      //   }
+      //   return reply.substring(0, 40 + imgLength)
+      // } else if (/^\/static.*/ig.test(reply)) {
+      //   return '图片评论' + `<a style='color:#0181FF' href='${reply}'><i class='iconfont'>&#xe694;</i>查看图片</a>`
+      // } else if (reply.length > 100) {
+      //   return reply.substring(0, 40) + '...'
+      // } else {
+      //   return reply
+      // }
     },
     // 评论回复文字处理
     commentContent (val, id) {
+      // console.log(val)
       if (val === undefined) {
         return
       }
@@ -609,7 +645,8 @@ export default{
       this.imgCommentLength[id] = val.lastIndexOf('data-w-e="1">')
       if (val.length - this.imgCommentLength[id] > 200) {
         if (this.more === '展开') {
-          return val.substring(0, 200 + this.imgCommentLength[id]) + '...'
+          let imgVal = val.replace(/<img src="\/static[^>]+>/g, '')
+          return imgVal.substring(0, 200 + this.imgCommentLength[id] - 1) + '...'
         } else {
           return val
         }
@@ -621,11 +658,9 @@ export default{
       if (id !== this.moreId) {
         this.moreId = id
         this.more = '收起'
-        // this.commentContent(val, id)
       } else {
         this.more = '展开'
         this.moreId = ''
-        // this.commentContent(val, id)
       }
     },
     // 数据排序
