@@ -33,7 +33,7 @@
                 </a>
               </li>
               <li class="set-choseStar" @click="collectionTopic(tmp)"> <a :class='{collectionActive:tmp.collect_bool}' href="javascript:void(0);"><i class="iconfont icon-star">&#xe6a7;</i>{{$t('list.collect')}}</a> </li>
-              <li class="set-delList" @click="delTopic(tmp)"> <a href="javascript:void(0);"><i class="iconfont icon-del">&#xe78d;</i>{{$t('list.delete')}}</a> </li>
+              <li v-if='tmp.bool_delete' class="set-delList" @click="delTopic(tmp)"> <a href="javascript:void(0);"><i class="iconfont icon-del">&#xe78d;</i>{{$t('list.delete')}}</a> </li>
               <!-- <li> <a href="javascript:void(0);"><i class="iconfont icon-fenxiang"></i> 分享</a> </li> -->
               <!-- <li class="set-choseShang"> <a href="javascript:void(0);"><i class="iconfont icon-dashang"></i> 打赏<span>438</span></a> </li> -->
               <li>
@@ -131,7 +131,7 @@
                             <i class="iconfont icon-pinglun"></i> {{$t('list.reply')}}
                           </a>
                         </li>
-                        <li class="set-delList" @click="delTopic(tmp)"> <a href="javascript:void(0);"><i class="iconfont icon-del">&#xe78d;</i>{{$t('list.delete')}}</a> </li>
+                        <li v-if='item.bool_delete' class="set-delList" @click="delComment(item,now,tmp)"> <a href="javascript:void(0);"><i class="iconfont icon-del">&#xe78d;</i>{{$t('list.delete')}}</a> </li>
                       </ul>
                     </div>
                      <!-- 回复 -->
@@ -692,6 +692,25 @@ export default{
           else this.nowData[tmpId] = data.data
         })
       }
+    },
+    // 删除文章
+    delTopic (tmp, index) {
+      post(`/api/topic/delete/${tmp.id}`).then(data => {
+        if (data.resultcode === 1) {
+          this.articles.splice(index, 1)
+          this.i = ''
+          $('.bibar-hot').css({'display': 'none'})
+        }
+      })
+    },
+    // 删除评论
+    delComment (item, now, tmp) {
+      post(`/api/reply/delete/${item.id}`).then(data => {
+        if (data.resultcode === 1) {
+          this.nowData[tmp.id].splice(now, 1)
+          this.articles[this.i].replies_count = this.articles[this.i].replies_count - 1
+        }
+      })
     },
     // 分页
     prev (id) {
