@@ -305,7 +305,7 @@ export default{
             that.topicData.content = content
           }
           // 请求
-          this.topicData.picture = this.imgArr[0]
+          this.topicData.picture = data.data[this.imgArr[0]]
           // console.log(this.topicData.content)
           // console.log(this)
           this.postEditor()
