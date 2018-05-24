@@ -17,7 +17,7 @@ class EmailView(MethodView):
     def get(self):
         user = request.user
         email = user.email
-        if not user.query.filter_by(email=email).exists():
+        if not user.query.filter_by(email=email, is_confirmed=True).exists():
             msg = _('Please go to email to complete verification.')
             return get_json(0, msg, {})
         return get_json(1, 'success', email)    
