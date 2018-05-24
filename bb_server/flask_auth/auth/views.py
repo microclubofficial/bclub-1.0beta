@@ -199,7 +199,7 @@ class ForgetView(MethodView):
         email = post_data['email']
         user = User.query.filter_by(email = email).first()
         if not user:
-            msg = _('The email is error')
+            msg = _('Email hasn\'t been binded, please find it through other ways.')
             return get_json(0, msg, {})
         self.send_email(user)
         msg = _('An email has been sent to you.Please receive and update your password in time')

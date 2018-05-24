@@ -18,6 +18,6 @@ class EmailView(MethodView):
         user = request.user
         email = user.email
         if not email:
-            msg = _('Email does not exist')
+            msg = _('Please go to email to complete verification.')
             return get_json(0, msg, {})
         return get_json(1, 'success', email)    

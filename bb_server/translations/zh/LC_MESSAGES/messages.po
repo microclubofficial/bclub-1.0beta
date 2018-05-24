@@ -110,9 +110,9 @@ msgstr "您已注册"
 msgid "forget password"
 msgstr "忘记密码"
 
-#: flask_auth/auth/views.py:202 forums/common/response.py:37
-msgid "The email is error"
-msgstr "邮箱未注册"
+#: flask_auth/auth/views.py:202
+msgid "Email hasn't been binded, please find it through other ways."
+msgstr "未绑定邮箱，请通过其他方式找回。"
 
 #: flask_auth/auth/views.py:205 flask_auth/auth/views.py:286
 msgid ""
@@ -383,8 +383,8 @@ msgid "Original password error"
 msgstr "原密码错误"
 
 #: forums/api/confirm/views.py:21
-msgid "Email does not exist"
-msgstr "邮箱未注册"
+msgid "Please go to email to complete verification."
+msgstr "请前往邮箱完成验证。"
 
 #: forums/api/follow/views.py:66 forums/api/follow/views.py:79
 msgid "FollowList"
