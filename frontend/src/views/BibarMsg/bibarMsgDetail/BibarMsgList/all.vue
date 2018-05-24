@@ -82,9 +82,9 @@
             <div class="comment-all">
               <h3>{{$t('list.allComments')}}({{tmp.replies_count}})</h3>
                <div class="comment-sort">
-                <a href="javascript:void(0)" @click='sortList(0, tmp.id)' :class="{active:sortNow === 0}">{{$t('list.newest')}}</a>
-                <a href="javascript:void(0)" @click='sortList(1, tmp.id)' :class="{active:sortNow === 1}">{{$t('list.earliest')}}</a>
-                <a href="javascript:void(0)" @click='sortList(2, tmp.id)' :class="{active:sortNow === 2}">{{$t('list.likeMost')}}</a>
+                <a href="javascript:void(0)" @click='sortList(tmp.id,0)' :class="{active:sortNow === 0}">{{$t('list.newest')}}</a>
+                <a href="javascript:void(0)" @click='sortList(tmp.id,1)' :class="{active:sortNow === 1}">{{$t('list.earliest')}}</a>
+                <a href="javascript:void(0)" @click='sortList(tmp.id,2)' :class="{active:sortNow === 2}">{{$t('list.likeMost')}}</a>
               </div>
               <!-- 回复内容 -->
                   <!-- <div class="comment-item" data-index='' data-id='' v-for="(tmp,rIndex) in replyContent" :key='rIndex'>
@@ -112,7 +112,7 @@
                     </a>
                     <div class="comment-item-main">
                       <div class="comment-item-hd">
-                        <p href="#" class="user-name">{{item.author}}<span class="time">{{item.diff_time !== '0秒' ? item.diff_time + '前' : '刚刚'}}发布</span></p>
+                        <p href="#" class="user-name">{{item.author}}<span class="time">{{item.diff_time !== 0 ? item.diff_time + '前' : '刚刚'}}发布</span></p>
                       </div>
                       <!-- @ 样式 -->
                       <div class="replyAuthor" v-if="item.at_user !== ''">@{{item.at_user}}:&nbsp;<span class="replyBackConten" style="display:inline-block;font-weight: normal;" v-html="replyFun(item.reference)"></span></div>
@@ -198,7 +198,7 @@
 <script>
 import {get, post} from '../../../../utils/http.js'
 import BibarReport from '../../../homePage/bibarReport.vue'
-import { Toast } from 'mint-ui'
+// import { Toast } from 'mint-ui'
 export default{
   // props: ['getNavData'],
   data: function () {
@@ -452,38 +452,7 @@ export default{
       if (!this.cpno[id]) {
         this.cpno[id] = 1
       }
-      get(`/api/topic/${id}/${this.cpno[id]}`).then(data => {
-        if (!this.nowData[id]) this.$set(this.nowData, id, data.data.replies)
-        else this.nowData[id] = data.data.replies
-        if (!this.pageNumber[id]) this.$set(this.pageNumber, id, this.showPageBtn(id, data.data.page_count))
-        else this.pageNumber[id] = this.showPageBtn(id, data.data.page_count)
-        this.showLoaderComment = false
-        this.cpageCount = data.data.page_count
-        this.cpageCountObj[id] = this.cpageCount
-        if (this.cpageCount > 1) {
-          this.showPage = true
-        } else {
-          this.showPage = false
-        }
-        this.$nextTick(() => {
-          $('.comment-item-main').find('img').addClass('zoom-in')
-          $('[data-w-e]').removeClass('zoom-in')
-          $('.comment-item-main').on('click', 'img', function () {
-            // console.log($(this)).not('[data-w-e]')
-            if (!$(this)[0].hasAttribute('data-w-e')) {
-              if (!$(this).hasClass('zoom-out')) {
-                if ($(this).hasClass('zoom-in')) {
-                  $(this).removeClass('zoom-in')
-                }
-                $(this).addClass('zoom-out')
-              } else if ($(this).hasClass('zoom-out')) {
-                $(this).removeClass('zoom-out')
-                $(this).addClass('zoom-in')
-              }
-            }
-          })
-        })
-      })
+      this.sortList(id, 0)
       $('.bibar-tabitem:eq(' + index + ')').find('.bibar-hot').slideToggle('fast')
       if (index !== this.i) {
         this.i = index
@@ -561,31 +530,17 @@ export default{
     },
     // 收藏
     collectionTopic (index, tmp) {
-      let instance
       post(`/api/collect/${tmp.id}`).then(data => {
-        if (data.message === '未登录') {
-          instance = new Toast({
-            message: data.message,
-            duration: 1000
-          })
+        if (data.resultcode === 0) {
+          alert(data.message)
           this.$router.push('/login')
         } else if (data.message === '收藏成功') {
           this.collection = index
-          instance = new Toast({
-            message: data.message,
-            iconClass: 'glyphicon glyphicon-ok',
-            duration: 1000
-          })
+          alert(data.message)
           tmp.collect_bool = data.data.collect_bool
         } else {
-          instance = new Toast({
-            message: data.message,
-            duration: 1000
-          })
+          alert(data.message)
         }
-        setTimeout(() => {
-          instance.close()
-        }, 1000)
         tmp.collect_bool = data.data.collect_bool
       })
     },
@@ -648,6 +603,7 @@ export default{
     },
     // 评论回复文字处理
     commentContent (val, id) {
+      // console.log(val)
       if (val === undefined) {
         return
       }
@@ -663,8 +619,9 @@ export default{
       // }
       this.imgCommentLength[id] = val.lastIndexOf('data-w-e="1">')
       if (val.length - this.imgCommentLength[id] > 200) {
-        if (this.more === '展开') {
-          return val.substring(0, 200 + this.imgCommentLength[id]) + '...'
+        if (id !== this.moreId) {
+          let imgVal = val.replace(/<img src="\/static[^>]+>/g, '')
+          return imgVal.substring(0, 200 + this.imgCommentLength[id] - 1) + '...'
         } else {
           return val
         }
@@ -682,46 +639,48 @@ export default{
       }
     },
     // 数据排序
-    sortList (id, tmpId) {
-      // 最近
-      if (id === 0) {
-        this.sortNow = id
-        get(`/api/topic/${tmpId}/1`).then(data => {
-          if (!this.nowData[tmpId]) this.$set(this.nowData, tmpId, data.data.replies)
-          else this.nowData[tmpId] = data.data.replies
-          this.showLoaderComment = false
-          this.cpageCount = data.data.page_count
-          if (this.cpageCount > 1) {
-            this.showPage = true
-          } else {
-            this.showPage = false
-          }
-          this.$nextTick(() => {
-            $('.comment-item-main').find('img').addClass('zoom-in')
-            $('[data-w-e]').removeClass('zoom-in')
-            $('.comment-item-main').on('click', 'img', function () {
-              if (!$(this)[0].hasAttribute('data-w-e')) {
-              // if (!$(this)[0].indexOf('alt="[') === -1) {
-                if (!$(this).hasClass('zoom-out')) {
-                  if ($(this).hasClass('zoom-in')) {
-                    $(this).removeClass('zoom-in')
-                  }
-                  $(this).addClass('zoom-out')
-                } else if ($(this).hasClass('zoom-out')) {
-                  $(this).removeClass('zoom-out')
-                  $(this).addClass('zoom-in')
+    sortList (id, sort) {
+      this.pageId = id
+      if (sort === 0) {
+        this.sortId = 'replies'
+      } else if (sort === 1) {
+        this.sortId = 'replies/early'
+      } else {
+        this.sortId = 'replies/good'
+      }
+      this.sortNow = sort
+      get(`/api/topic/${this.sortId}/${id}/${this.cpno[id]}`).then(data => {
+        if (!this.nowData[id]) this.$set(this.nowData, id, data.data.replies)
+        else this.nowData[id] = data.data.replies
+        if (!this.pageNumber[id]) this.$set(this.pageNumber, id, this.showPageBtn(id, data.data.page_count))
+        else this.pageNumber[id] = this.showPageBtn(id, data.data.page_count)
+        this.showLoaderComment = false
+        this.cpageCount = data.data.page_count
+        this.cpageCountObj[id] = this.cpageCount
+        if (this.cpageCount > 1) {
+          this.showPage = true
+        } else {
+          this.showPage = false
+        }
+        this.$nextTick(() => {
+          $('.comment-item-main').find('img').addClass('zoom-in')
+          $('[data-w-e]').removeClass('zoom-in')
+          $('.comment-item-main').on('click', 'img', function () {
+            // console.log($(this)).not('[data-w-e]')
+            if (!$(this)[0].hasAttribute('data-w-e')) {
+              if (!$(this).hasClass('zoom-out')) {
+                if ($(this).hasClass('zoom-in')) {
+                  $(this).removeClass('zoom-in')
                 }
+                $(this).addClass('zoom-out')
+              } else if ($(this).hasClass('zoom-out')) {
+                $(this).removeClass('zoom-out')
+                $(this).addClass('zoom-in')
               }
-            })
+            }
           })
         })
-      } else if (id === 1) {
-        this.sortNow = id
-        get(`/api/topic/replies/early/${tmpId}/1`).then(data => {
-          if (!this.nowData[tmpId]) this.$set(this.nowData, tmpId, data.data)
-          else this.nowData[tmpId] = data.data
-        })
-      }
+      })
     },
     delTopic (tmp, index) {
       post(`/api/topic/delete/${tmp.id}`).then(data => {
@@ -772,11 +731,8 @@ export default{
         this.cpno[id] = page
       }
       this.showLoaderComment = true
-      get(`/api/topic/${id}/${page}`).then(data => {
-        this.showLoaderComment = false
-        if (!this.nowData[id]) this.$set(this.nowData, id, data.data.replies)
-        else this.nowData[id] = data.data.replies
-      })
+      this.pageId = id
+      this.sortList(id, this.sortNow)
     },
     // 回复人文字处理
     needTxt (val) {

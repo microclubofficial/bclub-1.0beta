@@ -41,6 +41,7 @@
 <script>
 import {post, get} from '../../../utils/http'
 import { Toast } from 'mint-ui'
+import {getToken} from '../../../utils/auth.js'
 export default {
   data () {
     return {
@@ -48,10 +49,17 @@ export default {
       emailPrompt: '',
       canFind: false,
       showModal: false,
-      successbind: false
+      successbind: false,
+      user_token: ''
     }
   },
   mounted () {
+    if (getToken()) {
+      this.user_token = JSON.parse(getToken())
+    }
+    if (this.user_token === '') {
+      this.$router.push('/')
+    }
   },
   methods: {
     // 验证

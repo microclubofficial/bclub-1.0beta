@@ -120,8 +120,8 @@
                       <div class="replyAuthor" v-if="item.at_user !== ''">@{{item.at_user}}:&nbsp;<span class="replyBackConten" style="font-weight: normal;" v-html="replyFun(item.reference)"></span></div>
                       <!-- <p>{{item}}</p> -->
                       <!--评论文-->
-                      <p v-html="commentContent(item.content,item.id)"></p>
-                      <a style="font-size:16px; white-space:nowrap;" v-if='item.content !== undefined && item.content.length - imgCommentLength[item.id]  > 200' href="#" class="bibar-indexintromore text-theme" @click="changeMore(item.id)">{{item.id === moreId ? '收起' : '展开'}}<i style="font-size:16px;" class="iconfont" v-if='more === "展开"'>&#xe692;</i><i style="font-size:16px;" class="iconfont" v-if='more === "收起"'>&#xe693;</i></a>
+                      <p class="commentContent" v-html="commentContent(item.content,item.id)"></p>
+                      <a style="font-size:16px; white-space:nowrap;" v-if='item.content !== undefined && item.content.length - imgCommentLength[item.id]  > 200' href="#" class="bibar-indexintromore text-theme" @click="changeMore(item.id)">{{item.id === moreId ? '收起' : '展开'}}<i style="font-size:16px;" class="iconfont" v-if='moreId !== item.id'>&#xe692;</i><i style="font-size:16px;" class="iconfont" v-if='moreId === item.id'>&#xe693;</i></a>
                     </div>
                     <div class="set" style="margin-left:42px">
                       <ul class="bibar-indexNewsItem-infro">
@@ -200,7 +200,7 @@
 <script>
 import {get, post} from '../../../utils/http'
 import BibarReport from '../bibarReport.vue'
-import { Toast } from 'mint-ui'
+// import { Toast } from 'mint-ui'
 export default{
   // props: ['getNavData'],
   data: function () {
@@ -469,6 +469,48 @@ export default{
       $('.editor-toolbar').find('.wangeditor>.editor').css({'min-height': '130px', 'padding-bottom': '37px'})
       $('.editor-toolbar').find('.wangeditor>div:eq(2)').css('display', 'none')
     },
+    // 数据排序
+    sortList (id, sort) {
+      this.pageId = id
+      if (sort === 0) {
+        this.sortId = 'replies'
+      } else if (sort === 1) {
+        this.sortId = 'replies/early'
+      } else {
+        this.sortId = 'replies/good'
+      }
+      this.sortNow = sort
+      get(`/api/topic/${this.sortId}/${id}/${this.cpno[id]}`).then(data => {
+        if (!this.nowData[id]) this.$set(this.nowData, id, data.data.replies)
+        else this.nowData[id] = data.data.replies
+        if (!this.pageNumber[id]) this.$set(this.pageNumber, id, this.showPageBtn(id, data.data.page_count))
+        else this.pageNumber[id] = this.showPageBtn(id, data.data.page_count)
+        this.showLoaderComment = false
+        this.cpageCount = data.data.page_count
+        this.cpageCountObj[id] = this.cpageCount
+        if (this.cpageCount > 1) {
+          this.showPage = true
+        }
+        this.$nextTick(() => {
+          $('.comment-item-main').find('img').addClass('zoom-in')
+          $('[data-w-e]').removeClass('zoom-in')
+          $('.comment-item-main').on('click', 'img', function () {
+            if (!$(this)[0].hasAttribute('data-w-e')) {
+            // if (!$(this)[0].indexOf('alt="[') === -1) {
+              if (!$(this).hasClass('zoom-out')) {
+                if ($(this).hasClass('zoom-in')) {
+                  $(this).removeClass('zoom-in')
+                }
+                $(this).addClass('zoom-out')
+              } else if ($(this).hasClass('zoom-out')) {
+                $(this).removeClass('zoom-out')
+                $(this).addClass('zoom-in')
+              }
+            }
+          })
+        })
+      })
+    },
     // 是否显示评论默认框
     commentShowFun () {
       this.showReport = true
@@ -477,7 +519,6 @@ export default{
     },
     // 评论富文本框
     showContent (data) {
-      console.log(data)
       this.commentShow = true
       this.showReport = false
       this.nowData[this.replyId].unshift(data)
@@ -524,37 +565,17 @@ export default{
       this.nowData[this.replyId].unshift(data)
       this.articles[this.i].replies_count = data.replies_count
       this.replayId = ''
-      // get(`/api/topic/${this.tpno}`).then(data => {
-      //   this.showLoaderComment = false
-      //   if (this.tpno === 1) {
-      //     this.articles = data.data.topics
-      //   } else {
-      //     let oldArr = this.articles.slice(0, -5)
-      //     this.articles = oldArr.concat(data.data.topics)
-      //   }
-      // })
     },
     // 收藏
     collectionTopic (tmp) {
-      let instance
       post(`/api/collect/${tmp.id}`).then(data => {
-        if (data.message === '收藏成功') {
-          tmp.collect_bool = data.data.collect_bool
-          instance = new Toast({
-            message: data.message,
-            iconClass: 'glyphicon glyphicon-ok',
-            duration: 1000
-          })
+        if (data.resultcode === 0) {
+          alert(data.message)
+          this.$router.push('/login')
         } else {
           tmp.collect_bool = data.data.collect_bool
-          instance = new Toast({
-            message: data.message,
-            duration: 1000
-          })
+          alert(data.message)
         }
-        setTimeout(() => {
-          instance.close()
-        }, 1000)
       })
     },
     // 处理图片
@@ -632,7 +653,7 @@ export default{
       // }
       this.imgCommentLength[id] = val.lastIndexOf('data-w-e="1">')
       if (val.length - this.imgCommentLength[id] > 200) {
-        if (this.more === '展开') {
+        if (id !== this.moreId) {
           let imgVal = val.replace(/<img src="\/static[^>]+>/g, '')
           return imgVal.substring(0, 200 + this.imgCommentLength[id] - 1) + '...'
         } else {
@@ -650,48 +671,6 @@ export default{
         this.more = '展开'
         this.moreId = ''
       }
-    },
-    // 数据排序
-    sortList (id, sort) {
-      this.pageId = id
-      if (sort === 0) {
-        this.sortId = 'replies'
-      } else if (sort === 1) {
-        this.sortId = 'replies/early'
-      } else {
-        this.sortId = 'replies/good'
-      }
-      this.sortNow = sort
-      get(`/api/topic/${this.sortId}/${id}/${this.cpno[id]}`).then(data => {
-        if (!this.nowData[id]) this.$set(this.nowData, id, data.data.replies)
-        else this.nowData[id] = data.data.replies
-        if (!this.pageNumber[id]) this.$set(this.pageNumber, id, this.showPageBtn(id, data.data.page_count))
-        else this.pageNumber[id] = this.showPageBtn(id, data.data.page_count)
-        this.showLoaderComment = false
-        this.cpageCount = data.data.page_count
-        this.cpageCountObj[id] = this.cpageCount
-        if (this.cpageCount > 1) {
-          this.showPage = true
-        }
-        this.$nextTick(() => {
-          $('.comment-item-main').find('img').addClass('zoom-in')
-          $('[data-w-e]').removeClass('zoom-in')
-          $('.comment-item-main').on('click', 'img', function () {
-            if (!$(this)[0].hasAttribute('data-w-e')) {
-            // if (!$(this)[0].indexOf('alt="[') === -1) {
-              if (!$(this).hasClass('zoom-out')) {
-                if ($(this).hasClass('zoom-in')) {
-                  $(this).removeClass('zoom-in')
-                }
-                $(this).addClass('zoom-out')
-              } else if ($(this).hasClass('zoom-out')) {
-                $(this).removeClass('zoom-out')
-                $(this).addClass('zoom-in')
-              }
-            }
-          })
-        })
-      })
     },
     // 删除文章
     delTopic (tmp, index) {

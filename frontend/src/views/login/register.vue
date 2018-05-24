@@ -228,7 +228,7 @@ export default {
       post(this.formUrl, this.userForm).then(data => {
         // console.log(data)
         if (data.resultcode === 0) {
-          alert(data.message)
+          this.unamePrompt = data.message
           return
         }
         if (data.resultcode === 1) {

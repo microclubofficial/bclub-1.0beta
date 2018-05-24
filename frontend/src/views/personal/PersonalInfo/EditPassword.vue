@@ -33,17 +33,25 @@
 </template>
 <script>
 import {post} from '../../../utils/http'
-import { Toast } from 'mint-ui'
+// import { Toast } from 'mint-ui'
+import {getToken} from '../../../utils/auth.js'
 export default {
   data () {
     return {
       setPwd: {},
       oldpwdPrompt: '',
       newpwdPrompt: '',
-      confirm_upwdPrompt: ''
+      confirm_upwdPrompt: '',
+      user_token: ''
     }
   },
   mounted () {
+    if (getToken()) {
+      this.user_token = JSON.parse(getToken())
+    }
+    if (this.user_token === '') {
+      this.$router.push('/')
+    }
   },
   methods: {
     //   验证

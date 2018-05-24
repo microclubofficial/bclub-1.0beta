@@ -102,7 +102,8 @@ export default {
       phonePrompt: '',
       phoneControlPrompt: '',
       canSetU: false,
-      cansetP: false
+      cansetP: false,
+      user_token: ''
     }
   },
   computed: {
@@ -111,6 +112,12 @@ export default {
     }
   },
   created: function () {
+    if (getToken()) {
+      this.user_token = JSON.parse(getToken())
+    }
+    if (this.user_token === '') {
+      this.$router.push('/')
+    }
     // 个人资料
     this.personalUser(this.userInfo.username)
   },
@@ -269,7 +276,7 @@ export default {
     // 个人资料
     personalUser (uname) {
       get(`/api/u/${uname}`).then(data => {
-        if (data.message === '未登录') {
+        if (data.resultcode === 0) {
           alert(this.$t('prompt.loginFirst'))
           this.$router.push({ path: '/login' })
         } else {

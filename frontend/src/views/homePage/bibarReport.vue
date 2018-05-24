@@ -100,8 +100,10 @@ export default {
       }
       // 处理评论内容
       if (this.toApi === 0) {
-        let commentImg = this.topicData.content.match(/<img.*?(?:>|\/>)/gi)[0].match(/(?<=(src="))[^"]*?(?=")/ig)[0]
-        this.topicData.picture = commentImg
+        if (this.topicData.content.indexOf('img') > 0) {
+          let commentImg = this.topicData.content.match(/<img.*?(?:>|\/>)/gi)[0].match(/(?<=(src="))[^"]*?(?=")/ig)[0]
+          this.topicData.picture = commentImg
+        }
       }
       // 处理回复数据
       if (this.toApi === 4) {
