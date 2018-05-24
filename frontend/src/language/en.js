@@ -66,7 +66,8 @@ export default {
     icode: 'invitation code',
     email: 'email',
     originalPassword: 'original password',
-    newPassword: 'new password'
+    newPassword: 'new password',
+    title: 'Please enter title'
   },
   prompt: {
     acquireVcode: 'Acquire',

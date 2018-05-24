@@ -254,10 +254,16 @@ export default{
       // this.$emit('toBibarMsg', tmp.id)
       // 调简介
       this.briefFun(tmp.id)
+      var crumbName = ''
+      if(this.language == 'zh'){
+        crumbName = tmp.name_ch
+      }else if(this.language == 'en'){
+        crumbName = tmp.name_en
+      }
       this.$router.push({
         path: `/msgDetail/${tmp.id}`,
         query: {
-          b: JSON.stringify({'zh': tmp.name_ch})
+          b: JSON.stringify({'zh': crumbName})
         }
       })
     },
