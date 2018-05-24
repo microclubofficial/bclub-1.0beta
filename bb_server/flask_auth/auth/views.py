@@ -206,7 +206,8 @@ class ForgetView(MethodView):
         return get_json(1, msg, {})
 
     def send_email(self, user):
-        token = user.email_token(user.email)
+        user.r_email = user.email
+        token = user.email_token
         confirm_url = url_for(
             'auth.forget_token', token=token, _external=True)
         html = render_template('templet/forget.html', confirm_url=confirm_url)
