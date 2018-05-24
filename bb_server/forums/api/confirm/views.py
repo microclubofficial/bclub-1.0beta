@@ -20,4 +20,4 @@ class EmailView(MethodView):
         if not email:
             msg = _('Email does not exist')
             return get_json(0, msg, {})
-        return get_json(1, 'success', email)
+        return get_json(1, 'success', email)    

@@ -282,10 +282,12 @@ class ConfirmView(MethodView):
     def post(self):
         user = request.user
         email = request.data.get('email')
+        if User.query.filter_by(email=email).exists():
+            msg = _('The email has been registered')
+            return get_json(0, msg, {})
         self.send_email(user, email)
         msg = _('An email has been sent to you.Please receive and update your password in time')
         return get_json(1, msg, {})
-
 
     def send_email(self, user, email):
         token = user.email_token
