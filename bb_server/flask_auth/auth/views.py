@@ -197,7 +197,7 @@ class ForgetView(MethodView):
     def post(self):
         post_data = request.json
         email = post_data['email']
-        user = User.query.filter_by(email = email).first()
+        user = User.query.filter_by(email = email, is_confirmed=1).first()
         if not user:
             msg = _('Email hasn\'t been binded, please find it through other ways.')
             return get_json(0, msg, {})
@@ -215,7 +215,7 @@ class ForgetView(MethodView):
 
 class ForgetTokenView(MethodView):
     def get(self, token):
-        email, user = User.check_email_token(token)
+        user = User.check_email_token(token)
         if not user:
             msg = _('The confirm link has been out of time.Please confirm your email again')
             flash(msg)
@@ -235,7 +235,7 @@ class SetPasswordView(MethodView):
             phone = post_data['phone']
             user = User.query.filter_by(phone = phone).first()
         else:
-            email, user = User.check_email_token(token)
+            user = User.check_email_token(token)
         if password != confirm_password:
             msg = _('Two passwords are different')
             return get_json(0, msg, {})
@@ -273,7 +273,7 @@ class ConfirmView(MethodView):
     
     def get(self):
         email = request.data.get('email')
-        if User.query.filter_by(email=email).exists():
+        if User.query.filter_by(email=email, is_confirmed=1).exists():
             msg = _('The email has been registered')
             return get_json(0, msg, {})
         msg = _('success')
@@ -282,7 +282,7 @@ class ConfirmView(MethodView):
     def post(self):
         user = request.user
         email = request.data.get('email')
-        if User.query.filter_by(email=email).exists():
+        if User.query.filter_by(email=email,is_confirmed=1).exists():
             msg = _('The email has been registered')
             return get_json(0, msg, {})
         self.send_email(user, email)
@@ -301,12 +301,12 @@ class ConfirmView(MethodView):
 
 class ConfirmTokenView(MethodView):
     def get(self, token):
-        email, user = User.check_email_token(token)
+        user = User.check_email_token(token)
         if not user:
             msg = _('The confirm link has been out of time.Please confirm your email again')
             flash(msg)
             return redirect('/')
-        user.email = email
+        user.is_confirmed = 1
         user.save()
         return redirect('/')
 
