@@ -296,6 +296,7 @@ class ConfirmView(MethodView):
         html = render_template('templet/email.html', confirm_url=confirm_url)
         subject = _('Please confirm  your email')
         user.email = email
+        user.save()
         user.send_email(html=html, subject=subject)
         
 
