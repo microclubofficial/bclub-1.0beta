@@ -80,7 +80,7 @@ export default {
       let tempContent = this.topicData.content.replace(/<br>|&nbsp;|\s|<p>|<\/p>|<div>|<\/div>/g, '')
       if (!tempContent) {
         let instance = new Toast({
-          message: '发帖内容不能为空',
+          message: this.$t('prompt.emptyContent'),
           duration: 1000
         })
         setTimeout(() => {
@@ -187,7 +187,7 @@ export default {
         })
       } else {
         let instance = new Toast({
-          message: '发帖内容不能为空',
+          message: this.$t('prompt.emptyContent'),
           duration: 1000
         })
         setTimeout(() => {
@@ -241,11 +241,11 @@ export default {
     // 校验链接
     this.editor.customConfig.linkCheck = function (text, link) {
       if (text === '' || link === '') {
-        return ('无效的链接')
+        return this.$t('prompt.emptyLink')
       } else {
         let reg = /[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+\.?/ig
         if (!reg.test(link)) {
-          return ('请输入正确的链接地址')
+          return this.$t('prompt.invalidLink')
         } else {
           return true
         }
@@ -254,7 +254,7 @@ export default {
     // 表情配置
     this.editor.customConfig.emotions = [
       {
-        title: '表情',
+        title: this.$t('button.emoji'),
         type: 'image',
         content: [
           {

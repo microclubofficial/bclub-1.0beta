@@ -89,7 +89,8 @@ export default {
     loginFirst: '请先登录',
     emailSent: '一封邮件已发送，请至邮箱查收完成验证',
     loading: '加载中...',
-    noMore: '没有啦'
+    noMore: '没有啦',
+    empty: '发贴内容不能为空'
   },
   message: {
     sthToSay: '有什么消息告诉大家...',
