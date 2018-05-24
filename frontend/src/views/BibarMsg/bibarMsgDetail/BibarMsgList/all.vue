@@ -608,7 +608,29 @@ export default{
         return
       }
       let reply = val.replace(/<p[^>]*>|<\/p>|<h-char[^>]*>|<\/h-char>|<h-inner[^>]*>|<\/h-inner>/g, '')
-      if (reply.indexOf('data-w-e') > 0) {
+      if (reply.indexOf('href') > 0) {
+        let imgLength = 0
+        if (reply.indexOf('img') > 0) {
+          let imgArr = []
+          imgArr = reply.match(/<img[^>]*>/gi)
+          if (imgArr === null) {
+            return
+          }
+          for (let i = 0; i < imgArr.length; i++) {
+            imgLength += imgArr[i].length
+          }
+        }
+        let hrefLength = 0
+        let hrefArr = reply.match(/<a.*?>(.*?)<\/a>/ig)[0]
+        if (hrefArr === null) {
+          return
+        }
+        // for (let i = 0; i < hrefArr.length; i++) {
+        //   hrefLength += hrefArr[i].length
+        // }
+        hrefLength = hrefArr.length
+        return reply.substring(0, 40 + hrefLength + imgLength) + '...'
+      } else if (reply.indexOf('img') > 0) {
         let imgLength = 0
         let imgArr = reply.match(/<img[^>]*>/gi)
         if (imgArr === null) {
@@ -617,12 +639,8 @@ export default{
         for (let i = 0; i < imgArr.length; i++) {
           imgLength += imgArr[i].length
         }
-        console.log(imgLength)
-        console.log(reply.substring(imgLength))
         return reply.substring(0, 40 + imgLength)
-      } else if (/^\/static.*/ig.test(reply)) {
-        return '图片评论' + `<a style='color:#0181FF' href='${reply}'><i class='iconfont'>&#xe694;</i>查看图片</a>`
-      } else if (reply.length > 100) {
+      } else if (reply.length > 40) {
         return reply.substring(0, 40) + '...'
       } else {
         return reply

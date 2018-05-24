@@ -119,6 +119,10 @@ export default {
           if (this.topicData.replyContent.indexOf('data-w-e') === -1) {
             let justReplyImg = this.topicData.replyContent.match(/(?<=(src="))[^"]*?(?=")/ig)[0]
             this.topicData.replyContent = '图片评论' + `<a style='color:#0181FF' href='${justReplyImg}'><i class='iconfont'>&#xe694;</i>查看图片</a>`
+          } else {
+            let replyImg = this.topicData.replyContent.match(/<img(?![^<>]*?data-w-e[^<>]*?>).*?>/g)[0].match(/(?<=(src="))[^"]*?(?=")/ig)[0]
+            let replyNewData = this.topicData.replyContent.replace(/<img src="\/static[^>]+>/g, `<a style='color:#0181FF' href='${replyImg}'><i class='iconfont'>&#xe694;</i>查看图片</a>`)
+            this.topicData.replyContent = replyNewData
           }
         }
       }
@@ -145,7 +149,6 @@ export default {
           this.reportPost()
         })
       } else {
-        console.log(this.topicData)
         this.reportPost()
       }
     },
