@@ -158,7 +158,7 @@ class Reply(db.Model, ModelMixin):
     author = db.relationship(
         User, backref=db.backref(
             'replies_author', cascade='all,delete-orphan', lazy='dynamic', passive_deletes=True), lazy='joined')
-    
+    picture = db.Column(db.String(512))
     likers = db.relationship(
         User,
         secondary=reply_liker,

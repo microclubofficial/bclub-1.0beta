@@ -38,13 +38,21 @@ class Mail(object):
 
 
 class MailMixin(object):
-    @property
-    def email_token(self):
+    @property  
+    def r_email(self):
+        return self._r_email
+
+    @r_email.setter    
+    def r_email(self, email):
+        self._r_email = email
+
+    @property     
+    def email_token(self):    
         config = current_app.config
         secret_key = config.setdefault('SECRET_KEY', gen_secret_key(24))
         salt = config.setdefault('SECRET_KEY_SALT', gen_secret_key(24))
         serializer = URLSafeTimedSerializer(secret_key, salt=salt)
-        token = serializer.dumps(self.email)
+        token = serializer.dumps([self.id, self._r_email])
         return token
 
     @classmethod
@@ -54,12 +62,12 @@ class MailMixin(object):
         salt = config.setdefault('SECRET_KEY_SALT', gen_secret_key(24))
         serializer = URLSafeTimedSerializer(secret_key, salt=salt)
         try:
-            email = serializer.loads(token, max_age=max_age)
+            id, email = serializer.loads(token, max_age=max_age)
         except SignatureExpired:
             return email, False
         except BadSignature:
             return email, False
-        user = cls.query.filter_by(email=email).first()
+        user = cls.query.filter_by(id=id).first()
         if user is None:
             return email, False
         return email, user

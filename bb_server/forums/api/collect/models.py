@@ -27,9 +27,3 @@ class Collect(db.Model, ModelMixin):
         backref=db.backref(
             'collects', cascade='all,delete-orphan', lazy='dynamic', passive_deletes=True),
         lazy='joined')
-
-    def __str__(self):
-        return self.name
-
-    def __repr__(self):
-        return "<Collect %r>" % self.name

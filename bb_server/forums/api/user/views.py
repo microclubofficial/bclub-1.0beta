@@ -19,7 +19,8 @@ from forums.api.topic.models import Topic, Reply
 from forums.api.collect.models import Collect
 from forums.common.utils import gen_filter_dict, gen_order_by
 from forums.common.views import IsAuthMethodView as MethodView
-from forums.func import get_json, object_as_dict, Avatar, Count, FindAndCount, time_diff, json_loads
+from forums.func import get_json, object_as_dict, Avatar, Count, FindAndCount, time_diff, json_loads, bool_delete
+from forums.api.topic.views import collect_bool
 from datetime import datetime
 import math
 
@@ -58,7 +59,7 @@ class UserTopicView(MethodView):
         #    filter_dict.update(is_bad=True)
         #    title = _('bad Topics')
         topics = Topic.query.filter_by(
-            **filter_dict).order_by(*order_by).limit(per_page).offset(start)
+            **filter_dict).order_by('-id').limit(per_page).offset(start)
         topic_count = FindAndCount(Topic, **filter_dict)
         page_count = int(math.ceil(topic_count/per_page))
         topic = []
@@ -71,6 +72,7 @@ class UserTopicView(MethodView):
                 reply_user = None
                 reply_time = None
             reply_count = FindAndCount(Reply, topic_id = i.id)
+            collects = collect_bool(i.id)
             diff_time = time_diff(i.updated_at)
             i.created_at = str(i.created_at)
             i.updated_at = str(i.updated_at)
@@ -83,6 +85,8 @@ class UserTopicView(MethodView):
             topics_data['replies_count'] = reply_count
             topics_data['is_good'], topics_data['is_good_bool'] = Count(i.is_good)
             topics_data['is_bad'], topics_data['is_bad_bool'] = Count(i.is_bad)
+            topics_data['collect_bool'] = collects
+            topics_data['bool_delete'] = bool_delete(user)
             Avatar(topics_data, user)
             topic.append(topics_data)
         user_data = {}
@@ -128,6 +132,7 @@ class UserReplyListView(MethodView):
             topic_user = topic.author
             reply_count = FindAndCount(Reply, topic_id = topic.id)
             diff_time = time_diff(topic.updated_at)
+            collects = collect_bool(topic.id)
             topics_data = object_as_dict(topic)
             json_loads(topics_data, ['content', 'title'])
             topics_data['created_at'] = str(topics_data['created_at'])
@@ -139,6 +144,8 @@ class UserReplyListView(MethodView):
             topics_data['is_bad'], topics_data['is_bad_bool'] = Count(topic.is_bad)
             topics_data['reply_time'] = reply_time
             topics_data['reply_user'] = reply_user
+            topics_data['collect_bool'] = collects
+            topics_data['bool_delete'] = bool_delete(topic_user)
             Avatar(topics_data, topic_user)
             topics.append(topics_data)
         data = {'topics': topics, 'sum_count':sum_count, 'page_count':page_count}

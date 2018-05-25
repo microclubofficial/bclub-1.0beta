@@ -13,7 +13,7 @@
 from datetime import datetime, timedelta
 
 from flask import current_app, session
-from flask_babelex import lazy_gettext as _
+from flask_babel import lazy_gettext as _
 from flask_login import current_user, login_user, logout_user
 from flask_principal import Identity, identity_changed, AnonymousIdentity
 from pytz import all_timezones
@@ -135,8 +135,8 @@ class User(db.Model, UserMixin):
             return True
         return False
 
-    def send_email(self, *args, **kwargs):
-        kwargs.update(recipients=[self.email])
+    def send_email(self, email, *args, **kwargs):
+        kwargs.update(recipients=[email])
         mail.send_email(*args, **kwargs)
 
     def send_email_to_admin(self):

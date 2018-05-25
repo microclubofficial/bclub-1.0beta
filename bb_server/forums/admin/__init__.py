@@ -18,10 +18,14 @@ from flask_login import current_user
 from forums.func import get_json
 from flask.views import MethodView
 
+from forums.extension import redis_data
+from uuid import uuid4
+
 class MyAdminIndexView(AdminIndexView):  
     @expose()
     def index(self):
-        username = session.get('admin_username', None)
+        #username = session.get('admin_username', None)
+        username = request.cookies.get('admin_username', None)
         if not User.query.filter_by(username=username).exists():
         #if not current_user.is_authenticated:
             return redirect(url_for('login.login'))
@@ -40,6 +44,7 @@ class LoginView(MethodView):
         post_data = request.data
         username = post_data.get('username')
         password = post_data.get('password')
+        remember = post_data.get('remember')
         user = User.query.filter_by(username=username).first()
         if not user or not user.check_password(password):
             return redirect('/admin/login')
@@ -55,9 +60,6 @@ site = Blueprint('login', __name__)
 site.add_url_rule('/admin/login', view_func=LoginView.as_view('login'))
 def init_app(app):
     admin.init_app(app)
-    #bar.init_admin(admin)
     user.init_admin(admin)
     topic.init_admin(admin)
-    #message.init_admin(admin)
-    #permission.init_admin(admin)
     app.register_blueprint(site)

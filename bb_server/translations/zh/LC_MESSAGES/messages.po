@@ -1,14 +1,14 @@
 # Chinese translations for PROJECT.
-# Copyright (C) 2016 ORGANIZATION
+# Copyright (C) 2018 ORGANIZATION
 # This file is distributed under the same license as the PROJECT project.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2016.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2018.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2017-04-21 19:08+0800\n"
-"PO-Revision-Date: 2016-06-16 14:36+0800\n"
+"POT-Creation-Date: 2018-05-23 13:56+0800\n"
+"PO-Revision-Date: 2018-05-23 11:03+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh\n"
 "Language-Team: zh <LL@li.org>\n"
@@ -18,56 +18,231 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.4.0\n"
 
-#: forums/extension.py:67
-msgid "Please login to access this page."
-msgstr "这个页面要求登陆，请登陆"
+#: flask_auth/response.py:29
+msgid "Your account has been confirmed,don't need again"
+msgstr ""
 
-#: forums/api/auth/forms.py:22 forums/api/forms.py:48
-msgid "Username:"
-msgstr "用户名:"
+#: flask_auth/response.py:30 forums/common/response.py:40
+msgid "Form validate error"
+msgstr ""
 
-#: forums/api/auth/forms.py:25 forums/api/forms.py:51
-msgid "Password:"
-msgstr "密码:"
+#: flask_auth/response.py:31 forums/common/response.py:41
+msgid "You have no permission!"
+msgstr ""
 
-#: forums/api/auth/forms.py:28 forums/api/forms.py:54
-msgid "Captcha:"
-msgstr "验证码:"
+#: flask_auth/auth/views.py:37 forums/permission.py:73
+msgid "You have login ,needn't login again"
+msgstr ""
 
-#: forums/api/auth/forms.py:39 forums/api/forms.py:65
+#: flask_auth/auth/views.py:52
+msgid "Username"
+msgstr "用户名"
+
+#: flask_auth/auth/views.py:53
+msgid "Password"
+msgstr "密码"
+
+#: flask_auth/auth/views.py:54
+msgid "Phone"
+msgstr "手机号码"
+
+#: flask_auth/auth/views.py:55
+msgid "PhoneCaptcha"
+msgstr "手机验证码"
+
+#: flask_auth/auth/views.py:56 flask_auth/templates/maple/captcha.html:3
+msgid "Captcha"
+msgstr "验证码"
+
+#: flask_auth/auth/views.py:57
+msgid "Confirm_password"
+msgstr "验证密码"
+
+#: flask_auth/auth/views.py:59
+#, python-format
+msgid "The %(key)s is required"
+msgstr "%(key)s不能为空"
+
+#: flask_auth/auth/views.py:91 forums/common/response.py:33
+msgid "Username or Password Error"
+msgstr "用户名或密码错误"
+
+#: flask_auth/auth/views.py:96 flask_auth/auth/views.py:118
+#: flask_auth/auth/views.py:164 flask_auth/auth/views.py:264
+#: forums/api/forms.py:65 forums/api/setting/views.py:87
 msgid "The captcha is error"
 msgstr "验证码错误"
 
-#: forums/api/auth/forms.py:46 forums/api/forms.py:72
+#: flask_auth/auth/views.py:101 flask_auth/auth/views.py:124
+msgid "You have login"
+msgstr "登录成功"
+
+#: flask_auth/auth/views.py:115 flask_auth/auth/views.py:261
+msgid "The phone is error"
+msgstr "手机号错误"
+
+#: flask_auth/auth/views.py:133
+msgid "You have logout"
+msgstr "登出成功"
+
+#: flask_auth/auth/views.py:139
+msgid "register"
+msgstr "注册"
+
+#: flask_auth/auth/views.py:155 forums/api/setting/views.py:84
+msgid "The phone has been registered"
+msgstr "手机号已被注册"
+
+#: flask_auth/auth/views.py:158 forums/api/setting/views.py:101
+msgid "The username has been registered"
+msgstr "用户名已注册"
+
+#: flask_auth/auth/views.py:161 flask_auth/auth/views.py:240
+#: forums/api/setting/views.py:68
+msgid "Two passwords are different"
+msgstr "两次密码不相同"
+
+#: flask_auth/auth/views.py:178
+msgid "You have registered"
+msgstr "您已注册"
+
+#: flask_auth/auth/views.py:194 flask_auth/auth/views.py:253
+msgid "forget password"
+msgstr "忘记密码"
+
+#: flask_auth/auth/views.py:202
+msgid "Email hasn't been binded, please find it through other ways."
+msgstr "未绑定邮箱，请通过其他方式找回。"
+
+#: flask_auth/auth/views.py:205 flask_auth/auth/views.py:286
+msgid ""
+"An email has been sent to you.Please receive and update your password in "
+"time"
+msgstr "一封邮件已发送到你的邮箱,请及时查收"
+
+#: flask_auth/auth/views.py:213
+msgid "Please set a new password"
+msgstr "请重置密码"
+
+#: flask_auth/auth/views.py:220 flask_auth/auth/views.py:304
+msgid "The confirm link has been out of time.Please confirm your email again"
+msgstr "验证链接已过期,请重新验证你的帐号"
+
+#: flask_auth/auth/views.py:227
+msgid "Change Password"
+msgstr "修改密码"
+
+#: flask_auth/auth/views.py:246 flask_auth/auth/views.py:267
+#: flask_auth/auth/views.py:279 forums/api/block_data/views.py:34
+#: forums/api/block_data/views.py:41 forums/api/block_data/views.py:49
+#: forums/api/block_data/views.py:104 forums/api/collect/views.py:196
+#: forums/api/confirm/views.py:13 forums/api/follow/views.py:96
+#: forums/api/topic/views.py:186 forums/api/topic/views.py:246
+#: forums/api/topic/views.py:317 forums/api/topic/views.py:330
+#: forums/api/topic/views.py:370 forums/api/upload/views.py:62
+#: forums/api/upload/views.py:102 forums/api/upload/views.py:139
+msgid "success"
+msgstr "成功"
+
+#: flask_auth/auth/views.py:277
+msgid "The email has been registered"
+msgstr "邮箱已被注册"
+
+#: flask_auth/auth/views.py:295
+msgid "Please confirm  your email"
+msgstr "请验证邮箱"
+
+#: flask_auth/auth/views.py:317
+#, python-format
+msgid "Your verification code is %s, valid for 5 minutes."
+msgstr "您的验证码是%s,五分钟内有效。"
+
+#: flask_auth/auth/views.py:321
+msgid "The message has been sent"
+msgstr "一条短信已发出"
+
+#: flask_auth/auth/views.py:323
+msgid "failed"
+msgstr "失败"
+
+#: forums/func.py:29
+msgid " second"
+msgstr "秒"
+
+#: forums/func.py:30
+msgid " seconds"
+msgstr "秒"
+
+#: forums/func.py:33
+msgid " minute"
+msgstr "分钟"
+
+#: forums/func.py:34
+msgid " minutes"
+msgstr "分钟"
+
+#: forums/func.py:37
+msgid " hour"
+msgstr "小时"
+
+#: forums/func.py:38
+msgid " hours"
+msgstr "小时"
+
+#: forums/func.py:41
+msgid " day"
+msgstr "天"
+
+#: forums/func.py:42
+msgid " days"
+msgstr "天"
+
+#: forums/permission.py:60
+msgid "Not logged in"
+msgstr "未登录"
+
+#: forums/api/forms.py:48
+msgid "Username:"
+msgstr "用户名"
+
+#: forums/api/forms.py:51
+msgid "Password:"
+msgstr "密码"
+
+#: forums/api/forms.py:54
+msgid "Captcha:"
+msgstr "验证码"
+
+#: forums/api/forms.py:72
 msgid "Email:"
 msgstr "邮箱"
 
-#: forums/api/auth/forms.py:50 forums/api/forms.py:76
+#: forums/api/forms.py:76
 msgid "Remember me"
 msgstr "记住我"
 
-#: forums/api/forms.py:79 forums/api/topic/views.py:84
+#: forums/api/forms.py:79 forums/api/topic/views.py:97
 #: templates/topic/topic_good.html:13 templates/topic/topic_list.html:4
 #: templates/topic/topic_list.html:6 templates/topic/topic_list.html:8
 #: templates/topic/topic_top.html:13
 msgid "All Topics"
-msgstr "所有主题"
+msgstr "所有文章"
 
 #: forums/api/forms.py:79
 msgid "One Day"
-msgstr "一天之内"
+msgstr "一天"
 
 #: forums/api/forms.py:79
 msgid "One Week"
-msgstr "一周之内"
+msgstr "一周"
 
 #: forums/api/forms.py:80
 msgid "One Month"
-msgstr "一月之内"
+msgstr "一个月"
 
 #: forums/api/forms.py:80
 msgid "One Year"
-msgstr "一年之内"
+msgstr "一年"
 
 #: forums/api/forms.py:82
 msgid "Publish"
@@ -100,185 +275,270 @@ msgstr "私信"
 
 #: forums/api/forms.py:102
 msgid "Title:"
-msgstr "标题:"
+msgstr "标题："
 
-#: forums/api/forms.py:103 forums/api/forms.py:111
+#: forums/api/forms.py:103 forums/api/forms.py:112
 msgid "Content:"
-msgstr "内容:"
+msgstr "内容："
 
 #: forums/api/forms.py:104
 msgid "Category:"
-msgstr "分类:"
+msgstr "分类："
 
-#: forums/api/forms.py:105
-msgid "Tags:"
-msgstr "节点:"
+#: forums/api/forms.py:106
+msgid "token"
+msgstr "币"
 
-#: forums/api/forms.py:107
+#: forums/api/forms.py:108
 msgid "ContentType"
 msgstr "标记语言"
 
-#: forums/api/forms.py:115
-msgid "Name:"
-msgstr "收藏夹名:"
-
 #: forums/api/forms.py:116
+msgid "Name:"
+msgstr "收藏夹名："
+
+#: forums/api/forms.py:117
 msgid "Description:"
 msgstr "描述:"
 
-#: forums/api/forms.py:128
+#: forums/api/forms.py:129
 msgid "Upload Avatar:"
 msgstr "上传头像"
 
-#: forums/api/forms.py:135
+#: forums/api/forms.py:136
 msgid "Online status:"
 msgstr "在线状态:"
 
-#: forums/api/forms.py:136
+#: forums/api/forms.py:137
 msgid "Topic List:"
 msgstr "主题列表:"
 
-#: forums/api/forms.py:138
+#: forums/api/forms.py:139
 msgid "Reply List:"
 msgstr "回复列表:"
 
-#: forums/api/forms.py:139
+#: forums/api/forms.py:140
 msgid "Notebook List:"
 msgstr "笔记列表:"
 
-#: forums/api/forms.py:140
+#: forums/api/forms.py:141
 msgid "Collect List:"
 msgstr "收藏列表:"
 
-#: forums/api/forms.py:144
+#: forums/api/forms.py:145
 msgid "Introduce:"
 msgstr "个人介绍:"
 
-#: forums/api/forms.py:145
+#: forums/api/forms.py:146
 msgid "School:"
 msgstr "所在学校:"
 
-#: forums/api/forms.py:146
+#: forums/api/forms.py:147
 msgid "Signature:"
-msgstr "个性签名:"
+msgstr ""
 
-#: forums/api/forms.py:151
+#: forums/api/forms.py:152
 msgid "Old Password:"
-msgstr "原密码:"
+msgstr ""
 
-#: forums/api/forms.py:154
+#: forums/api/forms.py:155
 msgid "New Password:"
-msgstr "新密码:"
+msgstr ""
 
-#: forums/api/forms.py:157
+#: forums/api/forms.py:158
 msgid "New Password again:"
-msgstr "重复新密码:"
-
-#: forums/api/forms.py:161
-msgid "Timezone:"
-msgstr "时区设置:"
+msgstr ""
 
 #: forums/api/forms.py:162
+msgid "Timezone:"
+msgstr ""
+
+#: forums/api/forms.py:163
 msgid "Locale:"
-msgstr "语言设置:"
+msgstr ""
 
-#: forums/api/auth/views.py:101
-msgid "Please confirm  your email!"
-msgstr "请验证你的邮箱!"
+#: forums/api/block_data/views.py:52 forums/api/block_data/views.py:67
+msgid "Data error, please re-request"
+msgstr "数据错误，请重新请求"
 
-#: forums/api/auth/views.py:146
-msgid "Please confirm  your email"
-msgstr "请验证你的邮箱!"
+#: forums/api/block_data/views.py:62
+msgid "Request failed, please try again later"
+msgstr "请求失败，请重新请求"
+
+#: forums/api/block_data/views.py:88
+msgid "Token Pictures"
+msgstr "币标签"
+
+#: forums/api/collect/views.py:169 forums/api/collect/views.py:171
+#: templates/base/link.html:66
+msgid "CollectList"
+msgstr "收藏列表"
+
+#: forums/api/collect/views.py:185
+msgid "Cancel Collect"
+msgstr "取消收藏"
+
+#: forums/api/confirm/views.py:11 forums/api/setting/views.py:65
+msgid "Original password error"
+msgstr "原密码错误"
+
+#: forums/api/confirm/views.py:21
+msgid "Please go to email to complete verification."
+msgstr "请前往邮箱完成验证。"
+
+#: forums/api/follow/views.py:66 forums/api/follow/views.py:79
+msgid "FollowList"
+msgstr "关注列表"
+
+#: forums/api/follow/views.py:88
+#, python-format
+msgid "You have followed %(token)s,don't need again"
+msgstr "您已关注%(token)s，请勿重复关注"
 
 #: forums/api/forums/views.py:37
 msgid "About - "
-msgstr "关于 - "
+msgstr ""
 
 #: forums/api/forums/views.py:43
 msgid "Help - "
-msgstr "帮助 - "
+msgstr ""
 
 #: forums/api/forums/views.py:49
 msgid "Contact - "
-msgstr "联系我 - "
+msgstr ""
 
-#: forums/api/topic/views.py:44
+#: forums/api/setting/views.py:74
+msgid "Password changed successfully, please log in again"
+msgstr "修改密码成功，请重新登录"
+
+#: forums/api/setting/views.py:92
+msgid "The phone has changed"
+msgstr "手机号已更换"
+
+#: forums/api/setting/views.py:108
+msgid "The username has changed"
+msgstr "用户名已更换"
+
+#: forums/api/side/views.py:29
+msgid "influence"
+msgstr "影响力"
+
+#: forums/api/side/views.py:56
+msgid "analyst"
+msgstr "分析师"
+
+#: forums/api/topic/views.py:63
 msgid "Ask - "
-msgstr "提问 - "
+msgstr ""
 
-#: forums/api/topic/views.py:58
+#: forums/api/topic/views.py:76
 msgid "Edit -"
-msgstr "编辑 - "
+msgstr ""
 
-#: forums/api/topic/views.py:87 templates/topic/topic_good.html:13
-#: templates/topic/topic_list.html:6
-msgid "Good Topics"
-msgstr "社区精华帖子"
+#: forums/api/topic/views.py:100
+msgid "Topics"
+msgstr "文章"
 
-#: forums/api/topic/views.py:90 templates/topic/topic_list.html:4
-#: templates/topic/topic_top.html:13
-msgid "Top Topics"
-msgstr "精华文章"
+#: forums/api/topic/views.py:136 forums/api/user/views.py:97
+msgid "Topic List"
+msgstr "文章列表"
 
-#: forums/api/user/models.py:206
+#: forums/api/topic/views.py:180 forums/api/topic/views.py:309
+msgid "0 second"
+msgstr "0秒"
+
+#: forums/api/topic/views.py:235
+msgid "Topic Details"
+msgstr "文章详情"
+
+#: forums/api/topic/views.py:243
+msgid "You do not have permission to delete this article."
+msgstr "你没有删除该文章的权限"
+
+#: forums/api/topic/views.py:283
+msgid "Replies Information"
+msgstr "评论信息"
+
+#: forums/api/topic/views.py:327
+msgid "You do not have permission to delete this reply."
+msgstr "你没有删除该评论的权限"
+
+#: forums/api/upload/views.py:100 forums/api/upload/views.py:115
+#: forums/api/upload/views.py:137
+msgid "Wrong Format"
+msgstr "格式错误"
+
+#: forums/api/user/models.py:184
 msgid "ALLOW ALL USER"
 msgstr "允许所有人"
 
-#: forums/api/user/models.py:206
+#: forums/api/user/models.py:184
 msgid "ALLOW AUTHENTICATED USER"
 msgstr "只允许登陆用户"
 
-#: forums/api/user/models.py:207
+#: forums/api/user/models.py:185
 msgid "ALLOW OWN"
 msgstr "仅自己"
 
-#: forums/api/user/models.py:211
+#: forums/api/user/models.py:189
 msgid "Chinese"
 msgstr "中文"
 
-#: forums/api/user/models.py:211
+#: forums/api/user/models.py:189
 msgid "English"
 msgstr "英文"
 
+#: forums/api/user/views.py:43
+msgid "All Users"
+msgstr "所有用户"
+
+#: forums/api/user/views.py:93 forums/api/user/views.py:171
+msgid "administrator"
+msgstr "管理员"
+
+#: forums/api/user/views.py:95 forums/api/user/views.py:173
+msgid "normal user"
+msgstr "普通用户"
+
+#: forums/api/user/views.py:145
+msgid "List of topics reviewed"
+msgstr "评论文章列表"
+
+#: forums/api/user/views.py:175
+msgid "personal"
+msgstr "本人"
+
+#: forums/api/user/views.py:177
+msgid "not personal"
+msgstr "非本人"
+
+#: forums/api/user/views.py:178
+msgid "Personal Information"
+msgstr "个人信息"
+
 #: forums/common/response.py:34
-msgid "Username or Password Error"
-msgstr ""
+msgid "Captcha Error"
+msgstr "验证码错误"
 
 #: forums/common/response.py:35
-msgid "Captcha Error"
-msgstr ""
+msgid "The email has been registered!"
+msgstr "邮箱已被注册"
 
 #: forums/common/response.py:36
-msgid "The email has been registered!"
-msgstr ""
-
-#: forums/common/response.py:37
 msgid "The username has been registered!"
-msgstr ""
+msgstr "用户名已注册"
 
-#: forums/common/response.py:38
-msgid "The email is error"
-msgstr ""
-
-#: forums/common/response.py:40
-msgid "Your account has been confirmed,don't need again!"
-msgstr ""
-
-#: forums/common/response.py:42
+#: forums/common/response.py:39
 msgid "Token is out of time,please get token again!"
 msgstr ""
 
-#: forums/common/response.py:43
-msgid "Form validate error"
-msgstr ""
-
-#: forums/common/response.py:44
-msgid "You have no permission!"
-msgstr ""
-
-#: forums/common/response.py:45
+#: forums/common/response.py:42
 msgid "Other error"
-msgstr ""
+msgstr "其他错误"
+
+#: forums/extension/login.py:29
+msgid "Please login to access this page."
+msgstr "这个页面要求登陆，请登陆。"
 
 #: templates/auth/forget.html:1
 msgid "Forget Password - "
@@ -290,45 +550,37 @@ msgstr "忘记密码"
 
 #: templates/auth/login.html:1
 msgid "Login - "
-msgstr "登陆 - "
+msgstr "登录 - "
 
 #: templates/auth/login.html:5 templates/auth/login.html:8
-#: templates/base/base.html:70 templates/topic/reply/form.html:15
+#: templates/base/base.html:73 templates/topic/reply/form.html:15
 msgid "Login"
-msgstr "登陆"
+msgstr "登录"
 
 #: templates/auth/register.html:1
 msgid "Register - "
 msgstr "注册 - "
 
 #: templates/auth/register.html:5 templates/auth/register.html:8
-#: templates/base/base.html:69
+#: templates/base/base.html:72
 msgid "Register"
 msgstr "注册"
 
-#: templates/base/base.html:53
+#: templates/base/base.html:56 templates/base/header.html:35
 msgid "Home Page"
 msgstr "主页"
 
-#: templates/base/base.html:54
+#: templates/base/base.html:57 templates/base/header.html:36
 msgid "Setting"
 msgstr "帐号设置"
 
-#: templates/base/base.html:56
+#: templates/base/base.html:59 templates/base/header.html:38
 msgid "Logout"
 msgstr "注销"
 
-#: templates/base/base.html:60
+#: templates/base/base.html:63
 msgid "NoticeList"
 msgstr "通知"
-
-#: templates/base/base.html:72 templates/base/link.html:10
-msgid "TagList"
-msgstr "节点"
-
-#: templates/base/base.html:73 templates/base/link.html:2
-msgid "UserList"
-msgstr "用户列表"
 
 #: templates/base/form.html:14
 msgid "save"
@@ -338,21 +590,29 @@ msgstr "保存"
 msgid "Index"
 msgstr "社区主页"
 
-#: templates/base/header.html:19 templates/forums/index.html:10
+#: templates/base/header.html:67 templates/forums/index.html:10
 msgid "Forums"
 msgstr "社区"
 
-#: templates/base/header.html:20 templates/forums/index.html:11
+#: templates/base/header.html:68 templates/forums/index.html:11
 msgid "Wiki"
 msgstr "文档"
 
-#: templates/base/header.html:21 templates/forums/index.html:12
+#: templates/base/header.html:69 templates/forums/index.html:12
 msgid "Blog"
 msgstr "博客"
 
-#: templates/base/header.html:22 templates/forums/index.html:13
+#: templates/base/header.html:70 templates/base/link.html:10
+msgid "TagList"
+msgstr "节点"
+
+#: templates/base/header.html:71 templates/forums/index.html:13
 msgid "Good"
 msgstr "精华文章"
+
+#: templates/base/link.html:2
+msgid "UserList"
+msgstr "用户列表"
 
 #: templates/base/link.html:18
 msgid "TopicList"
@@ -368,7 +628,7 @@ msgstr "关注的节点"
 
 #: templates/base/link.html:55 templates/follow/following_topics.html:4
 msgid "Following Topics"
-msgstr "关注的主题"
+msgstr "关注的文章"
 
 #: templates/base/link.html:58 templates/follow/following_users.html:4
 msgid "Following Users"
@@ -377,10 +637,6 @@ msgstr "关注的用户"
 #: templates/base/link.html:61 templates/follow/following_collects.html:4
 msgid "Following Collects"
 msgstr "关注的收藏"
-
-#: templates/base/link.html:66
-msgid "CollectList"
-msgstr "收藏列表"
 
 #: templates/base/panel.html:5
 msgid "Ask Questions"
@@ -404,7 +660,7 @@ msgstr "已经注册"
 
 #: templates/base/panel.html:28
 msgid "login"
-msgstr "登陆"
+msgstr "登录"
 
 #: templates/base/panel.html:71
 msgid "Hot Tags"
@@ -412,91 +668,91 @@ msgstr "热门节点"
 
 #: templates/base/panel.html:72
 msgid "Recent Tags"
-msgstr "最近增加的节点"
+msgstr ""
 
 #: templates/base/panel.html:91
 msgid "Forums Count"
-msgstr "社区统计"
+msgstr ""
 
 #: templates/base/panel.html:95
 msgid "Total number of registered users:"
-msgstr "社区会员:"
+msgstr ""
 
 #: templates/base/panel.html:96
 msgid "Total number of topics:"
-msgstr "主题总数:"
+msgstr ""
 
 #: templates/base/panel.html:97
 msgid "Total number of posts:"
-msgstr "回帖数:"
+msgstr ""
 
 #: templates/board/_macro.html:9
 msgid "Topics:"
-msgstr "主题:"
+msgstr ""
 
 #: templates/board/_macro.html:11
 msgid "Posts:"
-msgstr "帖子:"
+msgstr ""
 
 #: templates/board/_macro.html:21
 #, python-format
 msgid "published by %(author)s"
-msgstr "由%(author)s发表"
+msgstr ""
 
 #: templates/board/_macro.html:25 templates/topic/_list_macro.html:100
 #: templates/user/user.html:37
 msgid "No Topic"
-msgstr "没有帖子"
+msgstr ""
 
 #: templates/board/board_list.html:4
 msgid "Board"
-msgstr "版块"
+msgstr ""
 
 #: templates/collect/collect.html:3 templates/collect/collect_list.html:3
 msgid "My Collects"
-msgstr "我的收藏"
+msgstr ""
 
 #: templates/collect/collect.html:12
 msgid "edit"
-msgstr "编辑"
+msgstr ""
 
 #: templates/collect/collect.html:13 templates/collect/collect.html:20
 msgid "delete"
-msgstr "删除"
+msgstr ""
 
 #: templates/collect/collect.html:25
 msgid "No Collect"
-msgstr "暂无收藏"
+msgstr ""
 
 #: templates/collect/collect_list.html:12 templates/collect/create.html:6
 msgid "Create Collect"
-msgstr "创建收藏"
+msgstr ""
 
 #: templates/collect/collect_list.html:18
 msgid "Privacy"
-msgstr "私有"
+msgstr ""
 
 #: templates/collect/collect_list.html:20
 msgid "Public"
-msgstr "公共"
+msgstr ""
 
 #: templates/collect/create.html:27 templates/collect/delete.html:13
 #: templates/collect/edit.html:26
 msgid "cancel"
-msgstr "取消"
+msgstr ""
 
 #: templates/collect/create.html:28 templates/collect/delete.html:14
 #: templates/collect/edit.html:27
 msgid "confirm"
-msgstr "确定"
+msgstr ""
 
 #: templates/collect/delete.html:6
 msgid "Delete this collect"
-msgstr "删除收藏"
+msgstr ""
 
 #: templates/collect/edit.html:6
 msgid "Edit the collect"
-msgstr "编辑收藏"
+msgstr ""
 
 #: templates/follow/none.html:3
 msgid "No Followings"
@@ -508,72 +764,72 @@ msgstr ""
 
 #: templates/forums/_macro.html:41 templates/topic/_list_macro.html:6
 msgid "Choice:"
-msgstr "筛选:"
+msgstr ""
 
 #: templates/forums/_macro.html:43 templates/topic/_list_macro.html:8
 msgid "Order:"
-msgstr "排序:"
+msgstr ""
 
 #: templates/forums/_macro.html:51 templates/topic/_list_macro.html:16
 msgid "Replies/Read"
-msgstr "回复/阅读"
+msgstr ""
 
 #: templates/forums/_macro.html:54 templates/topic/_list_macro.html:19
 msgid "Last reply"
-msgstr "最后回复"
+msgstr ""
 
 #: templates/forums/index.html:26
 msgid "more good topics"
-msgstr "更多精华文章"
+msgstr ""
 
 #: templates/forums/message.html:3 templates/forums/message.html:9
 msgid "Notices"
-msgstr "消息通知"
+msgstr ""
 
 #: templates/forums/message.html:8
 msgid "mark all to is read"
-msgstr "全部标记为已读"
+msgstr ""
 
 #: templates/forums/message.html:25
 msgid "No Notices"
-msgstr "没有通知"
+msgstr ""
 
 #: templates/forums/userlist.html:3 templates/forums/userlist.html:8
 #: templates/user/user_list.html:3 templates/user/user_list.html:8
 msgid "Userlist"
-msgstr "用户列表"
+msgstr ""
 
 #: templates/maple/footer.html:23
 msgid "Help"
-msgstr "帮助"
+msgstr ""
 
 #: templates/maple/footer.html:25
 msgid "About"
-msgstr "关于"
+msgstr ""
 
 #: templates/maple/footer.html:27
 msgid "Contact me"
-msgstr "联系我"
+msgstr ""
 
 #: templates/maple/footer.html:33
 msgid "Now users online:"
-msgstr "当前在线用户:"
+msgstr ""
 
 #: templates/maple/footer.html:34
 msgid "Registered users online:"
-msgstr "注册用户:"
+msgstr ""
 
 #: templates/maple/footer.html:35
 msgid "Guests online:"
-msgstr "当前访客:"
+msgstr ""
 
 #: templates/maple/footer.html:39
 msgid "Highest online:"
-msgstr "最高在线:"
+msgstr ""
 
 #: templates/maple/footer.html:40
 msgid "Time of highest online:"
-msgstr "最高在线时间:"
+msgstr ""
 
 #: templates/search/result.html:3 templates/search/result.html:6
 msgid "Search"
@@ -582,242 +838,172 @@ msgstr ""
 #: templates/setting/_macro.html:4 templates/setting/setting.html:5
 #: templates/setting/setting.html:19
 msgid "Profile "
-msgstr "资料设置"
+msgstr ""
 
 #: templates/setting/_macro.html:5 templates/setting/password.html:5
 msgid "Password "
-msgstr "密码修改"
+msgstr ""
 
 #: templates/setting/_macro.html:6 templates/setting/privacy.html:5
 #: templates/setting/privacy.html:13
 msgid "Privacy "
-msgstr "隐私设置"
+msgstr ""
 
 #: templates/setting/_macro.html:7 templates/setting/babel.html:5
 #: templates/setting/babel.html:22
 msgid "Timezone and Locale"
-msgstr "时区及语言设置"
+msgstr ""
 
 #: templates/setting/_macro.html:26
 msgid "confirm upload"
-msgstr "确认上传"
+msgstr ""
 
 #: templates/setting/password.html:13
 msgid "Account"
-msgstr "账户修改"
+msgstr ""
 
 #: templates/tag/tag.html:4 templates/tag/tag_list.html:3
 #: templates/tag/tag_list.html:8
 msgid "All Tags"
-msgstr "所有标签"
+msgstr ""
 
 #: templates/tag/tag_list.html:15
 msgid "No Tags"
-msgstr "暂无标签"
+msgstr ""
 
 #: templates/topic/ask.html:10 templates/topic/ask.html:12
 msgid "Ask"
-msgstr "提问"
+msgstr ""
 
 #: templates/topic/edit.html:13
 msgid "Edit"
-msgstr "编辑"
+msgstr ""
+
+#: templates/topic/topic_good.html:13 templates/topic/topic_list.html:6
+msgid "Good Topics"
+msgstr ""
+
+#: templates/topic/topic_list.html:4 templates/topic/topic_top.html:13
+msgid "Top Topics"
+msgstr ""
 
 #: templates/topic/item/_macro.html:14
 #, python-format
 msgid "published at %(time)s"
-msgstr "于%(time)s发布"
+msgstr ""
 
 #: templates/topic/item/_macro.html:16
 #, python-format
 msgid "The last reply published by %(author)s at %(time)s"
-msgstr "最后由%(author)s于%(time)s发布"
+msgstr ""
 
 #: templates/topic/reply/_macro.html:18
 msgid "no reply"
-msgstr "暂无回复"
+msgstr ""
 
 #: templates/topic/reply/form.html:3
 msgid "Reply this topic"
-msgstr "回帖"
+msgstr ""
 
 #: templates/topic/reply/form.html:8
 msgid "Post reply"
-msgstr "发表回复"
+msgstr ""
 
 #: templates/topic/reply/form.html:15
 msgid "You need"
-msgstr "你需要"
+msgstr ""
 
 #: templates/topic/reply/form.html:15
 msgid "before you can reply."
-msgstr "后才能发表回复"
+msgstr ""
 
-#: templates/topic/reply/itemlist.html:4
+#: templates/topic/reply/itemlist.html:6
 #, python-format
 msgid "Received %(total)s replies"
-msgstr "共收到%(total)s条回复"
+msgstr ""
 
-#: templates/topic/reply/itemlist.html:6 templates/user/followers.html:12
+#: templates/topic/reply/itemlist.html:8 templates/user/followers.html:12
 #: templates/user/replies.html:12 templates/user/user.html:12
 msgid "time"
-msgstr "时间"
+msgstr ""
 
-#: templates/topic/reply/itemlist.html:7 templates/user/followers.html:13
+#: templates/topic/reply/itemlist.html:9 templates/user/followers.html:13
 #: templates/user/replies.html:13
 msgid "likers"
-msgstr "点赞"
+msgstr ""
 
 #: templates/user/_macro.html:5
 msgid "Due to user's setting,the list have been hidden."
-msgstr "由于用户设置，列表被隐藏。"
+msgstr ""
 
 #: templates/user/base.html:12
 #, python-format
 msgid "topics of %(n)s"
-msgstr "%(n)s的主题"
+msgstr ""
 
 #: templates/user/base.html:13
 #, python-format
 msgid "replies of %(n)s"
-msgstr "%(n)s的回复"
+msgstr ""
 
 #: templates/user/base.html:14
 #, python-format
 msgid "collects of %(n)s"
-msgstr "%(n)s的收藏"
+msgstr ""
 
 #: templates/user/base.html:15
 #, python-format
 msgid "followers of %(n)s"
-msgstr "%(n)s的粉丝"
+msgstr ""
 
 #: templates/user/followers.html:10 templates/user/replies.html:10
 #: templates/user/user.html:10
 msgid "Sort:"
-msgstr "排序:"
+msgstr ""
 
 #: templates/user/followers.html:23
 msgid "No Follower"
-msgstr "暂无关注者"
+msgstr ""
 
 #: templates/user/info.html:21
 msgid "You haven't confirm your account,Please confirmed"
-msgstr "你的账户未验证，请尽快验证！"
+msgstr ""
 
 #: templates/user/info.html:22
 msgid "Activate  Account"
-msgstr "验证帐户"
+msgstr ""
 
 #: templates/user/info.html:29
 msgid "ONLINE"
-msgstr "在线"
+msgstr ""
 
 #: templates/user/info.html:31
 msgid "OUTLINE"
-msgstr "离线"
+msgstr ""
 
 #: templates/user/replies.html:29
 #, python-format
 msgid "replied %(title)s created by %(author)s"
-msgstr "回复了%(author)s创建的主题%(title)s"
+msgstr ""
 
 #: templates/user/replies.html:33
 msgid "replied time:"
-msgstr "回复时间:"
+msgstr ""
 
 #: templates/user/replies.html:38
 msgid "No Reply"
-msgstr "暂无回复"
+msgstr ""
 
 #: templates/user/user.html:13
 msgid "vote"
-msgstr "投票"
+msgstr ""
 
 #: templates/user/user.html:31
 msgid "create time:"
-msgstr "创建时间:"
+msgstr ""
 
 #: templates/user/user.html:32
 #, python-format
 msgid "the last reply published by %(author)s"
-msgstr "最后回复来自%(author)s"
-
-#~ msgid "Office Source Code"
-#~ msgstr "官方网站源码"
-
-#~ msgid "more good topics"
-#~ msgstr "查看更多精华文章"
-
-#~ msgid "My Page"
-#~ msgstr "我的主页"
-
-#~ msgid "My Created Collects"
-#~ msgstr "我创建的收藏夹"
-
-#~ msgid "My Followings"
-#~ msgstr "我的关注"
-
-#~ msgid "Today:"
-#~ msgstr "今日:"
-
-#~ msgid "Ranking:"
-#~ msgstr "排名:"
-
-#~ msgid "No Following"
-#~ msgstr "暂无关注"
-
-#~ msgid "No Tag"
-#~ msgstr "暂无标签"
-
-#~ msgid "score"
-#~ msgstr "积分"
-
-#~ msgid "me"
-#~ msgstr "我"
-
-#~ msgid "I love freedom more than life."
-#~ msgstr "爱生活，更爱自由"
-
-#~ msgid "Your account has been confirmed,don't need again"
-#~ msgstr "你的账户已经验证，不能重复验证"
-
-#~ msgid "An email has been sent to your.Please receive"
-#~ msgstr "验证邮件已发送到你的邮箱，请及时查收！"
-
-#~ msgid "Index - "
-#~ msgstr "首页 - "
-
-#~ msgid "Notice - "
-#~ msgstr "消息提醒 - "
-
-#~ msgid "Userlist - "
-#~ msgstr "用户列表 - "
-
-#~ msgid "send succeccfully"
-#~ msgstr "成功发送"
-
-#~ msgid "Everybody"
-#~ msgstr "所有人"
-
-#~ msgid "Logined User"
-#~ msgstr "已登录用户"
-
-#~ msgid "Only Self"
-#~ msgstr "仅自己"
-
-#~ msgid "Login status:"
-#~ msgstr "登陆状态:"
-
-#~ msgid "English"
-#~ msgstr "英文"
-
-#~ msgid "Chinese"
-#~ msgstr "中文"
-
-#~ msgid "You have no permission"
-#~ msgstr "你没有权限！"
-
-#~ msgid "search content"
-#~ msgstr "搜索内容"
+msgstr ""
 

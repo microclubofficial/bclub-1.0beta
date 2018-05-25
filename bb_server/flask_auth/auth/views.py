@@ -199,19 +199,20 @@ class ForgetView(MethodView):
         email = post_data['email']
         user = User.query.filter_by(email = email).first()
         if not user:
-            msg = _('The email is error')
+            msg = _('Email hasn\'t been binded, please find it through other ways.')
             return get_json(0, msg, {})
         self.send_email(user)
         msg = _('An email has been sent to you.Please receive and update your password in time')
         return get_json(1, msg, {})
 
     def send_email(self, user):
+        user.r_email = user.email
         token = user.email_token
         confirm_url = url_for(
             'auth.forget_token', token=token, _external=True)
         html = render_template('templet/forget.html', confirm_url=confirm_url)
         subject = _('Please set a new password')
-        user.send_email(html=html, subject=subject)
+        user.send_email(email=user.email, html=html, subject=subject)
 
 class ForgetTokenView(MethodView):
     def get(self, token):
@@ -282,19 +283,21 @@ class ConfirmView(MethodView):
     def post(self):
         user = request.user
         email = request.data.get('email')
+        if User.query.filter_by(email=email).exists():
+            msg = _('The email has been registered')
+            return get_json(0, msg, {})
         self.send_email(user, email)
         msg = _('An email has been sent to you.Please receive and update your password in time')
         return get_json(1, msg, {})
 
-
     def send_email(self, user, email):
+        user.r_email = email
         token = user.email_token
         confirm_url = url_for(
             'auth.confirm_token', token=token, _external=True)
         html = render_template('templet/email.html', confirm_url=confirm_url)
         subject = _('Please confirm  your email')
-        user.email = email
-        user.send_email(html=html, subject=subject)
+        user.send_email(email=email, html=html, subject=subject)
         
 
 class ConfirmTokenView(MethodView):
@@ -314,7 +317,7 @@ class ConfirmPhoneView(MethodView):
         if (request.path.endswith('login') and check_phone(phone)) or (request.path.endswith('phoneCaptcha') and not check_phone(phone)):
             captcha = ''.join(sample(digits, 6))
             url = "http://www.kanyanbao.com/websocket/aip/send_sms.json"
-            data = {"phone":phone, "content":'您的验证码是%s,五分钟内有效。'%captcha}
+            data = {"phone":phone, "content":_('Your verification code is %s, valid for 5 minutes.')%captcha}
             headers = {'Content-Type':'application/json'}
             ori = requests.post(url, headers = headers, json = data)
             redis_data.set(phone, captcha, ex=300)
