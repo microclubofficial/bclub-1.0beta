@@ -85,17 +85,10 @@ export default {
     },
     // 绑定邮箱
     bindEmailFun () {
-      let instance
       if (this.canFind) {
         post(`/api/setting/email`, this.bindForm).then(data => {
           if (data.resultcode === 0) {
-            instance = new Toast({
-              message: data.message,
-              duration: 1000
-            })
-            setTimeout(() => {
-              instance.close()
-            }, 1000)
+            alert(data.message)
             $('.emaiModal').modal('hide')
             return false
           } else if (data.resultcode === 1) {
@@ -110,7 +103,7 @@ export default {
     },
     // 完成验证状态
     successBind () {
-      get(`/api/confirmed/email`).then(data => {
+      get(`/api/confirmed/email`, {email: this.bindForm.email}).then(data => {
         if (data.resultcode === 0) {
           alert(data.message)
           $('.emaiModal').modal('show')

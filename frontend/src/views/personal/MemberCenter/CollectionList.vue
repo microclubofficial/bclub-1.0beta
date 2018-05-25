@@ -80,9 +80,9 @@
             <div class="comment-all">
               <h3>{{$t('list.allComments')}}({{tmp.replies_count}})</h3>
               <div class="comment-sort">
-                <a href="javascript:void(0)" @click='sortList(0, tmp.id)' :class="{active:sortNow === 0}">{{$t('list.newest')}}</a>
-                <a href="javascript:void(0)" @click='sortList(1, tmp.id)' :class="{active:sortNow === 1}">{{$t('list.earliest')}}</a>
-                <a href="javascript:void(0)" @click='sortList(2, tmp.id)' :class="{active:sortNow === 2}">{{$t('list.likeMost')}}</a>
+                <a href="javascript:void(0)" @click='sortList(tmp.id,0)' :class="{active:sortNow === 0}">{{$t('list.newest')}}</a>
+                <a href="javascript:void(0)" @click='sortList(tmp.id,1)' :class="{active:sortNow === 1}">{{$t('list.earliest')}}</a>
+                <a href="javascript:void(0)" @click='sortList(tmp.id,2)' :class="{active:sortNow === 2}">{{$t('list.likeMost')}}</a>
               </div>
               <!-- 回复内容 -->
                   <!-- <div class="comment-item" data-index='' data-id='' v-for="(tmp,rIndex) in replyContent" :key='rIndex'>
@@ -116,7 +116,7 @@
                         <p href="#" class="user-name">{{item.author}}<span class="time">{{item.diff_time !== '0秒' ? item.diff_time + '前' : '刚刚'}}发布</span></p>
                       </div>
                       <!-- @ 样式 -->
-                      <p class="replyAuthor" v-if="item.at_user !== ''">@{{item.at_user}}:&nbsp;<span class="replyBackConten" style="display:inline-block;font-weight: normal;" v-html="replyFun(item.reference)"></span></p>
+                      <div class="replyAuthor" v-if="item.at_user !== ''">@{{item.at_user}}:&nbsp;<span class="replyBackConten" style="display:inline-block;font-weight: normal;" v-html="replyFun(item.reference)"></span></div>
                       <!-- <p>{{item}}</p> -->
                       <p v-html="commentContent(item.content,item.id)"></p>
                       <!--展开-->
@@ -440,36 +440,7 @@ export default{
       if (!this.cpno[id]) {
         this.cpno[id] = 1
       }
-      get(`/api/topic/${id}/${this.cpno[id]}`).then(data => {
-        if (!this.pageNumber[id]) this.$set(this.pageNumber, id, this.showPageBtn(id, data.data.page_count))
-        else this.pageNumber[id] = this.showPageBtn(id, data.data.page_count)
-        this.showLoaderComment = false
-        this.cpageCount = data.data.page_count
-        this.cpageCountObj[id] = this.cpageCount
-        if (this.cpageCount > 1) {
-          this.showPage = true
-        } else {
-          this.showPage = false
-        }
-        this.$nextTick(() => {
-          $('.comment-item-main').find('img').addClass('zoom-in')
-          $('[data-w-e]').removeClass('zoom-in')
-          $('.comment-item-main').on('click', 'img', function () {
-            // console.log($(this)).not('[data-w-e]')
-            if (!$(this)[0].hasAttribute('data-w-e')) {
-              if (!$(this).hasClass('zoom-out')) {
-                if ($(this).hasClass('zoom-in')) {
-                  $(this).removeClass('zoom-in')
-                }
-                $(this).addClass('zoom-out')
-              } else if ($(this).hasClass('zoom-out')) {
-                $(this).removeClass('zoom-out')
-                $(this).addClass('zoom-in')
-              }
-            }
-          })
-        })
-      })
+      this.sortList(id, 0)
       $('.bibar-tabitem:eq(' + index + ')').find('.bibar-hot').slideToggle('fast')
       if (index !== this.i) {
         this.i = index
@@ -652,46 +623,48 @@ export default{
       })
     },
     // 数据排序
-    sortList (id, tmpId) {
-      // 最近
-      if (id === 0) {
-        this.sortNow = id
-        get(`/api/topic/${tmpId}/1`).then(data => {
-          if (!this.nowData[tmpId]) this.$set(this.nowData, tmpId, data.data.replies)
-          else this.nowData[tmpId] = data.data.replies
-          this.showLoaderComment = false
-          this.cpageCount = data.data.page_count
-          if (this.cpageCount > 1) {
-            this.showPage = true
-          } else {
-            this.showPage = false
-          }
-          this.$nextTick(() => {
-            $('.comment-item-main').find('img').addClass('zoom-in')
-            $('[data-w-e]').removeClass('zoom-in')
-            $('.comment-item-main').on('click', 'img', function () {
-              if (!$(this)[0].hasAttribute('data-w-e')) {
-              // if (!$(this)[0].indexOf('alt="[') === -1) {
-                if (!$(this).hasClass('zoom-out')) {
-                  if ($(this).hasClass('zoom-in')) {
-                    $(this).removeClass('zoom-in')
-                  }
-                  $(this).addClass('zoom-out')
-                } else if ($(this).hasClass('zoom-out')) {
-                  $(this).removeClass('zoom-out')
-                  $(this).addClass('zoom-in')
+    sortList (id, sort) {
+      this.pageId = id
+      if (sort === 0) {
+        this.sortId = 'replies'
+      } else if (sort === 1) {
+        this.sortId = 'replies/early'
+      } else {
+        this.sortId = 'replies/good'
+      }
+      this.sortNow = sort
+      get(`/api/topic/${this.sortId}/${id}/${this.cpno[id]}`).then(data => {
+        if (!this.nowData[id]) this.$set(this.nowData, id, data.data.replies)
+        else this.nowData[id] = data.data.replies
+        if (!this.pageNumber[id]) this.$set(this.pageNumber, id, this.showPageBtn(id, data.data.page_count))
+        else this.pageNumber[id] = this.showPageBtn(id, data.data.page_count)
+        this.showLoaderComment = false
+        this.cpageCount = data.data.page_count
+        this.cpageCountObj[id] = this.cpageCount
+        if (this.cpageCount > 1) {
+          this.showPage = true
+        } else {
+          this.showPage = false
+        }
+        this.$nextTick(() => {
+          $('.comment-item-main').find('img').addClass('zoom-in')
+          $('[data-w-e]').removeClass('zoom-in')
+          $('.comment-item-main').on('click', 'img', function () {
+            // console.log($(this)).not('[data-w-e]')
+            if (!$(this)[0].hasAttribute('data-w-e')) {
+              if (!$(this).hasClass('zoom-out')) {
+                if ($(this).hasClass('zoom-in')) {
+                  $(this).removeClass('zoom-in')
                 }
+                $(this).addClass('zoom-out')
+              } else if ($(this).hasClass('zoom-out')) {
+                $(this).removeClass('zoom-out')
+                $(this).addClass('zoom-in')
               }
-            })
+            }
           })
         })
-      } else if (id === 1) {
-        this.sortNow = id
-        get(`/api/topic/replies/early/${tmpId}/1`).then(data => {
-          if (!this.nowData[tmpId]) this.$set(this.nowData, tmpId, data.data)
-          else this.nowData[tmpId] = data.data
-        })
-      }
+      })
     },
     // 删除文章
     delTopic (tmp, index) {
@@ -742,10 +715,8 @@ export default{
       if (this.cpno[id] !== page) {
         this.cpno[id] = page
       }
-      get(`/api/topic/${id}/${page}`).then(data => {
-        if (!this.nowData[id]) this.$set(this.nowData, id, data.data.replies)
-        else this.nowData[id] = data.data.replies
-      })
+      this.pageId = id
+      this.sortList(id, this.sortNow)
     },
     // 翻页
     showPageBtn (id, tatal) {
@@ -768,6 +739,15 @@ export default{
 </script>
 
 <style>
+  .replyAuthor{
+    height: 50px;
+    background: #F2F2F2;
+    line-height: 50px !important;
+    padding-left: 20px !important;
+    font-weight: 700;
+    margin: 15px 2px 15px 0;
+    font-size: 15px;
+}
   .replyBackConten>p:first-child{
     overflow: hidden;
     text-overflow: ellipsis;

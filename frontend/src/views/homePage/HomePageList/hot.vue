@@ -722,11 +722,6 @@ export default{
         this.cpno[id] = page
       }
       this.pageId = id
-      // debugger
-      // get(`/api/topic/${id}/${page}`).then(data => {
-      //   if (!this.nowData[id]) this.$set(this.nowData, id, data.data.replies)
-      //   else this.nowData[id] = data.data.replies
-      // })
       this.sortList(id, this.sortNow)
     },
     // 回复人文字处理
