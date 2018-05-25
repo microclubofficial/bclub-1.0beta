@@ -464,10 +464,18 @@ export default{
         } else {
           $('.bibar-tabitem:eq(' + index + ')').find('.set-choseStar > a').addClass('collectionActive')
           this.collection = index
-          instance = new Toast({
-            message: data.message,
-            duration: 1000
-          })
+          if (data.data.collect_bool) {
+            instance = new Toast({
+              message: this.$t('prompt.successCollect'),
+              iconClass: 'glyphicon glyphicon-ok',
+              duration: 1000
+            })
+          } else {  
+            instance = new Toast({
+              message: this.$t('prompt.cancelCollect'),
+              duration: 1000
+            })
+          }
         }
         setTimeout(() => {
           instance.close()
