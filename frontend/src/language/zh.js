@@ -70,6 +70,7 @@ export default {
     title: '请输入标题'
   },
   prompt: {
+    prompt: '提 示',
     acquireVcode: '获取验证码',
     reacquire: '重新获取',
     usernameLength: '用户名在3-16位',
@@ -94,7 +95,8 @@ export default {
     emptyLink: '链接不能为空',
     invalidLink: '无效的链接',
     successCollect: '收藏成功',
-    cancelCollect: '取消收藏成功'
+    cancelCollect: '取消收藏成功',
+    confirmDelete: '确定要删除吗？'
   },
   message: {
     sthToSay: '有什么消息告诉大家...',

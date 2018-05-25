@@ -70,6 +70,7 @@ export default {
     title: 'Please enter title'
   },
   prompt: {
+    prompt: 'Prompt',
     acquireVcode: 'Acquire',
     reacquire: 'Reacquire',
     usernameLength: 'Username is between 3 and 16 bits',
@@ -94,7 +95,8 @@ export default {
     emptyLink: 'Link cannot be empty',
     invalidLink: 'Invalid link',
     successCollect: 'Collect successfully',
-    cancelCollect: 'Cancel successfully'
+    cancelCollect: 'Cancel successfully',
+    confirmDelete: 'Are you sure to delete ?'
   },
   message: {
     sthToSay: 'Something to say...',

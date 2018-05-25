@@ -197,18 +197,18 @@
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
             &times;
           </button>
-          <h4 class="modal-title" id="myModalLabel">
-            提示
+          <h4 class="text-center" id="myModalLabel">
+            {{$t('prompt.prompt')}}
           </h4>
         </div>
         <div class="modal-body">
-          确定要删除吗？
+          <p style="margin-top:20px;">{{$t('prompt.confirmDelete')}}</p>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">取消
+          <button type="button" class="btn btn-default" data-dismiss="modal">{{$t('button.cancel')}}
           </button>
           <button @click='confirm' type="button" class="btn btn-primary">
-            确定
+            {{$t('button.confirm')}}
           </button>
         </div>
       </div>
