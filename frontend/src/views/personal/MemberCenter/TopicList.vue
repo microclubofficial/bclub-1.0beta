@@ -113,7 +113,7 @@
                     </a>
                     <div class="comment-item-main">
                       <div class="comment-item-hd">
-                        <p href="#" class="user-name">{{item.author}}<span class="time">{{item.diff_time !== '0秒' ? item.diff_time + '前' : '刚刚'}}发布</span></p>
+                        <p href="#" class="user-name">{{item.author}}<span class="time">{{item.diff_time !== 0 ? item.diff_time + '前' : '刚刚'}}发布</span></p>
                       </div>
                       <!-- @ 样式 -->
                       <div class="replyAuthor" v-if="item.at_user !== ''">@{{item.at_user}}:&nbsp;<span class="replyBackConten" style="display:inline-block;font-weight: normal;" v-html="replyFun(item.reference)"></span></div>

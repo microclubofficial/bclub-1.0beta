@@ -76,6 +76,7 @@ export default {
     usernameRequired: '用户名不能为空',
     passwordLength: '密码长度在6-18位',
     passwordRequired: '密码不能为空',
+    oldpasswordDifferent: '新密码不能与原密码一致',
     passwordDifferent: '两次输入的密码不一致',
     orgpwdError: '原密码错误',
     phoneError: '手机号码格式不正确',

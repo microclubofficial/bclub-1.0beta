@@ -88,21 +88,23 @@ export default {
   methods: {
     // 失去焦点验证
     showRegisterMsg (input, id) {
-      var emailreg = /^[A-Za-z0-9.\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
+      let emailreg = /^[A-Za-z0-9.\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
       if (id === 0) {
-        if (input === undefined || input.length === 0) {
-          this.emailPrompt = this.$t('prompt.emailRequired')
-          return false
-        } else if (!emailreg.test(input) && input !== undefined && input.length > 0) {
-          this.emailPrompt = this.$t('prompt.emailError')
-          return false
-        } else {
+        if (emailreg.test(input) && input !== undefined && input.length > 0) {
           this.emailPrompt = ''
         }
       }
     },
     // 填新密码
     setfindemail () {
+      let emailreg = /^[A-Za-z0-9.\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
+      if (this.findForm.email === undefined || this.findForm.email.length === 0) {
+        this.emailPrompt = this.$t('prompt.emailRequired')
+        return false
+      } else if (!emailreg.test(this.findForm.email) && this.findForm.email !== undefined && this.findForm.email.length > 0) {
+        this.emailPrompt = this.$t('prompt.emailError')
+        return false
+      }
       post('/api/forget', this.findForm).then(data => {
         if (data.resultcode === 0) {
           alert(data.message)

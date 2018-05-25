@@ -24,7 +24,7 @@
             <p class="prompt">{{confirm_upwdPrompt}}</p>
           </div>
           <div class="form-group">
-                    <button type="button" class="col-md-offset-3 col-md-1 forphone btnm confirm" v-bind:disabled="!setPwd.OldPassword" @click='setPwdFun' data-target="#myModal" data-toggle="">{{$t('button.confirm')}}
+                    <button type="button" class="col-md-offset-3 col-md-1 forphone btnm confirm" @click='setPwdFun' data-target="#myModal" data-toggle="">{{$t('button.confirm')}}
                     </button>
                 </div>
             </form>
@@ -68,53 +68,49 @@ export default {
           })
         }
       } else if (id === 0 || id === 1) {
-        var upwdreg = /^[a-zA-Z0-9~!@#$%^&*()_+`\-={}:";'<>?,./]{6,18}$/
-        if (!upwdreg.test(input) && input !== undefined && input.length > 0) {
+        let upwdreg = /^[a-zA-Z0-9~!@#$%^&*()_+`\-={}:";'<>?,./]{6,18}$/
+        if (upwdreg.test(input) && input !== undefined && input.length > 0) {
           if (id === 0) {
-            this.oldpwdPrompt = this.$t('prompt.passwordLength')
+            this.oldpwdPrompt = ''
           } else if (id === 1) {
-            this.newpwdPrompt = this.$t('prompt.passwordLength')
+            if (input === this.setPwd.OldPassword) {
+              this.newpwdPrompt = this.$t('prompt.oldpasswordDifferent')
+              return false
+            } else {
+              this.newpwdPrompt = ''
+            }
           }
-          return false
-        } else if (id === 1 && (input === this.setPwd.OldPassword)) {
-          this.newpwdPrompt = this.$t('prompt.passwordDifferent')
-          return false
-        } else if (input === undefined || input.length === 0) {
-          if (id === 0) {
-            this.oldpwdPrompt = this.$t('prompt.passwordRequired')
-          } else if (id === 1) {
-            this.newpwdPrompt = this.$t('prompt.passwordRequired')
-          }
-          return false
-        } else {
-          this.oldpwdPrompt = ''
-          this.newpwdPrompt = ''
         }
       } else if (id === 2) {
-        if (input !== this.setPwd.NewPassword && input !== undefined && input.length > 0) {
+        if (input === this.setPwd.NewPassword && input !== undefined && input.length > 0) {
+          this.confirm_upwdPrompt = ''
+        } else if (input !== this.setPwd.NewPassword) {
           this.confirm_upwdPrompt = this.$t('prompt.passwordDifferent')
           return false
-        } else if (input === undefined || input.length === 0) {
-          this.confirm_upwdPrompt = this.$t('prompt.passwordRequired')
-          return false
-        } else {
-          this.confirm_upwdPrompt = ''
         }
       }
     },
     // 修改密码
     setPwdFun () {
-      // let instance
+      let upwdreg = /^[a-zA-Z0-9~!@#$%^&*()_+`\-={}:";'<>?,./]{6,18}$/
+      if (this.setPwd.OldPassword === undefined || this.setPwd.OldPassword.length === 0) {
+        this.oldpwdPrompt = this.$t('prompt.passwordRequired')
+        return false
+      } else if (!upwdreg.test(this.setPwd.OldPassword) && this.setPwd.OldPassword !== undefined && this.setPwd.OldPassword.length > 0) {
+        this.oldpwdPrompt = this.$t('prompt.passwordLength')
+        return false
+      } else if (this.setPwd.NewPassword === undefined || this.setPwd.setPwd.NewPassword === 0) {
+        this.newpwdPrompt = this.$t('prompt.passwordRequired')
+        return false
+      } else if (!upwdreg.test(this.setPwd.NewPassword) && this.setPwd.NewPassword !== undefined && this.setPwd.NewPassword.length > 0) {
+        this.newpwdPrompt = this.$t('prompt.passwordLength')
+        return false
+      } else if (this.setPwd.confirm_password === undefined || this.setPwd.confirm_password === 0) {
+        this.confirm_upwdPrompt = this.$t('prompt.passwordRequired')
+        return false
+      }
       post(`/api/setting/password`, this.setPwd).then(data => {
         if (data.resultcode === 1) {
-          // instance = new Toast({
-          //   message: data.message,
-          //   iconClass: 'glyphicon glyphicon-ok',
-          //   duration: 1000
-          // })
-          // setTimeout(() => {
-          //   instance.close()
-          // }, 1000)
           this.$router.push('/login')
         }
       })

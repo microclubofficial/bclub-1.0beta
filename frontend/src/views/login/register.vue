@@ -86,48 +86,48 @@
           <div class="form-group">
             <label class="col-md-3 control-label"><span class="text-red">* </span>{{$t('register.username')}}</label>
             <div class="col-md-9">
-              <input  class="form-control" maxlength="16" name="username" type="text" :placeholder="$t('placeholder.username')" @change='showRegisterMsg(userForm.username, 0)'  v-model="userForm.username">
+              <input  class="form-control" maxlength="16" name="username" type="text" :placeholder="$t('placeholder.username')" @change='showRegisterMsg(userForm.username,0)'  v-model="userForm.username">
             </div>
             <!--<label class="col-md-3 control-label"></label>-->
-            <p class="prompt col-md-offset-3 col-md-9" style="margin-top:0px!important;margin-left:25%!important;">{{unamePrompt}}</p>
+            <p class="prompt col-md-offset-3 col-md-9" style="margin-left:25%!important;">{{unamePrompt}}</p>
           </div>
           <div class="form-group">
             <label class="col-md-3 control-label"><span class="text-red">* </span>{{$t('register.password')}}</label>
             <div class="col-md-9">
-              <input class="form-control" name="password" type="password" :placeholder="$t('placeholder.password')" @change='showRegisterMsg(userForm.password, 1)' v-model="userForm.password">
+              <input @change='showRegisterMsg(userForm.password,1)' class="form-control" name="password" type="password" :placeholder="$t('placeholder.password')" v-model="userForm.password">
             </div>
             <!--<label class="col-md-3 control-label"></label>-->
-            <p class="prompt col-md-offset-3 col-md-9" style="margin-top:0px!important;margin-left:25%!important;">{{upwdPrompt}}</p>
+            <p class="prompt col-md-offset-3 col-md-9" style="margin-left:25%!important;">{{upwdPrompt}}</p>
           </div>
           <div class="form-group">
             <label class="col-md-3 control-label"><span class="text-red">* </span>{{$t('register.repassword')}}</label>
             <div class="col-md-9">
-              <input class="form-control" name="repassword" type="password" :placeholder="$t('placeholder.repassword')" @change='showRegisterMsg(userForm.confirm_password, 2)' v-model="userForm.confirm_password">
+              <input @change='showRegisterMsg(userForm.confirm_password,2)' class="form-control" name="repassword" type="password" :placeholder="$t('placeholder.repassword')" v-model="userForm.confirm_password">
             </div>
             <!--<label class="col-md-3 control-label"></label>-->
-            <p class="prompt col-md-offset-3 col-md-9" style="margin-top:0px!important;margin-left:25%!important;">{{confirm_upwdPrompt}}</p>
+            <p class="prompt col-md-offset-3 col-md-9" style="margin-left:25%!important;">{{confirm_upwdPrompt}}</p>
           </div>
           <div class="form-group">
             <label class="col-md-3 control-label"><span class="text-red">* </span>{{$t('register.phone')}}</label>
             <div class="col-md-9">
-              <input class="form-control" name="phone" type="text" :placeholder="$t('placeholder.phone')" v-model="userForm.phone" @change='showRegisterMsg(userForm.phone, 3)'>
+              <input @change='showRegisterMsg(userForm.phone,3)' class="form-control" name="phone" type="text" :placeholder="$t('placeholder.phone')" v-model="userForm.phone">
             </div>
             <!--<label class="col-md-3 control-label"></label>-->
-             <p class="prompt col-md-offset-3 col-md-9" style="margin-top:0px!important;margin-left:25%!important;">{{phonePrompt}}</p>
+             <p class="prompt col-md-offset-3 col-md-9" style="margin-left:25%!important;">{{phonePrompt}}</p>
           </div>
           <div class="form-group">
               <label for="inputCaptcha3" class="col-md-3 control-label"><span class="text-red">* </span>{{$t('register.vcode')}}</label>
               <div class="col-md-9 captcha-box">
-                  <input type="text" class="form-control" v-model="userForm.captcha" @change='showRegisterMsg(userForm.phone, 5)' id="inputCaptcha3" :placeholder="$t('placeholder.vcode')">
+                  <input type="text" class="form-control" @change='showRegisterMsg(userForm.captcha,4)' v-model="userForm.captcha" id="inputCaptcha3" :placeholder="$t('placeholder.vcode')">
                   <button type="button" class="col-md-3 get-captcha" v-bind:disabled="hasphone" :class="{'text-gray':hasphone}" @click="getPhoneControl"><span v-show="hasControl">{{countdown}}</span><i> | </i>{{getcontroltxt}}</button>
               </div>
             <!--<label class="col-md-3 control-label"></label>-->
-            <p class="prompt col-md-offset-3 col-md-9" style="margin-top:0px!important;margin-left:25%!important;">{{captchaPrompt}}</p>
+            <p class="prompt col-md-offset-3 col-md-9" style="margin-left:25%!important;">{{captchaPrompt}}</p>
           </div>
           <div class="form-group">
             <label class="col-md-3 control-label">&nbsp;&nbsp;&nbsp;{{$t('register.icode')}}</label>
             <div class="col-md-9">
-              <input class="form-control" name="recommender_code" type="text" :placeholder="$t('placeholder.icode')" v-model="userForm.recommender_code">
+              <input class="form-control" @change='showRegisterMsg(userForm.recommender_code,5)' name="recommender_code" type="text" :placeholder="$t('placeholder.icode')" v-model="userForm.recommender_code">
             </div>
           </div>
           <button class="btn btn-primary btn-block" type="button" id="register" @click="submitForm">{{$t('register.register')}}</button>
@@ -170,61 +170,71 @@ export default {
     showRegisterMsg (input, id) {
       if (id === 0) {
         var unamereg = /^[a-zA-Z0-9_.\-\u4e00-\u9fa5]{3,16}$/
-        if (!unamereg.test(input) && input !== undefined && input.length > 0) {
-          this.unamePrompt = this.$t('prompt.usernameLength')
-          // console.log(input.length)
-          return false
-        } else if (input === undefined || input.length === 0) {
-          this.unamePrompt = this.$t('prompt.usernameRequired')
-          return false
-        } else {
+        if (unamereg.test(input) && input !== undefined && input.length > 0) {
           this.unamePrompt = ''
         }
       } else if (id === 1) {
         var upwdreg = /^[a-zA-Z0-9~!@#$%^&*()_+`\-={}:";'<>?,./]{6,18}$/
-        if (!upwdreg.test(input) && input !== undefined && input.length > 0) {
-          this.upwdPrompt = this.$t('prompt.passwordLength')
-          return false
-        } else if (input === undefined || input.length === 0) {
-          this.upwdPrompt = this.$t('prompt.passwordRequired')
-          return false
-        } else {
+        if (upwdreg.test(input) && input !== undefined && input.length > 0) {
           this.upwdPrompt = ''
         }
       } else if (id === 2) {
-        if (input !== this.userForm.password && input !== undefined && input.length > 0) {
+        if (input !== this.userForm.password) {
           this.confirm_upwdPrompt = this.$t('prompt.passwordDifferent')
           return false
-        } else if (input === undefined || input.length === 0) {
-          this.confirm_upwdPrompt = this.$t('prompt.passwordRequired')
-          return false
-        } else {
+        } else if (input === this.userForm.password && input !== undefined && input.length > 0) {
           this.confirm_upwdPrompt = ''
         }
       } else if (id === 3) {
         var phonereg = /^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$/
-        if (!phonereg.test(input) && input !== undefined && input.length > 0) {
-          this.phonePrompt = this.$t('prompt.phoneError')
-          this.hasphone = true
-          return false
-        } else if (input === undefined || input.length === 0) {
-          this.phonePrompt = this.$t('prompt.phoneRequired')
-          this.hasphone = true
-          return false
-        } else {
+        if (phonereg.test(input) && input !== undefined && input.length > 0) {
           this.phonePrompt = ''
           this.hasphone = false
         }
-      } else if (id === 5) {
-        if (input === undefined || input.length === 0) {
-          this.captchaPrompt = this.$t('prompt.captchaRequired')
-          return false
-        } else {
+      } else if (id === 4) {
+        if (input !== undefined || input.length > 0) {
           this.captchaPrompt = ''
         }
       }
     },
     submitForm () {
+      // 用户名验证
+      let unamereg = /^[a-zA-Z0-9_.\-\u4e00-\u9fa5]{3,16}$/
+      // 密码验证
+      let upwdreg = /^[a-zA-Z0-9~!@#$%^&*()_+`\-={}:";'<>?,./]{6,18}$/
+      // 手机号验证
+      let phonereg = /^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$/
+      if (this.userForm.username === undefined || this.userForm.username.length === 0) {
+        this.unamePrompt = this.$t('prompt.usernameRequired')
+        return false
+      } else if (!unamereg.test(this.userForm.username) && this.userForm.username !== undefined && this.userForm.username.length > 0) {
+        this.unamePrompt = this.$t('prompt.usernameLength')
+        return false
+        // 以下--- 密码
+      } else if (this.userForm.password === undefined || this.userForm.password.length === 0) {
+        this.upwdPrompt = this.$t('prompt.passwordRequired')
+        return false
+      } else if (!upwdreg.test(this.userForm.password) && this.userForm.password !== undefined && this.userForm.password.length > 0) {
+        this.upwdPrompt = this.$t('prompt.passwordLength')
+        return false
+        // 以下 -- 确认密码
+      } else if (this.userForm.confirm_password === undefined || this.userForm.confirm_password.length === 0) {
+        this.confirm_upwdPrompt = this.$t('prompt.passwordRequired')
+        return false
+        // 以下 -- 手机号
+      } else if (this.userForm.phone === undefined || this.userForm.phone.length === 0) {
+        this.phonePrompt = this.$t('prompt.phoneRequired')
+        this.hasphone = true
+        return false
+      } else if (!phonereg.test(this.userForm.phone) && this.userForm.phone !== undefined && this.userForm.phone.length > 0) {
+        this.phonePrompt = this.$t('prompt.phoneError')
+        this.hasphone = true
+        return false
+        // 以下 -- 验证码
+      } else if (this.userForm.captcha === undefined || this.userForm.captcha.length === 0) {
+        this.captchaPrompt = this.$t('prompt.captchaRequired')
+        return false
+      }
       post(this.formUrl, this.userForm).then(data => {
         // console.log(data)
         if (data.resultcode === 0) {

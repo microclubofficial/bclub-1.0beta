@@ -76,6 +76,7 @@ export default {
     usernameRequired: 'Username is required',
     passwordLength: 'Password is between 6 and 18 bits',
     passwordRequired: 'Password is required',
+    oldpasswordDifferent: 'The new password is not consistent with the original password',
     passwordDifferent: 'Entered passwords differ from the other',
     orgpwdError: 'The original password is not correct',
     phoneError: 'The format of phone number is not correct',
