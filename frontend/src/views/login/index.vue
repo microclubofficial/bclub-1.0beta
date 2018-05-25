@@ -265,7 +265,7 @@ export default {
           this.phonePrompt = this.$t('prompt.phoneRequired')
           this.hasphone = true
           return false
-        }else if (!phonereg.test(input) && input !== undefined && input.length > 0) {
+        } else if (!phonereg.test(input) && input !== undefined && input.length > 0) {
           this.phonePrompt = this.$t('prompt.phoneError')
           this.hasphone = true
           return false

@@ -116,7 +116,7 @@
 }
 .zoom-out{
   cursor: zoom-out !important;
-  max-width: 100%;
+  max-width: 100% !important;
   width: 100% !important;
   /*margin: 10px auto;*/
 }

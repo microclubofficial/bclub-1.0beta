@@ -320,7 +320,6 @@ export default{
     this.showLoader = true
     get(`/api/topic/${this.tpno}`).then(data => {
       this.articles = data.data.topics
-      console.log(this.articles)
       this.showLoader = false
       this.pageCount = data.data.page_count
       if (this.articles.length > 0) {
@@ -643,9 +642,9 @@ export default{
         return
       }
       let reply = val.replace(/<p[^>]*>|<\/p>|<h-char[^>]*>|<\/h-char>|<h-inner[^>]*>|<\/h-inner>/g, '')
-      if (reply.indexOf('href') > 0) {
+      if (reply.substring(0, 80).indexOf('href') > 0) {
         let imgLength = 0
-        if (reply.indexOf('img') > 0) {
+        if (reply.substring(0, 80).indexOf('img') > 0) {
           let imgArr = []
           imgArr = reply.match(/<img[^>]*>/gi)
           if (imgArr === null) {
@@ -665,7 +664,7 @@ export default{
         // }
         hrefLength = hrefArr.length
         return reply.substring(0, 40 + hrefLength + imgLength) + '...'
-      } else if (reply.indexOf('img') > 0) {
+      } else if (reply.substring(0, 80).indexOf('img') > 0) {
         let imgLength = 0
         let imgArr = reply.match(/<img[^>]*>/gi)
         if (imgArr === null) {

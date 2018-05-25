@@ -133,7 +133,7 @@
 <script>
 import { post } from '../../utils/http'
 export default {
-  data: function() {
+  data: function () {
     return {
       hasphone: true,
       countdown: 30,
@@ -155,11 +155,11 @@ export default {
       }
     }
   },
-  mounted: function() {
+  mounted: function () {
   },
   methods: {
     // 失去焦点验证
-    showRegisterMsg(input, id) {
+    showRegisterMsg (input, id) {
       if (id === 0) {
         if (input === undefined || input.length === 0) {
           this.phonePrompt = this.$t('prompt.phoneRequired')
@@ -171,10 +171,7 @@ export default {
           this.findForm.phone = input
         }
       } else if (id === 1) {
-        if (input === undefined || input.length === 0) {
-          this.phoneControlPrompt = this.$t('prompt.captchaRequired')
-          return false
-        } else {
+        if (input !== undefined || input.length > 0) {
           this.phoneControlPrompt = ''
         }
       } else if (id === 2) {
@@ -201,13 +198,13 @@ export default {
       }
     },
     // 获取手机验证码
-    getPhoneControl() {
+    getPhoneControl () {
       let phone = parseFloat(this.phoneObj.phone)
       post('/api/phoneCaptcha/login', { 'phone': phone }).then((data) => {
         if (data.resultcode === 1) {
           this.hasphone = true
           let that = this
-          this.timer = setInterval(function() {
+          this.timer = setInterval(function () {
             that.countdown--
             that.hasControl = true
             that.getcontroltxt = that.$t('prompt.reacquire')
@@ -228,7 +225,7 @@ export default {
       })
     },
     // 填新密码
-    setnewpwd() {
+    setnewpwd () {
       this.findForm.phone = parseInt(this.phoneObj.phone)
       post('/api/setpassword', this.findForm).then(data => {
         if (data.resultcode === 1) {
@@ -245,7 +242,7 @@ export default {
       })
     },
     // 显示模态框
-    showModel() {
+    showModel () {
       if (this.phoneObj.phone === '') {
         this.phonePrompt = this.$t('prompt.phoneRequired')
         return false
