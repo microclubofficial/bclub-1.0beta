@@ -372,10 +372,9 @@ export default{
               item.is_bad = data.data.is_bad
               item.is_bad_bool = data.data.is_bad_bool
               item.is_good_bool = data.data.is_good_bool
-            } else if (data.message === '未登录') {
-              this.$router.push('/login')
-            } else {
+            } else if ( data.resultcode === 0 ) {
               alert(data.message)
+              this.$router.push('/login')
             }
           })
           // 吐槽
@@ -387,7 +386,7 @@ export default{
               item.is_bad = data.data.is_bad
               item.is_bad_bool = data.data.is_bad_bool
               item.is_good_bool = data.data.is_good_bool
-            } else if (data.message === '未登录') {
+            } else if ( data.resultcode === 0 ) {
               alert(data.message)
               this.$router.push('/login')
             } else {
@@ -406,10 +405,9 @@ export default{
               item.is_bad = data.data.is_bad
               item.is_bad_bool = data.data.is_bad_bool
               item.is_good_bool = data.data.is_good_bool
-            } else if (data.message === '未登录') {
-              this.$router.push('/login')
-            } else {
+            } else if ( data.resultcode === 0 ) {
               alert(data.message)
+              this.$router.push('/login')
             }
           })
           // 吐槽
@@ -421,10 +419,9 @@ export default{
               item.is_bad = data.data.is_bad
               item.is_bad_bool = data.data.is_bad_bool
               item.is_good_bool = data.data.is_good_bool
-            } else if (data.message === '未登录') {
-              this.$router.push('/login')
-            } else {
+            } else if ( data.resultcode === 0 ) {
               alert(data.message)
+              this.$router.push('/login')
             }
           })
         }

@@ -90,7 +90,9 @@ export default {
     emailSent: '一封邮件已发送，请至邮箱查收完成验证',
     loading: '加载中...',
     noMore: '没有啦',
-    empty: '发贴内容不能为空'
+    emptyContent: '发贴内容不能为空',
+    emptyLink: '链接不能为空',
+    invalidLink: '无效的链接'
   },
   message: {
     sthToSay: '有什么消息告诉大家...',
@@ -105,7 +107,8 @@ export default {
     fold: '收起',
     unfold: '展开',
     resend: '重新发送',
-    verify: '完成验证'
+    verify: '完成验证',
+    emoji: '表情'
   },
   pages: {
     first: '首页',

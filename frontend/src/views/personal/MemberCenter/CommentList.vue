@@ -285,7 +285,7 @@ export default{
     this.showLoader = true
     get(`/api/u/replies/${this.userInfo.username}/${this.tpno}`).then(data => {
       if (data.message === '未登录') {
-        alert('请先去登录')
+        alert(this.$t('prompt.loginFirst'))
         this.$router.push({ path: '/login' })
       } else {
         this.articles = data.data.topics
