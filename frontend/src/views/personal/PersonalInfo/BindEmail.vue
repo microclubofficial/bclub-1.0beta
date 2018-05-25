@@ -40,7 +40,7 @@
 </template>
 <script>
 import {post, get} from '../../../utils/http'
-import { Toast } from 'mint-ui'
+// import { Toast } from 'mint-ui'
 import {getToken} from '../../../utils/auth.js'
 export default {
   data () {
@@ -60,6 +60,11 @@ export default {
     if (this.user_token === '') {
       this.$router.push('/')
     }
+    get(`/api/u/email`).then(data => {
+      if (data.resultcode === 1) {
+        this.successbind = true
+      }
+    })
   },
   methods: {
     // 验证

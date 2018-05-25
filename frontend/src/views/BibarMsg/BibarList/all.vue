@@ -463,17 +463,14 @@ export default{
     collectionTopic (index, id) {
       let instance
       post(`/api/collect/${id}`).then(data => {
-        if (data.message === 'success') {
+        if (data.resultcode === 0) {
+          alert(data.message)
+          this.$router.push('/login')
+        } else {
           $('.bibar-tabitem:eq(' + index + ')').find('.set-choseStar > a').addClass('collectionActive')
           this.collection = index
           instance = new Toast({
-            message: '收藏成功',
-            iconClass: 'glyphicon glyphicon-ok',
-            duration: 1000
-          })
-        } else {
-          instance = new Toast({
-            message: '取消收藏',
+            message: data.message,
             duration: 1000
           })
         }

@@ -119,7 +119,7 @@ export default {
   },
   mounted () {
     // this.outloginSty()
-    $('.bibar-headerSearchitem').find('.toLongText').css({'right': '320px', 'bottom': '0'})
+    $('.bibar-headerSearchitem').find('.toLongText').css({'left': '200px', 'bottom': '0'})
     $('.bibar-headerSearchitem').find('.avatar').css({'display': 'none'})
     $('.bibar-headerSearchitem').find('.editor').css({'width': '570px'})
     $('.bibar-headerSearchitem').find('.cancel').css({'right': '52px', 'bottom': '0px'})
@@ -371,7 +371,7 @@ a.nav_btn_longtext {
     position: fixed!important;
     top: 195px!important;
 }
-.modal-body{
+.hmModal .modal-body{
     position: relative;
     padding: 0 15px 15px 15px !important;
     margin: 0 !important;
@@ -421,7 +421,8 @@ a.nav_btn_longtext {
 }
 .modal-body>.wangeditor .toLongText{
     bottom: 0;
-    right: 320px;
+    right: 298px;
+    color:#999;
 }
 .modal-body>.wangeditor>.editor{width: 525px;}
 </style>
