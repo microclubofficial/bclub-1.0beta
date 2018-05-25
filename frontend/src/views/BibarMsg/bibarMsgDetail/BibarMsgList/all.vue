@@ -406,10 +406,9 @@ export default{
               item.is_bad = data.data.is_bad
               item.is_bad_bool = data.data.is_bad_bool
               item.is_good_bool = data.data.is_good_bool
-            } else if (data.message === '未登录') {
-              this.$router.push('/login')
-            } else {
+            } else if ( data.resultcode === 0 ) {
               alert(data.message)
+              this.$router.push('/login')
             }
           })
           // 吐槽
@@ -421,7 +420,7 @@ export default{
               item.is_bad = data.data.is_bad
               item.is_bad_bool = data.data.is_bad_bool
               item.is_good_bool = data.data.is_good_bool
-            } else if (data.message === '未登录') {
+            } else if ( data.resultcode === 0 ) {
               alert(data.message)
               this.$router.push('/login')
             } else {
@@ -440,10 +439,9 @@ export default{
               item.is_bad = data.data.is_bad
               item.is_bad_bool = data.data.is_bad_bool
               item.is_good_bool = data.data.is_good_bool
-            } else if (data.message === '未登录') {
-              this.$router.push('/login')
-            } else {
+            } else if ( data.resultcode === 0 ) {
               alert(data.message)
+              this.$router.push('/login')
             }
           })
           // 吐槽
@@ -455,10 +453,9 @@ export default{
               item.is_bad = data.data.is_bad
               item.is_bad_bool = data.data.is_bad_bool
               item.is_good_bool = data.data.is_good_bool
-            } else if (data.message === '未登录') {
-              this.$router.push('/login')
-            } else {
+            } else if ( data.resultcode === 0 ) {
               alert(data.message)
+              this.$router.push('/login')
             }
           })
         }
@@ -572,10 +569,18 @@ export default{
         } else {
           this.collection = index
           tmp.collect_bool = data.data.collect_bool
-          instance = new Toast({
-            message: data.message,
-            duration: 1000
-          })
+          if (data.data.collect_bool) {
+            instance = new Toast({
+              message: this.$t('prompt.successCollect'),
+              iconClass: 'glyphicon glyphicon-ok',
+              duration: 1000
+            })
+          } else {  
+            instance = new Toast({
+              message: this.$t('prompt.cancelCollect'),
+              duration: 1000
+            })
+          }
           setTimeout(() => {
             instance.close()
           }, 1000)

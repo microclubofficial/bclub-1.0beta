@@ -318,8 +318,8 @@ export default{
     this.$store.dispatch('clear_backForNav')
     this.showLoader = true
     get(`/api/u/replies/${this.userInfo.username}/${this.tpno}`).then(data => {
-      if (data.message === '未登录') {
-        alert('请先去登录')
+      if (data.resultcode === 0) {
+        alert(this.$t('prompt.loginFirst'))
         this.$router.push({ path: '/login' })
       } else {
         this.articles = data.data.topics
@@ -537,10 +537,18 @@ export default{
           this.$router.push('/login')
         } else {
           tmp.collect_bool = data.data.collect_bool
-          instance = new Toast({
-            message: data.message,
-            duration: 1000
-          })
+          if (data.data.collect_bool) {
+            instance = new Toast({
+              message: this.$t('prompt.successCollect'),
+              iconClass: 'glyphicon glyphicon-ok',
+              duration: 1000
+            })
+          } else {  
+            instance = new Toast({
+              message: this.$t('prompt.cancelCollect'),
+              duration: 1000
+            })
+          }
           setTimeout(() => {
             instance.close()
           }, 1000)

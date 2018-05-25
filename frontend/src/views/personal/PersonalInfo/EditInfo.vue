@@ -236,7 +236,7 @@ export default {
       let that = this
       post('/api/phoneCaptcha', { 'phone': phone }).then((data) => {
         if (data.resultcode === 0) {
-          if (data.message === 'failed') {
+          if (data.message === 'failed' || data.message === '失败') {
             alert(this.$t('prompt.phoneRegistered'))
             this.hasphone = true
             return false

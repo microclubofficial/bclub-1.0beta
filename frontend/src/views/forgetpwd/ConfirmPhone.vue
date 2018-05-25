@@ -251,10 +251,10 @@ export default {
         return false
       } else {
         post('/api/phoneForget', this.phoneObj).then(data => {
-          if (data.message === '验证码错误') {
-            this.phoneControlPrompt = '验证码错误，请重新获取'
+          if (data.message === '验证码错误'|| data.message === 'Captcha error') {
+            this.phoneControlPrompt = data.message
             this.phoneObj.captcha = ''
-          } else if (data.message === '手机号不存在') {
+          } else if (data.message === '手机号错误' || data.message === 'Phone error') {
             this.phonePrompt = data.message
           } else if (data.resultcode === 1) {
             $('#myModal').modal({

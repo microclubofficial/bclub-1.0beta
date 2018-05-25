@@ -76,7 +76,7 @@ export default {
     usernameRequired: 'Username is required',
     passwordLength: 'Password is between 6 and 18 bits',
     passwordRequired: 'Password is required',
-    passwordDifferent: 'Entered passwords differ from the another',
+    passwordDifferent: 'Entered passwords differ from the other',
     orgpwdError: 'The original password is not correct',
     phoneError: 'The format of phone number is not correct',
     phoneRequired: 'Phone number is required',
@@ -92,7 +92,9 @@ export default {
     noMore: 'No more',
     emptyContent: 'Post content cannot be empty',
     emptyLink: 'Link cannot be empty',
-    invalidLink: 'Invalid link'
+    invalidLink: 'Invalid link',
+    successCollect: 'Collect successfully',
+    cancelCollect: 'Cancel successfully'
   },
   message: {
     sthToSay: 'Something to say...',

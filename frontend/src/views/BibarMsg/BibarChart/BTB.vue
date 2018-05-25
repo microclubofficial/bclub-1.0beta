@@ -31,7 +31,7 @@
                         <dl>
                             <dt>{{$t('details.marketCap')}} :</dt>
                             <dd> <i class="iconfont icon-USD" v-if='(parseFloat(bibarData.marketCap) * CNY_RATE).toFixed(2) > 0'>&#xe634;</i>{{bibarData.marketCap | cnyFun(CNY_RATE,2)}}
-                                <div v-if='(parseFloat(bibarData.marketCap) * CNY_RATE).toFixed(2) > 0' class="sprit-12 bg-green ml10">{{language == 'ch' ? '第'+bibarData.level+'名' : 'No. '+bibarData.level}}</div>
+                                <div v-if='(parseFloat(bibarData.marketCap) * CNY_RATE).toFixed(2) > 0' class="sprit-12 bg-green ml10">{{language == 'zh' ? '第'+bibarData.level+'名' : 'No. '+bibarData.level}}</div>
                             </dd>
                             <dd> <i v-if="parseFloat((bibarData.marketCap + '').replace(/[^\d.-]/g, '')).toFixed(2) + '' > 0" class="iconfont icon-yueden">&#xe6ca;</i> <i v-if="parseFloat((bibarData.marketCap + '').replace(/[^\d.-]/g, '')).toFixed(2) + '' > 0" class="iconfont icon-rmb icon-CNY">&#xe736;</i>{{bibarData.marketCap | formatNum(2)}} </dd>
                             <dd> <i v-if="(parseInt(bibarData.marketCap) * BTC_RATE).toFixed(2) > 0" class="iconfont icon-yueden">&#xe6ca;</i> <i v-if="(parseInt(bibarData.marketCap) * BTC_RATE).toFixed(2) > 0" class="iconfont icon-BTC">&#xe63a;</i> {{bibarData.marketCap | bitcoinFun(BTC_RATE)}} </dd>
@@ -51,7 +51,7 @@
                         <dl>
                             <dt>{{$t('details.tradingVolume24h')}} :</dt>
                             <dd> <i v-if='(parseFloat(bibarData.volume_ex) * CNY_RATE).toFixed(2) > 0' class="iconfont icon-USD">&#xe634;</i>{{bibarData.volume_ex | cnyFun(CNY_RATE,2)}}
-                                <div v-if='(parseFloat(bibarData.volume_ex) * CNY_RATE).toFixed(2) > 0' class="sprit-12 bg-green ml10">{{language == 'ch' ? '第'+bibarData.volume_level+'名' : 'No. '+bibarData.volume_level}}</div>
+                                <div v-if='(parseFloat(bibarData.volume_ex) * CNY_RATE).toFixed(2) > 0' class="sprit-12 bg-green ml10">{{language == 'zh' ? '第'+bibarData.volume_level+'名' : 'No. '+bibarData.volume_level}}</div>
                             </dd>
                             <dd> <i v-if="parseFloat((bibarData.volume_ex + '').replace(/[^\d.-]/g, '')).toFixed(2) + '' > 0" class="iconfont icon-yueden">&#xe6ca;</i><i v-if="parseFloat((bibarData.volume_ex + '').replace(/[^\d.-]/g, '')).toFixed(2) + '' > 0" class="iconfont icon-CNY">&#xe736;</i> {{bibarData.volume_ex | formatNum(2)}}</dd>
                             <dd> <i v-if="(parseInt(bibarData.volume_ex) * BTC_RATE).toFixed(2) > 0" class="iconfont icon-yueden">&#xe6ca;</i><i v-if="(parseInt(bibarData.volume_ex) * BTC_RATE).toFixed(2) > 0" class="iconfont icon-btb icon-BTC">&#xe63a;</i>{{bibarData.volume_ex | bitcoinFun(BTC_RATE)}} </dd>
