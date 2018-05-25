@@ -100,7 +100,8 @@ export default {
   },
   message: {
     sthToSay: 'Something to say...',
-    noInformation: 'No information'
+    noInformation: 'No information',
+    imageComment: 'Image Comment'
   },
   button: {
     publish: 'Publish',

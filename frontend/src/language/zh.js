@@ -100,7 +100,9 @@ export default {
   },
   message: {
     sthToSay: '有什么消息告诉大家...',
-    noInformation: '暂无信息'
+    noInformation: '暂无信息',
+    imageComment: '图片评论',
+    viewImage: '查看图片'
   },
   button: {
     publish: '发布',
