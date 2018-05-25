@@ -89,7 +89,7 @@
               <input  class="form-control" maxlength="16" name="username" type="text" :placeholder="$t('placeholder.username')" @change='showRegisterMsg(userForm.username, 0)'  v-model="userForm.username">
             </div>
             <!--<label class="col-md-3 control-label"></label>-->
-            <p class="prompt col-md-offset-3 col-md-9">{{unamePrompt}}</p>
+            <p class="prompt col-md-offset-3 col-md-9" style="margin-top:0px!important;margin-left:25%!important;">{{unamePrompt}}</p>
           </div>
           <div class="form-group">
             <label class="col-md-3 control-label"><span class="text-red">* </span>{{$t('register.password')}}</label>
@@ -97,7 +97,7 @@
               <input class="form-control" name="password" type="password" :placeholder="$t('placeholder.password')" @change='showRegisterMsg(userForm.password, 1)' v-model="userForm.password">
             </div>
             <!--<label class="col-md-3 control-label"></label>-->
-            <p class="prompt col-md-offset-3 col-md-9">{{upwdPrompt}}</p>
+            <p class="prompt col-md-offset-3 col-md-9" style="margin-top:0px!important;margin-left:25%!important;">{{upwdPrompt}}</p>
           </div>
           <div class="form-group">
             <label class="col-md-3 control-label"><span class="text-red">* </span>{{$t('register.repassword')}}</label>
@@ -105,7 +105,7 @@
               <input class="form-control" name="repassword" type="password" :placeholder="$t('placeholder.repassword')" @change='showRegisterMsg(userForm.confirm_password, 2)' v-model="userForm.confirm_password">
             </div>
             <!--<label class="col-md-3 control-label"></label>-->
-            <p class="prompt col-md-offset-3 col-md-9">{{confirm_upwdPrompt}}</p>
+            <p class="prompt col-md-offset-3 col-md-9" style="margin-top:0px!important;margin-left:25%!important;">{{confirm_upwdPrompt}}</p>
           </div>
           <div class="form-group">
             <label class="col-md-3 control-label"><span class="text-red">* </span>{{$t('register.phone')}}</label>
@@ -113,7 +113,7 @@
               <input class="form-control" name="phone" type="text" :placeholder="$t('placeholder.phone')" v-model="userForm.phone" @change='showRegisterMsg(userForm.phone, 3)'>
             </div>
             <!--<label class="col-md-3 control-label"></label>-->
-             <p class="prompt col-md-offset-3 col-md-9">{{phonePrompt}}</p>
+             <p class="prompt col-md-offset-3 col-md-9" style="margin-top:0px!important;margin-left:25%!important;">{{phonePrompt}}</p>
           </div>
           <div class="form-group">
               <label for="inputCaptcha3" class="col-md-3 control-label"><span class="text-red">* </span>{{$t('register.vcode')}}</label>
@@ -122,7 +122,7 @@
                   <button type="button" class="col-md-3 get-captcha" v-bind:disabled="hasphone" :class="{'text-gray':hasphone}" @click="getPhoneControl"><span v-show="hasControl">{{countdown}}</span><i> | </i>{{getcontroltxt}}</button>
               </div>
             <!--<label class="col-md-3 control-label"></label>-->
-            <p class="prompt col-md-offset-3 col-md-9">{{captchaPrompt}}</p>
+            <p class="prompt col-md-offset-3 col-md-9" style="margin-top:0px!important;margin-left:25%!important;">{{captchaPrompt}}</p>
           </div>
           <div class="form-group">
             <label class="col-md-3 control-label">&nbsp;&nbsp;&nbsp;{{$t('register.icode')}}</label>
@@ -228,7 +228,7 @@ export default {
       post(this.formUrl, this.userForm).then(data => {
         // console.log(data)
         if (data.resultcode === 0) {
-          alert(data.message)
+          this.unamePrompt = data.message
           return
         }
         if (data.resultcode === 1) {

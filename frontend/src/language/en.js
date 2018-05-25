@@ -13,6 +13,12 @@ export default {
     logout: 'Logout',
     noNews: 'No messages'
   },
+  breadcrumb: {
+    home: 'Home',
+    all: 'All',
+    coinNews: 'Coin News',
+    personal: 'Personal center'
+  },
   column: {
     hotCoins: 'Hot Coins',
     all: 'All',
@@ -60,7 +66,8 @@ export default {
     icode: 'invitation code',
     email: 'email',
     originalPassword: 'original password',
-    newPassword: 'new password'
+    newPassword: 'new password',
+    title: 'Please enter title'
   },
   prompt: {
     acquireVcode: 'Acquire',
@@ -80,10 +87,16 @@ export default {
     emailError: 'The format of email is not correct',
     spaceForbidden: 'Spaces are not allowed',
     loginFirst: 'Please login first!',
-    emailSent: 'An email has been sent. Please check and verify it.'
+    emailSent: 'An email has been sent. Please check and verify it.',
+    loading: 'Loading...',
+    noMore: 'No more',
+    emptyContent: 'Post content cannot be empty',
+    emptyLink: 'Link cannot be empty',
+    invalidLink: 'Invalid link'
   },
   message: {
-    sthToSay: 'Something to say...'
+    sthToSay: 'Something to say...',
+    noInformation: 'No information'
   },
   button: {
     publish: 'Publish',
@@ -94,7 +107,8 @@ export default {
     fold: 'Fold',
     unfold: 'Unfold',
     resend: 'Resend',
-    verify: 'Verify'
+    verify: 'Verify',
+    emoji: 'Emoji'
   },
   pages: {
     first: 'First',
@@ -103,14 +117,19 @@ export default {
     next: 'Next'
   },
   list: {
-    ago: 'ago',
+    ago: ' ago',
+    justNow: 'Published just now',
     commented: 'made a comment',
-    from: 'from',
+    from: 'from ',
+    bclub: 'Bclub',
     comment: 'Comment',
     collect: 'Collect',
     delete: 'Delete',
     reply: 'Reply',
-    allComments: 'All comments'
+    allComments: 'All comments',
+    earliest: 'Earliest',
+    newest: 'Newest',
+    likeMost: 'Like most'
   },
   personalCenter: {
     personal: 'Personal Center',
@@ -165,5 +184,15 @@ export default {
     totalSupply: 'Total supply',
     availableSupply: 'Available supply',
     circulationRate: 'Circulation rate'
+  },
+  chart: {
+    zoom: 'Zoom',
+    all: 'All',
+    month1: '1M',
+    month3: '3M',
+    month6: '6M',
+    year1: '1Y',
+    price: 'Price(CNY)',
+    volume: 'Volume(24H)'
   }
 }

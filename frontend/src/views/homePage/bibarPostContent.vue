@@ -41,7 +41,9 @@ export default {
         replt_count: 0
       },
       showDilog: false,
-      editor: {}
+      editor: {},
+      imgArr: [],
+      imgObj: {}
     }
   },
   computed: {
@@ -57,6 +59,7 @@ export default {
   },
   methods: {
     getContent: function () {
+      let that = this
       // this.topicData.content = this.editorContent
       this.topicData.content = this.editor.$textElem.html()
       // 处理插入链接
@@ -77,7 +80,7 @@ export default {
       let tempContent = this.topicData.content.replace(/<br>|&nbsp;|\s|<p>|<\/p>|<div>|<\/div>/g, '')
       if (!tempContent) {
         let instance = new Toast({
-          message: '发帖内容不能为空',
+          message: this.$t('prompt.emptyContent'),
           duration: 1000
         })
         setTimeout(() => {
@@ -86,12 +89,21 @@ export default {
         $('.w-e-text').html('')
         return false
       }
-      let image = this.topicData.content.match(/<img src="\/static[^>]+>/g)
-      this.topicData.picture = ''
-      if (image !== null) {
-        this.topicData.picture = image[0]
-        this.topicData.picture = this.topicData.picture.slice(this.topicData.picture.indexOf('/'), this.topicData.picture.lastIndexOf('=') - 7)
+      // let image = this.topicData.content.match(/<img src="\/static[^>]+>/g)
+      // this.topicData.picture = ''
+      // if (image !== null) {
+      //   this.topicData.picture = image[0]
+      //   this.topicData.picture = this.topicData.picture.slice(this.topicData.picture.indexOf('/'), this.topicData.picture.lastIndexOf('=') - 7)
+      // }
+      // 处理首图
+      if (/<img.*?(?:>|\/>)/gi.test(this.topicData.content)) {
+        let image = this.topicData.content.match(/<img(?![^<>]*?data-w-e[^<>]*?>).*?>/g)
+        if (image !== null) {
+          image = image[0].match(/(?<=(src="))[^"]*?(?=")/ig)[0]
+        }
+        this.topicData.picture = image
       }
+      // 处理路由
       if (this.$route.path !== '/' && this.$route.path.indexOf('details') === -1) {
         this.topicData.token = this.$route.params.currency
         if (this.tokenBibar) {
@@ -102,11 +114,39 @@ export default {
           this.topicData.tokenname = '币吧'
         }
       }
+      // 上传网络图片
+      this.imgArr = []
+      let contentImg = this.topicData.content.match(/<img[^>]*?(src="(?!\/static\/avatar)[^"]*?")(?![^<>]*?data-w-e[^<>]*?>)[^>]*?>/g)
+      if (contentImg !== null) {
+        for (let i = 0; i < contentImg.length; i++) {
+          if (contentImg[i].indexOf('alt="[') === -1) {
+            this.imgArr.push(contentImg[i].match(/(?<=(src="))[^"]*?(?=")/ig)[0])
+          }
+        }
+        this.imgObj.imgName = this.imgArr
+        post('/api/photo', this.imgObj).then(data => {
+          for (let key in data.data) {
+            let reg = new RegExp(key, 'g')
+            let content = that.topicData.content.replace(reg, data.data[key])
+            that.topicData.content = content
+          }
+          this.topicData.picture = data.data[this.imgArr[0]]
+          // 请求
+          // console.log(this.topicData.content)
+          // console.log(this)
+          this.postContent()
+        })
+      } else {
+        this.postContent()
+      }
       // this.$store.commit('LONG_ID', {
       //   hideDilog: !this.showDilog,
       //   bId: this.$route.params.currency,
       //   bName: JSON.parse(this.$route.query.b).zh
       // })
+    },
+    // post内容
+    postContent () {
       if (this.topicData.content.length > 0 || this.topicData.picture.length > 0) {
         post(`/api/topic`, this.topicData).then(data => {
           this.editorContent = ''
@@ -133,6 +173,7 @@ export default {
               backFt.picture = data.data.picture
               backFt.reply_user = null
               backFt.replies_count = 0
+              backFt.bool_delete = data.data.bool_delete
               if (this.showDilog) {
                 this.$emit('backFtNav', backFt)
                 this.showDilog = false
@@ -149,7 +190,7 @@ export default {
         })
       } else {
         let instance = new Toast({
-          message: '发帖内容不能为空',
+          message: this.$t('prompt.emptyContent'),
           duration: 1000
         })
         setTimeout(() => {
@@ -203,11 +244,11 @@ export default {
     // 校验链接
     this.editor.customConfig.linkCheck = function (text, link) {
       if (text === '' || link === '') {
-        return ('无效的链接')
+        return this.$t('prompt.emptyLink')
       } else {
         let reg = /[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+\.?/ig
         if (!reg.test(link)) {
-          return ('请输入正确的链接地址')
+          return this.$t('prompt.invalidLink')
         } else {
           return true
         }
@@ -216,7 +257,7 @@ export default {
     // 表情配置
     this.editor.customConfig.emotions = [
       {
-        title: '表情',
+        title: this.$t('button.emoji'),
         type: 'image',
         content: [
           {

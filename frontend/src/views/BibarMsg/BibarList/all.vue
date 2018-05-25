@@ -7,7 +7,7 @@
         <div class="bibar-indexNewsItem">
           <div class="speech" v-if="tmp.reply_user !== null"> <span><span class="time">{{tmp.reply_time}}</span>{{$t('list.ago')}} {{tmp.reply_user}} {{$t('list.commented')}}</span><i class="iconfont icon-dot"></i></div>
           <div class="user">
-            <div class="bibar-author"> <a href="#"> <span class="photo"><img :src="tmp.avatar"></span> <span class="name">{{tmp.author}}</span> <span class="time">{{tmp.diff_time}}前发布</span> </a> </div>
+            <div class="bibar-author"> <a href="#"> <span class="photo"><img :src="tmp.avatar"></span> <span class="name">{{tmp.author}}</span> <span class="time">{{tmp.diff_time !== 0 ? tmp.diff_time + $t('list.ago') : $t('list.justNow')}}</span> </a> </div>
           </div>
           <div class="tit"><a href="javascript:void(0)" @click="goDetail(tmp.id)">{{tmp.title}}</a></div>
           <div class="txt indexNewslimitHeight" @click="goDetail(tmp.id)">
@@ -148,18 +148,19 @@
                 </div>
               </div>
               <!-- 分页条 -->
-            <div class="pages" v-if='showPage'>
+            <div class="pages" v-if='cpageCountObj[tmp.id] > 1'>
               <ul class="mo-paging">
-              <!-- prev -->
-        <li :class="['paging-item', 'paging-item--first', {'paging-item--disabled' : cpno === 1}]" @click="first">{{$t('pages.first')}}</li>
-                <li class="paging-item paging-item--prev" :class="{'paging-item--disabled' : cpno === 1}" @click="prev">{{$t('pages.prev')}}</li>
-                <li :class="['paging-item', {'paging-item--current' : cpno === tmp}]" :key="index" v-for="(tmp, index) in showPageBtn" @click="go(tmp)">{{tmp}}</li>
+                <!-- prev -->
+                <!-- first -->
+                <li :class="['paging-item', 'paging-item--first', {'paging-item--disabled' : cpno[tmp.id] === 1}]" @click="first(tmp.id)">{{$t('pages.first')}}</li>
+                <li class="paging-item paging-item--prev" :class="{'paging-item--disabled' : cpno[tmp.id] === 1}" @click="prev(tmp.id)">{{$t('pages.prev')}}</li>
+                <li :class="['paging-item', {'paging-item--current' : cpno[tmp.id] === page}]" :key="index" v-for="(page, index) in pageNumber[tmp.id]" @click="go(page,tmp.id)">{{page}}</li>
                 <!--<li :class="['paging-item', 'paging-item--more']" @click="next" v-if="showNextMore">...</li>-->
                 <!-- next -->
-                <li :class="['paging-item', 'paging-item--next', {'paging-item--disabled' : cpno === cpageCount}]" @click="next">{{$t('pages.next')}}</li>
+                <li :class="['paging-item', 'paging-item--next', {'paging-item--disabled' : cpno[tmp.id] === cpageCountObj[tmp.id]}]" @click="next(tmp.id)">{{$t('pages.next')}}</li>
                 <!-- last -->
-                <li :class="['paging-item', 'paging-item--last', {'paging-item--disabled' : cpno === cpageCount}]" @click="last">{{$t('pages.end')}}</li>
-        </ul>
+                <li :class="['paging-item', 'paging-item--last', {'paging-item--disabled' : cpno[tmp.id] === cpageCountObj[tmp.id]}]" @click="last(tmp.id)">{{$t('pages.end')}}</li>
+              </ul>
             </div>
             </div>
           </div>
@@ -212,7 +213,7 @@ export default{
       upId: 0,
       tpno: 1,
       pageCount: 0,
-      bottomText: '加载中...',
+      bottomText: '',
       listLoding: true,
       noLoading: false,
       up: 0,
@@ -229,14 +230,16 @@ export default{
       isBad: 0,
       // 分页
       replyId: 0,
-      cpno: 1,
+      cpno: {},
       cpageLimit: 10,
       cpageCount: 0,
       showPrevMore: false,
       showNextMore: false,
       showPage: false,
       // 收藏
-      collectionAct: false
+      collectionAct: false,
+      pageNumber: {},
+      cpageCountObj: {}
     }
   },
   components: {
@@ -248,20 +251,6 @@ export default{
     },
     userInfo () {
       return this.$store.state.userInfo.userInfo
-    },
-    showPageBtn () {
-      let pageArr = []
-      if (this.cpageCount <= 5) {
-        for (let i = 1; i <= this.cpageCount; i++) {
-          pageArr.push(i)
-        }
-        return pageArr
-      }
-      if (this.cpno <= 2) return [1, 2, 3, '···', this.cpageCount]
-      if (this.cpno >= this.cpageCount - 1) return [1, '···', this.cpageCount - 2, this.cpageCount - 1, this.cpageCount]
-      if (this.cpno === 3) return [1, 2, 3, 4, '···', this.cpageCount]
-      if (this.cpno === this.cpageCount - 2) return [1, '···', this.cpageCount - 3, this.cpageCount - 2, this.cpageCount - 1, this.cpageCount]
-      return [1, '···', this.cpno - 1, this.cpno, this.cpno + 1, '···', this.cpageCount]
     }
   },
   created: function () {
@@ -296,12 +285,12 @@ export default{
           this.tpno++
           get(`/api/topic/${this.tpno}`).then(data => {
             this.articles = this.articles.concat(data.data.topics)
-            this.bottomText = '加载中...'
+            this.bottomText = this.$t('prompt.loading')
             // this.loadingImg = '../../assets/img/listLoding.png'
           })
         }, 1000)
       } else {
-        this.bottomText = '没有啦'
+        this.bottomText = this.$t('prompt.noMore')
         this.listLoding = false
         this.noLoading = true
         // this.loadingImg = '../../assets/img/noLoading.png'
@@ -390,9 +379,17 @@ export default{
     // 评论
     showDiscuss (index, id) {
       this.replyId = id
-      get(`/api/topic/${id}/${this.cpno}`).then(data => {
-        this.nowData = data.data.replies
+      if (!this.cpno[id]) {
+        this.cpno[id] = 1
+      }
+      get(`/api/topic/${id}/${this.cpno[id]}`).then(data => {
+        if (!this.nowData[id]) this.$set(this.nowData, id, data.data.replies)
+        else this.nowData[id] = data.data.replies
+        if (!this.pageNumber[id]) this.$set(this.pageNumber, id, this.showPageBtn(id, data.data.page_count))
+        else this.pageNumber[id] = this.showPageBtn(id, data.data.page_count)
+        this.showLoaderComment = false
         this.cpageCount = data.data.page_count
+        this.cpageCountObj[id] = this.cpageCount
         if (this.cpageCount > 1) {
           this.showPage = true
         } else {
@@ -498,35 +495,54 @@ export default{
       return now
     },
     // 分页
-    prev () {
-      if (this.cpno > 1) {
-        this.go(this.cpno - 1)
+    prev (id) {
+      if (this.cpno[id] > 1) {
+        this.go(this.cpno[id] - 1, id)
       }
     },
-    next () {
-      if (this.cpno < this.cpageCount) {
-        this.go(this.cpno + 1)
+    next (id) {
+      if (this.cpno[id] < this.cpageCount) {
+        this.go(this.cpno[id] + 1, id)
       }
     },
-    first () {
-      if (this.cpno !== 1) {
-        this.go(1)
+    first (id) {
+      if (this.cpno[id] !== 1) {
+        this.go(1, id)
       }
     },
-    last () {
-      if (this.cpno !== this.cpageCount) {
-        this.go(this.cpageCount)
+    last (id) {
+      if (this.cpno[id] !== this.cpageCount) {
+        this.go(this.cpageCount, id)
       }
     },
-    go (page) {
+    go (page, id) {
+      if (page === '···') {
+        return
+      }
       this.chartShow = 0
       this.summaryList = []
-      if (this.cpno !== page) {
-        this.cpno = page
+      if (this.cpno[id] !== page) {
+        this.cpno[id] = page
       }
-      get(`/api/topic/${this.replyId}/${page}`).then(data => {
-        this.nowData = data.data.replies
+      get(`/api/topic/${id}/${page}`).then(data => {
+        if (!this.nowData[id]) this.$set(this.nowData, id, data.data.replies)
+        else this.nowData[id] = data.data.replies
       })
+    },
+    showPageBtn (id, tatal) {
+      let pageArr = []
+      if (tatal <= 5) {
+        for (let i = 1; i <= tatal; i++) {
+          pageArr.push(i)
+        }
+        return pageArr
+      }
+      // if (!this.cpno[i]) this.cpno[i] = 1
+      if (this.cpno[id] <= 2) return [1, 2, 3, '···', tatal]
+      if (this.cpno[id] >= tatal - 1) return [1, '···', tatal - 2, tatal - 1, tatal]
+      if (this.cpno[id] === 3) return [1, 2, 3, 4, '···', tatal]
+      if (this.cpno[id] === tatal - 2) return [1, '···', tatal - 3, tatal - 2, tatal - 1, tatal]
+      return [1, '···', this.cpno[id] - 1, this.cpno[id], this.cpno[id] + 1, '···', tatal]
     },
     // 回复人文字处理
     needTxt (val) {
@@ -754,7 +770,7 @@ svg:not(:root) {
 }
 .comment-item{
     padding: 15px 0 10px;
-    border-top: 1px solid #edf0f5;
+    /*border-bottom: 1px solid #edf0f5;*/
     margin: 15px 0;
 }
 .comment-item .avatar {

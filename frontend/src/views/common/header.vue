@@ -4,7 +4,9 @@
     <header class="bibar-header">
       <section class="bibar-w1100">
         <!--Logo-->
-        <h1 class="bibar-headerlogo" title="币吧"><img src="../../assets/img/logo-BCLUB.png"></h1>
+        <h1 class="bibar-headerlogo">
+          <router-link :to="{path:'/'}"><img src="../../assets/img/logo-BCLUB.png"></router-link>
+        </h1>
         <!--菜单-->
         <nav class="bibar-headernav">
           <ul class="bibar-headernavlist">
@@ -59,8 +61,7 @@ export default {
   data: function () {
     return {
       user_token: '',
-      remember_token: '',
-      language: 'zh'
+      remember_token: ''
     }
   },
   components: {
@@ -70,6 +71,9 @@ export default {
   computed: {
     userInfo () {
       return this.$store.state.userInfo.userInfo
+    },
+    language () {
+      return this.$store.state.language.language
     }
   },
   created () {
@@ -77,15 +81,17 @@ export default {
       this.user_token = JSON.parse(getToken())
     }
     if (getToken('language')) {
-      this.language = getToken('language')
-      // console.log(this.language)
+      this.$store.commit('LANGUAGE', {
+        'language': getToken('language')
+      })
     }
-    // this.remember_token = rememberToken('remember_token')
   },
   methods: {
     switchLang (lang) {
       setToken('language', lang)
-      this.language = lang
+      this.$store.commit('LANGUAGE', {
+        'language': lang
+      })
       location.reload()
     },
     // toLoadMain () {

@@ -63,7 +63,7 @@
                     <input type="text" class="form-control" id="inputEmail3" @change='showsetFormMsg(setForm.phone, 1)' v-model="setForm.phone" :placeholder="$t('placeholder.phone')">
                   </div>
                 </div>
-                <p class="prompt col-md-offset-3 col-md-9" style="margin-top:0px !important;">{{phonePrompt}}</p>
+                <p class="prompt col-md-offset-3 col-md-9" style="margin-top:0px!important;margin-left:25%!important;">{{phonePrompt}}</p>
                 <div class="form-group" style="margin-top: 37px;">
                   <label for="inputCaptcha3" class="col-md-3 control-label">{{$t('register.vcode')}}</label>
                   <div class="col-md-6">
@@ -72,7 +72,7 @@
                   <button type="button" class="btn btn-default get-captcha" style="height:34px;line-height:34px;" @click="getPhoneControl" v-bind:disabled="hasphone" :class="{'btn-success':!hasphone}">
                     <span v-show="hasControl">{{countdown}}</span>{{getcontroltxt}}</button>
                 </div>
-                <p class="prompt col-md-offset-3 col-md-9" style="margin-top:0px !important;">{{phoneControlPrompt}}</p>
+                <p class="prompt col-md-offset-3 col-md-9" style="margin-top:0px!important;margin-left:25%!important;">{{phoneControlPrompt}}</p>
                 <button type="button" class="btn btn-primary btn-block login-button"  v-bind:disabled="!setForm.phone" @click="setusername" data-target="#myModal" data-toggle="">{{$t('button.confirm')}}
                 </button>
               </form>
@@ -102,7 +102,8 @@ export default {
       phonePrompt: '',
       phoneControlPrompt: '',
       canSetU: false,
-      cansetP: false
+      cansetP: false,
+      user_token: ''
     }
   },
   computed: {
@@ -111,6 +112,12 @@ export default {
     }
   },
   created: function () {
+    if (getToken()) {
+      this.user_token = JSON.parse(getToken())
+    }
+    if (this.user_token === '') {
+      this.$router.push('/')
+    }
     // 个人资料
     this.personalUser(this.userInfo.username)
   },
@@ -269,7 +276,7 @@ export default {
     // 个人资料
     personalUser (uname) {
       get(`/api/u/${uname}`).then(data => {
-        if (data.message === '未登录') {
+        if (data.resultcode === 0) {
           alert(this.$t('prompt.loginFirst'))
           this.$router.push({ path: '/login' })
         } else {

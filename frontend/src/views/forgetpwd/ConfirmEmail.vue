@@ -43,16 +43,17 @@
   margin-top: 10px;
   color: red;
 }
+
 </style>
 <template>
   <div>
     <div class="panel panel-primary login-box">
       <div class="panel-heading login-title">
-        <h3 class="panel-title text-center">{{$t('forgetPassword.retrieve')}}</h3>
+        <h3 class="panel-title text-center">{{$t('forgetPassword.byEmail')}}</h3>
       </div>
       <div class="panel-body">
         <div class="confirm-box" style="padding:0 150px 0 100px;">
-          <h4>{{$t('forgetPassword.byEmail')}}</h4>
+          <!--<h4>{{$t('forgetPassword.byEmail')}}</h4>-->
           <form class="form-horizontal clearfloat">
             <div class="form-group">
               <label for="inputEmail3" class="col-md-3 control-label">{{$t('forgetPassword.email')}}</label>

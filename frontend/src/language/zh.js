@@ -13,6 +13,12 @@ export default {
     logout: '退出登录',
     noNews: '暂无消息'
   },
+  breadcrumb: {
+    home: '首页',
+    all: '全部',
+    coinNews: '币讯',
+    personal: '个人中心'
+  },
   column: {
     hotCoins: '热门币',
     all: '全部',
@@ -60,7 +66,8 @@ export default {
     icode: '邀请码（选填）',
     email: '请输入邮箱',
     originalPassword: '请输入原密码',
-    newPassword: '请输入新密码'
+    newPassword: '请输入新密码',
+    title: '请输入标题'
   },
   prompt: {
     acquireVcode: '获取验证码',
@@ -80,10 +87,14 @@ export default {
     emailError: '邮箱格式不正确',
     spaceForbidden: '不能输入空格',
     loginFirst: '请先登录',
-    emailSent: '一封邮件已发送，请至邮箱查收完成验证'
+    emailSent: '一封邮件已发送，请至邮箱查收完成验证',
+    loading: '加载中...',
+    noMore: '没有啦',
+    empty: '发贴内容不能为空'
   },
   message: {
-    sthToSay: '有什么消息告诉大家...'
+    sthToSay: '有什么消息告诉大家...',
+    noInformation: '暂无信息'
   },
   button: {
     publish: '发布',
@@ -104,13 +115,18 @@ export default {
   },
   list: {
     ago: '前',
+    justNow: '刚刚发布',
     commented: '发表了评论',
     from: '来自',
+    bclub: '币吧',
     comment: '评论',
     collect: '收藏',
     delete: '删除',
     reply: '回复',
-    allComments: '全部评论'
+    allComments: '全部评论',
+    earliest: '最早',
+    newest: '最近',
+    likeMost: '赞'
   },
   personalCenter: {
     personal: '个人中心',
@@ -157,5 +173,15 @@ export default {
     totalSupply: '总发行量',
     availableSupply: '流通数量',
     circulationRate: '流通率'
+  },
+  chart: {
+    zoom: '区间',
+    all: '所有',
+    month1: '1月',
+    month3: '3月',
+    month6: '6月',
+    year1: '1年',
+    price: '价格（CNY）',
+    volume: '交易量（24H）'
   }
 }

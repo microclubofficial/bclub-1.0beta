@@ -38,7 +38,9 @@ export default {
       nowShowApi: ['topic', 'bar', 'bar', 'bar', 'comment', 'topic'],
       isHide: false,
       replies: [],
-      editor: {}
+      editor: {},
+      imgArr: [],
+      imgObj: {}
     }
   },
   computed: {
@@ -51,10 +53,11 @@ export default {
       this.nowApi = api
     },
     getContent: function () {
+      let that = this
       // this.topicData.content = this.editorContent
       this.topicData.content = this.editor.$textElem.html()
       // 处理链接
-      if (this.topicData.content.indexOf('href') > -1) {
+      if (this.topicData.content.indexOf('href') > 0) {
         let href = this.topicData.content.match(/(?<=(href="))[^"]*?(?=")/ig)
         for (let i = 0; i < href.length; i++) {
           if (href[i].indexOf('http') === -1) {
@@ -65,14 +68,13 @@ export default {
           }
         }
       }
-      // link = link.substr(0, 7).toLowerCase() === 'http://' ? link : 'http://' + link
       if (this.topicData.content.indexOf('<p>') > -1) {
         this.topicData.content = this.topicData.content.replace(/(^<p>)|(<\/p>$)/g, '')
       }
       let tempContent = this.topicData.content.replace(/<br>|&nbsp;|\s|<p>|<\/p>|<div>|<\/div>/g, '')
       if (!tempContent) {
         let instance = new Toast({
-          message: '发帖内容不能为空',
+          message: this.$t('prompt.emptyContent'),
           duration: 1000
         })
         setTimeout(() => {
@@ -96,20 +98,63 @@ export default {
           this.topicData.content += `${newData[i]}`
         }
       }
+      // 处理评论内容
+      if (this.toApi === 0) {
+        if (this.topicData.content.indexOf('img') > 0) {
+          let commentImg = this.topicData.content.match(/<img.*?(?:>|\/>)/gi)[0].match(/(?<=(src="))[^"]*?(?=")/ig)[0]
+          this.topicData.picture = commentImg
+        }
+      }
       // 处理回复数据
       if (this.toApi === 4) {
         this.topicData.author = this.replyAuthor
         this.topicData.replyContent = this.replyContent.replace(/<p>|<\/p>|<br>/g, '')
         if (!/^<img.*>$/gi.test(this.topicData.replyContent)) {
           // 处理正常内容
-          let replyNewData = this.topicData.replyContent.split(/<img src="\/static[^>]+>/g)[0]
-          this.topicData.replyContent = replyNewData
+          if (this.topicData.replyContent.indexOf('img') > 0) {
+            let replyImg = this.topicData.replyContent.match(/<img(?![^<>]*?data-w-e[^<>]*?>).*?>/g)[0].match(/(?<=(src="))[^"]*?(?=")/ig)[0]
+            let replyNewData = this.topicData.replyContent.replace(/<img src="\/static[^>]+>/g, `<a style='color:#0181FF' href='${replyImg}'><i class='iconfont'>&#xe694;</i>查看图片</a>`)
+            this.topicData.replyContent = replyNewData
+          }
+          // this.topicData.replyContent = replyNewData
         } else {
           if (this.topicData.replyContent.indexOf('data-w-e') === -1) {
-            this.topicData.replyContent = this.topicData.replyContent.match(/(?<=(src="))[^"]*?(?=")/ig)[0]
+            let justReplyImg = this.topicData.replyContent.match(/(?<=(src="))[^"]*?(?=")/ig)[0]
+            this.topicData.replyContent = '图片评论' + `<a style='color:#0181FF' href='${justReplyImg}'><i class='iconfont'>&#xe694;</i>查看图片</a>`
+          } else {
+            let replyImg = this.topicData.replyContent.match(/<img(?![^<>]*?data-w-e[^<>]*?>).*?>/g)[0].match(/(?<=(src="))[^"]*?(?=")/ig)[0]
+            let replyNewData = this.topicData.replyContent.replace(/<img src="\/static[^>]+>/g, `<a style='color:#0181FF' href='${replyImg}'><i class='iconfont'>&#xe694;</i>查看图片</a>`)
+            this.topicData.replyContent = replyNewData
           }
         }
       }
+      // 上传网络图片
+      this.imgArr = []
+      let mainImg = this.topicData.content.match(/<img[^>]*?(src="(?!\/static\/avatar)[^"]*?")(?![^<>]*?data-w-e[^<>]*?>)[^>]*?>/g)
+      if (mainImg !== null) {
+        for (let i = 0; i < mainImg.length; i++) {
+          if (mainImg[i].indexOf('alt="[') === -1) {
+            this.imgArr.push(mainImg[i].match(/(?<=(src="))[^"]*?(?=")/ig)[0])
+          }
+        }
+        this.imgObj.imgName = this.imgArr
+        post('/api/photo', this.imgObj).then(data => {
+          for (let key in data.data) {
+            let reg = new RegExp(key, 'g')
+            let content = that.topicData.content.replace(reg, data.data[key])
+            that.topicData.content = content
+          }
+          this.topicData.picture = data.data[this.imgArr[0]]
+          // 请求
+          // console.log(this.topicData.content)
+          // console.log(this)
+          this.reportPost()
+        })
+      } else {
+        this.reportPost()
+      }
+    },
+    reportPost () {
       if (this.topicData.content.length > 0 || this.topicData.url.length > 0) {
         post(`/api/${this.nowShowApi[this.toApi]}${this.toApi === 1 ? '/question' : this.toApi === 2 ? '/answer' : this.toApi === 3 ? '/comment' : ''}/replies/${this.toApi === 0 ? this.mainCommnet : this.toApi === 2 ? this.talkId : this.toApi === 3 ? this.contentId : this.toApi === 5 ? this.detailId : this.mainReplay}`, this.topicData).then(data => {
           //   评论发送完毕
@@ -133,6 +178,7 @@ export default {
               backData.url = data.data.url
               backData.reference = data.data.reference
               backData.replies_count = data.data.replies_count
+              backData.bool_delete = data.data.bool_delete
               let hotreplies = {}
               hotreplies = data.data
               // 热门回复
@@ -146,9 +192,6 @@ export default {
           }
         })
       }
-    //   get('api/topic').then(data => {
-    //     console.log('这是传回来' + data)
-    //   })
     },
     isHideFun () {
       $('.w-e-text-container').find('.w-e-text').html('')
@@ -169,11 +212,11 @@ export default {
     // 校验链接
     this.editor.customConfig.linkCheck = function (text, link) {
       if (text === '' || link === '') {
-        return ('无效的链接')
+        return this.$t('prompt.emptyLink')
       } else {
         let reg = /[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+\.?/ig
         if (!reg.test(link)) {
-          return ('请输入正确的链接地址')
+          return this.$t('prompt.invalidLink')
         } else {
           return true
         }
@@ -182,7 +225,7 @@ export default {
     // 表情配置
     this.editor.customConfig.emotions = [
       {
-        title: '表情',
+        title: this.$t('button.emoji'),
         type: 'image',
         content: [
           {

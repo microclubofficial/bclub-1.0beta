@@ -41,6 +41,7 @@
 <script>
 import {post, get} from '../../../utils/http'
 import { Toast } from 'mint-ui'
+import {getToken} from '../../../utils/auth.js'
 export default {
   data () {
     return {
@@ -48,10 +49,17 @@ export default {
       emailPrompt: '',
       canFind: false,
       showModal: false,
-      successbind: false
+      successbind: false,
+      user_token: ''
     }
   },
   mounted () {
+    if (getToken()) {
+      this.user_token = JSON.parse(getToken())
+    }
+    if (this.user_token === '') {
+      this.$router.push('/')
+    }
   },
   methods: {
     // 验证
@@ -64,6 +72,9 @@ export default {
           return false
         } else if (!emailreg.test(input) && input !== undefined && input.length > 0) {
           this.emailPrompt = this.$t('prompt.emailError')
+          // get('/api/setting/email', {'email': input}).then(data=>{
+          //   console.log(data)
+          // })
           this.canFind = false
           return false
         } else {
@@ -74,17 +85,10 @@ export default {
     },
     // 绑定邮箱
     bindEmailFun () {
-      let instance
       if (this.canFind) {
         post(`/api/setting/email`, this.bindForm).then(data => {
           if (data.resultcode === 0) {
-            instance = new Toast({
-              message: data.message,
-              duration: 1000
-            })
-            setTimeout(() => {
-              instance.close()
-            }, 1000)
+            alert(data.message)
             $('.emaiModal').modal('hide')
             return false
           } else if (data.resultcode === 1) {
@@ -99,9 +103,10 @@ export default {
     },
     // 完成验证状态
     successBind () {
-      get(`/api/confirmed/email`).then(data => {
+      get(`/api/confirmed/email`, {email: this.bindForm.email}).then(data => {
         if (data.resultcode === 0) {
-          $('.emaiModal').modal('hide')
+          alert(data.message)
+          $('.emaiModal').modal('show')
           this.successbind = false
         } else {
           $('.emaiModal').modal('hide')

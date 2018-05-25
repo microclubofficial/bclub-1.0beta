@@ -8,8 +8,8 @@
       <div class="span6">
         <ul class="breadcrumb">
           <li v-for='(item, index) in crumb' :key="index" :class='{crumbActive:item.path === "last"}'>
-          <router-link :class='{crumbActive:item.path === "last"}' :to="item.path === '' ? '/' : item.path"><i class="iconfont" v-if='item.label === "首页"' style="margin-right:10px;">&#xe65a;</i>{{item.label}}</router-link>
-            <span class="divider" v-if='item.path !== "last"'>></span>
+          <router-link :class='{crumbActive:item.path === "last"}' :to="item.path === '' ? '/' : item.path"><i class="iconfont" v-if="item.label === $t('breadcrumb.home')" style="margin-right:10px;">&#xe65a;</i>{{item.label}}</router-link>
+            <!--<span class="divider" v-if='item.path !== "last"'>></span>-->
           </li>
         </ul>
       </div>
@@ -27,7 +27,7 @@
           <div class="avatar_subtitle">
             <!--<a href="" target="_blank" class="time">{{articleDetail.diff_time}}前</a>
             <span class="source">·&nbsp;来自币吧</span>-->
-            <a href="javascript:void(0)" @click='toBibar(articleDetail)'> <span class="time">{{articleDetail.diff_time !== '0秒' ? articleDetail.diff_time + '前' : '刚刚发布'}} - 来自{{articleDetail.token !== null ? articleDetail.zh_token : '币吧'}}</span> </a>
+            <a href="javascript:void(0)" @click='toBibar(articleDetail)'> <span class="time">{{articleDetail.diff_time !== 0 ? articleDetail.diff_time + $t('list.ago') : $t('list.justNow')}} - {{$t('list.from')}}{{articleDetail.token !== null ? articleDetail.zh_token : $t('list.bclub')}}</span> </a>
           </div>
         </div>
       </div>
@@ -70,7 +70,7 @@
               <li class="set-choseStar" @click="collectionTopic(articleDetail)"> <a href="javascript:void(0)" class="btn-article-retweet" :class='{collectionActive:articleDetail.collect_bool}'>
           <i class="iconfont icon-star">&#xe6a7;</i>{{$t('list.collect')}}
         </a> </li>
-        <li class="set-delList" @click="delTopic(tmp)"> <a href="javascript:void(0);"><i class="iconfont icon-del">&#xe78d;</i>{{$t('list.delete')}}</a> </li>
+        <!--<li class="set-delList" @click="delTopic(tmp)"> <a href="javascript:void(0);"><i class="iconfont icon-del">&#xe78d;</i>{{$t('list.delete')}}</a> </li>-->
               <!-- <li> <a href="javascript:void(0);"><i class="iconfont icon-fenxiang"></i> 分享</a> </li> -->
               <!-- <li class="set-choseShang"> <a href="javascript:void(0);"><i class="iconfont icon-dashang"></i> 打赏<span>438</span></a> </li> -->
               <li>
@@ -114,9 +114,9 @@
             <div class="comment-all">
               <h3>{{$t('list.allComments')}}({{repliesCcount}})</h3>
               <div class="comment-sort">
-                <a href="javascript:void(0)" @click='sortList(0, tmp.id)' :class="{active:sortNow === 0}">最近</a>
-                <a href="javascript:void(0)" @click='sortList(1, tmp.id)' :class="{active:sortNow === 1}">最早</a>
-                <a href="javascript:void(0)" @click='sortList(2, tmp.id)' :class="{active:sortNow === 2}">赞</a>
+                <a href="javascript:void(0)" @click='sortList(articleDetail.id,0)' :class="{active:sortNow === 0}">{{$t('list.newest')}}</a>
+                <a href="javascript:void(0)" @click='sortList(articleDetail.id,1)' :class="{active:sortNow === 1}">{{$t('list.earliest')}}</a>
+                <a href="javascript:void(0)" @click='sortList(articleDetail.id,2)' :class="{active:sortNow === 2}">{{$t('list.likeMost')}}</a>
               </div>
                 <div class="comment-list">
                   <!-- <pull-to> -->
@@ -129,17 +129,17 @@
                       <div class="comment-item-hd">
                         <span href="#" class="name">{{item.author}}</span>
                         <!--<span class="time">{{item.diff_time}}前发布</span>-->
-                        <span class="time">{{item.diff_time !== '0秒' ? item.diff_time + '前' : '刚刚'}}发布</span>
+                        <span class="time">{{item.diff_time !== 0 ? item.diff_time + $t('list.ago') : $t('list.justNow')}}</span>
                       </div>
                       <!-- @ 样式 -->
-                      <p class="replyAuthor" v-if="item.at_user !== ''">@{{item.at_user}}:&nbsp;<span class="replyBackConten" style="display:inline-block;font-weight: normal;" v-html="replyFun(item.reference)"></span></p>
+                      <div class="replyAuthor" v-if="item.at_user !== ''">@{{item.at_user}}:&nbsp;<span class="replyBackConten" style="display:inline;font-weight: normal;" v-html="replyFun(item.reference)"></span></div>
                       <!-- <p>{{item}}</p> -->
                       <!-- <p>{{item}}</p> -->
-                      <div class="detailContent" v-html="commentContent(item.content)"></div>
+                      <div class="detailContent" v-html="commentContent(item.content,item.id)"></div>
                       <!--展开-->
-              <a style="font-size:16px;"  v-if='item.content !== undefined && item.content.length > 300' href="#" class="bibar-indexintromore text-theme" @click="changeMore(item.id)">{{item.id === moreId ? '收起' : '展开'}}<i style="font-size:16px;" class="iconfont" v-if='more === "展开"'>&#xe692;</i><i style="font-size:16px;" class="iconfont" v-if='more === "收起"'>&#xe693;</i></a>
+              <a style="font-size:16px; white-space:nowrap;"  v-if='item.content !== undefined && item.content.length - imgCommentLength[item.id] > 200' href="#" class="bibar-indexintromore text-theme" @click="changeMore(item.id)">{{item.id === moreId ? '收起' : '展开'}}<i style="font-size:16px;" class="iconfont" v-if='more === "展开"'>&#xe692;</i><i style="font-size:16px;" class="iconfont" v-if='more === "收起"'>&#xe693;</i></a>
                     </div>
-                    <div class="set" style="margin-left: 57px;">
+                    <div class="set clearfloat" style="margin-left: 57px;">
                       <ul class="bibar-indexNewsItem-infro">
                         <li class="set-choseOne"> <a href="javascript:void(0);" class="icon-quan mr15" :class='{active:item.is_good_bool}'  @click="changeNum(0,now,item.id,item)"><i class="iconfont">&#xe603;</i><span class="is-good">{{item.is_good}}</span></a><a href="javascript:void(0);" :class='{active:item.is_bad_bool}' class="icon-quan" @click="changeNum(1,now,item.id,item)"><i class="iconfont">&#xe731;</i><span class="is-bad">{{item.is_bad}}</span></a> </li>
                         <li class="set-discuss" @click="replyComment(item.id,now)">
@@ -147,7 +147,7 @@
                             <i class="iconfont icon-pinglun"></i> {{$t('list.reply')}}
                           </a>
                         </li>
-                        <li class="set-delList" @click="delTopic(tmp)"> <a href="javascript:void(0);"><i class="iconfont icon-del">&#xe78d;</i>{{$t('list.delete')}}</a> </li>
+                        <li class="set-delList" v-if='item.bool_delete' @click="delComment(item,now,articleDetail)"> <a href="javascript:void(0);"><i class="iconfont icon-del">&#xe78d;</i>{{$t('list.delete')}}</a> </li>
                       </ul>
                     </div>
                     <!-- 回复 -->
@@ -165,7 +165,7 @@
            <div class="editor-textarea" v-show="talkReplyTxt" @click="talkReplyEditor">
              <div class="editor-placeholder">{{$t('list.reply')}}...</div>
            </div>
-           <div class="editor-toolbar">
+           <div class="editor-toolbar clearfloat">
               <BibarReport ref='childShowApi' :toApi='toRId' :replyAuthor='item.author' :replyContent='item.content' @backhotReplies = 'showReplyContent' :mainReplay='articleDetail.id' v-show="showReportReplay"></BibarReport>
           </div>
          <span class="img-upload-delete">
@@ -220,7 +220,7 @@ export default {
       toId: 0,
       pageCount: 0,
       pno: 1,
-      bottomText: '加载中...',
+      bottomText: '',
       listLoding: true,
       noLoading: false,
       loadingShow: true,
@@ -239,7 +239,9 @@ export default {
       crumb: [],
       more: '展开',
       moreId: '',
-      sortNow: 0
+      sortNow: 0,
+      imgCommentLength: {},
+      sortId: ''
     }
   },
   computed: {
@@ -259,44 +261,8 @@ export default {
       this.showLoader = false
       this.articleDetail = data.data.topic
       this.repliesCcount = data.data.replies_count
-      this.nowData = data.data.replies
-      if (this.nowData.length === 0) {
-        this.loadingShow = false
-      }
-      this.pageCount = data.data.page_count
-      this.$nextTick(() => {
-        $('.article_bd').find('img').css({'margin': '10px auto', 'display': 'block', 'text-align': 'center', 'max-width': '60%'})
-        // $('.article_bd').find('p').css({'font-size': '16px', 'margin': '25px 0', 'text-align': 'justify', 'line-height': '1.8'})
-        $('.detailContent').find('img').addClass('zoom-in')
-        $('.detailContent').on('click', 'img', function () {
-          if (!$(this)[0].hasAttribute('data-w-e')) {
-            if (!$(this).hasClass('zoom-out')) {
-              if ($(this).hasClass('zoom-in')) {
-                $(this).removeClass('zoom-in')
-              }
-              $(this).addClass('zoom-out')
-            } else if ($(this).hasClass('zoom-out')) {
-              $(this).removeClass('zoom-out')
-              $(this).addClass('zoom-in')
-            }
-          }
-        })
-      })
-      var that = this
-      if (this.pageCount === 1) {
-        this.bottomText = '没有啦'
-        this.listLoding = false
-        this.noLoading = true
-        // this.loadingImg = '../../assets/img/noLoading.png'
-        return false
-      } else {
-        document.querySelector('#app').addEventListener('scroll', function () {
-          if (this.scrollHeight - this.scrollTop === this.clientHeight) {
-            that.loadDetailPage()
-          }
-        })
-      }
     })
+    this.sortList(this.did, 0)
     $('.editor').css({'padding-bottom': '35px'})
     $('.editor-toolbar').find('.report ').css({'right': '260px', 'bottom': '2px'})
     $('.editor-toolbar').find('.cancel ').css({'right': '315px', 'bottom': '6px'})
@@ -312,17 +278,67 @@ export default {
             this.showLoaderComment = false
             this.nowData = this.nowData.concat(data.data.replies)
             this.pno++
-            this.bottomText = '加载中...'
+            this.bottomText = this.$t('prompt.loading')
             // this.loadingImg = '../../assets/img/listLoding.png'
           })
         }, 1000)
       } else {
-        this.bottomText = '没有啦'
+        this.bottomText = this.$t('prompt.noMore')
         this.listLoding = false
         this.noLoading = true
         // this.loadingImg = '../../assets/img/noLoading.png'
         return false
       }
+    },
+    sortList (id, sort) {
+      if (sort === 0) {
+        this.sortId = 'replies'
+      } else if (sort === 1) {
+        this.sortId = 'replies/early'
+      } else {
+        this.sortId = 'replies/good'
+      }
+      this.sortNow = sort
+      get(`/api/topic/${this.sortId}/${id}/${this.pno}`).then(data => {
+        this.showLoader = false
+        this.nowData = data.data.replies
+        if (this.nowData.length === 0) {
+          this.loadingShow = false
+        }
+        this.pageCount = data.data.page_count
+        this.$nextTick(() => {
+          $('.article_bd').find('img').css({'margin': '10px auto', 'display': 'block', 'text-align': 'center', 'max-width': '60%'})
+          // $('.article_bd').find('p').css({'font-size': '16px', 'margin': '25px 0', 'text-align': 'justify', 'line-height': '1.8'})
+          $('.detailContent').find('img').addClass('zoom-in')
+          $('.detailContent').on('click', 'img', function () {
+            if (!$(this)[0].hasAttribute('data-w-e')) {
+              if (!$(this).hasClass('zoom-out')) {
+                if ($(this).hasClass('zoom-in')) {
+                  $(this).removeClass('zoom-in')
+                }
+                $(this).addClass('zoom-out')
+              } else if ($(this).hasClass('zoom-out')) {
+                $(this).removeClass('zoom-out')
+                $(this).addClass('zoom-in')
+              }
+            }
+          })
+        })
+        var that = this
+        if (this.pageCount === 1) {
+          this.bottomText = '没有啦'
+          this.listLoding = false
+          this.noLoading = true
+          // this.loadingImg = '../../assets/img/noLoading.png'
+          return false
+        } else {
+          document.querySelector('#app').addEventListener('scroll', function () {
+            if (this.scrollHeight - this.scrollTop === this.clientHeight) {
+              that.loadDetailPage()
+            }
+          })
+        }
+      })
     },
     // 正文点赞吐槽
     changeNumAriticle (isNum, articleDetail) {
@@ -458,25 +474,14 @@ export default {
     },
     // 收藏
     collectionTopic (articleDetail) {
-      let instance
       post(`/api/collect/${articleDetail.id}`).then(data => {
         if (data.data.collect_bool) {
           articleDetail.collect_bool = data.data.collect_bool
-          instance = new Toast({
-            message: data.message,
-            iconClass: 'glyphicon glyphicon-ok',
-            duration: 1000
-          })
+          alert(data.message)
         } else {
           articleDetail.collect_bool = data.data.collect_bool
-          instance = new Toast({
-            message: data.message,
-            duration: 1000
-          })
+          alert(data.message)
         }
-        setTimeout(() => {
-          instance.close()
-        }, 1000)
       })
     },
     // 来自去币讯
@@ -484,6 +489,13 @@ export default {
       if (tmp.token === null) {
         return
       }
+      // var crumbName = ''
+      // if(this.language == 'zh'){
+      //   crumbName = tmp.zh_token
+      // }else if(this.language == 'en'){
+      //   crumbName = tmp.token
+      // }
+      // console.log(tmp)
       this.$router.push({
         path: `/msgDetail/${tmp.token}`,
         query: {
@@ -493,34 +505,69 @@ export default {
     },
     // 艾特图片处理
     replyFun (val) {
-      if (val === undefined) {
+      if (val === undefined || val === null) {
         return
       }
-      let reply = val.replace(/<p[^>]*>|<\/p>|<h-char[^>]*>|<\/h-char>|<h-inner>|<\/h-inner>/g, '')
-      if (reply.indexOf('img') > 0) {
+      let reply = val.replace(/<p[^>]*>|<\/p>|<h-char[^>]*>|<\/h-char>|<h-inner[^>]*>|<\/h-inner>/g, '')
+      if (reply.indexOf('href') > 0) {
+        let imgLength = 0
+        if (reply.indexOf('img') > 0) {
+          let imgArr = []
+          imgArr = reply.match(/<img[^>]*>/gi)
+          if (imgArr === null) {
+            return
+          }
+          for (let i = 0; i < imgArr.length; i++) {
+            imgLength += imgArr[i].length
+          }
+        }
+        let hrefLength = 0
+        let hrefArr = reply.match(/<a.*?>(.*?)<\/a>/ig)[0]
+        if (hrefArr === null) {
+          return
+        }
+        // for (let i = 0; i < hrefArr.length; i++) {
+        //   hrefLength += hrefArr[i].length
+        // }
+        hrefLength = hrefArr.length
+        return reply.substring(0, 40 + hrefLength + imgLength) + '...'
+      } else if (reply.indexOf('img') > 0) {
         let imgLength = 0
         let imgArr = reply.match(/<img[^>]*>/gi)
+        if (imgArr === null) {
+          return
+        }
         for (let i = 0; i < imgArr.length; i++) {
           imgLength += imgArr[i].length
         }
-        return reply.substring(0, 50 + imgLength)
-      } else if (/^\/static.*/ig.test(reply)) {
-        return '图片评论' + `<a style='color:#0181FF' href='${reply}'><i class='iconfont'>&#xe694;</i>查看图片</a>`
-      } else if (reply.length > 100) {
-        return reply.substring(0, 50) + '...'
+        return reply.substring(0, 40 + imgLength)
+      } else if (reply.length > 40) {
+        return reply.substring(0, 40) + '...'
       } else {
         return reply
       }
     },
     // 评论回复文字处理
-    commentContent (val) {
+    commentContent (val, id) {
+      // console.log(val)
       if (val === undefined) {
         return
       }
-      val = val.replace(/<p[^>]*>|<\/p>|<h-char[^>]*>|<\/h-char>|<h-inner>|<\/h-inner>/g, '')
-      if (this.more === '展开') {
-        if (val.length > 300) {
-          return val.substring(0, 300) + '...'
+      val = val.replace(/<p[^>]*>|<\/p>|<h-char[^>]*>|<\/h-char>|<h-inner[^>]*>|<\/h-inner>|<br>/g, '')
+      // let imgArr = val.match(/<img[^>]*>/gi)
+      if (!this.imgCommentLength[id]) {
+        this.imgCommentLength[id] = 0
+      }
+      // if (val.indexOf('img') > 0) {
+      //   for (let i = 0; i < imgArr.length; i++) {
+      //     this.imgCommentLength[id] += imgArr[i].length
+      //   }
+      // }
+      this.imgCommentLength[id] = val.lastIndexOf('data-w-e="1">')
+      if (val.length - this.imgCommentLength[id] > 200) {
+        if (id !== this.moreId) {
+          let imgVal = val.replace(/<img src="\/static[^>]+>/g, '')
+          return imgVal.substring(0, 200 + this.imgCommentLength[id] - 1) + '...'
         } else {
           return val
         }
@@ -537,47 +584,17 @@ export default {
         this.moreId = ''
       }
     },
-    // 数据排序
-    sortList (id, tmpId) {
-      // 最近
-      if (id === 0) {
-        this.sortNow = id
-        get(`/api/topic/${tmpId}/1`).then(data => {
-          if (!this.nowData[tmpId]) this.$set(this.nowData, tmpId, data.data.replies)
-          else this.nowData[tmpId] = data.data.replies
-          this.showLoaderComment = false
-          this.cpageCount = data.data.page_count
-          if (this.cpageCount > 1) {
-            this.showPage = true
-          } else {
-            this.showPage = false
-          }
-          this.$nextTick(() => {
-            $('.comment-item-main').find('img').addClass('zoom-in')
-            $('[data-w-e]').removeClass('zoom-in')
-            $('.comment-item-main').on('click', 'img', function () {
-              if (!$(this)[0].hasAttribute('data-w-e')) {
-              // if (!$(this)[0].indexOf('alt="[') === -1) {
-                if (!$(this).hasClass('zoom-out')) {
-                  if ($(this).hasClass('zoom-in')) {
-                    $(this).removeClass('zoom-in')
-                  }
-                  $(this).addClass('zoom-out')
-                } else if ($(this).hasClass('zoom-out')) {
-                  $(this).removeClass('zoom-out')
-                  $(this).addClass('zoom-in')
-                }
-              }
-            })
-          })
-        })
-      } else if (id === 1) {
-        this.sortNow = id
-        get(`/api/topic/replies/early/${tmpId}/1`).then(data => {
-          if (!this.nowData[tmpId]) this.$set(this.nowData, tmpId, data.data)
-          else this.nowData[tmpId] = data.data
-        })
-      }
+    // 删除评论
+    delComment (item, now, tmp) {
+      post(`/api/reply/delete/${item.id}`).then(data => {
+        if (data.resultcode === 1) {
+          this.nowData.splice(now, 1)
+          this.repliesCcount = this.repliesCcount - 1
+        } else {
+          alert(data.message)
+          this.$router.push('/login')
+        }
+      })
     }
   }
 }
@@ -624,7 +641,7 @@ export default {
     line-height: 50px !important;
     padding-left: 20px !important;
     font-weight: 700;
-    margin-right: 2px;
+    margin: 15px 2px 15px 0;
 }
 .detail-editor-toolbar>.wangeditor{
     width: 90%;
@@ -800,7 +817,7 @@ export default {
   position: relative;
 }
 .comment-all>h3 {
-    margin-top: 15px;
+    margin-top: 30px;
     font-size: 15px;
 }
 .comment-sort {
@@ -839,7 +856,7 @@ export default {
 }
 .comment-item{
     padding: 15px 0 10px;
-    border-top: 1px solid #edf0f5;
+    // border-bottom: 1px solid #edf0f5;
     margin: 15px 0;
 }
 .comment-item .avatar {
