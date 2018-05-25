@@ -85,7 +85,7 @@ class FollowingTokenView(MethodView):
             follwer = Follower.query.filter_by(author_id = user.id).first()
             tokenlist = json.loads(follwer.follower)
             if token in tokenlist:
-                msg = _('You have followed %(token)s,don\'t need again',token=token)
+                msg = _('You have followed %(token)s,no need to follow again',token=token)
                 return get_json(0, msg, {})
             tokenlist.append(token)
             follwer.follower = json.dumps(tokenlist)

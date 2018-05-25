@@ -65,7 +65,7 @@ class ChangePasswordView(MethodView):
             msg = _('Original password error')
             return get_json(0, msg, {})
         elif new_password != confirm_password:
-            msg = _('Two passwords are different')
+            msg = _('Entered passwords differ from the other.')
             return get_json(0, msg, {})
         else:    
             user.set_password(new_password)
@@ -84,7 +84,7 @@ class ChangePhoneView(MethodView):
             msg = _('The phone has been registered')
             return get_json(0, msg, {})
         if not check_captcha(phone, captcha):
-            msg = _('The captcha is error')
+            msg = _('Captcha error')
             return get_json(0, msg, {})
         user.phone = phone
         user.save()

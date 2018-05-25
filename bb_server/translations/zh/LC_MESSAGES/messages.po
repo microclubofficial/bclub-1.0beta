@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2018-05-23 13:56+0800\n"
-"PO-Revision-Date: 2018-05-23 11:03+0800\n"
+"POT-Creation-Date: 2018-05-25 10:44+0800\n"
+"PO-Revision-Date: 2018-05-25 10:46+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh\n"
 "Language-Team: zh <LL@li.org>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Generated-By: Babel 2.4.0\n"
 
 #: flask_auth/response.py:29
-msgid "Your account has been confirmed,don't need again"
+msgid "Your account has been confirmed,no need to confirm again"
 msgstr ""
 
 #: flask_auth/response.py:30 forums/common/response.py:40
@@ -31,7 +31,7 @@ msgid "You have no permission!"
 msgstr ""
 
 #: flask_auth/auth/views.py:37 forums/permission.py:73
-msgid "You have login ,needn't login again"
+msgid "You have logged in ,needn't login again"
 msgstr ""
 
 #: flask_auth/auth/views.py:52
@@ -68,21 +68,21 @@ msgid "Username or Password Error"
 msgstr "用户名或密码错误"
 
 #: flask_auth/auth/views.py:96 flask_auth/auth/views.py:118
-#: flask_auth/auth/views.py:164 flask_auth/auth/views.py:264
+#: flask_auth/auth/views.py:164 flask_auth/auth/views.py:265
 #: forums/api/forms.py:65 forums/api/setting/views.py:87
-msgid "The captcha is error"
+msgid "Captcha error"
 msgstr "验证码错误"
 
 #: flask_auth/auth/views.py:101 flask_auth/auth/views.py:124
-msgid "You have login"
+msgid "You have logged in"
 msgstr "登录成功"
 
-#: flask_auth/auth/views.py:115 flask_auth/auth/views.py:261
-msgid "The phone is error"
+#: flask_auth/auth/views.py:115 flask_auth/auth/views.py:262
+msgid "Phone error"
 msgstr "手机号错误"
 
 #: flask_auth/auth/views.py:133
-msgid "You have logout"
+msgid "You have logged out"
 msgstr "登出成功"
 
 #: flask_auth/auth/views.py:139
@@ -95,18 +95,18 @@ msgstr "手机号已被注册"
 
 #: flask_auth/auth/views.py:158 forums/api/setting/views.py:101
 msgid "The username has been registered"
-msgstr "用户名已注册"
+msgstr 用户名已注册""
 
-#: flask_auth/auth/views.py:161 flask_auth/auth/views.py:240
+#: flask_auth/auth/views.py:161 flask_auth/auth/views.py:241
 #: forums/api/setting/views.py:68
-msgid "Two passwords are different"
+msgid "Entered passwords differ from the other."
 msgstr "两次密码不相同"
 
 #: flask_auth/auth/views.py:178
 msgid "You have registered"
 msgstr "您已注册"
 
-#: flask_auth/auth/views.py:194 flask_auth/auth/views.py:253
+#: flask_auth/auth/views.py:194 flask_auth/auth/views.py:254
 msgid "forget password"
 msgstr "忘记密码"
 
@@ -114,54 +114,59 @@ msgstr "忘记密码"
 msgid "Email hasn't been binded, please find it through other ways."
 msgstr "未绑定邮箱，请通过其他方式找回。"
 
-#: flask_auth/auth/views.py:205 flask_auth/auth/views.py:286
+#: flask_auth/auth/views.py:205 flask_auth/auth/views.py:290
 msgid ""
 "An email has been sent to you.Please receive and update your password in "
 "time"
 msgstr "一封邮件已发送到你的邮箱,请及时查收"
 
-#: flask_auth/auth/views.py:213
+#: flask_auth/auth/views.py:214
 msgid "Please set a new password"
 msgstr "请重置密码"
 
-#: flask_auth/auth/views.py:220 flask_auth/auth/views.py:304
+#: flask_auth/auth/views.py:221 flask_auth/auth/views.py:307
 msgid "The confirm link has been out of time.Please confirm your email again"
 msgstr "验证链接已过期,请重新验证你的帐号"
 
-#: flask_auth/auth/views.py:227
+#: flask_auth/auth/views.py:228
 msgid "Change Password"
 msgstr "修改密码"
 
-#: flask_auth/auth/views.py:246 flask_auth/auth/views.py:267
-#: flask_auth/auth/views.py:279 forums/api/block_data/views.py:34
+#: flask_auth/auth/views.py:247 flask_auth/auth/views.py:268
+#: flask_auth/auth/views.py:280 forums/api/block_data/views.py:34
 #: forums/api/block_data/views.py:41 forums/api/block_data/views.py:49
-#: forums/api/block_data/views.py:104 forums/api/collect/views.py:196
+#: forums/api/block_data/views.py:105 forums/api/collect/views.py:196
 #: forums/api/confirm/views.py:13 forums/api/follow/views.py:96
-#: forums/api/topic/views.py:186 forums/api/topic/views.py:246
-#: forums/api/topic/views.py:317 forums/api/topic/views.py:330
-#: forums/api/topic/views.py:370 forums/api/upload/views.py:62
+#: forums/api/topic/views.py:166 forums/api/topic/views.py:223
+#: forums/api/topic/views.py:310 forums/api/topic/views.py:323
+#: forums/api/topic/views.py:363 forums/api/upload/views.py:62
 #: forums/api/upload/views.py:102 forums/api/upload/views.py:139
+#: forums/api/user/views.py:192
 msgid "success"
 msgstr "成功"
 
-#: flask_auth/auth/views.py:277
+#: flask_auth/auth/views.py:278 flask_auth/auth/views.py:287
 msgid "The email has been registered"
 msgstr "邮箱已被注册"
 
-#: flask_auth/auth/views.py:295
+#: flask_auth/auth/views.py:299
 msgid "Please confirm  your email"
 msgstr "请验证邮箱"
 
-#: flask_auth/auth/views.py:317
+#: flask_auth/auth/views.py:312
+msgid "Verification succeed"
+msgstr "验证成功"
+
+#: flask_auth/auth/views.py:322
 #, python-format
 msgid "Your verification code is %s, valid for 5 minutes."
 msgstr "您的验证码是%s,五分钟内有效。"
 
-#: flask_auth/auth/views.py:321
+#: flask_auth/auth/views.py:326
 msgid "The message has been sent"
 msgstr "一条短信已发出"
 
-#: flask_auth/auth/views.py:323
+#: flask_auth/auth/views.py:328
 msgid "failed"
 msgstr "失败"
 
@@ -198,8 +203,8 @@ msgid " days"
 msgstr "天"
 
 #: forums/permission.py:60
-msgid "Not logged in"
-msgstr "未登录"
+msgid "Please login first"
+msgstr "请先登录"
 
 #: forums/api/forms.py:48
 msgid "Username:"
@@ -221,7 +226,7 @@ msgstr "邮箱"
 msgid "Remember me"
 msgstr "记住我"
 
-#: forums/api/forms.py:79 forums/api/topic/views.py:97
+#: forums/api/forms.py:79 forums/api/topic/views.py:98
 #: templates/topic/topic_good.html:13 templates/topic/topic_list.html:4
 #: templates/topic/topic_list.html:6 templates/topic/topic_list.html:8
 #: templates/topic/topic_top.html:13
@@ -365,7 +370,7 @@ msgstr "数据错误，请重新请求"
 msgid "Request failed, please try again later"
 msgstr "请求失败，请重新请求"
 
-#: forums/api/block_data/views.py:88
+#: forums/api/block_data/views.py:89
 msgid "Token Pictures"
 msgstr "币标签"
 
@@ -382,8 +387,8 @@ msgstr "取消收藏"
 msgid "Original password error"
 msgstr "原密码错误"
 
-#: forums/api/confirm/views.py:21
-msgid "Please go to email to complete verification."
+#: forums/api/confirm/views.py:22
+msgid "Please check your email and complete verification."
 msgstr "请前往邮箱完成验证。"
 
 #: forums/api/follow/views.py:66 forums/api/follow/views.py:79
@@ -392,7 +397,7 @@ msgstr "关注列表"
 
 #: forums/api/follow/views.py:88
 #, python-format
-msgid "You have followed %(token)s,don't need again"
+msgid "You have followed %(token)s,no need to follow again"
 msgstr "您已关注%(token)s，请勿重复关注"
 
 #: forums/api/forums/views.py:37
@@ -427,39 +432,35 @@ msgstr "影响力"
 msgid "analyst"
 msgstr "分析师"
 
-#: forums/api/topic/views.py:63
+#: forums/api/topic/views.py:64
 msgid "Ask - "
 msgstr ""
 
-#: forums/api/topic/views.py:76
+#: forums/api/topic/views.py:77
 msgid "Edit -"
 msgstr ""
 
-#: forums/api/topic/views.py:100
+#: forums/api/topic/views.py:101
 msgid "Topics"
 msgstr "文章"
 
-#: forums/api/topic/views.py:136 forums/api/user/views.py:97
+#: forums/api/topic/views.py:137 forums/api/user/views.py:101
 msgid "Topic List"
 msgstr "文章列表"
 
-#: forums/api/topic/views.py:180 forums/api/topic/views.py:309
-msgid "0 second"
-msgstr "0秒"
-
-#: forums/api/topic/views.py:235
+#: forums/api/topic/views.py:213
 msgid "Topic Details"
 msgstr "文章详情"
 
-#: forums/api/topic/views.py:243
+#: forums/api/topic/views.py:220
 msgid "You do not have permission to delete this article."
 msgstr "你没有删除该文章的权限"
 
-#: forums/api/topic/views.py:283
+#: forums/api/topic/views.py:270
 msgid "Replies Information"
 msgstr "评论信息"
 
-#: forums/api/topic/views.py:327
+#: forums/api/topic/views.py:320
 msgid "You do not have permission to delete this reply."
 msgstr "你没有删除该评论的权限"
 
@@ -488,31 +489,31 @@ msgstr "中文"
 msgid "English"
 msgstr "英文"
 
-#: forums/api/user/views.py:43
+#: forums/api/user/views.py:44
 msgid "All Users"
 msgstr "所有用户"
 
-#: forums/api/user/views.py:93 forums/api/user/views.py:171
+#: forums/api/user/views.py:97 forums/api/user/views.py:178
 msgid "administrator"
 msgstr "管理员"
 
-#: forums/api/user/views.py:95 forums/api/user/views.py:173
+#: forums/api/user/views.py:99 forums/api/user/views.py:180
 msgid "normal user"
 msgstr "普通用户"
 
-#: forums/api/user/views.py:145
+#: forums/api/user/views.py:152
 msgid "List of topics reviewed"
 msgstr "评论文章列表"
 
-#: forums/api/user/views.py:175
+#: forums/api/user/views.py:182
 msgid "personal"
 msgstr "本人"
 
-#: forums/api/user/views.py:177
+#: forums/api/user/views.py:184
 msgid "not personal"
 msgstr "非本人"
 
-#: forums/api/user/views.py:178
+#: forums/api/user/views.py:185
 msgid "Personal Information"
 msgstr "个人信息"
 
@@ -527,6 +528,10 @@ msgstr "邮箱已被注册"
 #: forums/common/response.py:36
 msgid "The username has been registered!"
 msgstr "用户名已注册"
+
+#: forums/common/response.py:37
+msgid "Email error"
+msgstr "邮箱错误"
 
 #: forums/common/response.py:39
 msgid "Token is out of time,please get token again!"
@@ -966,7 +971,7 @@ msgid "No Follower"
 msgstr ""
 
 #: templates/user/info.html:21
-msgid "You haven't confirm your account,Please confirmed"
+msgid "You haven't confirm your account,please confirm"
 msgstr ""
 
 #: templates/user/info.html:22
