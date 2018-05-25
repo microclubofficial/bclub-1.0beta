@@ -46,6 +46,9 @@ export default {
   computed: {
     userInfo () {
       return this.$store.state.userInfo.userInfo
+    },
+    language () {
+      return this.$store.state.language.language
     }
   },
   methods: {
@@ -120,10 +123,19 @@ export default {
         } else {
           if (this.topicData.replyContent.indexOf('data-w-e') === -1) {
             let justReplyImg = this.topicData.replyContent.match(/(?<=(src="))[^"]*?(?=")/ig)[0]
-            this.topicData.replyContent = '图片评论' + `<a href='${justReplyImg}' style='color:#0181FF'><i class='iconfont'>&#xe694;</i>查看图片</a>`
+            if(this.language == 'zh') {  
+              this.topicData.replyContent = '图片评论' + `<a href='${justReplyImg}' style='color:#0181FF'><i class='iconfont'>&#xe694;</i>查看图片</a>`
+            }else if (this.language == 'en') {
+              this.topicData.replyContent = 'Image comment ' + `<a href='${justReplyImg}' style='color:#0181FF'><i class='iconfont'>&#xe694;</i> View image</a>`
+            }
           } else {
             let replyImg = this.topicData.replyContent.match(/<img(?![^<>]*?data-w-e[^<>]*?>).*?>/g)[0].match(/(?<=(src="))[^"]*?(?=")/ig)[0]
-            let replyNewData = this.topicData.replyContent.replace(/<img src="\/static[^>]+>/g, `<a href='${replyImg}' style='color:#0181FF'><i class='iconfont'>&#xe694;</i>查看图片</a>`)
+            let replyNewData
+            if(this.language == 'zh') { 
+              replyNewData = this.topicData.replyContent.replace(/<img src="\/static[^>]+>/g, `<a href='${replyImg}' style='color:#0181FF'><i class='iconfont'>&#xe694;</i>查看图片</a>`)
+            }else if (this.language == 'en') {
+              replyNewData = this.topicData.replyContent.replace(/<img src="\/static[^>]+>/g, `<a href='${replyImg}' style='color:#0181FF'><i class='iconfont'>&#xe694;</i> View image</a>`)
+            }
             this.topicData.replyContent = replyNewData
           }
         }

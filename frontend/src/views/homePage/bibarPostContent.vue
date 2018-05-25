@@ -111,7 +111,7 @@ export default {
         } else if (JSON.stringify(this.$route.query) !== '{}') {
           this.topicData.tokenname = JSON.parse(this.$route.query.b).zh
         } else {
-          this.topicData.tokenname = '币吧'
+          this.topicData.tokenname = this.$t('list.bclub')
         }
       }
       // 上传网络图片

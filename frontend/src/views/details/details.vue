@@ -137,7 +137,7 @@
                       <!-- <p>{{item}}</p> -->
                       <div class="detailContent" v-html="commentContent(item.content,item.id)"></div>
                       <!--展开-->
-              <a style="font-size:16px; white-space:nowrap;"  v-if='item.content !== undefined && item.content.length - imgCommentLength[item.id] > 200' href="#" class="bibar-indexintromore text-theme" @click="changeMore(item.id)">{{item.id === moreId ? '收起' : '展开'}}<i style="font-size:16px;" class="iconfont" v-if='more === "展开"'>&#xe692;</i><i style="font-size:16px;" class="iconfont" v-if='more === "收起"'>&#xe693;</i></a>
+              <a style="font-size:16px; white-space:nowrap;"  v-if='item.content !== undefined && item.content.length - imgCommentLength[item.id] > 200' href="#" class="bibar-indexintromore text-theme" @click="changeMore(item.id)">{{item.id === moreId ? $t('button.fold') : $t('button.unfold')}}<i style="font-size:16px;" class="iconfont" v-if="more === $t('button.unfold')">&#xe692;</i><i style="font-size:16px;" class="iconfont" v-if="more === $t('button.fold')">&#xe693;</i></a>
                     </div>
                     <div class="set clearfloat" style="margin-left: 57px;">
                       <ul class="bibar-indexNewsItem-infro">
@@ -184,18 +184,18 @@
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
             &times;
           </button>
-          <h4 class="modal-title" id="myModalLabel">
-            提示
+          <h4 class="text-center" id="myModalLabel">
+            {{$t('prompt.prompt')}}
           </h4>
         </div>
         <div class="modal-body">
-          确定要删除吗？
+          <p style="margin-top:20px;">{{$t('prompt.confirmDelete')}}</p>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">取消
+          <button type="button" class="btn btn-default" data-dismiss="modal">{{$t('button.cancel')}}
           </button>
           <button @click='confirm' type="button" class="btn btn-primary">
-            确定
+            {{$t('button.confirm')}}
           </button>
         </div>
       </div>
@@ -262,7 +262,7 @@ export default {
       showLoader: false,
       showLoaderComment: false,
       crumb: [],
-      more: '展开',
+      more: this.$t('button.unfold'),
       moreId: '',
       sortNow: 0,
       imgCommentLength: {},
@@ -626,9 +626,9 @@ export default {
     changeMore (id) {
       if (id !== this.moreId) {
         this.moreId = id
-        this.more = '收起'
+        this.more = this.$t('button.fold')
       } else {
-        this.more = '展开'
+        this.more = this.$t('button.unfold')
         this.moreId = ''
       }
     },
