@@ -531,7 +531,7 @@ export default{
         if (data.resultcode === 0) {
           alert(data.message)
           this.$router.push('/login')
-        } else if (data.message === '收藏成功') {
+        } else if (data.message === 'success' || data.message === '成功') {
           this.collection = index
           alert(data.message)
           tmp.collect_bool = data.data.collect_bool

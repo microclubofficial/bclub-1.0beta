@@ -247,17 +247,17 @@ export default {
     // 显示模态框
     showModel() {
       if (this.phoneObj.phone === '') {
-        this.phonePrompt = '手机号码不能为空'
+        this.phonePrompt = this.$t('prompt.phoneRequired')
         return false
       } else if (this.phoneObj.captcha === '') {
-        this.phoneControlPrompt = '验证码不能为空'
+        this.phoneControlPrompt = this.$t('prompt.captchaRequired')
         return false
       } else {
         post('/api/phoneForget', this.phoneObj).then(data => {
-          if (data.message === '验证码错误') {
-            this.phoneControlPrompt = '验证码错误，请重新获取'
+          if (data.message === '验证码错误'|| data.message === 'Captcha error') {
+            this.phoneControlPrompt = data.message
             this.phoneObj.captcha = ''
-          } else if (data.message === '手机号不存在') {
+          } else if (data.message === '手机号错误' || data.message === 'Phone error') {
             this.phonePrompt = data.message
           } else if (data.resultcode === 1) {
             $('#myModal').modal({

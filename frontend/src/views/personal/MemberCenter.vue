@@ -99,7 +99,9 @@ export default {
   },
   mounted () {
     get(`/api/u/${this.userInfo.username}`).then(data => {
-      if (data.message === '未登录') {
+        console.log(data)
+      if (data.resultcode === 0) {
+          alert(data.message)
         this.$router.push({ path: '/login' })
       } else {
         this.personalUser = data.data

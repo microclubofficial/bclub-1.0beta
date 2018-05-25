@@ -92,7 +92,9 @@ export default {
     noMore: '没有啦',
     emptyContent: '发贴内容不能为空',
     emptyLink: '链接不能为空',
-    invalidLink: '无效的链接'
+    invalidLink: '无效的链接',
+    successCollect: '收藏成功',
+    cancelCollect: '取消收藏成功'
   },
   message: {
     sthToSay: '有什么消息告诉大家...',

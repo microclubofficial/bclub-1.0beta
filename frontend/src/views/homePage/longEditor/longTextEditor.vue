@@ -322,8 +322,8 @@ export default{
       // 首图
       if (this.topicData.content.length > 0 || this.topicData.picture.length > 0) {
         post('/api/topic', this.topicData).then(data => {
-          if (data.message === '未登录') {
-            alert('先去登录')
+          if (data.message === '请先登录' || data.message === 'Please login first') {
+            alert(data.message)
             this.$router.push('/login')
           } else {
             if (data.data.content !== '') {

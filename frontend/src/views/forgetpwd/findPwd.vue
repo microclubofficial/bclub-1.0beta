@@ -122,7 +122,7 @@ export default{
     setnewpwd () {
       let token = this.$route.params.token
       post(`/api/setpassword/${token}`, this.findForm).then(data => {
-        if (data.message === '修改成功') {
+        if (data.message === '成功' || data.message === 'success') {
           if (data.resultcode === 1) {
             this.$store.commit('USER_INFO', {
               'username': data.data.username,

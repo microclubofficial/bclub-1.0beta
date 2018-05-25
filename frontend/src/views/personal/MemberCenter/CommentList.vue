@@ -284,7 +284,7 @@ export default{
     this.$store.dispatch('clear_backForNav')
     this.showLoader = true
     get(`/api/u/replies/${this.userInfo.username}/${this.tpno}`).then(data => {
-      if (data.message === '未登录') {
+      if (data.resultcode === 0) {
         alert(this.$t('prompt.loginFirst'))
         this.$router.push({ path: '/login' })
       } else {

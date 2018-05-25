@@ -92,7 +92,9 @@ export default {
     noMore: 'No more',
     emptyContent: 'Post content cannot be empty',
     emptyLink: 'Link cannot be empty',
-    invalidLink: 'Invalid link'
+    invalidLink: 'Invalid link',
+    successCollect: 'Collect successfully',
+    cancelCollect: 'Cancel successfully'
   },
   message: {
     sthToSay: 'Something to say...',

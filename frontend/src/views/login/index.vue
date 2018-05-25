@@ -303,7 +303,7 @@ export default {
         // console.log(this.userForm)
         // alert(data.message)
         this.controlPrompt = data.message
-        if (data.message === '验证码错误') {
+        if (data.message === '验证码错误' || data.message === 'Captcha error') {
           this.controlPrompt = data.message
           this.captchaPrompt = data.message
           this.changeControl()
@@ -311,10 +311,10 @@ export default {
         } else {
           this.controlPrompt = ''
         }
-        if (data.message === '用户名或密码错误') {
+        if (data.message === '用户名或密码错误' || data.message === 'Username or Password Error') {
           alert(data.message)
         }
-        if (data.message === '你已经登陆，不能重复登陆') {
+        if (data.message === '你已登陆，不能重复登陆' || data.message === 'You have loggen in, no need to login again') {
           alert(data.message)
           this.changeControl()
           this.$router.push('/')
@@ -350,11 +350,11 @@ export default {
       }
       post(this.phoneUrl, this.phoneForm).then(data => {
         if (data.resultcode === 0) {
-          if (data.message === '你已经登陆，不能重复登陆') {
+          if (data.message === '你已登陆，不能重复登陆' || data.message === 'You have loggen in, no need to login again') {
             alert(data.message)
             this.$router.push('/')
             this.changeControl()
-          } if (data.message === 'failed') {
+          } if (data.message === 'failed' ||　ata.message === '失败') {
             alert(this.$t('prompt.phoneNotRegistered'))
             return
           } else {
