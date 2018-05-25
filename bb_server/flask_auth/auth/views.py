@@ -34,7 +34,7 @@ def guest_required(func):
             user = request.user
             data = {"username":user.username}
             Avatar(data, user)
-            msg = _("You have logged in ,needn't login again")
+            msg = _("You have logged in, no need to login again")
             return get_json(0, msg, data)
         return func(*args, **kwargs)
     return decorator

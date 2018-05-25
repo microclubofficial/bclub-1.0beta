@@ -31,8 +31,8 @@ msgid "You have no permission!"
 msgstr ""
 
 #: flask_auth/auth/views.py:37 forums/permission.py:73
-msgid "You have logged in ,needn't login again"
-msgstr ""
+msgid "You have logged in, no need to login again"
+msgstr "你已登录，不能重复登录"
 
 #: flask_auth/auth/views.py:52
 msgid "Username"

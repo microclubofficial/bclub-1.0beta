@@ -13,7 +13,7 @@
 from forums.admin import bar, user, topic, message, permission 
 from flask_admin import expose, AdminIndexView, Admin
 from forums.api.user.models import User
-from flask import redirect, url_for, request, render_template, Blueprint, session
+from flask import redirect, url_for, request, render_template, Blueprint, session, Response
 from flask_login import current_user
 from forums.func import get_json
 from flask.views import MethodView
@@ -25,7 +25,8 @@ class MyAdminIndexView(AdminIndexView):
     @expose()
     def index(self):
         #username = session.get('admin_username', None)
-        username = request.cookies.get('admin_username', None)
+        uuid = request.cookies.get('uuid', None)
+        username = redis_data.get(uuid)
         if not User.query.filter_by(username=username).exists():
         #if not current_user.is_authenticated:
             return redirect(url_for('login.login'))
@@ -44,14 +45,19 @@ class LoginView(MethodView):
         post_data = request.data
         username = post_data.get('username')
         password = post_data.get('password')
-        remember = post_data.get('remember')
+        remember = post_data.get('remember', False)
         user = User.query.filter_by(username=username).first()
         if not user or not user.check_password(password):
             return redirect('/admin/login')
         if not user.is_superuser:
             return redirect('/admin/login')
-        session['admin_username'] =  user.username
-        session.permanent = True
+        uuid = str(uuid4())
+        redis_data.set(uuid, username)
+        Response.set_cookie('uuid', uuid)
+        #if remember:
+        #    redis_data.expire()
+        #session['admin_username'] =  user.username
+        #session.permanent = True
         return redirect('/admin')
 
 admin = Admin(name='Bclub', index_view=MyAdminIndexView(name='导航栏', template='admin/index.html', url='/admin'))

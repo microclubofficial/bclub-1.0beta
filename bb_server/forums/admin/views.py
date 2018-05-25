@@ -10,13 +10,15 @@
 #          By:
 # Description:
 # **************************************************************************
-from flask import abort, request, session
+from flask import abort, request
 from flask_admin.contrib.sqla import ModelView
 from flask_wtf import Form
 from forums.permission import super_permission
 from flask_login import current_user
 from forums.func import object_as_dict
 from forums.api.user.models import User
+
+from forums.extension import redis_data
 
 class BaseForm(Form):
     def __init__(self, formdata=None, obj=None, prefix=u'', **kwargs):
@@ -32,7 +34,9 @@ class BaseView(ModelView):
     form_base_class = BaseForm
 
     def is_accessible(self):
-        username = session.get('admin_username', None)
+        uuid = request.cookies.get('uuid')
+        username = redis_data.get(uuid)
+        #username = session.get('admin_username', None)
         if User.query.filter_by(username=username).exists():
             user = User.query.filter_by(username=username).first()
             return user.is_superuser

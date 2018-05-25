@@ -27,7 +27,7 @@ from forums.common.serializer import Serializer
 from forums.common.utils import gen_filter_dict, gen_order_by
 from forums.common.views import IsAuthMethodView as MethodView
 from forums.api.message.models import MessageClient
-from forums.func import get_json, FindAndCount, Count, object_as_dict, Avatar, time_diff, json_loads
+from forums.func import get_json, FindAndCount, Count, object_as_dict, Avatar, time_diff, json_loads, bool_delete
 from forums.api.topic.views import collect_bool
 import json
 import math
@@ -162,6 +162,7 @@ class CollectView(MethodView):
                 topics_data['is_good'], topics_data['is_good_bool'] = Count(topic.is_good)
                 topics_data['is_bad'], topics_data['is_bad_bool'] = Count(topic.is_bad)
                 topics_data['collect_bool'] = collects
+                topics_data['bool_delete'] = bool_delete(user)
                 #a, topics_data['collect_bool'] = Count(Collect.topic_id)
                 Avatar(topics_data, user)
                 topics.append(topics_data)
