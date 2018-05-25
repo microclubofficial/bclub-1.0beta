@@ -458,18 +458,14 @@ export default{
     collectionTopic (index, id) {
       let instance
       post(`/api/collect/${id}`).then(data => {
-        console.log(data)
-        if (data.message === 'success' || data.message === '成功') {
+        if (data.resultcode === 0) {
+          alert(data.message)
+          this.$router.push('/login')
+        } else {
           $('.bibar-tabitem:eq(' + index + ')').find('.set-choseStar > a').addClass('collectionActive')
           this.collection = index
           instance = new Toast({
-            message: this.$t('prompt.successCollect'),
-            iconClass: 'glyphicon glyphicon-ok',
-            duration: 1000
-          })
-        } else {
-          instance = new Toast({
-            message: this.$t('prompt.cancelCollect'),
+            message: data.message,
             duration: 1000
           })
         }

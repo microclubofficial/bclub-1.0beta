@@ -27,7 +27,7 @@
           <div class="avatar_subtitle">
             <!--<a href="" target="_blank" class="time">{{articleDetail.diff_time}}前</a>
             <span class="source">·&nbsp;来自币吧</span>-->
-            <a href="javascript:void(0)" @click='toBibar(articleDetail)'> <span class="time">{{articleDetail.diff_time !== 0 ? articleDetail.diff_time + $t('list.ago') : $t('list.justNow')}} - {{$t('list.from')}}{{articleDetail.token !== null ? articleDetail.zh_token : $t('list.bclub')}}</span> </a>
+            <a href="javascript:void(0)" @click='toBibar(articleDetail)'> <span class="time">{{articleDetail.diff_time !== 0 ? articleDetail.diff_time + $t('list.ago') : $t('list.justNow')}} - {{$t('list.from')}}{{articleDetail.token !== null ? (language === 'zh' ? articleDetail.zh_token : articleDetail.token) : $t('list.bclub')}}</span> </a>
           </div>
         </div>
       </div>
@@ -176,6 +176,31 @@
        </div>
                   </div>
                 </div>
+                <!--确认框-->
+    <div class="modal fade DleConfirm" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+            &times;
+          </button>
+          <h4 class="modal-title" id="myModalLabel">
+            提示
+          </h4>
+        </div>
+        <div class="modal-body">
+          确定要删除吗？
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">取消
+          </button>
+          <button @click='confirm' type="button" class="btn btn-primary">
+            确定
+          </button>
+        </div>
+      </div>
+    </div>
+</div>
                 <div class="loading-bar" v-if='loadingShow'>
                   <!-- <svg class="icon icon-loading" aria-hidden="true">
                       <use xlink:href="#icon-loading"  style="fill:blue" ></use>
@@ -241,7 +266,13 @@ export default {
       moreId: '',
       sortNow: 0,
       imgCommentLength: {},
-      sortId: ''
+      sortId: '',
+      // 删除提示
+      isDel: false,
+      delId: '',
+      delIndex: '',
+      delItem: '',
+      isdelTopic: true
     }
   },
   computed: {
@@ -250,6 +281,9 @@ export default {
     },
     chartId () {
       return this.$store.state.chartId.chartId
+    },
+    language () {
+      return this.$store.state.language.language
     }
   },
   mounted () {
@@ -470,14 +504,24 @@ export default {
     },
     // 收藏
     collectionTopic (articleDetail) {
+      let instance
       post(`/api/collect/${articleDetail.id}`).then(data => {
         if (data.data.collect_bool) {
           articleDetail.collect_bool = data.data.collect_bool
-          alert(data.message)
+          instance = new Toast({
+            message: data.message,
+            duration: 1000
+          })
         } else {
           articleDetail.collect_bool = data.data.collect_bool
-          alert(data.message)
+          instance = new Toast({
+            message: data.message,
+            duration: 1000
+          })
         }
+        setTimeout(() => {
+          instance.close()
+        }, 1000)
       })
     },
     // 来自去币讯
@@ -580,17 +624,25 @@ export default {
         this.moreId = ''
       }
     },
-    // 删除评论
-    delComment (item, now, tmp) {
-      post(`/api/reply/delete/${item.id}`).then(data => {
+    confirm () {
+      post(`/api/reply/delete/${this.delItem}`).then(data => {
         if (data.resultcode === 1) {
-          this.nowData.splice(now, 1)
+          this.nowData.splice(this.delIndex, 1)
           this.repliesCcount = this.repliesCcount - 1
         } else {
           alert(data.message)
           this.$router.push('/login')
         }
+        $('.DleConfirm').modal('hide')
       })
+    },
+    // 删除评论
+    delComment (item, now, tmp) {
+      $('.DleConfirm').modal('show')
+      this.isdelTopic = false
+      this.delId = tmp.id
+      this.delIndex = now
+      this.delItem = item.id
     }
   }
 }

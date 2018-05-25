@@ -5,7 +5,7 @@
             <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
            </svg>-->
         <div ref="editor" style="text-align:left" class='editor'></div>
-        <span class="toLongText" @click="toBibarData(4)"><img src="../../assets/img/longText.png">长文</span>
+        <span class="toLongText" @click="toBibarData(4)"><i class="iconfont" style='font-size:14px;'>&#xe67d;</i>{{$t('button.longText')}}</span>
         <button @click="getContent()" class="report btnm">{{$t('button.publish')}}</button>
         <button class="cancel" @click="isHideFun" v-if="!showDilog">{{$t('button.cancel')}}</button>
         <button class="cancel" @click="isHideFun" v-if="!showDilog">{{$t('button.cancel')}}</button>
@@ -438,7 +438,8 @@ export default {
     cursor: pointer;
     position: absolute;
     bottom: 20px;
-    right: 572px;
+    right: 555px;
+    color: #999;
 }
 .toLongText img{
   margin-right: 5px;

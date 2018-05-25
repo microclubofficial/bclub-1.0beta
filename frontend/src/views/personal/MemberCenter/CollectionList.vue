@@ -10,7 +10,7 @@
         <div class="bibar-indexNewsItem">
           <div class="speech" v-if="tmp.reply_user !== null"> <span><span class="time">{{tmp.reply_time}}</span>{{$t('list.ago')}} {{tmp.reply_user}} {{$t('list.commented')}}</span><i class="iconfont icon-dot"></i></div>
           <div class="user">
-            <div class="bibar-author"> <a href="javascript:void(0)"> <span class="photo"><img :src="tmp.avatar"></span> <span class="name">{{tmp.author}}</span> <span class="time" @click='toBibar(tmp)'>{{tmp.diff_time !== 0 ? tmp.diff_time + $t('list.ago') : $t('list.justNow')}} - {{$t('list.from')}}{{tmp.token !== null ? tmp.zh_token : $t('list.bclub')}}</span> </a> </div>
+            <div class="bibar-author"> <a href="javascript:void(0)"> <span class="photo"><img :src="tmp.avatar"></span> <span class="name">{{tmp.author}}</span> <span class="time" @click='toBibar(tmp)'>{{tmp.diff_time !== 0 ? tmp.diff_time + $t('list.ago') : $t('list.justNow')}} - {{$t('list.from')}}{{tmp.token !== null ? (language === 'zh' ? tmp.zh_token : tmp.token) : $t('list.bclub')}}</span> </a> </div>
             <div class="bibar-list">
               <div class="tit"><a href="javascript:void(0)" @click="goDetail(tmp.id)">{{tmp.title}}</a></div>
           <div class="txt indexNewslimitHeight" @click="goDetail(tmp.id)">
@@ -189,6 +189,31 @@
         </div>
       </div>
     </div>
+    <!--确认框-->
+    <div class="modal fade DleConfirm" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+            &times;
+          </button>
+          <h4 class="modal-title" id="myModalLabel">
+            提示
+          </h4>
+        </div>
+        <div class="modal-body">
+          确定要删除吗？
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">取消
+          </button>
+          <button @click='confirm' type="button" class="btn btn-primary">
+            确定
+          </button>
+        </div>
+      </div>
+    </div>
+</div>
     <div class="loading-bar" v-if='loadingShow'>
                   <!-- <svg class="icon icon-loading" aria-hidden="true">
                       <use xlink:href="#icon-loading"  style="fill:blue" ></use>
@@ -265,7 +290,13 @@ export default{
       user_token: '',
       pageNumber: {},
       cpageCountObj: {},
-      imgCommentLength: {}
+      imgCommentLength: {},
+      // 删除提示
+      isDel: false,
+      delId: '',
+      delIndex: '',
+      delItem: '',
+      isdelTopic: true
     }
   },
   components: {
@@ -277,6 +308,9 @@ export default{
     },
     userInfo () {
       return this.$store.state.userInfo.userInfo
+    },
+    language () {
+      return this.$store.state.language.language
     }
   },
   created: function () {
@@ -499,13 +533,20 @@ export default{
     },
     // 收藏
     collectionTopic (tmp) {
+      let instance
       post(`/api/collect/${tmp.id}`).then(data => {
         if (data.resultcode === 0) {
           alert(data.message)
           this.$router.push('/login')
         } else {
           tmp.collect_bool = data.data.collect_bool
-          alert(data.message)
+          instance = new Toast({
+            message: data.message,
+            duration: 1000
+          })
+          setTimeout(() => {
+            instance.close()
+          }, 1000)
         }
       })
     },
@@ -661,24 +702,40 @@ export default{
         })
       })
     },
+    confirm () {
+      if (this.isdelTopic) {
+        post(`/api/topic/delete/${this.delId}`).then(data => {
+          if (data.resultcode === 1) {
+            this.articles.splice(this.delIndex, 1)
+            this.i = ''
+            $('.bibar-hot').css({'display': 'none'})
+            $('.DleConfirm').modal('hide')
+          }
+        })
+      } else {
+        post(`/api/reply/delete/${this.delItem}`).then(data => {
+          if (data.resultcode === 1) {
+            this.nowData[this.delId].splice(this.delIndex, 1)
+            this.articles[this.i].replies_count = this.articles[this.i].replies_count - 1
+            $('.DleConfirm').modal('hide')
+          }
+        })
+      }
+    },
     // 删除文章
     delTopic (tmp, index) {
-      post(`/api/topic/delete/${tmp.id}`).then(data => {
-        if (data.resultcode === 1) {
-          this.articles.splice(index, 1)
-          this.i = ''
-          $('.bibar-hot').css({'display': 'none'})
-        }
-      })
+      $('.DleConfirm').modal('show')
+      this.isdelTopic = true
+      this.delId = tmp.id
+      this.delIndex = index
     },
     // 删除评论
     delComment (item, now, tmp) {
-      post(`/api/reply/delete/${item.id}`).then(data => {
-        if (data.resultcode === 1) {
-          this.nowData[tmp.id].splice(now, 1)
-          this.articles[this.i].replies_count = this.articles[this.i].replies_count - 1
-        }
-      })
+      $('.DleConfirm').modal('show')
+      this.isdelTopic = false
+      this.delId = tmp.id
+      this.delIndex = now
+      this.delItem = item.id
     },
     // 分页
     prev (id) {
