@@ -2,7 +2,7 @@
 
 > spa
 
-lt -s rongrong -h http://ymhui999.com:1234 -p 8080
+lt -s hefang -h http://ymhui999.com:1234 -p 8080
 
 ## Build Setup
 
