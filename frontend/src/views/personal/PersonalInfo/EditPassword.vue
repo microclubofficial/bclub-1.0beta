@@ -96,8 +96,8 @@ export default {
       if (this.setPwd.OldPassword === undefined || this.setPwd.OldPassword.length === 0) {
         this.oldpwdPrompt = this.$t('prompt.passwordRequired')
         return false
-      } else if (!upwdreg.test(this.setPwd.OldPassword) && this.setPwd.OldPassword !== undefined && this.setPwd.OldPassword.length > 0) {
-        this.oldpwdPrompt = this.$t('prompt.passwordLength')
+      } else if (this.oldpwdPrompt !== '') {
+        this.oldpwdPrompt = this.$t('prompt.orgpwdError')
         return false
       } else if (this.setPwd.NewPassword === undefined || this.setPwd.setPwd.NewPassword === 0) {
         this.newpwdPrompt = this.$t('prompt.passwordRequired')

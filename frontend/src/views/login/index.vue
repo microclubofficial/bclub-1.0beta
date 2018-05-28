@@ -58,7 +58,7 @@
     top: 0;
     background-color:rgba(255,255,255,0)!important;
     color: #1e8fff;
-    width: 41%;
+    /*width: 41%;*/
     height: 32px;
     line-height: 32px;
     text-align: right;
@@ -172,7 +172,7 @@
                 <label for="inputCaptcha3" class="col-md-3 control-label">{{$t('login.vcode')}}</label>
                 <div class="col-md-9 captcha-box">
                   <input type="text" class="form-control" v-model="phoneForm.phonecaptcha" @change='showRegisterMsg(phoneForm.phonecaptcha, 4)' id="inputCaptcha3" :placeholder="$t('placeholder.vcode')">
-                  <button type="button" class="col-md-3 get-captcha" v-bind:disabled="hasphone" :class="{'text-gray':hasphone}" @click="getPhoneControl">
+                  <button type="button" class="col-md-7 get-captcha" v-bind:disabled="hasphone" :class="{'text-gray':hasphone}" @click="getPhoneControl">
                     <span v-show="hasControl">{{countdown}}</span>
                     <i> | </i>{{getcontroltxt}}</button>
                 </div>
@@ -225,7 +225,8 @@ export default {
       countdown: 30,
       showTab: true,
       remember: '',
-      getcontroltxt: this.$t('prompt.acquireVcode')
+      getcontroltxt: this.$t('prompt.acquireVcode'),
+      isGetCaptcha: false
     }
   },
   mounted () {
@@ -259,8 +260,8 @@ export default {
           }
         }
       } else if (id === 4) {
-        if (input !== undefined || input.length > 0) {
-          this.phoneControlPrompt = ''
+        if (this.isGetCaptcha && input !== undefined && input.length > 0) {
+          this.captchaPrompt = ''
         }
       }
     },
@@ -268,12 +269,15 @@ export default {
     handleLogin () {
       if (this.userForm.username === undefined || this.userForm.username.length === 0) {
         this.unamePrompt = this.$t('prompt.usernameRequired')
+        this.changeControl()
         return false
       } else if (this.userForm.password === undefined || this.userForm.password.length === 0) {
         this.upwdPrompt = this.$t('prompt.passwordRequired')
+        this.changeControl()
         return false
       } else if (this.userForm.captcha === undefined || this.userForm.captcha.length === 0) {
         this.captchaPrompt = this.$t('prompt.captchaRequired')
+        this.changeControl()
         return false
       }
       post(this.formUrl, this.userForm).then(data => {
@@ -326,7 +330,10 @@ export default {
         this.hasphone = true
         return false
       } else if (this.phoneForm.phonecaptcha === undefined || this.phoneForm.phonecaptcha.length === 0) {
-        this.phoneControlPrompt = this.$t('prompt.captchaRequired')
+        this.captchaPrompt = this.$t('prompt.captchaRequired')
+        return false
+      } else if (!this.isGetCaptcha) {
+        this.captchaPrompt = this.$t('prompt.captchaError')
         return false
       }
       post(this.phoneUrl, this.phoneForm).then(data => {
@@ -378,6 +385,8 @@ export default {
           return
         }
         if (data.resultcode === 1) {
+          // 获取过
+          this.isGetCaptcha = true
           this.hasphone = true
           let that = this
           this.timer = setInterval(function () {

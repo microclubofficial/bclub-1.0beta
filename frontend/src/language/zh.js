@@ -73,9 +73,9 @@ export default {
     prompt: '提 示',
     acquireVcode: '获取验证码',
     reacquire: '重新获取',
-    usernameLength: '用户名在3-16位',
+    usernameLength: '3-16位字符,可由中文、英文、数字或下划线组成',
     usernameRequired: '用户名不能为空',
-    passwordLength: '密码长度在6-18位',
+    passwordLength: '6-18位大小写英文字母、数字',
     passwordRequired: '密码不能为空',
     oldpasswordDifferent: '新密码不能与原密码一致',
     passwordDifferent: '两次输入的密码不一致',
@@ -85,6 +85,7 @@ export default {
     phoneRegistered: '手机号已注册',
     phoneNotRegistered: '手机号未注册',
     captchaRequired: '验证码不能为空',
+    captchaError: '验证码错误',
     emailRequired: '邮箱地址不能为空',
     emailError: '邮箱格式不正确',
     spaceForbidden: '不能输入空格',
@@ -193,5 +194,12 @@ export default {
     year1: '1年',
     price: '价格（CNY）',
     volume: '交易量（24H）'
+  },
+  lang: {
+    hint: '点击，或拖动图片至此处',
+    btnBack: '上一步',
+    btnSave: '保存',
+    preview: '图片预览',
+    loading: '正在上传'
   }
 }

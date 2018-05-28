@@ -74,17 +74,17 @@
             <div class="form-group">
               <label for="inputEmail3" class="col-md-3 control-label">{{$t('register.phone')}}</label>
               <div class="col-md-6">
-                <input type="text" class="form-control" id="inputEmail3" @blur='showRegisterMsg(phoneObj.phone, 0)' v-model="phoneObj.phone" :placeholder="$t('placeholder.phone')">
+                <input type="text" class="form-control" id="inputEmail3" @change='showRegisterMsg(phoneObj.phone, 0)' v-model="phoneObj.phone" :placeholder="$t('placeholder.phone')">
               </div>
             </div>
             <!--<label class="col-md-3 control-label"></label>-->
             <p class="prompt col-md-offset-3 col-md-9" style="margin-top:0px!important;margin-left:25%!important;">{{phonePrompt}}</p>
             <div class="form-group" style="margin-top: 37px;">
               <label for="inputCaptcha3" class="col-md-3 control-label">{{$t('register.vcode')}}</label>
-              <div class="col-md-4">
-                <input type="text" class="form-control" v-model="phoneObj.captcha" @blur='showRegisterMsg(phoneObj.captcha, 1)' id="inputCaptcha3" :placeholder="$t('placeholder.vcode')">
+              <div class="col-md-3" style="width:28%;">
+                <input type="text" class="form-control" v-model="phoneObj.captcha" @change='showRegisterMsg(phoneObj.captcha, 1)' id="inputCaptcha3" :placeholder="$t('placeholder.vcode')">
               </div>
-              <button type="button" class="btn btn-default get-captcha" style="width:15%" @click="getPhoneControl" v-bind:disabled="hasphone" :class="{'btn-success':!hasphone}">
+              <button type="button" class="btn btn-default get-captcha" style="width:19%" @click="getPhoneControl" v-bind:disabled="hasphone" :class="{'btn-success':!hasphone}">
                 {{getcontroltxt}}<span v-show="hasControl"> {{countdown}}</span></button>
             </div>
             <!--<label class="col-md-3 control-label"></label>-->
@@ -108,14 +108,14 @@
               <div class="form-group">
                 <label for="inputPassword3" class="col-md-3 control-label">{{$t('editProfile.newPassword')}}</label>
                 <div class="col-md-9">
-                  <input class="form-control" name="password" type="password" :placeholder="$t('placeholder.password')" @blur='showRegisterMsg(findForm.password, 2)' v-model="findForm.password">
+                  <input class="form-control" name="password" type="password" :placeholder="$t('placeholder.password')" @change='showRegisterMsg(findForm.password, 2)' v-model="findForm.password">
                 </div>
                 <p class="prompt col-md-3 col-md-offset-3">{{upwdPrompt}}</p>
               </div>
               <div class="form-group" style="margin-top:15px;">
                 <label for="inputRepassword3" class="col-md-3 control-label">{{$t('editProfile.confirmPassword')}}</label>
                 <div class="col-md-9">
-                  <input class="form-control" name="repassword" type="password" :placeholder="$t('placeholder.repassword')" @blur='showRegisterMsg(findForm.confirm_password, 3)' v-model="findForm.confirm_password">
+                  <input class="form-control" name="repassword" type="password" :placeholder="$t('placeholder.repassword')" @change='showRegisterMsg(findForm.confirm_password, 3)' v-model="findForm.confirm_password">
                 </div>
                 <p class="prompt col-md-3 col-md-offset-3">{{confirm_upwdPrompt}}</p>
               </div>
@@ -161,7 +161,8 @@ export default {
     // 失去焦点验证
     showRegisterMsg (input, id) {
       if (id === 0) {
-        if (input !== undefined && input.length > 0) {
+        let phonereg = /^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$/
+        if (phonereg.test(input) && input !== undefined && input.length > 0) {
           this.phonePrompt = ''
           this.hasphone = false
           this.findForm.phone = input
@@ -241,11 +242,17 @@ export default {
     },
     // 显示模态框
     showModel () {
+      let phonereg = /^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$/
       if (this.phoneObj.phone === undefined || this.phoneObj.phone.length === 0) {
         this.phonePrompt = this.$t('prompt.phoneRequired')
         this.hasphone = true
         return false
-      } else if (this.phoneObj.captcha === undefined || this.phoneObj.captcha.length === 0) {
+      } else if (!phonereg.test(this.phoneObj.phone) && this.phoneObj.phone !== undefined && this.phoneObj.phone.length > 0) {
+        this.phonePrompt = this.$t('prompt.phoneError')
+        this.hasphone = true
+        return false
+      }
+      if (this.phoneObj.captcha === undefined || this.phoneObj.captcha.length === 0) {
         this.phoneControlPrompt = this.$t('prompt.captchaRequired')
         return false
       }

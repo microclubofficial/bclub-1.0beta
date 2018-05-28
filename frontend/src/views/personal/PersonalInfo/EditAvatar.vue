@@ -92,7 +92,6 @@ export default {
       this.$router.push('/memberCenter')
     },
     cropUploadFailFun (status, field) {
-      console.log(status)
     }
   }
 }

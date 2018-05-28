@@ -127,6 +127,14 @@ img[data-w-e]{
     width: 22px !important;
     height: 22px;
 }
+/*表情样式*/
+  img[src*="/images/face"] {
+    width: 22px !important;
+    height: 22px !important;
+    vertical-align: -4px;
+    margin: 0 4px !important;
+    display: inline !important;
+}
 /*富文本title样式*/
 .w-e-text-container .w-e-panel-container .w-e-panel-tab-title .w-e-active{
     color: #333;
@@ -147,6 +155,13 @@ img[data-w-e]{
     line-height: 1.8;
 }
 .detail-main-content a{color: #0181ff !important;}
+/*详情图片样式*/
+.detail-main-content img,.detail-main-content p img{
+    max-width: 60%;
+    margin: 10px auto;
+    display: block;
+    text-align: center;
+}
 .media-body a{color: #0181ff !important;}
 /*面包屑*/
 .crumb .row .span6 .breadcrumb{

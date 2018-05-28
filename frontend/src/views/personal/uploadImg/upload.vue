@@ -12,7 +12,7 @@
                     <i class="vicp-icon1-body"></i>
                     <i class="vicp-icon1-bottom"></i>
                 </i>
-                <span class="vicp-hint" v-show="loading !== 1">{{ lang.hint }}</span>
+                <span class="vicp-hint" v-show="loading !== 1">{{$t('lang.hint')}}</span>
                 <span class="vicp-no-supported-hint" v-show="!isSupported">{{ lang.noSupported }}</span>
                 <input type="file" v-show="false" v-if="step == 1" @change="handleChange" ref='fileInput'>
             </div>
@@ -67,24 +67,24 @@
                     <div class="vicp-preview">
                         <div class="vicp-preview-item" v-if="!noSquare">
                             <img :src="createImgUrl" :style="previewStyle">
-                            <span>{{ lang.preview }}</span>
+                            <span>{{ $t('lang.preview') }}</span>
                             </div>
                             <div class="vicp-preview-item vicp-preview-item-circle" v-if="!noCircle">
                                 <img :src="createImgUrl" :style="previewStyle">
-                                <span>{{ lang.preview }}</span>
+                                <span>{{ $t('lang.preview') }}</span>
                                 </div>
                     </div>
                 </div>
             </div>
             <div class="vicp-operate">
-                <a @click="setStep(1)" @mousedown="ripple">{{ lang.btn.back }}</a>
-                <a class="vicp-operate-btn" @click="prepareUpload" @mousedown="ripple">{{ lang.btn.save }}</a>
+                <a @click="setStep(1)" @mousedown="ripple">{{ $t('lang.btnBack') }}</a>
+                <a class="vicp-operate-btn" @click="prepareUpload" @mousedown="ripple">{{ $t('lang.btnSave') }}</a>
             </div>
         </div>
 
         <div class="vicp-step3" v-if="step == 3">
             <div class="vicp-upload">
-                <span class="vicp-loading" v-show="loading === 1">{{ lang.loading }}</span>
+                <span class="vicp-loading" v-show="loading === 1">{{ $t('lang.loading') }}</span>
                 <div class="vicp-progress-wrap">
                     <span class="vicp-progress" v-show="loading === 1" :style="progressStyle"></span>
                 </div>
@@ -389,6 +389,9 @@ export default {
                 width: w + 'px',
                 height: h + 'px'
             };
+        },
+        language () {
+            return this.$store.state.language.language
         }
     },
     watch: {
