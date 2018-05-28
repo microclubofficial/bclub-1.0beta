@@ -1,80 +1,203 @@
+<style lang="scss" scoped>
+.wrap-width {
+  width: 800px;
+}
+.title {
+  border-bottom: solid 1px #dfdfdf;
+  height: 80px;
+  line-height: 80px;
+  margin: 0 50px;
+  span {
+    &:nth-child(1) {
+      width: 32px;
+      height: 24px;
+      display: inline-block;
+
+      >img {
+        width: 100%;
+        height: 100%;
+        display: inline;
+        vertical-align: text-bottom;
+      }
+    }
+    &:nth-child(2) {
+      font-size: 16px;
+      font-weight: bold;
+      padding-top: 4px;
+    }
+    &:nth-child(3) {
+      font-size: 14px;
+      float: right;
+      color: #666;
+
+      i {
+        font-family: simsun;
+        color: #666;
+        padding: 0 10px;
+      }
+    }
+  }
+}
+
+.password-form {
+  width: 320px;
+  margin: 30px auto;
+  label {
+    width: 90px;
+    float: left;
+  }
+  input {
+    width: 220px;
+    float: left;
+  }
+}
+
+.btn-confirm {
+  width: 60px;
+  padding: 4px 8px;
+  background: #1e8fff;
+  color: #fff;
+}
+
+.btn-cacel {
+  width: 60px;
+  padding: 4px 8px;
+  background: #f0f0f0;
+  color: #666;
+  border-radius: 5px;
+}
+
+.email-box {
+  clear: both;
+  width: 350px;
+  margin: 0 auto;
+  padding: 20px 0;
+  label {
+    width: 130px;
+    line-height: 52px;
+    display: block;
+    float: left;
+  }
+  input {
+    width: 220px;
+    float: left;
+  }
+  button {
+    &:nth-child(1) {
+      margin-right: 20px;
+    }
+  }
+}
+
+.email-btn {
+  padding: 30px 0 40px 0;
+}
+
+.btn-confirm {
+  width: 60px;
+  padding: 4px 8px;
+  background: #1e8fff;
+  color: #fff;
+  border-radius: 5px;
+}
+
+.btn-cacel {
+  width: 60px;
+  padding: 4px 8px;
+  background: #f0f0f0;
+  color: #666;
+  border-radius: 5px;
+}
+.center-wrap {
+  width: 840px;
+  margin: 0 auto;
+}
+</style>
 <template>
-    <div>
-        <div class="container bindEmail">
-            <form v-if='!successbind'>
-                <div class="form-group">
-                    <label class="col-sm-12" for="exampleInputEmail1">{{$t('editProfile.bindEmail')}}</label>
-                    <input type="email" style="width:25%;margin-top:10px" class="form-control col-sm-3" v-model="bindForm.email" id="exampleInputEmail1" :placeholder="$t('placeholder.email')" @change='showBindEmailMsg(bindForm.email, 0)'>
-                    <span class="prompt col-sm-9" style="margin-left: 0 !important;height:34px;margin-top:20px; display:block;">{{emailPrompt}}</span>
-                </div>
-                <button type="button" style="margin-top:10px;" v-bind:disabled="!bindForm.email" @click="bindEmailFun" class="btn findEmail btn-primary">{{$t('button.confirm')}}</button>
-            </form>
-            <!--完成验证后样式-->
-            <div class="successBind" style="margin:50px 0;" v-if='successbind'>
-              <p>{{$t('editProfile.bindedEmail')}}<span style="font-weight: bold;margin: 0 20px 0 10px;">{{bindForm.email}}</span>
-                <button type="button" @click='SbindEmail' class="btn btn-primary">{{$t('button.edit')}}</button>
-              </p>
-            </div>
-            <!--发邮件模态框-->
-                <div class="modal fade emaiModal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                  <div class="modal-dialog">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                      </div>
-                      <div class="modal-body">
-                        <p >{{$t('prompt.emailSent')}}</p>
-                      </div>
-                      <div class="modal-footer">
-                        <button type="button" @click="resendFun" class="btn btn-primary">{{$t('button.resend')}}
-                        </button>
-                        <button type="button" @click="successBind" class="btn btn-default">
-                          {{$t('button.verify')}}
-                        </button>
-                      </div>
-                    </div><!-- /.modal-content -->
-                  </div><!-- /.modal-dialog -->
-</div>
-        </div>
+  <div>
+    <div class="center-wrap">
+      <div class="title">
+        <span>
+          <img src="../../../assets/img/personal.png" />
+        </span>
+        <span>绑定邮箱</span>
+        <span>
+          <router-link class="hover" :to="{path:'/memberCenter'}">返回我的主页  <i>></i></router-link>
+        </span>
+      </div>
     </div>
+
+    <div class="center-wrap bindEmail">
+      <form v-if='!successbind'>
+        <div class="form-group email-box">
+          <label for="exampleInputEmail1">{{$t('editProfile.bindEmail')}}</label>
+          <input type="email" style="margin-top:10px" class="form-control" v-model="bindForm.email" id="exampleInputEmail1" :placeholder="$t('placeholder.email')" @change='showBindEmailMsg(bindForm.email, 0)'>
+          <span class="prompt" style="margin-left: 0 !important;height:34px;margin-top:20px; display:block;">{{emailPrompt}}</span>
+        </div>
+        <div class="email-box email-btn">
+          <button type="button" v-bind:disabled="!bindForm.email" @click="bindEmailFun" class="findEmail btnm btn-confirm">{{$t('button.confirm')}}</button>
+          <button class="findEmail btnm btn-cacel ">取消</button>
+        </div>
+      </form>
+      <!--完成验证后样式-->
+      <div class="successBind" style="margin:50px 0;" v-if='successbind'>
+        <p>
+          已绑定邮箱
+          <span style="font-weight: bold;margin: 0 20px 0 10px;">{{bindForm.email}}</span>
+          <button type="button" @click='SbindEmail' class="btn btn-primary">修改邮箱</button>
+        </p>
+      </div>
+      <!--发邮件模态框-->
+      <div class="modal fade emaiModal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">
+              一封邮件已发送，请注意查收
+            </div>
+            <div class="modal-footer">
+              <button type="button" @click="resendFun" class="btn btn-primary">重新发送
+              </button>
+              <button type="button" @click="successBind" class="btn btn-default">
+                完成验证
+              </button>
+            </div>
+          </div>
+          <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+      </div>
+    </div>
+  </div>
 </template>
 <script>
-import {post, get} from '../../../utils/http'
+import { post, get } from '../../../utils/http'
 import { Toast } from 'mint-ui'
-import {getToken} from '../../../utils/auth.js'
 export default {
-  data () {
+  data() {
     return {
       bindForm: {},
       emailPrompt: '',
       canFind: false,
       showModal: false,
-      successbind: false,
-      user_token: ''
+      successbind: false
     }
   },
-  mounted () {
-    if (getToken()) {
-      this.user_token = JSON.parse(getToken())
-    }
-    if (this.user_token === '') {
-      this.$router.push('/')
-    }
+  mounted() {
   },
   methods: {
     // 验证
-    showBindEmailMsg (input, id) {
+    showBindEmailMsg(input, id) {
       let emailreg = /^[A-Za-z0-9.\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
       if (id === 0) {
         if (input === undefined || input.length === 0) {
-          this.emailPrompt = this.$t('prompt.emailRequired')
+          this.emailPrompt = '邮箱不能为空'
           this.canFind = false
           return false
         } else if (!emailreg.test(input) && input !== undefined && input.length > 0) {
-          this.emailPrompt = this.$t('prompt.emailError')
-          // get('/api/setting/email', {'email': input}).then(data=>{
-          //   console.log(data)
-          // })
+          this.emailPrompt = '邮箱格式不正确'
           this.canFind = false
           return false
         } else {
@@ -84,11 +207,18 @@ export default {
       }
     },
     // 绑定邮箱
-    bindEmailFun () {
+    bindEmailFun() {
+      let instance
       if (this.canFind) {
         post(`/api/setting/email`, this.bindForm).then(data => {
           if (data.resultcode === 0) {
-            alert(data.message)
+            instance = new Toast({
+              message: data.message,
+              duration: 1000
+            })
+            setTimeout(() => {
+              instance.close()
+            }, 1000)
             $('.emaiModal').modal('hide')
             return false
           } else if (data.resultcode === 1) {
@@ -98,15 +228,15 @@ export default {
       }
     },
     // 重新发送
-    resendFun () {
-      this.bindEmailFun()
+    resendFun() {
+      post(`/api/confirmed/password`, this.bindForm).then(data => {
+      })
     },
     // 完成验证状态
-    successBind () {
-      get(`/api/confirmed/email`, {email: this.bindForm.email}).then(data => {
+    successBind() {
+      get(`/api/confirmed/email`).then(data => {
         if (data.resultcode === 0) {
-          alert(data.message)
-          $('.emaiModal').modal('show')
+          $('.emaiModal').modal('hide')
           this.successbind = false
         } else {
           $('.emaiModal').modal('hide')
@@ -115,7 +245,7 @@ export default {
       })
     },
     // 完成后修改邮箱
-    SbindEmail () {
+    SbindEmail() {
       this.successbind = false
     }
   }
@@ -123,27 +253,32 @@ export default {
 </script>
 
 <style>
- .prompt{
-    float: left;
-    margin-left: 4%;
-    margin-top: 10px;
-    color: red;
-  }
-  .findEmail{
-    transition: opacity .5s
-  }
- .bindEmail>.emaiModal>.modal-dialog{
-    width: 30%;
-  }
- .emaiModal>.modal-dialog>.modal-content>.modal-body{
-   font-size: 16px;
-   text-align: center;
- }
- .emaiModal>.modal-dialog>.modal-content>.modal-footer{
-   border:none;
-   text-align: center;
- }
- .emaiModal>.modal-dialog>.modal-content>.modal-footer>.btn-primary{
-   margin-left: 20px;
- }
+.prompt {
+  float: left;
+  margin-left: 4%;
+  margin-top: 10px;
+  color: red;
+}
+
+.findEmail {
+  transition: opacity .5s
+}
+
+.bindEmail>.emaiModal>.modal-dialog {
+  width: 30%;
+}
+
+.emaiModal>.modal-dialog>.modal-content>.modal-body {
+  font-size: 16px;
+  text-align: center;
+}
+
+.emaiModal>.modal-dialog>.modal-content>.modal-footer {
+  border: none;
+  text-align: center;
+}
+
+.emaiModal>.modal-dialog>.modal-content>.modal-footer>.btn-primary {
+  margin-left: 20px;
+}
 </style>
