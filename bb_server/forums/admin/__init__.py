@@ -13,7 +13,7 @@
 from forums.admin import bar, user, topic, message, permission 
 from flask_admin import expose, AdminIndexView, Admin
 from forums.api.user.models import User
-from flask import redirect, url_for, request, render_template, Blueprint, session, Response
+from flask import redirect, url_for, request, render_template, Blueprint, session, Response, make_response
 from flask_login import current_user
 from forums.func import get_json
 from flask.views import MethodView
@@ -53,12 +53,13 @@ class LoginView(MethodView):
             return redirect('/admin/login')
         uuid = str(uuid4())
         redis_data.set(uuid, username)
-        Response.set_cookie('uuid', uuid)
-        #if remember:
-        #    redis_data.expire()
+        resp = make_response(redirect('/admin'))
+        resp.set_cookie('uuid', uuid)
+        if remember:
+            redis_data.expire('uuid', 3600*24*7)
         #session['admin_username'] =  user.username
         #session.permanent = True
-        return redirect('/admin')
+        return resp
 
 admin = Admin(name='Bclub', index_view=MyAdminIndexView(name='导航栏', template='admin/index.html', url='/admin'))
 #admin = Admin(name='Bclub', index_view=MyAdminIndexView(),template_mode='bootstrap3')

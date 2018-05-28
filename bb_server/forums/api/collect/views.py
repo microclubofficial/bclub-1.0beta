@@ -147,6 +147,13 @@ class CollectView(MethodView):
                     collect.topic_id = json.dumps(topiclist)
                     collect.save()
                     continue
+                reply = Reply.query.filter_by(topic_id = i).order_by('-id').first()
+                if reply:
+                    reply_user = reply.author.username
+                    reply_time = time_diff(reply.updated_at)
+                else:
+                    reply_user = None
+                    reply_time = None
                 user = topic.author
                 #user = User.query.filter_by(id = topic.author_id).first()
                 reply_count = FindAndCount(Reply, topic_id = topic.id)
@@ -163,6 +170,8 @@ class CollectView(MethodView):
                 topics_data['is_bad'], topics_data['is_bad_bool'] = Count(topic.is_bad)
                 topics_data['collect_bool'] = collects
                 topics_data['bool_delete'] = bool_delete(user)
+                topics_data['reply_time'] = reply_time
+                topics_data['reply_user'] = reply_user
                 #a, topics_data['collect_bool'] = Count(Collect.topic_id)
                 Avatar(topics_data, user)
                 topics.append(topics_data)
