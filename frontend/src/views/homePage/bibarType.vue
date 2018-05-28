@@ -2,7 +2,7 @@
   <div class="commun-bibarType">
     <h4 style="font-weight:bold;">{{$t('column.hotCoins')}}</h4>
    <div class="bibarType-main">
-     <div v-bind:style="{backgroundImage: 'url(' + type.picture + ')'}" class="bibarType-main-box shadow-box" @click="toBibarData(type.id,type.id,type.name_ch)" :key="index" v-for="(type,index) in bibarType">
+     <div v-bind:style="{backgroundImage: 'url(' + type.picture + ')'}" class="bibarType-main-box shadow-box" @click="toBibarData(type)" :key="index" v-for="(type,index) in bibarType">
        <!--<img :src="type.picture" alt="">-->
        <!--<img src="../../assets/img/pic-news02.png" alt="">-->
        <div class="bibarType-bot">
@@ -30,7 +30,7 @@ export default{
       bibarType: []
     }
   },
-  computed:{
+  computed: {
     language () {
       return this.$store.state.language.language
     }
@@ -38,21 +38,29 @@ export default{
   mounted: function () {
     get('/api/bpicture').then(data => {
       this.bibarType = data.data
-      // console.log(this.bibarType)
     })
   },
   methods: {
-    toBibarData (router, id, ch) {
+    toBibarData (type) {
       this.$store.commit('CHART_ID', {
-        'chartId': id,
-        'chartCh': ch
+        'chartId': type.id,
+        'chartCh': type.name_ch
       })
-      this.$router.push({
-        path: `/msgDetail/${router}`,
-        query: {
-          b: JSON.stringify({'zh': ch})
-        }
-      })
+      if (this.language === 'zh') {
+        this.$router.push({
+          path: `/msgDetail/${type.id}`,
+          query: {
+            b: JSON.stringify({'zh': type.name_ch})
+          }
+        })
+      } else {
+        this.$router.push({
+          path: `/msgDetail/${type.id}`,
+          query: {
+            b: JSON.stringify({'zh': type.name_en})
+          }
+        })
+      }
     }
   }
 }

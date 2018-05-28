@@ -127,6 +127,16 @@ img[data-w-e]{
     width: 22px !important;
     height: 22px;
 }
+/*富文本title样式*/
+.w-e-text-container .w-e-panel-container .w-e-panel-tab-title .w-e-active{
+    color: #333;
+     border-bottom: none !important; 
+    cursor: default;
+    font-weight: 700;
+    height: 30px;
+    line-height: 30px;
+}
+.w-e-text-container .w-e-panel-container .w-e-panel-tab-title .w-e-item:nth-child(2){display: none;}
 .comment-item-main{position: relative;}
 .comment-item-main a {color: #0181ff !important;}
 /*详情正文样式*/

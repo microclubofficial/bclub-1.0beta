@@ -123,17 +123,17 @@ export default {
         } else {
           if (this.topicData.replyContent.indexOf('data-w-e') === -1) {
             let justReplyImg = this.topicData.replyContent.match(/(?<=(src="))[^"]*?(?=")/ig)[0]
-            if(this.language == 'zh') {  
+            if (this.language === 'zh') {
               this.topicData.replyContent = '图片评论' + `<a href='${justReplyImg}' style='color:#0181FF'><i class='iconfont'>&#xe694;</i>查看图片</a>`
-            }else if (this.language == 'en') {
+            } else if (this.language === 'en') {
               this.topicData.replyContent = 'Image comment ' + `<a href='${justReplyImg}' style='color:#0181FF'><i class='iconfont'>&#xe694;</i> View image</a>`
             }
           } else {
             let replyImg = this.topicData.replyContent.match(/<img(?![^<>]*?data-w-e[^<>]*?>).*?>/g)[0].match(/(?<=(src="))[^"]*?(?=")/ig)[0]
             let replyNewData
-            if(this.language == 'zh') { 
+            if (this.language === 'zh') { 
               replyNewData = this.topicData.replyContent.replace(/<img src="\/static[^>]+>/g, `<a href='${replyImg}' style='color:#0181FF'><i class='iconfont'>&#xe694;</i>查看图片</a>`)
-            }else if (this.language == 'en') {
+            } else if (this.language === 'en') {
               replyNewData = this.topicData.replyContent.replace(/<img src="\/static[^>]+>/g, `<a href='${replyImg}' style='color:#0181FF'><i class='iconfont'>&#xe694;</i> View image</a>`)
             }
             this.topicData.replyContent = replyNewData
@@ -232,6 +232,32 @@ export default {
         } else {
           return true
         }
+      }
+    }
+    if (this.language === 'en') {
+      // 多语言
+      this.editor.customConfig.lang = {
+        '设置标题': 'Title',
+        '字号': 'Font size',
+        '宋体': 'SimSun',
+        '微软雅黑': 'Microsoft YaHei',
+
+        '字体': 'Font family',
+        '正文': 'Content',
+        '文字颜色': 'Font color',
+        '背景色': 'Background',
+        '链接': 'Link',
+        '链接文字': 'Link',
+        '设置列表': 'Set List',
+        '有序列表': '&nbspOrdered list&nbsp&nbsp&nbsp',
+        '无序列表': 'Disordered list',
+        '对齐方式': 'Align',
+        '靠左': '&nbsp&nbspLeft&nbsp&nbsp&nbsp',
+        '居中': '&nbspCenter',
+        '靠右': '&nbsp&nbspRight',
+        '上传图片': 'Upload image',
+        '上传': 'Upload',
+        '创建': 'Init'
       }
     }
     // 表情配置

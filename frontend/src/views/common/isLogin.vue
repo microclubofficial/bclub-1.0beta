@@ -119,7 +119,7 @@ export default {
   },
   mounted () {
     // this.outloginSty()
-    $('.bibar-headerSearchitem').find('.toLongText').css({'left': '200px', 'bottom': '0'})
+    $('.bibar-headerSearchitem').find('.toLongText').css({'bottom': '0'})
     $('.bibar-headerSearchitem').find('.avatar').css({'display': 'none'})
     $('.bibar-headerSearchitem').find('.editor').css({'width': '570px'})
     $('.bibar-headerSearchitem').find('.cancel').css({'right': '52px', 'bottom': '0px'})
@@ -421,7 +421,7 @@ a.nav_btn_longtext {
 }
 .modal-body>.wangeditor .toLongText{
     bottom: 0;
-    right: 298px;
+    right: 307px;
     color:#999;
 }
 .modal-body>.wangeditor>.editor{width: 525px;}

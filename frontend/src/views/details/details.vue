@@ -27,7 +27,7 @@
           <div class="avatar_subtitle">
             <!--<a href="" target="_blank" class="time">{{articleDetail.diff_time}}前</a>
             <span class="source">·&nbsp;来自币吧</span>-->
-            <a href="javascript:void(0)" @click='toBibar(articleDetail)'> <span class="time">{{articleDetail.diff_time !== 0 ? articleDetail.diff_time + $t('list.ago') : $t('list.justNow')}} - {{$t('list.from')}}{{articleDetail.token !== null ? (language === 'zh' ? articleDetail.zh_token : articleDetail.token) : $t('list.bclub')}}</span> </a>
+            <a href="javascript:void(0)" @click='toBibar(articleDetail)'> <span class="time">{{articleDetail.diff_time !== 0 ? articleDetail.diff_time + $t('list.ago') : $t('list.justNow')}} - {{$t('list.from')}}{{articleDetail.token !== null ? (language === 'zh' ? articleDetail.zh_token : articleDetail.en_token) : $t('list.bclub')}}</span> </a>
           </div>
         </div>
       </div>

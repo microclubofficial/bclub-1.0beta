@@ -110,7 +110,7 @@ export default {
     cancel: '取消',
     confirm: '确定',
     edit: '修改',
-    longText: '长文',
+    longText: '发长文',
     fold: '收起',
     unfold: '展开',
     resend: '重新发送',

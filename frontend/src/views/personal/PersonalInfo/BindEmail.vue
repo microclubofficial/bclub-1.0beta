@@ -63,6 +63,7 @@ export default {
     get(`/api/u/email`).then(data => {
       if (data.resultcode === 1) {
         this.successbind = true
+        this.bindForm.email = data.data
       }
     })
   },

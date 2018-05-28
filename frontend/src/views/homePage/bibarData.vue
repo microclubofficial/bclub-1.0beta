@@ -162,6 +162,9 @@ export default{
   computed: {
     swiper () {
       return this.$refs.mySwiper.swiper
+    },
+    language () {
+      return this.$store.state.language.language
     }
   },
   created () {
@@ -185,12 +188,21 @@ export default{
   methods: {
     // 去币详情页
     toBibarDetail (tmp) {
-      this.$router.push({
-        path: `/msgDetail/${tmp.id}`,
-        query: {
-          b: JSON.stringify({'zh': tmp.name_ch})
-        }
-      })
+      if (this.language === 'zh') {
+        this.$router.push({
+          path: `/msgDetail/${tmp.id}`,
+          query: {
+            b: JSON.stringify({'zh': tmp.name_ch})
+          }
+        })
+      } else {
+        this.$router.push({
+          path: `/msgDetail/${tmp.id}`,
+          query: {
+            b: JSON.stringify({'zh': tmp.name_en})
+          }
+        })
+      }
     }
   }
 }
