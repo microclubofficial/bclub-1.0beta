@@ -125,7 +125,7 @@
                 <ul class="nav  nav-tabs nav-width">
                     <li class="tx-box">
                         <div class="tx">
-                            <img src="../../assets/img/tx.png" />
+                            <!-- <img src="../../assets/img/tx.png" /> -->
                         </div>
                     </li>
                     <li class="name">楚人长侠</li>

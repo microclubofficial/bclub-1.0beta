@@ -32,7 +32,7 @@
     "vue-highcharts": "0.0.10",
     "vue-i18n": "^7.5.0",
     "vue-image-crop-upload": "^2.2.3",
-    "vue-loader": "^13.3.0",
+    "vue-loader": "12.1.0",
     "vue-msgbox": "0.2.14",
     "vue-pull-to": "^0.1.6",
     "vue-quill-editor": "^3.0.5",
