@@ -58,7 +58,7 @@
     top: 0;
     background-color:rgba(255,255,255,0)!important;
     color: #1e8fff;
-    width: 41%;
+    /*width: 41%;*/
     height: 32px;
     line-height: 32px;
     text-align: right;
@@ -119,7 +119,7 @@
                   <input class="form-control" name="username" type="text" :placeholder="$t('placeholder.username')" @change='showRegisterMsg(userForm.username, 0)' v-model="userForm.username">
                 </div>
                 <!--<label class="col-md-3 control-label"></label>-->
-                <p class="prompt col-md-offset-3 col-md-9" style="margin-top:0px!important;margin-left:25%!important;">{{unamePrompt}}</p>
+                <p class="prompt col-md-offset-3 col-md-9" style="margin-left:25%!important;">{{unamePrompt}}</p>
               </div>
               <div class="form-group">
                 <label class="col-md-3 control-label">{{$t('login.password')}}</label>
@@ -127,7 +127,7 @@
                   <input class="form-control" name="password" type="password" :placeholder="$t('placeholder.password')" @change='showRegisterMsg(userForm.password, 1)' v-model="userForm.password">
                 </div>
                 <!--<label class="col-sm-3 control-label"></label>-->
-                <p class="prompt col-md-offset-3 col-md-9" style="margin-top:0px!important;margin-left:25%!important;">{{upwdPrompt}}</p>
+                <p class="prompt col-md-offset-3 col-md-9" style="margin-left:25%!important;">{{upwdPrompt}}</p>
               </div>
               <div class="form-group">
                 <label class="col-md-3 control-label">{{$t('login.vcode')}}</label>
@@ -140,7 +140,7 @@
                   </div>
                 </div>
                 <!--<label class="col-md-3 control-label"></label>-->
-                <p class="prompt col-md-offset-3 col-md-9" style="margin-top:0px!important;margin-left:25%!important;">{{captchaPrompt}}</p>
+                <p class="prompt col-md-offset-3 col-md-9" style="margin-left:25%!important;">{{captchaPrompt}}</p>
               </div>
               <div class="form-group">
                 <div class="col-md-offset-3 col-md-9">
@@ -166,18 +166,18 @@
                   <input class="form-control" name="phone" type="text" :placeholder="$t('placeholder.phone')" v-model="phoneForm.phone" @change='showRegisterMsg(phoneForm.phone, 3)'>
                 </div>
                 <!--<label class="col-md-3 control-label"></label>-->
-                <p class="prompt col-md-offset-3 col-md-6" style="margin-top:0px!important;margin-left:25%!important;">{{phonePrompt}}</p>
+                <p class="prompt col-md-offset-3 col-md-6" style="margin-left:25%!important;">{{phonePrompt}}</p>
               </div>
               <div class="form-group">
                 <label for="inputCaptcha3" class="col-md-3 control-label">{{$t('login.vcode')}}</label>
                 <div class="col-md-9 captcha-box">
                   <input type="text" class="form-control" v-model="phoneForm.phonecaptcha" @change='showRegisterMsg(phoneForm.phonecaptcha, 4)' id="inputCaptcha3" :placeholder="$t('placeholder.vcode')">
-                  <button type="button" class="col-md-3 get-captcha" v-bind:disabled="hasphone" :class="{'text-gray':hasphone}" @click="getPhoneControl">
+                  <button type="button" class="col-md-7 get-captcha" v-bind:disabled="hasphone" :class="{'text-gray':hasphone}" @click="getPhoneControl">
                     <span v-show="hasControl">{{countdown}}</span>
                     <i> | </i>{{getcontroltxt}}</button>
                 </div>
                 <!--<label class="col-md-3 control-label"></label>-->
-                <p class="prompt col-md-offset-3 col-md-6" style="margin-top:0px!important;margin-left:25%!important;">{{captchaPrompt}}</p>
+                <p class="prompt col-md-offset-3 col-md-6" style="margin-left:25%!important;">{{captchaPrompt}}</p>
               </div>
               <div class="form-group">
                 <div class="col-md-offset-3 col-md-9">
@@ -225,7 +225,8 @@ export default {
       countdown: 30,
       showTab: true,
       remember: '',
-      getcontroltxt: this.$t('prompt.acquireVcode')
+      getcontroltxt: this.$t('prompt.acquireVcode'),
+      isGetCaptcha: false
     }
   },
   mounted () {
@@ -239,71 +240,52 @@ export default {
     // 失去焦点验证
     showRegisterMsg (input, id) {
       if (id === 0) {
-        if (input === undefined || input.length === 0) {
-          this.unamePrompt = this.$t('prompt.usernameRequired')
-          return false
-        } else {
+        if (input !== undefined || input.length > 0) {
           this.unamePrompt = ''
         }
       } else if (id === 1) {
-        if (input === undefined || input.length === 0) {
-          this.upwdPrompt = this.$t('prompt.passwordRequired')
-          return false
-        } else {
+        if (input !== undefined || input.length > 0) {
           this.upwdPrompt = ''
         }
       } else if (id === 2) {
-        if (input === undefined || input.length === 0) {
-          this.captchaPrompt = this.$t('prompt.captchaRequired')
-          return false
-        } else {
+        if (input !== undefined || input.length > 0) {
           this.captchaPrompt = ''
         }
       } else if (id === 3) {
-        var phonereg = /^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$/        
-        if (input === undefined || input.length === 0) {
-          this.phonePrompt = this.$t('prompt.phoneRequired')
-          this.hasphone = true
-          return false
-        }else if (!phonereg.test(input) && input !== undefined && input.length > 0) {
-          this.phonePrompt = this.$t('prompt.phoneError')
-          this.hasphone = true
-          return false
-        } else {
+        let phonereg = /^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$/
+        if (phonereg.test(input) && input !== undefined && input.length > 0) {
           this.phonePrompt = ''
           if (this.countdown === 30) {
             this.hasphone = false
           }
         }
       } else if (id === 4) {
-        if (input === undefined || input.length === 0) {
-          if (this.hasphone) {
-            this.phoneControlPrompt = this.$t('prompt.captchaRequired')
-          }
-          return false
-        } else {
-          this.phoneControlPrompt = ''
+        if (this.isGetCaptcha && input !== undefined && input.length > 0) {
+          this.captchaPrompt = ''
         }
       }
     },
     // 用户名登录
     handleLogin () {
-      if (this.userForm.username === undefined) {
-        alert(this.$t('prompt.usernmaeRequired'))
-        return
-      } else if (this.userForm.password === undefined) {
-        alert(this.$t('prompt.passwordRequired'))
-        return
-      } else if (this.userForm.captcha === undefined) {
-        alert(this.$t('prompt.captchaRequired'))
-        return
+      if (this.userForm.username === undefined || this.userForm.username.length === 0) {
+        this.unamePrompt = this.$t('prompt.usernameRequired')
+        this.changeControl()
+        return false
+      } else if (this.userForm.password === undefined || this.userForm.password.length === 0) {
+        this.upwdPrompt = this.$t('prompt.passwordRequired')
+        this.changeControl()
+        return false
+      } else if (this.userForm.captcha === undefined || this.userForm.captcha.length === 0) {
+        this.captchaPrompt = this.$t('prompt.captchaRequired')
+        this.changeControl()
+        return false
       }
       post(this.formUrl, this.userForm).then(data => {
-        // console.log(data.data)
-        // console.log(this.userForm)
-        // alert(data.message)
         this.controlPrompt = data.message
-        if (data.message === '验证码错误') {
+        if (data.resultcode === 0) {
+          this.changeControl()
+        }
+        if (data.message === '验证码错误' || data.message === 'Captcha error') {
           this.controlPrompt = data.message
           this.captchaPrompt = data.message
           this.changeControl()
@@ -311,10 +293,10 @@ export default {
         } else {
           this.controlPrompt = ''
         }
-        if (data.message === '用户名或密码错误') {
+        if (data.message === '用户名或密码错误' || data.message === 'Username or Password Error') {
           alert(data.message)
         }
-        if (data.message === '你已经登陆，不能重复登陆') {
+        if (data.message === '你已登陆，不能重复登陆' || data.message === 'You have loggen in, no need to login again') {
           alert(data.message)
           this.changeControl()
           this.$router.push('/')
@@ -340,21 +322,30 @@ export default {
     },
     // 手机登录
     handlePhoneLogin () {
-      if (this.phoneForm.phone === undefined) {
-        alert(this.$t('prompt.phoneRequired'))
-        return
-      } else if (this.phoneForm.phonecaptcha === undefined) {
-        alert(this.$t('prompt.captchaRequired'))
-        this.changeControl()
-        return
+      // 手机号验证
+      let phonereg = /^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$/
+      if (this.phoneForm.phone === undefined || this.phoneForm.phone.length === 0) {
+        this.phonePrompt = this.$t('prompt.phoneRequired')
+        this.hasphone = true
+        return false
+      } else if (!phonereg.test(this.phoneForm.phone) && this.phoneForm.phone !== undefined && this.phoneForm.phone.length > 0) {
+        this.phonePrompt = this.$t('prompt.phoneError')
+        this.hasphone = true
+        return false
+      } else if (this.phoneForm.phonecaptcha === undefined || this.phoneForm.phonecaptcha.length === 0) {
+        this.captchaPrompt = this.$t('prompt.captchaRequired')
+        return false
+      } else if (!this.isGetCaptcha) {
+        this.captchaPrompt = this.$t('prompt.captchaError')
+        return false
       }
       post(this.phoneUrl, this.phoneForm).then(data => {
         if (data.resultcode === 0) {
-          if (data.message === '你已经登陆，不能重复登陆') {
+          if (data.message === '你已登陆，不能重复登陆' || data.message === 'You have loggen in, no need to login again') {
             alert(data.message)
             this.$router.push('/')
             this.changeControl()
-          } if (data.message === 'failed') {
+          } if (data.message === 'failed' || data.message === '失败') {
             alert(this.$t('prompt.phoneNotRegistered'))
             return
           } else {
@@ -397,6 +388,8 @@ export default {
           return
         }
         if (data.resultcode === 1) {
+          // 获取过
+          this.isGetCaptcha = true
           this.hasphone = true
           let that = this
           this.timer = setInterval(function () {

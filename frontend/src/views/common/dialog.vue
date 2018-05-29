@@ -107,6 +107,6 @@ export default{
 }
 .modal-body>.wangeditor .toLongText{
     bottom: 0;
-    right: 320px;
+    right: 307px;
 }
 </style>

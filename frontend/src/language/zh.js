@@ -70,12 +70,14 @@ export default {
     title: '请输入标题'
   },
   prompt: {
+    prompt: '提 示',
     acquireVcode: '获取验证码',
     reacquire: '重新获取',
-    usernameLength: '用户名在3-16位',
+    usernameLength: '3-16位字符,可由中文、英文、数字或下划线组成',
     usernameRequired: '用户名不能为空',
-    passwordLength: '密码长度在6-18位',
+    passwordLength: '6-18位大小写英文字母、数字',
     passwordRequired: '密码不能为空',
+    oldpasswordDifferent: '新密码不能与原密码一致',
     passwordDifferent: '两次输入的密码不一致',
     orgpwdError: '原密码错误',
     phoneError: '手机号码格式不正确',
@@ -83,6 +85,7 @@ export default {
     phoneRegistered: '手机号已注册',
     phoneNotRegistered: '手机号未注册',
     captchaRequired: '验证码不能为空',
+    captchaError: '验证码错误',
     emailRequired: '邮箱地址不能为空',
     emailError: '邮箱格式不正确',
     spaceForbidden: '不能输入空格',
@@ -90,22 +93,30 @@ export default {
     emailSent: '一封邮件已发送，请至邮箱查收完成验证',
     loading: '加载中...',
     noMore: '没有啦',
-    empty: '发贴内容不能为空'
+    emptyContent: '发贴内容不能为空',
+    emptyLink: '链接不能为空',
+    invalidLink: '无效的链接',
+    successCollect: '收藏成功',
+    cancelCollect: '取消收藏成功',
+    confirmDelete: '确定要删除吗？'
   },
   message: {
     sthToSay: '有什么消息告诉大家...',
-    noInformation: '暂无信息'
+    noInformation: '暂无信息',
+    imageComment: '图片评论',
+    viewImage: '查看图片'
   },
   button: {
     publish: '发布',
     cancel: '取消',
     confirm: '确定',
     edit: '修改',
-    longText: '长文',
+    longText: '发长文',
     fold: '收起',
     unfold: '展开',
     resend: '重新发送',
-    verify: '完成验证'
+    verify: '完成验证',
+    emoji: '表情'
   },
   pages: {
     first: '首页',
@@ -183,5 +194,12 @@ export default {
     year1: '1年',
     price: '价格（CNY）',
     volume: '交易量（24H）'
+  },
+  lang: {
+    hint: '点击，或拖动图片至此处',
+    btnBack: '上一步',
+    btnSave: '保存',
+    preview: '图片预览',
+    loading: '正在上传'
   }
 }

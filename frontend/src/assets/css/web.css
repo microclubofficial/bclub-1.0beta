@@ -116,7 +116,7 @@
 }
 .zoom-out{
   cursor: zoom-out !important;
-  max-width: 100%;
+  max-width: 100% !important;
   width: 100% !important;
   /*margin: 10px auto;*/
 }
@@ -127,6 +127,24 @@ img[data-w-e]{
     width: 22px !important;
     height: 22px;
 }
+/*表情样式*/
+  img[src*="/images/face"] {
+    width: 22px !important;
+    height: 22px !important;
+    vertical-align: -4px;
+    margin: 0 4px !important;
+    display: inline !important;
+}
+/*富文本title样式*/
+.w-e-text-container .w-e-panel-container .w-e-panel-tab-title .w-e-active{
+    color: #333;
+     border-bottom: none !important; 
+    cursor: default;
+    font-weight: 700;
+    height: 30px;
+    line-height: 30px;
+}
+.w-e-text-container .w-e-panel-container .w-e-panel-tab-title .w-e-item:nth-child(2){display: none;}
 .comment-item-main{position: relative;}
 .comment-item-main a {color: #0181ff !important;}
 /*详情正文样式*/
@@ -137,6 +155,13 @@ img[data-w-e]{
     line-height: 1.8;
 }
 .detail-main-content a{color: #0181ff !important;}
+/*详情图片样式*/
+.detail-main-content img,.detail-main-content p img{
+    max-width: 60%;
+    margin: 10px auto;
+    display: block;
+    text-align: center;
+}
 .media-body a{color: #0181ff !important;}
 /*面包屑*/
 .crumb .row .span6 .breadcrumb{
@@ -150,6 +175,11 @@ img[data-w-e]{
     width: 100%;
     text-align: center;
 }
+/*删除富文本*/
+.DleConfirm .modal-dialog{width: 300px;}
+.DleConfirm .modal-body{font-size: 18px; text-align: center;}
+.DleConfirm .modal-footer{text-align: center; border-top: none;}
+.DleConfirm .modal-footer button{margin: 0 10px;}
 .mo-paging {
     display: inline-block;
     padding: 0;
@@ -818,7 +848,8 @@ ul.dropdown-menu{height: auto;}
 /*清除浮动*/
 .clearfloat::after{display:block;clear:both;content:"";visibility:hidden;height:0}
 /*首页框架*/
-.bibar-Main{position: relative; z-index: 5;}
+.bibar-Main{position: relative;}
+ /*z-index: 5;*/
 .bibar-Mainleft{width: 1200px; float: left;}
 .bibar-Mainright{width: 220px; float: right;}
 .bibar-box{background-color: #fff; box-shadow: 0px 0px 4px 3px #ededed;}
@@ -910,10 +941,29 @@ i.icon-BTC{font-size: 14px; font-weight: bold;}
 .bibar-list .set>ul>li:after{
     position: absolute;
     content: '';
-    right: -2px;
+    right: 18px;
     top: 2px;
     height: 12px;
     width: 2px;
+    background-color: #F6F5F5;
+}
+.bibar-indexNewsItem-infro li{position: relative;}
+.bibar-indexNewsItem-infro li:after{
+    position: absolute;
+    content: '';
+    right: -23px;
+    top: 2px;
+    height: 12px;
+    width: 2px;
+    background-color: #F6F5F5;
+}
+.bibar-indexNewsItem-infro li:last-child:after{
+    position: absolute;
+    content: '';
+    right: -23px;
+    top: 2px;
+    height: 12px;
+    width: 0;
     background-color: #F6F5F5;
 }
 .bibar-list .set>ul>li:last-child:after{

@@ -67,22 +67,25 @@ export default {
     email: 'email',
     originalPassword: 'original password',
     newPassword: 'new password',
-    title: 'Please enter title'
+    title: 'Please enter a title'
   },
   prompt: {
+    prompt: 'Prompt',
     acquireVcode: 'Acquire',
     reacquire: 'Reacquire',
-    usernameLength: 'Username is between 3 and 16 bits',
+    usernameLength: 'The 3-16 character can be composed of Chinese, English, digits or underlines',
     usernameRequired: 'Username is required',
-    passwordLength: 'Password is between 6 and 18 bits',
+    passwordLength: '6-18 bits and sizes of English letters or numbers',
     passwordRequired: 'Password is required',
-    passwordDifferent: 'Entered passwords differ from the another',
+    oldpasswordDifferent: 'The new password is not consistent with the original password',
+    passwordDifferent: 'Entered passwords differ from the other',
     orgpwdError: 'The original password is not correct',
     phoneError: 'The format of phone number is not correct',
     phoneRequired: 'Phone number is required',
     phoneRegistered: 'The phone has been registered!',
     phoneNotRegistered: 'The phone has not been registered!',
     captchaRequired: 'Captcha is required',
+    captchaError: 'Captcha is is not correct',
     emailRequired: 'Email is required',
     emailError: 'The format of email is not correct',
     spaceForbidden: 'Spaces are not allowed',
@@ -90,13 +93,17 @@ export default {
     emailSent: 'An email has been sent. Please check and verify it.',
     loading: 'Loading...',
     noMore: 'No more',
-    emptyContent: 'Post content cannot be empty',
+    emptyContent: 'Posted content cannot be empty',
     emptyLink: 'Link cannot be empty',
-    invalidLink: 'Invalid link'
+    invalidLink: 'Invalid link',
+    successCollect: 'Collect successfully',
+    cancelCollect: 'Cancel successfully',
+    confirmDelete: 'Are you sure to delete ?'
   },
   message: {
     sthToSay: 'Something to say...',
-    noInformation: 'No information'
+    noInformation: 'No information',
+    imageComment: 'Image Comment'
   },
   button: {
     publish: 'Publish',
@@ -194,5 +201,12 @@ export default {
     year1: '1Y',
     price: 'Price(CNY)',
     volume: 'Volume(24H)'
+  },
+  lang: {
+    hint: 'Click, or drag the picture to this point',
+    btnBack: 'Previous step',
+    btnSave: 'Save',
+    preview: 'Preview',
+    loading: 'Uploading'
   }
 }

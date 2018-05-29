@@ -27,7 +27,7 @@
           <div class="avatar_subtitle">
             <!--<a href="" target="_blank" class="time">{{articleDetail.diff_time}}前</a>
             <span class="source">·&nbsp;来自币吧</span>-->
-            <a href="javascript:void(0)" @click='toBibar(articleDetail)'> <span class="time">{{articleDetail.diff_time !== 0 ? articleDetail.diff_time + $t('list.ago') : $t('list.justNow')}} - {{$t('list.from')}}{{articleDetail.token !== null ? articleDetail.zh_token : $t('list.bclub')}}</span> </a>
+            <a href="javascript:void(0)" @click='toBibar(articleDetail)'> <span class="time">{{articleDetail.diff_time !== 0 ? articleDetail.diff_time + $t('list.ago') : $t('list.justNow')}} - {{$t('list.from')}}{{articleDetail.token !== null ? (language === 'zh' ? articleDetail.zh_token : articleDetail.en_token) : $t('list.bclub')}}</span> </a>
           </div>
         </div>
       </div>
@@ -137,7 +137,7 @@
                       <!-- <p>{{item}}</p> -->
                       <div class="detailContent" v-html="commentContent(item.content,item.id)"></div>
                       <!--展开-->
-              <a style="font-size:16px; white-space:nowrap;"  v-if='item.content !== undefined && item.content.length - imgCommentLength[item.id] > 200' href="#" class="bibar-indexintromore text-theme" @click="changeMore(item.id)">{{item.id === moreId ? '收起' : '展开'}}<i style="font-size:16px;" class="iconfont" v-if='more === "展开"'>&#xe692;</i><i style="font-size:16px;" class="iconfont" v-if='more === "收起"'>&#xe693;</i></a>
+              <a style="font-size:16px; white-space:nowrap;"  v-if='item.content !== undefined && item.content.length - imgCommentLength[item.id] > 200' href="#" class="bibar-indexintromore text-theme" @click="changeMore(item.id)">{{item.id === moreId ? $t('button.fold') : $t('button.unfold')}}<i style="font-size:16px;" class="iconfont" v-if="more === $t('button.unfold')">&#xe692;</i><i style="font-size:16px;" class="iconfont" v-if="more === $t('button.fold')">&#xe693;</i></a>
                     </div>
                     <div class="set clearfloat" style="margin-left: 57px;">
                       <ul class="bibar-indexNewsItem-infro">
@@ -176,6 +176,31 @@
        </div>
                   </div>
                 </div>
+                <!--确认框-->
+    <div class="modal fade DleConfirm" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+            &times;
+          </button>
+          <h4 class="text-center" id="myModalLabel">
+            {{$t('prompt.prompt')}}
+          </h4>
+        </div>
+        <div class="modal-body">
+          <p style="margin-top:20px;">{{$t('prompt.confirmDelete')}}</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">{{$t('button.cancel')}}
+          </button>
+          <button @click='confirm' type="button" class="btn btn-primary">
+            {{$t('button.confirm')}}
+          </button>
+        </div>
+      </div>
+    </div>
+</div>
                 <div class="loading-bar" v-if='loadingShow'>
                   <!-- <svg class="icon icon-loading" aria-hidden="true">
                       <use xlink:href="#icon-loading"  style="fill:blue" ></use>
@@ -237,11 +262,17 @@ export default {
       showLoader: false,
       showLoaderComment: false,
       crumb: [],
-      more: '展开',
+      more: this.$t('button.unfold'),
       moreId: '',
       sortNow: 0,
       imgCommentLength: {},
-      sortId: ''
+      sortId: '',
+      // 删除提示
+      isDel: false,
+      delId: '',
+      delIndex: '',
+      delItem: '',
+      isdelTopic: true
     }
   },
   computed: {
@@ -250,6 +281,9 @@ export default {
     },
     chartId () {
       return this.$store.state.chartId.chartId
+    },
+    language () {
+      return this.$store.state.language.language
     }
   },
   mounted () {
@@ -350,10 +384,9 @@ export default {
             articleDetail.is_bad = data.data.is_bad
             articleDetail.is_bad_bool = data.data.is_bad_bool
             articleDetail.is_good_bool = data.data.is_good_bool
-          } else if (data.message === '未登录') {
-            this.$router.push('/login')
-          } else {
+          } else if (data.resultcode === 0) {
             alert(data.message)
+            this.$router.push('/login')
           }
         })
       } else if (isNum === 1) {
@@ -364,10 +397,9 @@ export default {
             articleDetail.is_bad = data.data.is_bad
             articleDetail.is_bad_bool = data.data.is_bad_bool
             articleDetail.is_good_bool = data.data.is_good_bool
-          } else if (data.message === '未登录') {
-            this.$router.push('/login')
-          } else {
+          } else if (data.resultcode === 0) {
             alert(data.message)
+            this.$router.push('/login')
           }
         })
       }
@@ -386,10 +418,9 @@ export default {
             item.is_bad = data.data.is_bad
             item.is_bad_bool = data.data.is_bad_bool
             item.is_good_bool = data.data.is_good_bool
-          } else if (data.message === '未登录') {
-            this.$router.push('/login')
-          } else {
+          } else if (data.resultcode === 0) {
             alert(data.message)
+            this.$router.push('/login')
           }
         })
         // 吐槽
@@ -401,10 +432,9 @@ export default {
             item.is_bad = data.data.is_bad
             item.is_bad_bool = data.data.is_bad_bool
             item.is_good_bool = data.data.is_good_bool
-          } else if (data.message === '未登录') {
-            this.$router.push('/login')
-          } else {
+          } else if (data.resultcode === 0) {
             alert(data.message)
+            this.$router.push('/login')
           }
         })
       }
@@ -474,14 +504,32 @@ export default {
     },
     // 收藏
     collectionTopic (articleDetail) {
+      let instance
       post(`/api/collect/${articleDetail.id}`).then(data => {
         if (data.data.collect_bool) {
           articleDetail.collect_bool = data.data.collect_bool
-          alert(data.message)
+          instance = new Toast({
+            message: data.message,
+            duration: 1000
+          })
         } else {
           articleDetail.collect_bool = data.data.collect_bool
-          alert(data.message)
+          if (data.data.collect_bool) {
+            instance = new Toast({
+              message: this.$t('prompt.successCollect'),
+              iconClass: 'glyphicon glyphicon-ok',
+              duration: 1000
+            })
+          } else {  
+            instance = new Toast({
+              message: this.$t('prompt.cancelCollect'),
+              duration: 1000
+            })
+          }
         }
+        setTimeout(() => {
+          instance.close()
+        }, 1000)
       })
     },
     // 来自去币讯
@@ -509,9 +557,9 @@ export default {
         return
       }
       let reply = val.replace(/<p[^>]*>|<\/p>|<h-char[^>]*>|<\/h-char>|<h-inner[^>]*>|<\/h-inner>/g, '')
-      if (reply.indexOf('href') > 0) {
+      if (reply.substring(0, 40).indexOf('href') > 0) {
         let imgLength = 0
-        if (reply.indexOf('img') > 0) {
+        if (reply.substring(0, 40).indexOf('img') > 0) {
           let imgArr = []
           imgArr = reply.match(/<img[^>]*>/gi)
           if (imgArr === null) {
@@ -531,7 +579,7 @@ export default {
         // }
         hrefLength = hrefArr.length
         return reply.substring(0, 40 + hrefLength + imgLength) + '...'
-      } else if (reply.indexOf('img') > 0) {
+      } else if (reply.substring(0, 40).indexOf('img') > 0) {
         let imgLength = 0
         let imgArr = reply.match(/<img[^>]*>/gi)
         if (imgArr === null) {
@@ -578,23 +626,31 @@ export default {
     changeMore (id) {
       if (id !== this.moreId) {
         this.moreId = id
-        this.more = '收起'
+        this.more = this.$t('button.fold')
       } else {
-        this.more = '展开'
+        this.more = this.$t('button.unfold')
         this.moreId = ''
       }
     },
-    // 删除评论
-    delComment (item, now, tmp) {
-      post(`/api/reply/delete/${item.id}`).then(data => {
+    confirm () {
+      post(`/api/reply/delete/${this.delItem}`).then(data => {
         if (data.resultcode === 1) {
-          this.nowData.splice(now, 1)
+          this.nowData.splice(this.delIndex, 1)
           this.repliesCcount = this.repliesCcount - 1
         } else {
           alert(data.message)
           this.$router.push('/login')
         }
+        $('.DleConfirm').modal('hide')
       })
+    },
+    // 删除评论
+    delComment (item, now, tmp) {
+      $('.DleConfirm').modal('show')
+      this.isdelTopic = false
+      this.delId = tmp.id
+      this.delIndex = now
+      this.delItem = item.id
     }
   }
 }

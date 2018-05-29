@@ -7,7 +7,7 @@
                     <input type="email" style="width:25%;margin-top:10px" class="form-control col-sm-3" v-model="bindForm.email" id="exampleInputEmail1" :placeholder="$t('placeholder.email')" @change='showBindEmailMsg(bindForm.email, 0)'>
                     <span class="prompt col-sm-9" style="margin-left: 0 !important;height:34px;margin-top:20px; display:block;">{{emailPrompt}}</span>
                 </div>
-                <button type="button" style="margin-top:10px;" v-bind:disabled="!bindForm.email" @click="bindEmailFun" class="btn findEmail btn-primary">{{$t('button.confirm')}}</button>
+                <button type="button" style="margin-top:10px;" @click="bindEmailFun" class="btn findEmail btn-primary">{{$t('button.confirm')}}</button>
             </form>
             <!--完成验证后样式-->
             <div class="successBind" style="margin:50px 0;" v-if='successbind'>
@@ -40,7 +40,7 @@
 </template>
 <script>
 import {post, get} from '../../../utils/http'
-import { Toast } from 'mint-ui'
+// import { Toast } from 'mint-ui'
 import {getToken} from '../../../utils/auth.js'
 export default {
   data () {
@@ -60,24 +60,20 @@ export default {
     if (this.user_token === '') {
       this.$router.push('/')
     }
+    get(`/api/u/email`).then(data => {
+      console.log(data)
+      if (data.resultcode === 1 && data.data) {
+        this.successbind = true
+        this.bindForm.email = data.data
+      }
+    })
   },
   methods: {
     // 验证
     showBindEmailMsg (input, id) {
       let emailreg = /^[A-Za-z0-9.\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
       if (id === 0) {
-        if (input === undefined || input.length === 0) {
-          this.emailPrompt = this.$t('prompt.emailRequired')
-          this.canFind = false
-          return false
-        } else if (!emailreg.test(input) && input !== undefined && input.length > 0) {
-          this.emailPrompt = this.$t('prompt.emailError')
-          // get('/api/setting/email', {'email': input}).then(data=>{
-          //   console.log(data)
-          // })
-          this.canFind = false
-          return false
-        } else {
+        if (emailreg.test(input) && input !== undefined && input.length > 0) {
           this.emailPrompt = ''
           this.canFind = true
         }
@@ -85,17 +81,23 @@ export default {
     },
     // 绑定邮箱
     bindEmailFun () {
-      if (this.canFind) {
-        post(`/api/setting/email`, this.bindForm).then(data => {
-          if (data.resultcode === 0) {
-            alert(data.message)
-            $('.emaiModal').modal('hide')
-            return false
-          } else if (data.resultcode === 1) {
-            $('.emaiModal').modal('show')
-          }
-        })
+      let emailreg = /^[A-Za-z0-9.\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
+      if (this.bindForm.email === undefined || this.bindForm.email.length === 0) {
+        this.emailPrompt = this.$t('prompt.emailRequired')
+        this.canFind = false
+      } else if (!emailreg.test(this.bindForm.email) && this.bindForm.email !== undefined && this.bindForm.email.length > 0) {
+        this.emailPrompt = this.$t('prompt.emailError')
+        return false
       }
+      post(`/api/setting/email`, this.bindForm).then(data => {
+        if (data.resultcode === 0) {
+          alert(data.message)
+          $('.emaiModal').modal('hide')
+          return false
+        } else if (data.resultcode === 1) {
+          $('.emaiModal').modal('show')
+        }
+      })
     },
     // 重新发送
     resendFun () {

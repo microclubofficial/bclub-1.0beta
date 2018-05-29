@@ -45,6 +45,9 @@ export default{
   computed: {
     longId () {
       return this.$store.state.longId
+    },
+    language () {
+      return this.$store.state.language.language
     }
   },
   mounted () {
@@ -82,6 +85,31 @@ export default{
         } else {
           return true
         }
+      }
+    }
+    if (this.language === 'en') {
+      // 多语言
+      this.editor.customConfig.lang = {
+        '设置标题': 'Title',
+        '字号': 'Font size',
+        '宋体': 'SimSun',
+        '微软雅黑': 'Microsoft YaHei',
+        '字体': 'Font family',
+        '正文': 'Content',
+        '文字颜色': 'Font color',
+        '背景色': 'Background',
+        '链接': 'Link',
+        '链接文字': 'Link',
+        '设置列表': 'Set List',
+        '有序列表': '&nbspOrdered list&nbsp&nbsp&nbsp',
+        '无序列表': 'Disordered list',
+        '对齐方式': 'Align',
+        '靠左': '&nbsp&nbspLeft&nbsp&nbsp&nbsp',
+        '居中': '&nbspCenter',
+        '靠右': '&nbsp&nbspRight',
+        '上传图片': 'Upload image',
+        '上传': 'Upload',
+        '创建': 'Init'
       }
     }
     // 表情配置
@@ -322,8 +350,8 @@ export default{
       // 首图
       if (this.topicData.content.length > 0 || this.topicData.picture.length > 0) {
         post('/api/topic', this.topicData).then(data => {
-          if (data.message === '未登录') {
-            alert('先去登录')
+          if (data.message === '请先登录' || data.message === 'Please login first') {
+            alert(data.message)
             this.$router.push('/login')
           } else {
             if (data.data.content !== '') {

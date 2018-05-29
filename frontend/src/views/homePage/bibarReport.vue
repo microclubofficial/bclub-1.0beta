@@ -46,6 +46,9 @@ export default {
   computed: {
     userInfo () {
       return this.$store.state.userInfo.userInfo
+    },
+    language () {
+      return this.$store.state.language.language
     }
   },
   methods: {
@@ -113,17 +116,26 @@ export default {
           // 处理正常内容
           if (this.topicData.replyContent.indexOf('img') > 0) {
             let replyImg = this.topicData.replyContent.match(/<img(?![^<>]*?data-w-e[^<>]*?>).*?>/g)[0].match(/(?<=(src="))[^"]*?(?=")/ig)[0]
-            let replyNewData = this.topicData.replyContent.replace(/<img src="\/static[^>]+>/g, `<a style='color:#0181FF' href='${replyImg}'><i class='iconfont'>&#xe694;</i>查看图片</a>`)
+            let replyNewData = this.topicData.replyContent.replace(/<img src="\/static[^>]+>/g, `<a target="_blank" href='${replyImg}'  style='color:#0181FF'><i class='iconfont'>&#xe694;</i>查看图片</a>`)
             this.topicData.replyContent = replyNewData
           }
           // this.topicData.replyContent = replyNewData
         } else {
           if (this.topicData.replyContent.indexOf('data-w-e') === -1) {
             let justReplyImg = this.topicData.replyContent.match(/(?<=(src="))[^"]*?(?=")/ig)[0]
-            this.topicData.replyContent = '图片评论' + `<a style='color:#0181FF' href='${justReplyImg}'><i class='iconfont'>&#xe694;</i>查看图片</a>`
+            if (this.language === 'zh') {
+              this.topicData.replyContent = '图片评论' + `<a target="_blank" href='${justReplyImg}' style='color:#0181FF'><i class='iconfont'>&#xe694;</i>查看图片</a>`
+            } else if (this.language === 'en') {
+              this.topicData.replyContent = 'Image comment ' + `<a target="_blank" href='${justReplyImg}' style='color:#0181FF'><i class='iconfont'>&#xe694;</i> View image</a>`
+            }
           } else {
             let replyImg = this.topicData.replyContent.match(/<img(?![^<>]*?data-w-e[^<>]*?>).*?>/g)[0].match(/(?<=(src="))[^"]*?(?=")/ig)[0]
-            let replyNewData = this.topicData.replyContent.replace(/<img src="\/static[^>]+>/g, `<a style='color:#0181FF' href='${replyImg}'><i class='iconfont'>&#xe694;</i>查看图片</a>`)
+            let replyNewData
+            if (this.language === 'zh') { 
+              replyNewData = this.topicData.replyContent.replace(/<img src="\/static[^>]+>/g, `<a target="_blank" href='${replyImg}' style='color:#0181FF'><i class='iconfont'>&#xe694;</i>查看图片</a>`)
+            } else if (this.language === 'en') {
+              replyNewData = this.topicData.replyContent.replace(/<img src="\/static[^>]+>/g, `<a target="_blank" href='${replyImg}' style='color:#0181FF'><i class='iconfont'>&#xe694;</i> View image</a>`)
+            }
             this.topicData.replyContent = replyNewData
           }
         }
@@ -159,8 +171,8 @@ export default {
         post(`/api/${this.nowShowApi[this.toApi]}${this.toApi === 1 ? '/question' : this.toApi === 2 ? '/answer' : this.toApi === 3 ? '/comment' : ''}/replies/${this.toApi === 0 ? this.mainCommnet : this.toApi === 2 ? this.talkId : this.toApi === 3 ? this.contentId : this.toApi === 5 ? this.detailId : this.mainReplay}`, this.topicData).then(data => {
           //   评论发送完毕
           this.editorContent = ''
-          if (data.message === '未登录') {
-            alert('先去登录')
+          if (data.message === '请先登录' || data.message === 'Please login first') {
+            alert(data.message)
             this.$router.push('/login')
           } else {
             if (data.data.content !== '') {
@@ -220,6 +232,32 @@ export default {
         } else {
           return true
         }
+      }
+    }
+    if (this.language === 'en') {
+      // 多语言
+      this.editor.customConfig.lang = {
+        '设置标题': 'Title',
+        '字号': 'Font size',
+        '宋体': 'SimSun',
+        '微软雅黑': 'Microsoft YaHei',
+
+        '字体': 'Font family',
+        '正文': 'Content',
+        '文字颜色': 'Font color',
+        '背景色': 'Background',
+        '链接': 'Link',
+        '链接文字': 'Link',
+        '设置列表': 'Set List',
+        '有序列表': '&nbspOrdered list&nbsp&nbsp&nbsp',
+        '无序列表': 'Disordered list',
+        '对齐方式': 'Align',
+        '靠左': '&nbsp&nbspLeft&nbsp&nbsp&nbsp',
+        '居中': '&nbspCenter',
+        '靠右': '&nbsp&nbspRight',
+        '上传图片': 'Upload image',
+        '上传': 'Upload',
+        '创建': 'Init'
       }
     }
     // 表情配置
