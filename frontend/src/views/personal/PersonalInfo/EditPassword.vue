@@ -6,9 +6,12 @@
   margin: 0 50px;
   span {
     &:nth-child(1) {
-      width: 32px;
-      height: 24px;
-      display: inline-block;
+      width: 28px;
+      height: 28px;
+      display: block;
+      float: left;
+      margin-top: 4px;
+      margin-right: 4px;
 
       > img {
         width: 100%;
@@ -103,11 +106,11 @@
     <div class="center-wrap">
       <div class="title">
         <span>
-          <img src="../../../assets/img/personal.png" />
+          <img src="../../../assets/img/i03.png" />
         </span>
-        <span>修改密码</span>
+        <span>{{$t('editProfile.password')}}</span>
         <span>
-          <router-link class="hover" :to="{path:'/memberCenter'}">返回我的主页 <i>></i></router-link>
+          <router-link class="hover" :to="{path:'/memberCenter'}">{{$t('personalCenter.returnMyHomepage')}} <i>></i></router-link>
         </span>
       </div>
       <form class="form-horizontal password-form">
@@ -138,7 +141,7 @@
           </button>
 
           <button class="forphone btnm  btn-cacel">
-            取消
+            {{$t('button.cancel')}}
           </button>
 
         </div>

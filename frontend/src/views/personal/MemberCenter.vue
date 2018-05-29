@@ -69,6 +69,17 @@
       background: #fff;
       color: #666;
       border: none;
+      &::after {
+        content: '';
+        width: 28px;
+        height: 28px;
+        display: block;
+        position: absolute;
+        background: url(../../assets/img/i00.png);
+        background-size: cover;
+        top: 8px;
+        right: 18px;
+      }
     }
   }
 }
@@ -80,12 +91,12 @@
   min-height: 300px;
 }
 .bg-box {
-  width: 1030px;
+  width: 100%;
   height: 140px;
   position: relative;
   background: #ccc;
   .bgimg-box {
-    width: 1030px;
+    width: 100%;
     height: 140px;
     background: #ccc;
     > img {
@@ -157,7 +168,7 @@
                 </div>
                 <div class="right-btn">
                     <button class="edit-btn" @click="personalInfo">{{$t('personalCenter.editProfile')}}</button>
-                </div>
+               </div>
             </div>
             <section>
                 <div class="main-list">

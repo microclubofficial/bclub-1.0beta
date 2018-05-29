@@ -133,7 +133,9 @@ export default {
     topic: '主题',
     comment: '评论',
     collection: '收藏',
-    editProfile: '编辑资料'
+    editProfile: '编辑资料',
+    editAvatar: '编辑头像',
+    returnMyHomepage: '返回我的主页'
   },
   editProfile: {
     index: '首页',

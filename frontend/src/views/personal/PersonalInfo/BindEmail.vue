@@ -6,9 +6,12 @@
   margin: 0 50px;
   span {
     &:nth-child(1) {
-      width: 32px;
-      height: 24px;
-      display: inline-block;
+      width: 28px;
+      height: 28px;
+      display: block;
+      float: left;
+      margin-top: 4px;
+      margin-right: 4px;
 
       > img {
         width: 100%;
@@ -116,11 +119,11 @@
     <div class="center-wrap">
       <div class="title">
         <span>
-          <img src="../../../assets/img/personal.png" />
+          <img src="../../../assets/img/i04.png" />
         </span>
-        <span>绑定邮箱</span>
+        <span>{{$t('editProfile.email')}}</span>
         <span>
-          <router-link class="hover" :to="{path:'/memberCenter'}">返回我的主页
+          <router-link class="hover" :to="{path:'/memberCenter'}">{{$t('personalCenter.returnMyHomepage')}}
             <i>></i>
           </router-link>
         </span>
@@ -136,7 +139,7 @@
         </div>
         <div class="email-box email-btn">
           <button type="button" v-bind:disabled="!bindForm.email" @click="bindEmailFun" class="findEmail btnm btn-confirm">{{$t('button.confirm')}}</button>
-          <button class="findEmail btnm btn-cacel ">取消</button>
+          <button class="findEmail btnm btn-cacel ">{{$t('button.cancel')}}</button>
         </div>
       </form>
       <!--完成验证后样式-->

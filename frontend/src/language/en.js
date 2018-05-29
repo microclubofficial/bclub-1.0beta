@@ -136,7 +136,9 @@ export default {
     topic: 'Topic',
     comment: 'Comment',
     collection: 'Collection',
-    editProfile: 'Edit profile'
+    editProfile: 'Edit profile',
+    editAvatar: 'Edit avatar',
+    returnMyHomepage: 'Return my homepage'
   },
   editProfile: {
     index: 'Home',

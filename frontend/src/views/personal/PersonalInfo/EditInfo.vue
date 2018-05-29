@@ -4,11 +4,11 @@
     <div class="center-wrap">
       <div class="title">
         <span>
-          <img src="../../../assets/img/personal.png" />
+          <img src="../../../assets/img/i01.png" />
         </span>
-        <span>个人资料</span>
+        <span>{{$t('editProfile.profile')  }}</span>
         <span>
-          <router-link class="hover" :to="{path:'/memberCenter'}">返回我的主页 <i>></i></router-link>
+          <router-link class="hover" :to="{path:'/memberCenter'}">{{$t('personalCenter.returnMyHomepage')}} <i>></i></router-link>
         </span>
       </div>
       <form class="form-horizontal">
@@ -18,7 +18,7 @@
             <p class="form-control-static personal-font">{{personalUserInfo.username}}</p>
           </div>
           <div class="col-md-2 col-sm-3 right">
-            <div class="btnm  btn-edit" @click="setFormBtn(0)">{{isShow ? '收起' : '修改'}}</div>
+            <div class="btnm  btn-edit" @click="setFormBtn(0)">{{isShow ? $t('button.fold') : $t('button.unfold')}}</div>
           </div>
         </div>
         <!-- 修改用户名 -->
@@ -35,7 +35,7 @@
             <div class="col-md-offset-4 col-sm-offset-4 margin-top">
               <button type="button" class="edit-user-btn" v-bind:disabled="!setForm.username" @click="setusername" data-target="#myModal" data-toggle="">{{$t('button.confirm')}}
               </button>
-              <button class="cancel-user-btn">取消</button>
+              <button class="cancel-user-btn">{{$t('button.cancel')}}</button>
             </div>
             
           </div>
@@ -47,7 +47,7 @@
             <p class="form-control-static personal-font">{{personalUserInfo.phone}}</p>
           </div>
           <div class="col-md-2 col-sm-2">
-            <div class="btnm  btn-edit" @click="setFormBtn(1)">{{seShow ? '收起' : '修改'}}</div>
+            <div class="btnm  btn-edit" @click="setFormBtn(1)">{{seShow ? $t('button.fold'): $t('button.unfold')}}</div>
           </div>
         </div>
         
@@ -68,13 +68,16 @@
           <button type="button" class="btn btn-default get-captcha" style="height:34px;line-height:34px;" @click="getPhoneControl" v-bind:disabled="hasphone" :class="{'btn-success':!hasphone}">
             <span v-show="hasControl">{{countdown}}</span>{{getcontroltxt}}</button>
         </div>
-        <p class="prompt col-md-offset-3 col-sm-offset-3  col-md-9 col-sm-9" style="margin-top:0px !important;">{{phoneControlPrompt}}</p>
-         <div class="col-md-offset-4 col-sm-offset-4 margin-top">
+        <div class="form-group">
+          <p class="prompt col-md-offset-3 col-sm-offset-3  col-md-9 col-sm-9" style="margin-top:0px !important;">{{phoneControlPrompt}}</p>
+          <div class="col-md-offset-4 col-sm-offset-4 margin-top">
             <button type="button" class=" edit-user-btn" v-bind:disabled="!setForm.phone" @click="setusername"  data-target="#myModal" data-toggle="">{{$t('button.confirm')}}
             </button>
-            <button class="cancel-user-btn">取消</button>
+            <button class="cancel-user-btn">{{$t('button.cancel')}}</button>
 
-         </div>
+          </div>
+        </div>
+        
         
       </form>
 
@@ -436,9 +439,12 @@ export default {
   margin: 0 50px;
   span {
     &:nth-child(1) {
-      width: 32px;
-      height: 24px;
-      display: inline-block;
+      width: 28px;
+      height: 28px;
+      display: block;
+      float: left;
+      margin-top: 4px;
+      margin-right: 4px;
 
       > img {
         width: 100%;
@@ -476,7 +482,11 @@ export default {
 }
 
 .btn-edit {
-  padding: 4px 12px;
+  width: 60px;
+  height: 32px;
+  line-height: 32px;
+  padding: 0;
+  text-align: center;
   color: #fff;
   background: #1e8fff;
   border-radius: 4px;
