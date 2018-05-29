@@ -255,6 +255,9 @@ export default {
       if (this.phoneObj.captcha === undefined || this.phoneObj.captcha.length === 0) {
         this.phoneControlPrompt = this.$t('prompt.captchaRequired')
         return false
+      } else if (!this.countdown < 30) {
+        this.phoneControlPrompt = this.$t('prompt.captchaError')
+        return false
       }
       post('/api/phoneForget', this.phoneObj).then(data => {
         if (data.message === '验证码错误' || data.message === 'Captcha error') {

@@ -51,7 +51,7 @@ export default {
     goLogin: '去登录'
   },
   forgetPassword: {
-    retrieve: '找回密码',
+    retrieve: '通过邮箱找回密码',
     byPhone: '通过手机找回',
     byEmail: '通过邮箱找回',
     email: '邮 箱：',

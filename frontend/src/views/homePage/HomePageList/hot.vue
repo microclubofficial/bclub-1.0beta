@@ -121,7 +121,7 @@
                       <!-- <p>{{item}}</p> -->
                       <!--评论文-->
                       <p class="commentContent" v-html="commentContent(item.content,item.id)"></p>
-                      <a style="font-size:16px; white-space:nowrap;" v-if='item.content !== undefined && item.content.length - imgCommentLength[item.id]  > 200' href="#" class="bibar-indexintromore text-theme" @click="changeMore(item.id)">{{item.id === moreId ? $t('button.fold') : $t('button.unfold')}}<i style="font-size:16px;" class="iconfont" v-if="more === $t('button.unfold')">&#xe692;</i><i style="font-size:16px;" class="iconfont" v-if="more === $t('button.fold')">&#xe693;</i></a>
+                      <a style="font-size:16px; white-space:nowrap;" v-if='item.content !== undefined && item.content.length - imgCommentLength[item.id]  > 200' href="#" class="bibar-indexintromore text-theme" @click="changeMore(item.id)">{{item.id === moreId ? $t('button.fold') : $t('button.unfold')}}<i style="font-size:16px;" class="iconfont" v-if="item.id !== moreId">&#xe692;</i><i style="font-size:16px;" class="iconfont" v-if="item.id === moreId">&#xe693;</i></a>
                     </div>
                     <div class="set" style="margin-left:42px">
                       <ul class="bibar-indexNewsItem-infro">
@@ -347,7 +347,6 @@ export default{
   watch: {
     getNavaVal (val) {
       if (val.length !== 0) {
-        console.log(val)
         this.articles.unshift(val[0])
       }
       this.i = ''
@@ -606,7 +605,6 @@ export default{
           this.$router.push('/login')
         } else {
           tmp.collect_bool = data.data.collect_bool
-          console.log(tmp)
           if (data.data.collect_bool) {
             instance = new Toast({
               message: this.$t('prompt.successCollect'),
@@ -630,7 +628,7 @@ export default{
       if (val === undefined) {
         return
       }
-      let now = val.replace(/<p[^>]*>|<\/p>|<span[^>]*>|<\/span>|<br>|<h[1-6][^>]*>|<\/h[1-6]>|<h-char[^>]*>|<img[^>]*>|<\/h-char>|<h-inner>|<\/h-inner>/g, '')
+      let now = val.replace(/<br>|<span[^>]*>|<\/span>|<br>|<h[1-6][^>]*>|<\/h[1-6]>|<h-char[^>]*>|<img[^>]*>|<\/h-char>|<h-inner>|<\/h-inner>/g, '')
       now = now.replace(/&nbsp;*/g, '')
       // now = $(now).text()
       if (now.length > 300) {
@@ -688,7 +686,7 @@ export default{
       if (val === undefined) {
         return
       }
-      val = val.replace(/<p[^>]*>|<\/p>|<h-char[^>]*>|<\/h-char>|<h-inner[^>]*>|<\/h-inner>|<br>/g, '')
+      val = val.replace(/<h-char[^>]*>|<\/h-char>|<h-inner[^>]*>|<\/h-inner>/g, '')
       // let imgArr = val.match(/<img[^>]*>/gi)
       if (!this.imgCommentLength[id]) {
         this.imgCommentLength[id] = 0

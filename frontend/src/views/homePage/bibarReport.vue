@@ -46,7 +46,7 @@ export default {
   watch: {
     editorContent (val) {
       // let editorHeight = this.editor.$textElem[0].offsetHeight
-      // console.log($('.w-e-text-container').find('.w-e-panel-container').height())
+      // $('.w-e-text-container').css('height', '500px !important')
     }
   },
   computed: {
@@ -89,7 +89,7 @@ export default {
         setTimeout(() => {
           instance.close()
         }, 1000)
-        $('.w-e-text').html('')
+        this.editor.$textElem.html('')
         return false
       }
       if (this.toApi !== 0 && this.toApi !== 5 && this.toApi !== 4) {
@@ -205,14 +205,14 @@ export default {
               this.replies = data.data.replies
               this.$emit('backReplies', this.replies)
               this.$emit('backList', backData)
-              $('.w-e-text-container').find('.w-e-text').html('')
+              this.editor.$textElem.html('')
             }
           }
         })
       }
     },
     isHideFun () {
-      $('.w-e-text-container').find('.w-e-text').html('')
+      this.editor.$textElem.html('')
       this.isHide = !this.isHide
     }
   },
