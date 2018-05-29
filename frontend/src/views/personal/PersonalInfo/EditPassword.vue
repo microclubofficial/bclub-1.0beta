@@ -62,10 +62,7 @@
   color: #666;
   border-radius: 5px;
 }
-.center-wrap {
-  width: 840px;
-  margin: 0 auto;
-}
+
 .mark {
   background: #f7f8fd;
   font-size: 14px;
@@ -78,9 +75,23 @@
     color: #1e8fff;
   }
 }
+
+.center-wrap {
+  width: 100%;
+  margin: 0 auto;
+}
+.wrap {
+  width: 100%;
+  position: relative;
+
+}
+
+.wrap-width {
+  width: 90%;
+}
 </style>
 <template>
-  <div>
+  <div class="wrap">
     <div class="center-wrap">
       <div class="title">
         <span>

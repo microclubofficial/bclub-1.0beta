@@ -1,8 +1,5 @@
 <style lang="scss" scoped>
-.wrap-width {
-    width: 1190px;
-    margin: 0 auto;
-}
+
 
 .member-center {
     margin-top: 40px;
@@ -24,15 +21,15 @@
 
 //加入样式
 .nav-width {
-    width: 236px;
+    width: 27%;
     height: 580px;
     background: #fff;
     float: left;
     border-bottom: none;
-    margin-right: 14px;
+    margin-right: 3%;
 
     .tx-box {
-        width: 236px;
+        width: 100%;
         height: 80px;
         margin-top: 30px;
     }
@@ -63,7 +60,7 @@
         }
     }
     li {
-        width: 236px;
+        width: 100%;
         height: 48px;
         line-height: 48px;
         display: block;
@@ -78,7 +75,7 @@
             }
         }
         &:hover {
-            width: 236px;
+            width: 100%;
             border: none;
             
         }
@@ -103,7 +100,7 @@
 }
 
 .right-width {
-    width: 840px;
+    width: 70%;
     float: left;
 }
 </style>
@@ -112,7 +109,7 @@
     <div>
         <MainHeader></MainHeader>
         <div class="member-center">
-            <div class="wrap-width">
+            <div class="container">
                 <ol class="breadcrumb">
                     <li>
                         <router-link to='/'>
@@ -125,7 +122,7 @@
                 <ul class="nav  nav-tabs nav-width">
                     <li class="tx-box">
                         <div class="tx">
-                            <!-- <img src="../../assets/img/tx.png" /> -->
+                            <!--<img src="../../assets/img/tx.png" />-->
                         </div>
                     </li>
                     <li class="name">楚人长侠</li>

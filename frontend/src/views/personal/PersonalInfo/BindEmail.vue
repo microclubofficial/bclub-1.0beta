@@ -1,7 +1,6 @@
 <style lang="scss" scoped>
-.wrap-width {
-  width: 800px;
-}
+
+
 .title {
   border-bottom: solid 1px #dfdfdf;
   height: 80px;
@@ -69,17 +68,17 @@
 
 .email-box {
   clear: both;
-  width: 350px;
+  width: 50%;
   margin: 0 auto;
   padding: 20px 0;
   label {
-    width: 130px;
+    width: 40%;
     line-height: 52px;
     display: block;
     float: left;
   }
   input {
-    width: 220px;
+    width: 50%;
     float: left;
   }
   button {
@@ -94,7 +93,6 @@
 }
 
 .btn-confirm {
-  width: 60px;
   padding: 4px 8px;
   background: #1e8fff;
   color: #fff;
@@ -102,19 +100,28 @@
 }
 
 .btn-cacel {
-  width: 60px;
   padding: 4px 8px;
   background: #f0f0f0;
   color: #666;
   border-radius: 5px;
 }
+
 .center-wrap {
-  width: 840px;
+  width: 100%;
   margin: 0 auto;
+}
+.wrap {
+  width: 100%;
+  position: relative;
+
+}
+
+.wrap-width {
+  width: 90%;
 }
 </style>
 <template>
-  <div>
+  <div class="wrap">
     <div class="center-wrap">
       <div class="title">
         <span>
@@ -122,7 +129,9 @@
         </span>
         <span>绑定邮箱</span>
         <span>
-          <router-link class="hover" :to="{path:'/memberCenter'}">返回我的主页  <i>></i></router-link>
+          <router-link class="hover" :to="{path:'/memberCenter'}">返回我的主页
+            <i>></i>
+          </router-link>
         </span>
       </div>
     </div>

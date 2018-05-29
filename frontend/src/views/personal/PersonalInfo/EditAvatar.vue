@@ -60,13 +60,23 @@
   
 }
 .center-wrap {
-  width: 840px;
+  width: 100%;
   margin: 0 auto;
 }
+.wrap {
+  width: 100%;
+  position: relative;
+
+}
+
+.wrap-width {
+  width: 90%;
+}
+
 </style>
 
 <template>
-    <div>
+    <div class="wrap">
         <div class="center-wrap">
           <div class="title">
             <span>

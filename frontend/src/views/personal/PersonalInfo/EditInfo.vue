@@ -1,36 +1,36 @@
 
 <template>
-  <div>
-    <div class="center-wrap ">
+  <div class="wrap">
+    <div class="center-wrap">
       <div class="title">
         <span>
           <img src="../../../assets/img/personal.png" />
         </span>
-        <span>个人资料 </span>
+        <span>个人资料</span>
         <span>
           <router-link class="hover" :to="{path:'/memberCenter'}">返回我的主页 <i>></i></router-link>
         </span>
       </div>
       <form class="form-horizontal">
         <div class="form-group info-border">
-          <label class="col-md-2 control-label personal-font">{{$t('register.username')}}</label>
-          <div class="col-md-8">
+          <label class="col-md-3 col-sm-3 control-label personal-font">{{$t('register.username')}}</label>
+          <div class="col-md-7 col-sm-6" >
             <p class="form-control-static personal-font">{{personalUserInfo.username}}</p>
           </div>
-          <div class="col-md-2 right">
+          <div class="col-md-2 col-sm-3 right">
             <div class="btnm  btn-edit" @click="setFormBtn(0)">{{isShow ? '收起' : '修改'}}</div>
           </div>
         </div>
         <!-- 修改用户名 -->
         <form class="form-horizontal form-space margin-top" v-if="isShow">
           <div class="form-group">
-            <label for="inputEmail3" class="col-md-2 control-label">{{$t('register.username')}}</label>
-            <div class="col-md-9">
+            <label for="inputEmail3" class="col-md-3 col-sm-3 control-label">{{$t('register.username')}}</label>
+            <div class="col-md-9 col-sm-9">
               <input type="text" class="form-control" name="username" @change='showsetFormMsg(setForm.username, 0)' v-model="setForm.username" maxlength="16" id="inputEmail3" :placeholder="$t('placeholder.username')">
             </div>
           </div>
           <div class="form-group">
-            <label class="col-md-2 control-label"></label>
+            <label class="col-md-3 col-sm-3 control-label"></label>
             <p class="form-control-static prompt" style="margin-top:0px !important;">{{unamePrompt}}</p>
             <div class="col-md-offset-4 margin-top">
               <button type="button" class="edit-user-btn" v-bind:disabled="!setForm.username" @click="setusername" data-target="#myModal" data-toggle="">{{$t('button.confirm')}}
@@ -42,11 +42,11 @@
           
         </form>
         <div class="form-group info-border">
-          <label class="col-md-2 control-label personal-font">{{$t('register.phone')}}</label>
-          <div class="col-md-8">
+          <label class="col-md-3 col-sm-3 control-label personal-font">{{$t('register.phone')}}</label>
+          <div class="col-md-7 col-sm-7">
             <p class="form-control-static personal-font">{{personalUserInfo.phone}}</p>
           </div>
-          <div class="col-md-2">
+          <div class="col-md-2 col-sm-2">
             <div class="btnm  btn-edit" @click="setFormBtn(1)">{{seShow ? '收起' : '修改'}}</div>
           </div>
         </div>
@@ -54,14 +54,14 @@
        <!-- 修改手机号 -->
       <form class="form-horizontal form-space margin-top" v-if="seShow">
         <div class="form-group">
-          <label for="inputEmail3" class="col-md-2 control-label">{{$t('register.phone')}}</label>
+          <label for="inputEmail3" class="col-md-3 control-label">{{$t('register.phone')}}</label>
           <div class="col-md-9">
             <input type="text" class="form-control" id="inputEmail3" @change='showsetFormMsg(setForm.phone, 1)' v-model="setForm.phone" :placeholder="$t('placeholder.phone')">
           </div>
         </div>
         <p class="prompt col-md-offset-3 col-md-9" style="margin-top:0px !important;">{{phonePrompt}}</p>
         <div class="form-group" style="margin-top: 37px;">
-          <label for="inputCaptcha3" class="col-md-2 control-label">{{$t('register.vcode')}}</label>
+          <label for="inputCaptcha3" class="col-md-3 control-label">{{$t('register.vcode')}}</label>
           <div class="col-md-6">
             <input type="text" class="form-control" v-model="setForm.captcha" @change='showsetFormMsg(setForm.captcha, 2)' id="inputCaptcha3" :placeholder="$t('placeholder.vcode')">
           </div>
@@ -81,14 +81,14 @@
 
 
         <div class="form-group info-border">
-          <label class="col-md-2 control-label personal-font">{{$t('editProfile.registerTime')}}</label>
-          <div class="col-md-8">
+          <label class="col-md-3 control-label personal-font">{{$t('editProfile.registerTime')}}</label>
+          <div class="col-md-7">
             <p class="form-control-static personal-font">{{personalUserInfo.register_time}}</p>
           </div>
         </div>
         <div class="form-group info-border">
-          <label class="col-md-2 control-label personal-font">{{$t('editProfile.lastLogin')}}</label>
-          <div class="col-md-8">
+          <label class="col-md-3 control-label personal-font">{{$t('editProfile.lastLogin')}}</label>
+          <div class="col-md-7">
             <p class="form-control-static personal-font">{{personalUserInfo.last_login}}</p>
           </div>
         </div>
@@ -463,10 +463,6 @@ export default {
   }
 }
 
-.wrap-width {
-  width: 800px;
-}
-
 .form-group {
   margin: 0 50px;
 }
@@ -502,7 +498,17 @@ export default {
   margin-top: 30px;
 }
 .center-wrap {
-  width: 840px;
+  width: 100%;
   margin: 0 auto;
 }
+.wrap {
+  width: 100%;
+  position: relative;
+
+}
+
+.wrap-width {
+  width: 90%;
+}
+
 </style>
