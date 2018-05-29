@@ -204,7 +204,7 @@ export default {
   },
   lang: {
     hint: 'Click, or drag the picture to this point',
-    btnBack: 'Prev',
+    btnBack: 'Previous step',
     btnSave: 'Save',
     preview: 'Preview',
     loading: 'Uploading'
