@@ -34,7 +34,7 @@ def guest_required(func):
             user = request.user
             data = {"username":user.username}
             Avatar(data, user)
-            msg = _("You have login ,needn't login again")
+            msg = _("You have logged in, no need to login again")
             return get_json(0, msg, data)
         return func(*args, **kwargs)
     return decorator
@@ -93,12 +93,12 @@ class LoginView(MethodView):
         captcha = post_data['captcha']
         session_captcha = session.pop('captcha', '00000')
         if captcha.lower() != session_captcha.lower():
-            msg = _('The captcha is error')
+            msg = _('Captcha error')
             return get_json(0, msg, {})  
         user.login(remember)
         data = {"username":user.username}
         Avatar(data, user)
-        msg = _('You have login')
+        msg = _('You have logged in')
         return get_json(1, msg, data)
 
 class PhoneLoginView(MethodView):
@@ -112,16 +112,16 @@ class PhoneLoginView(MethodView):
         remember = post_data.pop('remember', False)
         user = User.query.filter_by(phone=phone).first()
         if not user:
-            msg = _('The phone is error')
+            msg = _('Phone error')
             return get_json(0, msg, {})
         if not check_captcha(phone, captcha):
-            msg = _('The captcha is error')
+            msg = _('Captcha error')
             return get_json(0, msg, {})
         user.login(remember)
         data = {"username":user.username}
         Avatar(data, user)
         redis_data.delete(phone)
-        msg = _('You have login')
+        msg = _('You have logged in')
         return get_json(1, msg, data)
         
 
@@ -130,7 +130,7 @@ class LogoutView(MethodView):
 
     def post(self):
         current_user.logout()
-        msg = _('You have logout')
+        msg = _('You have logged out')
         return get_json(1, msg, {})
 
 
@@ -158,10 +158,10 @@ class RegisterView(MethodView):
             msg = _('The username has been registered')
             return get_json(0, msg, {})
         if password != confirm_password:
-            msg = _('Two passwords are different')
+            msg = _('Entered passwords differ from the other.')
             return get_json(0, msg, {})
         if not check_captcha(phone, captcha):
-            msg = _('The captcha is error')
+            msg = _('Captcha error')
             return get_json(0, msg, {})
         user_code = self.user_code()
         user = User(username=username, phone=phone, user_code=user_code,
@@ -238,7 +238,7 @@ class SetPasswordView(MethodView):
         else:
             email, user = User.check_email_token(token)
         if password != confirm_password:
-            msg = _('Two passwords are different')
+            msg = _('Entered passwords differ from the other.')
             return get_json(0, msg, {})
         user.set_password(password)
         user.save()
@@ -259,10 +259,10 @@ class PhoneForgetView(MethodView):
         phone = post_data['phone']
         captcha = post_data['captcha']
         if not check_phone(phone):
-            msg = _('The phone is error')
+            msg = _('Phone error')
             return get_json(0, msg, {})
         if not check_captcha(phone, captcha):
-            msg = _('The captcha is error')
+            msg = _('Captcha error')
             return get_json(0, msg, {})
         redis_data.delete(phone)
         msg = _('success')
@@ -309,6 +309,8 @@ class ConfirmTokenView(MethodView):
             return redirect('/')
         user.email = email
         user.save()
+        msg = _('Verification succeed')
+        flash(msg)
         return redirect('/')
 
 class ConfirmPhoneView(MethodView):

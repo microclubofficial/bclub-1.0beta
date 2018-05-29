@@ -121,6 +121,8 @@ class TopicListView(MethodView):
             i.updated_at = str(i.updated_at)
             collect = collect_bool(i.id)
             topics_data = object_as_dict(i)
+            if topics_data['token']:
+                topics_data['en_token'] = topics_data['token'].capitalize()
             json_loads(topics_data, ['content', 'title'])
             topics_data['reply_time'] = reply_time
             topics_data['reply_user'] = reply_user
@@ -229,7 +231,7 @@ class ReplyListView(MethodView):
         if 'early' in request.path:
             reply = Reply.query.filter_by(topic_id = topicId).order_by(('id')).limit(per_page).offset(start)
         elif 'good' in request.path:
-            is_goodlist = Reply.query.with_entities(Reply.is_good, Reply.id).filter_by().all()
+            is_goodlist = Reply.query.with_entities(Reply.is_good, Reply.id).filter_by(topic_id = topicId).all()
             a = []
             for i in is_goodlist:
                 i = list(i)
@@ -268,7 +270,7 @@ class ReplyListView(MethodView):
             replies.append(replies_data)
         data = {'page_count':page_count, 'reply_count':reply_count, 'replies':replies}
         msg = _('Replies Information')
-        return get_json(1, msg, data)
+        return get_json(1, msg, data) 
 
     decorators = (reply_list_permission, )
     #@form_validate(ReplyForm, error=error_callback, f='')

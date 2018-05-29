@@ -62,7 +62,7 @@ class BaseForm(Form):
         captcha = session['captcha']
         captcha_data = self.captcha.data
         if captcha_data.lower() != captcha.lower():
-            self.captcha.errors.append(_('The captcha is error'))
+            self.captcha.errors.append(_('Captcha error'))
             return False
 
         return True

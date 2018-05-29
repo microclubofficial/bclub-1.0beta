@@ -34,7 +34,7 @@ class HTTPResponse(object):
         AUTH_CAPTCHA_ERROR: _('Captcha Error'),
         AUTH_EMAIL_UNIQUE: _('The email has been registered!'),
         AUTH_USERNAME_UNIQUE: _('The username has been registered!'),
-        AUTH_EMAIL_NOT_REGISTER: _('The email is error'),
+        AUTH_EMAIL_NOT_REGISTER: _('Email error'),
         AUTH_TOKEN_VERIFY_FAIL:
         _('Token is out of time,please get token again!'),
         FORM_VALIDATE_ERROR: _('Form validate error'),

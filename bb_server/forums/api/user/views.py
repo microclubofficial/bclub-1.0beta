@@ -184,4 +184,9 @@ class UserView(MethodView):
             user_data['_user'] = _('not personal')
         msg = _('Personal Information')
         return get_json(1, msg, user_data)
-        
+
+class UserEmailView(MethodView):
+
+    def get(self):
+        user = request.user
+        return get_json(1, _('success'), user.email)

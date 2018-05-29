@@ -26,7 +26,7 @@ class HTTPResponse(object):
     STATUS_DESCRIPTION = {
         NORMAL_STATUS: 'normal',
         USER_IS_CONFIRMED:
-        _('Your account has been confirmed,don\'t need again'),
+        _('Your account has been confirmed,no need to confirm again'),
         FORM_VALIDATE_ERROR: _('Form validate error'),
         FORBIDDEN: _('You have no permission!'),
         HTTP_PARA_ERROR: 'params error',

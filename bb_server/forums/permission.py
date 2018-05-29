@@ -57,7 +57,7 @@ def is_confirmed(func):
     def _is_confirmed(*args, **kwargs):
         if not current_user.is_authenticated:
             #return redirect(url_for('auth.login', next=request.path))
-            msg = _('Not logged in')
+            msg = _('Please login first')
             return get_json(0, msg, {})
         #if confirm_permission.can():
         return func(*args, **kwargs)
@@ -70,7 +70,7 @@ def is_guest(func):
     def _is_guest(*args, **kwargs):
         if not current_user.is_authenticated:
             return func(*args, **kwargs)
-        flash(_('You have login ,needn\'t login again'))
+        flash(_('You have logged in ,needn\'t login again'))
         return redirect('/')
 
     return _is_guest
