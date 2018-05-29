@@ -282,6 +282,9 @@ export default {
       }
       post(this.formUrl, this.userForm).then(data => {
         this.controlPrompt = data.message
+        if (data.resultcode === 0) {
+          this.changeControl()
+        }
         if (data.message === '验证码错误' || data.message === 'Captcha error') {
           this.controlPrompt = data.message
           this.captchaPrompt = data.message

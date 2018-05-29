@@ -941,10 +941,29 @@ i.icon-BTC{font-size: 14px; font-weight: bold;}
 .bibar-list .set>ul>li:after{
     position: absolute;
     content: '';
-    right: -2px;
+    right: 18px;
     top: 2px;
     height: 12px;
     width: 2px;
+    background-color: #F6F5F5;
+}
+.bibar-indexNewsItem-infro li{position: relative;}
+.bibar-indexNewsItem-infro li:after{
+    position: absolute;
+    content: '';
+    right: -23px;
+    top: 2px;
+    height: 12px;
+    width: 2px;
+    background-color: #F6F5F5;
+}
+.bibar-indexNewsItem-infro li:last-child:after{
+    position: absolute;
+    content: '';
+    right: -23px;
+    top: 2px;
+    height: 12px;
+    width: 0;
     background-color: #F6F5F5;
 }
 .bibar-list .set>ul>li:last-child:after{
