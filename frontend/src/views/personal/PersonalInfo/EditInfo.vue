@@ -32,7 +32,7 @@
           <div class="form-group">
             <label class="col-md-3 col-sm-3 control-label"></label>
             <p class="form-control-static prompt" style="margin-top:0px !important;">{{unamePrompt}}</p>
-            <div class="col-md-offset-4 margin-top">
+            <div class="col-md-offset-4 col-sm-offset-4 margin-top">
               <button type="button" class="edit-user-btn" v-bind:disabled="!setForm.username" @click="setusername" data-target="#myModal" data-toggle="">{{$t('button.confirm')}}
               </button>
               <button class="cancel-user-btn">取消</button>
@@ -54,22 +54,22 @@
        <!-- 修改手机号 -->
       <form class="form-horizontal form-space margin-top" v-if="seShow">
         <div class="form-group">
-          <label for="inputEmail3" class="col-md-3 control-label">{{$t('register.phone')}}</label>
-          <div class="col-md-9">
+          <label for="inputEmail3" class="col-md-3 col-sm-3 control-label">{{$t('register.phone')}}</label>
+          <div class="col-md-9 col-sm-9">
             <input type="text" class="form-control" id="inputEmail3" @change='showsetFormMsg(setForm.phone, 1)' v-model="setForm.phone" :placeholder="$t('placeholder.phone')">
           </div>
         </div>
-        <p class="prompt col-md-offset-3 col-md-9" style="margin-top:0px !important;">{{phonePrompt}}</p>
+        <p class="prompt col-md-offset-3 col-sm-offset-3 col-md-9 col-sm-9" style="margin-top:0px !important;">{{phonePrompt}}</p>
         <div class="form-group" style="margin-top: 37px;">
-          <label for="inputCaptcha3" class="col-md-3 control-label">{{$t('register.vcode')}}</label>
-          <div class="col-md-6">
+          <label for="inputCaptcha3" class="col-md-3 col-sm-3 control-label">{{$t('register.vcode')}}</label>
+          <div class="col-md-6 col-sm-6">
             <input type="text" class="form-control" v-model="setForm.captcha" @change='showsetFormMsg(setForm.captcha, 2)' id="inputCaptcha3" :placeholder="$t('placeholder.vcode')">
           </div>
           <button type="button" class="btn btn-default get-captcha" style="height:34px;line-height:34px;" @click="getPhoneControl" v-bind:disabled="hasphone" :class="{'btn-success':!hasphone}">
             <span v-show="hasControl">{{countdown}}</span>{{getcontroltxt}}</button>
         </div>
-        <p class="prompt col-md-offset-3 col-md-9" style="margin-top:0px !important;">{{phoneControlPrompt}}</p>
-         <div class="col-md-offset-4 margin-top">
+        <p class="prompt col-md-offset-3 col-sm-offset-3  col-md-9 col-sm-9" style="margin-top:0px !important;">{{phoneControlPrompt}}</p>
+         <div class="col-md-offset-4 col-sm-offset-4 margin-top">
             <button type="button" class=" edit-user-btn" v-bind:disabled="!setForm.phone" @click="setusername"  data-target="#myModal" data-toggle="">{{$t('button.confirm')}}
             </button>
             <button class="cancel-user-btn">取消</button>
@@ -81,14 +81,14 @@
 
 
         <div class="form-group info-border">
-          <label class="col-md-3 control-label personal-font">{{$t('editProfile.registerTime')}}</label>
-          <div class="col-md-7">
+          <label class="col-md-3 col-sm-3 control-label personal-font">{{$t('editProfile.registerTime')}}</label>
+          <div class="col-md-7 col-sm-7">
             <p class="form-control-static personal-font">{{personalUserInfo.register_time}}</p>
           </div>
         </div>
         <div class="form-group info-border">
-          <label class="col-md-3 control-label personal-font">{{$t('editProfile.lastLogin')}}</label>
-          <div class="col-md-7">
+          <label class="col-md-3 col-sm-3 control-label personal-font">{{$t('editProfile.lastLogin')}}</label>
+          <div class="col-md-7 col-sm-7">
             <p class="form-control-static personal-font">{{personalUserInfo.last_login}}</p>
           </div>
         </div>
@@ -153,8 +153,8 @@ import { Toast } from "mint-ui";
 export default {
   data() {
     return {
-      isShow:false,
-      seShow:false,
+      isShow: false,
+      seShow: false,
       personalUserInfo: [],
       setForm: {},
       unamePrompt: "",
@@ -168,12 +168,15 @@ export default {
       phoneControlPrompt: "",
       canSetU: false,
       cansetP: false,
-      switchText: '修改'
+      switchText: "修改"
     };
   },
   computed: {
     userInfo() {
       return this.$store.state.userInfo.userInfo;
+    },
+    language() {
+      return this.$store.state.language.language;
     }
   },
   created: function() {
@@ -329,11 +332,11 @@ export default {
     },
     setFormBtn(id) {
       if (id === 0) {
-        this.isShow = !this.isShow
+        this.isShow = !this.isShow;
         // $('.setPhone').modal('show')
         // document.body.removeChild(document.querySelector('.modal-backdrop'))
       } else if (id === 1) {
-        this.seShow = !this.seShow
+        this.seShow = !this.seShow;
         // this.showModel = false;
         // $(".setPhone").modal("show");
       }
@@ -481,13 +484,17 @@ export default {
   float: right;
 }
 .edit-user-btn {
-  padding: 6px 14px;
+  width: 60px;
+  height: 32px;
+  text-align: center;
   background: #ff9612;
   border-radius: 5px;
   color: #fff;
 }
 .cancel-user-btn {
-  padding: 6px 14px;
+  width: 60px;
+  height: 32px;
+  text-align: center;
   background: #f0f0f0;
   border-radius: 5px;
   color: #666;
@@ -499,16 +506,15 @@ export default {
 }
 .center-wrap {
   width: 100%;
+  min-height: 600px;
   margin: 0 auto;
 }
 .wrap {
   width: 100%;
   position: relative;
-
 }
 
 .wrap-width {
   width: 90%;
 }
-
 </style>

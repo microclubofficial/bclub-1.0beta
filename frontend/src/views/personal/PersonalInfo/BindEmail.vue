@@ -1,6 +1,4 @@
 <style lang="scss" scoped>
-
-
 .title {
   border-bottom: solid 1px #dfdfdf;
   height: 80px;
@@ -12,7 +10,7 @@
       height: 24px;
       display: inline-block;
 
-      >img {
+      > img {
         width: 100%;
         height: 100%;
         display: inline;
@@ -52,18 +50,26 @@
 }
 
 .btn-confirm {
+  text-align: center;
   width: 60px;
-  padding: 4px 8px;
+  height: 32px;
+  padding: 0;
+  line-height: 32px;
   background: #1e8fff;
   color: #fff;
+  border-radius: 5px;
 }
 
 .btn-cacel {
+  text-align: center;
   width: 60px;
-  padding: 4px 8px;
+  height: 32px;
+  padding: 0;
+  line-height: 32px;
   background: #f0f0f0;
   color: #666;
   border-radius: 5px;
+  border: solid 1px #dfdfdf;
 }
 
 .email-box {
@@ -92,20 +98,6 @@
   padding: 30px 0 40px 0;
 }
 
-.btn-confirm {
-  padding: 4px 8px;
-  background: #1e8fff;
-  color: #fff;
-  border-radius: 5px;
-}
-
-.btn-cacel {
-  padding: 4px 8px;
-  background: #f0f0f0;
-  color: #666;
-  border-radius: 5px;
-}
-
 .center-wrap {
   width: 100%;
   margin: 0 auto;
@@ -113,7 +105,6 @@
 .wrap {
   width: 100%;
   position: relative;
-
 }
 
 .wrap-width {
@@ -182,83 +173,85 @@
   </div>
 </template>
 <script>
-import { post, get } from '../../../utils/http'
-import { Toast } from 'mint-ui'
+import { post, get } from "../../../utils/http";
+import { Toast } from "mint-ui";
 export default {
   data() {
     return {
       bindForm: {},
-      emailPrompt: '',
+      emailPrompt: "",
       canFind: false,
       showModal: false,
       successbind: false
-    }
+    };
   },
-  mounted() {
-  },
+  mounted() {},
   methods: {
     // 验证
     showBindEmailMsg(input, id) {
-      let emailreg = /^[A-Za-z0-9.\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
+      let emailreg = /^[A-Za-z0-9.\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
       if (id === 0) {
         if (input === undefined || input.length === 0) {
-          this.emailPrompt = '邮箱不能为空'
-          this.canFind = false
-          return false
-        } else if (!emailreg.test(input) && input !== undefined && input.length > 0) {
-          this.emailPrompt = '邮箱格式不正确'
-          this.canFind = false
-          return false
+          this.emailPrompt = "邮箱不能为空";
+          this.canFind = false;
+          return false;
+        } else if (
+          !emailreg.test(input) &&
+          input !== undefined &&
+          input.length > 0
+        ) {
+          this.emailPrompt = "邮箱格式不正确";
+          this.canFind = false;
+          return false;
         } else {
-          this.emailPrompt = ''
-          this.canFind = true
+          this.emailPrompt = "";
+          this.canFind = true;
         }
       }
     },
     // 绑定邮箱
     bindEmailFun() {
-      let instance
+      let instance;
       if (this.canFind) {
         post(`/api/setting/email`, this.bindForm).then(data => {
           if (data.resultcode === 0) {
             instance = new Toast({
               message: data.message,
               duration: 1000
-            })
+            });
             setTimeout(() => {
-              instance.close()
-            }, 1000)
-            $('.emaiModal').modal('hide')
-            return false
+              instance.close();
+            }, 1000);
+            $(".emaiModal").modal("hide");
+            return false;
           } else if (data.resultcode === 1) {
-            $('.emaiModal').modal('show')
+            $(".emaiModal").modal("show");
           }
-        })
+        });
       }
     },
     // 重新发送
     resendFun() {
-      post(`/api/confirmed/password`, this.bindForm).then(data => {
-      })
+      post(`/api/confirmed/password`, this.bindForm).then(data => {});
     },
     // 完成验证状态
     successBind() {
       get(`/api/confirmed/email`).then(data => {
         if (data.resultcode === 0) {
-          $('.emaiModal').modal('hide')
-          this.successbind = false
+          $(".emaiModal").modal("hide");
+          this.successbind = false;
         } else {
-          $('.emaiModal').modal('hide')
-          this.successbind = true
+          $(".emaiModal").modal("hide");
+          this.successbind = true;
         }
-      })
+      });
     },
     // 完成后修改邮箱
     SbindEmail() {
-      this.successbind = false
+      this.successbind = false;
     }
   }
-}
+};
 </script>
 
 <style>
@@ -270,24 +263,24 @@ export default {
 }
 
 .findEmail {
-  transition: opacity .5s
+  transition: opacity 0.5s;
 }
 
-.bindEmail>.emaiModal>.modal-dialog {
+.bindEmail > .emaiModal > .modal-dialog {
   width: 30%;
 }
 
-.emaiModal>.modal-dialog>.modal-content>.modal-body {
+.emaiModal > .modal-dialog > .modal-content > .modal-body {
   font-size: 16px;
   text-align: center;
 }
 
-.emaiModal>.modal-dialog>.modal-content>.modal-footer {
+.emaiModal > .modal-dialog > .modal-content > .modal-footer {
   border: none;
   text-align: center;
 }
 
-.emaiModal>.modal-dialog>.modal-content>.modal-footer>.btn-primary {
+.emaiModal > .modal-dialog > .modal-content > .modal-footer > .btn-primary {
   margin-left: 20px;
 }
 </style>

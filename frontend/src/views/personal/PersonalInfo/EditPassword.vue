@@ -10,7 +10,7 @@
       height: 24px;
       display: inline-block;
 
-      >img {
+      > img {
         width: 100%;
         height: 100%;
         display: inline;
@@ -49,18 +49,27 @@
 }
 
 .btn-confirm {
+  text-align: center;
   width: 60px;
-  padding: 4px 8px;
+  height: 32px;
+  padding: 0;
+  line-height: 32px;
   background: #1e8fff;
   color: #fff;
+  margin-right: 20px;
+  border-radius: 5px;
 }
 
 .btn-cacel {
+  text-align: center;
   width: 60px;
-  padding: 4px 8px;
+  height: 32px;
+  padding: 0;
+  line-height: 32px;
   background: #f0f0f0;
   color: #666;
   border-radius: 5px;
+  border: solid 1px #dfdfdf;
 }
 
 .mark {
@@ -83,7 +92,6 @@
 .wrap {
   width: 100%;
   position: relative;
-
 }
 
 .wrap-width {
@@ -102,9 +110,6 @@
           <router-link class="hover" :to="{path:'/memberCenter'}">返回我的主页 <i>></i></router-link>
         </span>
       </div>
-      <p class="mark">
-        为了您的账号安全，修改密码前请填写原密码<span>帮助</span>
-      </p>
       <form class="form-horizontal password-form">
         <div class="form-group">
           <label class="col-sm-2 control-label">{{$t('editProfile.originalPassword')}}</label>
@@ -127,12 +132,12 @@
           </div>
           <p class="prompt">{{confirm_upwdPrompt}}</p>
         </div>
-        <div class="form-group">
+        <div class="btn-box">
 
-          <button class="col-md-offset-3 col-md-1 forphone btnm  btn-confirm" v-bind:disabled="!setPwd.OldPassword" @click='setPwdFun' data-target="#myModal" data-toggle="">{{$t('button.confirm')}}
+          <button class="col-md-offset-4 col-sm-2 forphone btnm  btn-confirm" v-bind:disabled="!setPwd.OldPassword" @click='setPwdFun' data-target="#myModal" data-toggle="">{{$t('button.confirm')}}
           </button>
 
-          <button class="col-md-offset-1 col-md-1 forphone btnm  btn-cacel">
+          <button class="forphone btnm  btn-cacel">
             取消
           </button>
 
@@ -142,19 +147,18 @@
   </div>
 </template>
 <script>
-import { post } from '../../../utils/http'
-import { Toast } from 'mint-ui'
+import { post } from "../../../utils/http";
+import { Toast } from "mint-ui";
 export default {
   data() {
     return {
       setPwd: {},
-      oldpwdPrompt: '',
-      newpwdPrompt: '',
-      confirm_upwdPrompt: ''
-    }
+      oldpwdPrompt: "",
+      newpwdPrompt: "",
+      confirm_upwdPrompt: ""
+    };
   },
-  mounted() {
-  },
+  mounted() {},
   methods: {
     //   验证
     showFindPwdMsg(input, id) {
@@ -162,67 +166,71 @@ export default {
         if (input.length > 0) {
           post(`/api/confirmed/password`, this.setPwd).then(data => {
             if (data.resultcode === 0) {
-              this.oldpwdPrompt = '原密码错误'
-              return false
+              this.oldpwdPrompt = "原密码错误";
+              return false;
             } else {
-              this.oldpwdPrompt = ''
+              this.oldpwdPrompt = "";
             }
-          })
+          });
         }
       } else if (id === 0 || id === 1) {
-        var upwdreg = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[~!@#$%^&*()_+`\-={}:";'<>?,.\/]).{6,18}$/
+        var upwdreg = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[~!@#$%^&*()_+`\-={}:";'<>?,.\/]).{6,18}$/;
         if (!upwdreg.test(input) && input !== undefined && input.length > 0) {
           if (id === 0) {
-            this.oldpwdPrompt = '密码长度在6-18位'
+            this.oldpwdPrompt = "密码长度在6-18位";
           } else if (id === 1) {
-            this.newpwdPrompt = '密码长度在6-18位'
+            this.newpwdPrompt = "密码长度在6-18位";
           }
-          return false
-        } else if (id === 1 && (input === this.setPwd.OldPassword)) {
-          this.newpwdPrompt = '新密码不能和原密码一致'
-          return false
+          return false;
+        } else if (id === 1 && input === this.setPwd.OldPassword) {
+          this.newpwdPrompt = "新密码不能和原密码一致";
+          return false;
         } else if (input === undefined || input.length === 0) {
           if (id === 0) {
-            this.oldpwdPrompt = '原密码不能为空'
+            this.oldpwdPrompt = "原密码不能为空";
           } else if (id === 1) {
-            this.newpwdPrompt = '新密码不能为空'
+            this.newpwdPrompt = "新密码不能为空";
           }
-          return false
+          return false;
         } else {
-          this.oldpwdPrompt = ''
-          this.newpwdPrompt = ''
+          this.oldpwdPrompt = "";
+          this.newpwdPrompt = "";
         }
       } else if (id === 2) {
-        if (input !== this.setPwd.NewPassword && input !== undefined && input.length > 0) {
-          this.confirm_upwdPrompt = '两次输入密码不一致'
-          return false
+        if (
+          input !== this.setPwd.NewPassword &&
+          input !== undefined &&
+          input.length > 0
+        ) {
+          this.confirm_upwdPrompt = "两次输入密码不一致";
+          return false;
         } else if (input === undefined || input.length === 0) {
-          this.confirm_upwdPrompt = '确认密码不能为空'
-          return false
+          this.confirm_upwdPrompt = "确认密码不能为空";
+          return false;
         } else {
-          this.confirm_upwdPrompt = ''
+          this.confirm_upwdPrompt = "";
         }
       }
     },
     // 修改密码
     setPwdFun() {
-      let instance
+      let instance;
       post(`/api/setting/password`, this.setPwd).then(data => {
         if (data.resultcode === 1) {
           instance = new Toast({
             message: data.message,
-            iconClass: 'glyphicon glyphicon-ok',
+            iconClass: "glyphicon glyphicon-ok",
             duration: 1000
-          })
+          });
           setTimeout(() => {
-            instance.close()
-          }, 1000)
-          this.$router.push('/login')
+            instance.close();
+          }, 1000);
+          this.$router.push("/login");
         }
-      })
+      });
     }
   }
-}
+};
 </script>
 
 <style>

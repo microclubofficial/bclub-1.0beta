@@ -1,107 +1,110 @@
 <style lang="scss" scoped>
-
-
 .member-center {
-    margin-top: 40px;
+  margin-top: 40px;
 }
 
 .personal-info {
-    background-color: #fefefe;
-    border: 1px solid #eee;
-    display: flex;
-    display: -webkit-flex;
-    align-items: center;
+  background-color: #fefefe;
+  border: 1px solid #eee;
+  display: flex;
+  display: -webkit-flex;
+  align-items: center;
 }
 
 .breadcrumb {
-    .hover:hover {
-        color: #1e8fff;
-    }
+  .hover:hover {
+    color: #1e8fff;
+  }
 }
 
 //加入样式
 .nav-width {
-    width: 27%;
-    height: 580px;
-    background: #fff;
-    float: left;
-    border-bottom: none;
-    margin-right: 3%;
+  width: 27%;
+  height: 580px;
+  background: #fff;
+  float: left;
+  border-bottom: none;
+  margin-right: 3%;
 
-    .tx-box {
-        width: 100%;
-        height: 80px;
-        margin-top: 30px;
+  .tx-box {
+    width: 100%;
+    height: 80px;
+    margin-top: 30px;
+  }
+  .tx {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: 0 auto;
+    > img {
+      width: 100%;
+      height: 100%;
     }
-    .tx {
-        width: 80px;
-        height: 80px;
-        border-radius: 50%;
-        overflow: hidden;
-        margin: 0 auto;
-        >img {
-            width: 100%;
-            height: 100%;
-        }
+  }
+  .name {
+    font-size: 16px;
+    font-weight: bold;
+    padding: 10px 0;
+  }
+  .grade {
+    margin-bottom: 10px;
+    span {
+      font-size: 14px;
+      color: #fff;
+      background: #ffce0a;
+      padding: 4px 12px;
+      border-radius: 10px;
     }
-    .name {
-        font-size: 16px;
-        font-weight: bold;
-        padding: 10px 0;
-    }
-    .grade {
-        margin-bottom: 10px;
-        span {
-            font-size: 14px;
-            color: #fff;
-            background: #ffce0a;
-            padding: 4px 12px;
-            border-radius: 10px;
-        }
-    }
-    li {
-        width: 100%;
+  }
+  li {
+    width: 100%;
+    height: 48px;
+    line-height: 48px;
+    display: block;
+    text-align: center;
+    border: none;
+    &.active {
+      a {
+        border: 0;
         height: 48px;
         line-height: 48px;
-        display: block;
-        text-align: center;
-        border: none;
-        &.active {
-            a {
-                border: 0;
-                height: 48px;
-                line-height: 48px;
-                background: #f6f6f6;
-            }
-        }
-        &:hover {
-            width: 100%;
-            border: none;
-            
-        }
-
-        a {
-            margin: 0;
-            padding: 0;
-            height: 48px;
-            font-size: 14px;
-            border: none;
-            line-height: 48px;
-
-            &:hover {
-                border: none;
-            }
-        }
+        background: #f6f6f6;
+      }
     }
+    &:hover {
+      width: 100%;
+      border: none;
+    }
+
+    a {
+      margin: 0;
+      padding: 0;
+      height: 48px;
+      font-size: 14px;
+      border: none;
+      line-height: 48px;
+
+      &:hover {
+        border: none;
+      }
+    }
+  }
 }
 
 .info-border {
-    border-bottom: solid 1px #dfdfdf;
+  border-bottom: solid 1px #dfdfdf;
 }
 
 .right-width {
-    width: 70%;
-    float: left;
+  width: 70%;
+  float: left;
+}
+.enul {
+    li {
+        text-align: left;
+        text-indent: 30%;
+    }
 }
 </style>
 
@@ -119,7 +122,7 @@
                         <router-link class="hover" :to="{path:'/memberCenter'}">{{$t('personalCenter.personal')}}</router-link>
                     </li>
                 </ol>
-                <ul class="nav  nav-tabs nav-width">
+                <ul class="nav  nav-tabs nav-width" :class="{'enul':language == 'en'}">
                     <li class="tx-box">
                         <div class="tx">
                             <!--<img src="../../assets/img/tx.png" />-->
@@ -147,37 +150,59 @@
 </template>
 <script>
 // import {post} from '../utils/http'
-import MainHeader from '../common/header.vue'
+import MainHeader from "../common/header.vue";
 export default {
-    data() {
-        return {
-            infoList: [
-                { 'name': 'editInfo', 'cnName': this.$t('editProfile.profile'), 'path': 'editInfo' },
-                { 'name': 'editAvatar', 'cnName': this.$t('editProfile.avatar'), 'path': 'editAvatar' },
-                { 'name': 'editPassword', 'cnName': this.$t('editProfile.password'), 'path': 'editPassword' },
-                { 'name': 'bindEmail', 'cnName': this.$t('editProfile.email'), 'path': 'bindEmail' }
-            ],
-            nowIndex: 0,
-            personalUser: []
+  data() {
+    return {
+      infoList: [
+        {
+          name: "editInfo",
+          cnName: this.$t("editProfile.profile"),
+          path: "editInfo"
+        },
+        {
+          name: "editAvatar",
+          cnName: this.$t("editProfile.avatar"),
+          path: "editAvatar"
+        },
+        {
+          name: "editPassword",
+          cnName: this.$t("editProfile.password"),
+          path: "editPassword"
+        },
+        {
+          name: "bindEmail",
+          cnName: this.$t("editProfile.email"),
+          path: "bindEmail"
         }
-    },
-    components: {
-        MainHeader
-    },
-    methods: {
-        routerGo(index) {
-            this.$router.push(`/personalInfo/${this.infoList[index].path}`)
-        }
+      ],
+      nowIndex: 0,
+      personalUser: []
+    };
+  },
+  components: {
+    MainHeader
+  },
+  computed: {
+    language() {
+      return this.$store.state.language.language;
     }
-}
+  },
+
+  methods: {
+    routerGo(index) {
+      this.$router.push(`/personalInfo/${this.infoList[index].path}`);
+    }
+  }
+};
 </script>
 <style>
 .breadcrumb {
-    border-bottom: 1px solid #efefef;
-    background: #F2F2F2;
+  border-bottom: 1px solid #efefef;
+  background: #f2f2f2;
 }
 
 .breadcrumb li:first-child a {
-    color: #2DA2FF;
+  color: #2da2ff;
 }
 </style>
