@@ -95,6 +95,7 @@
   height: 140px;
   position: relative;
   background: #ccc;
+  margin-top: 20px;
   .bgimg-box {
     width: 100%;
     height: 140px;
@@ -137,7 +138,7 @@
  <MainHeader></MainHeader>
     <div class="member-center">
         <div class="container">
-            <h3 style="margin:20px 0;">{{$t('personalCenter.personal')}}</h3>
+            <!-- <h3 style="margin:20px 0;">{{$t('personalCenter.personal')}}</h3> -->
             <div class="bg-box">
                 <div class="bgimg-box">
                     <img  src="../../assets/img/pic-news.png"/>

@@ -113,7 +113,7 @@
         <MainHeader></MainHeader>
         <div class="member-center">
             <div class="container">
-                <ol class="breadcrumb">
+                <!-- <ol class="breadcrumb">
                     <li>
                         <router-link to='/'>
                             <i class="iconfont" style="margin-right:10px;">&#xe65a;</i>{{$t('editProfile.index')}}</router-link>
@@ -121,7 +121,7 @@
                     <li class="active">
                         <router-link class="hover" :to="{path:'/memberCenter'}">{{$t('personalCenter.personal')}}</router-link>
                     </li>
-                </ol>
+                </ol> -->
                 <ul class="nav  nav-tabs nav-width" :class="{'enul':language == 'en'}">
                     <li class="tx-box">
                         <div class="tx">
