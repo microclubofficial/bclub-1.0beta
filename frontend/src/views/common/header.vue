@@ -61,7 +61,8 @@ export default {
   data: function () {
     return {
       user_token: '',
-      remember_token: ''
+      remember_token: '',
+      language: 'zh'
     }
   },
   components: {
@@ -71,9 +72,6 @@ export default {
   computed: {
     userInfo () {
       return this.$store.state.userInfo.userInfo
-    },
-    language () {
-      return this.$store.state.language.language
     }
   },
   created () {
@@ -81,6 +79,7 @@ export default {
       this.user_token = JSON.parse(getToken())
     }
     if (getToken('language')) {
+      this.language = getToken('language')
       this.$store.commit('LANGUAGE', {
         'language': getToken('language')
       })
@@ -89,6 +88,7 @@ export default {
   methods: {
     switchLang (lang) {
       setToken('language', lang)
+      this.language = lang
       this.$store.commit('LANGUAGE', {
         'language': lang
       })
@@ -154,12 +154,6 @@ export default {
   line-height: 50px;
 }
 
-.bibar-headerlogo img {}
-
-.bibar-headernav {}
-
-.bibar-headernav ul {}
-
 .bibar-headernav ul li {
   float: left;
 }
@@ -180,8 +174,6 @@ export default {
   height: 60px;
 }
 
-.bibar-headerSearch ul {}
-
 .bibar-headerSearch ul li {
   float: left;
   margin-left: 20px;
@@ -191,10 +183,6 @@ export default {
   font-size: 12px;
   margin-top: 18px;
 }
-
-.bibar-headerSearchitem input+i {}
-
-.bibar-headeruserpic {}
 
 .headerActive {
   color: #0181ff !important;
