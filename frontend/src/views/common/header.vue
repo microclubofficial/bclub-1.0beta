@@ -120,6 +120,7 @@ export default {
 }
 .language-switch .active-language{
   color:#0181ff;
+  pointer-events: none;
 }
 .bibar-header {
   height: 60px;

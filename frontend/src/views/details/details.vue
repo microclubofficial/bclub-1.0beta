@@ -183,10 +183,10 @@
           <p style="margin-top:20px;">{{$t('prompt.confirmDelete')}}</p>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">{{$t('button.cancel')}}
-          </button>
           <button @click='confirm' type="button" class="btn btn-primary">
             {{$t('button.confirm')}}
+          </button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">{{$t('button.cancel')}}
           </button>
         </div>
       </div>
