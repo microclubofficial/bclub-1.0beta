@@ -17,6 +17,8 @@ babel = Babel()
 
 @babel.localeselector
 def get_locale():
+    #import pdb
+    #pdb.set_trace()
     if request.path.startswith('/admin'):
         return 'zh'
     #user = getattr(g, 'user', None)
@@ -24,8 +26,9 @@ def get_locale():
     if lang:
         return lang
     #if user is not None:  
-    return request.accept_languages.best_match(current_app.config['LANGUAGES']
-                                               .keys())
+    return 'zh'
+    #return request.accept_languages.best_match(current_app.config['LANGUAGES']
+    #                                           .keys())
 
 @babel.timezoneselector
 def get_timezone():

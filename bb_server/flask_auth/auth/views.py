@@ -115,7 +115,7 @@ class PhoneLoginView(MethodView):
             msg = _('Phone error')
             return get_json(0, msg, {})
         if not check_captcha(phone, captcha):
-            msg = _('Captcha error')
+            msg = _('Captcha error or expired')
             return get_json(0, msg, {})
         user.login(remember)
         data = {"username":user.username}
@@ -161,7 +161,7 @@ class RegisterView(MethodView):
             msg = _('Entered passwords differ from the other.')
             return get_json(0, msg, {})
         if not check_captcha(phone, captcha):
-            msg = _('Captcha error')
+            msg = _('Captcha error or expired')
             return get_json(0, msg, {})
         user_code = self.user_code()
         user = User(username=username, phone=phone, user_code=user_code,
@@ -262,7 +262,7 @@ class PhoneForgetView(MethodView):
             msg = _('Phone error')
             return get_json(0, msg, {})
         if not check_captcha(phone, captcha):
-            msg = _('Captcha error')
+            msg = _('Captcha error or expired')
             return get_json(0, msg, {})
         redis_data.delete(phone)
         msg = _('success')

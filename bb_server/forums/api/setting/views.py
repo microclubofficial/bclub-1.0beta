@@ -84,7 +84,7 @@ class ChangePhoneView(MethodView):
             msg = _('The phone has been registered')
             return get_json(0, msg, {})
         if not check_captcha(phone, captcha):
-            msg = _('Captcha error')
+            msg = _('Captcha error or expired')
             return get_json(0, msg, {})
         user.phone = phone
         user.save()
