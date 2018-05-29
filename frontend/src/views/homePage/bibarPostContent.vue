@@ -177,6 +177,7 @@ export default {
               backFt.reply_user = null
               backFt.replies_count = 0
               backFt.bool_delete = data.data.bool_delete
+              backFt.collect_bool = data.data.collect_bool
               if (this.showDilog) {
                 this.$emit('backFtNav', backFt)
                 this.showDilog = false
@@ -264,7 +265,8 @@ export default {
         '字号': 'Font size',
         '宋体': 'SimSun',
         '微软雅黑': 'Microsoft YaHei',
-
+        'Link文字': 'Link text',
+        '插入': 'Insert',
         '字体': 'Font family',
         '正文': 'Content',
         '文字颜色': 'Font color',

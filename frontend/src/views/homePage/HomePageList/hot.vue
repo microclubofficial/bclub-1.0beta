@@ -347,6 +347,7 @@ export default{
   watch: {
     getNavaVal (val) {
       if (val.length !== 0) {
+        console.log(val)
         this.articles.unshift(val[0])
       }
       this.i = ''
@@ -605,13 +606,14 @@ export default{
           this.$router.push('/login')
         } else {
           tmp.collect_bool = data.data.collect_bool
+          console.log(tmp)
           if (data.data.collect_bool) {
             instance = new Toast({
               message: this.$t('prompt.successCollect'),
               iconClass: 'glyphicon glyphicon-ok',
               duration: 1000
             })
-          } else {  
+          } else {
             instance = new Toast({
               message: this.$t('prompt.cancelCollect'),
               duration: 1000

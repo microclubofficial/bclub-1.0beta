@@ -100,6 +100,7 @@ export default{
         '背景色': 'Background',
         '链接': 'Link',
         '链接文字': 'Link',
+        '插入': 'Insert',
         '设置列表': 'Set List',
         '有序列表': '&nbspOrdered list&nbsp&nbsp&nbsp',
         '无序列表': 'Disordered list',

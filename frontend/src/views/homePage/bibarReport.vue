@@ -43,6 +43,12 @@ export default {
       imgObj: {}
     }
   },
+  watch: {
+    editorContent (val) {
+      // let editorHeight = this.editor.$textElem[0].offsetHeight
+      // console.log($('.w-e-text-container').find('.w-e-panel-container').height())
+    }
+  },
   computed: {
     userInfo () {
       return this.$store.state.userInfo.userInfo
@@ -131,7 +137,7 @@ export default {
           } else {
             let replyImg = this.topicData.replyContent.match(/<img(?![^<>]*?data-w-e[^<>]*?>).*?>/g)[0].match(/(?<=(src="))[^"]*?(?=")/ig)[0]
             let replyNewData
-            if (this.language === 'zh') { 
+            if (this.language === 'zh') {
               replyNewData = this.topicData.replyContent.replace(/<img src="\/static[^>]+>/g, `<a href='${replyImg}' style='color:#0181FF'><i class='iconfont'>&#xe694;</i>查看图片</a>`)
             } else if (this.language === 'en') {
               replyNewData = this.topicData.replyContent.replace(/<img src="\/static[^>]+>/g, `<a href='${replyImg}' style='color:#0181FF'><i class='iconfont'>&#xe694;</i> View image</a>`)
@@ -222,13 +228,22 @@ export default {
       'link'
     ]
     // 校验链接
+    let that = this
     this.editor.customConfig.linkCheck = function (text, link) {
       if (text === '' || link === '') {
-        return this.$t('prompt.emptyLink')
+        if (that.language === 'en') {
+          return 'Link cannot be empty'
+        } else if (that.language === 'zh') {
+          return '链接不能为空'
+        }
       } else {
         let reg = /[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+\.?/ig
         if (!reg.test(link)) {
-          return this.$t('prompt.invalidLink')
+          if (that.language === 'en') {
+            return '无效的链接'
+          } else {
+            return 'Invalid link'
+          }
         } else {
           return true
         }
@@ -241,7 +256,7 @@ export default {
         '字号': 'Font size',
         '宋体': 'SimSun',
         '微软雅黑': 'Microsoft YaHei',
-
+        '插入': 'Insert',
         '字体': 'Font family',
         '正文': 'Content',
         '文字颜色': 'Font color',

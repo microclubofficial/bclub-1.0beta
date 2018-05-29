@@ -73,15 +73,6 @@
         <!--<li class="set-delList" @click="delTopic(tmp)"> <a href="javascript:void(0);"><i class="iconfont icon-del">&#xe78d;</i>{{$t('list.delete')}}</a> </li>-->
               <!-- <li> <a href="javascript:void(0);"><i class="iconfont icon-fenxiang"></i> 分享</a> </li> -->
               <!-- <li class="set-choseShang"> <a href="javascript:void(0);"><i class="iconfont icon-dashang"></i> 打赏<span>438</span></a> </li> -->
-              <li>
-                <!-- <div class="dropdown">
-                  <a href="javascript:void(0);" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="iconfont icon-genduo"></i> 更多</a>
-                  <ul class="dropdown-menu">
-                    <li><a href="javascript:void(0);">举报</a></li>
-                    <li><a href="javascript:void(0);">没有帮助</a></li>
-                  </ul>
-                </div> -->
-              </li>
             </ul>
           </div>
       </div>
@@ -506,12 +497,9 @@ export default {
     collectionTopic (articleDetail) {
       let instance
       post(`/api/collect/${articleDetail.id}`).then(data => {
-        if (data.data.collect_bool) {
-          articleDetail.collect_bool = data.data.collect_bool
-          instance = new Toast({
-            message: data.message,
-            duration: 1000
-          })
+        if (data.resultcode === 0) {
+          alert(data.message)
+          this.$router.push('/login')
         } else {
           articleDetail.collect_bool = data.data.collect_bool
           if (data.data.collect_bool) {
@@ -520,7 +508,7 @@ export default {
               iconClass: 'glyphicon glyphicon-ok',
               duration: 1000
             })
-          } else {  
+          } else {
             instance = new Toast({
               message: this.$t('prompt.cancelCollect'),
               duration: 1000
