@@ -77,9 +77,12 @@
 
 .email-box {
   clear: both;
+  overflow: hidden;
+  display: block;
   width: 50%;
   margin: 0 auto;
-  padding: 20px 0;
+  position: relative;
+  padding: 30px 0;
   label {
     width: 40%;
     line-height: 52px;
@@ -87,7 +90,7 @@
     float: left;
   }
   input {
-    width: 50%;
+    width: 60%;
     float: left;
   }
   button {
@@ -98,7 +101,7 @@
 }
 
 .email-btn {
-  padding: 30px 0 40px 0;
+  padding: 0 0 40px 0;
 }
 
 .center-wrap {

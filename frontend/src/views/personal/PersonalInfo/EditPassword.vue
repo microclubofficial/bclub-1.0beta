@@ -40,15 +40,12 @@
 }
 
 .password-form {
-  width: 320px;
+  width: 60%;
   margin: 30px auto;
   label {
-    width: 90px;
     float: left;
   }
-  input {
-    width: 220px;
-  }
+  
 }
 
 .btn-confirm {
@@ -115,29 +112,29 @@
       </div>
       <form class="form-horizontal password-form">
         <div class="form-group">
-          <label class="col-sm-2 control-label">{{$t('editProfile.originalPassword')}}</label>
-          <div class="col-sm-3">
+          <label class="col-sm-3 control-label">{{$t('editProfile.originalPassword')}}</label>
+          <div class="col-sm-9">
             <input class="form-control" name="password" type="password" :placeholder="$t('placeholder.originalPassword')" @change='showFindPwdMsg(setPwd.OldPassword, 0)' v-model="setPwd.OldPassword">
           </div>
           <p class="prompt">{{oldpwdPrompt}}</p>
         </div>
         <div class="form-group">
-          <label class="col-sm-2 control-label">{{$t('editProfile.newPassword')}}</label>
-          <div class="col-sm-3">
+          <label class="col-sm-3 control-label">{{$t('editProfile.newPassword')}}</label>
+          <div class="col-sm-9">
             <input class="form-control" name="password" type="password" :placeholder="$t('placeholder.newPassword')" @change='showFindPwdMsg(setPwd.NewPassword, 1)' v-model="setPwd.NewPassword">
           </div>
           <p class="prompt">{{newpwdPrompt}}</p>
         </div>
         <div class="form-group">
-          <label class="col-sm-2 control-label">{{$t('editProfile.confirmPassword')}}</label>
-          <div class="col-sm-3">
+          <label class="col-sm-3 control-label">{{$t('editProfile.confirmPassword')}}</label>
+          <div class="col-sm-9">
             <input class="form-control" name="repassword" type="password" :placeholder="$t('placeholder.repassword')" @change='showFindPwdMsg(setPwd.confirm_password, 2)' v-model="setPwd.confirm_password">
           </div>
           <p class="prompt">{{confirm_upwdPrompt}}</p>
         </div>
-        <div class="btn-box">
+        <div class="form-group  ">
 
-          <button class="col-md-offset-4 col-sm-2 forphone btnm  btn-confirm" v-bind:disabled="!setPwd.OldPassword" @click='setPwdFun' data-target="#myModal" data-toggle="">{{$t('button.confirm')}}
+          <button class=" forphone btnm  btn-confirm col-sm-offset-4" v-bind:disabled="!setPwd.OldPassword" @click='setPwdFun' data-target="#myModal" data-toggle="">{{$t('button.confirm')}}
           </button>
 
           <button class="forphone btnm  btn-cacel">
