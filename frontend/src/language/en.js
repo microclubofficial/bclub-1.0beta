@@ -67,7 +67,7 @@ export default {
     email: 'email',
     originalPassword: 'original password',
     newPassword: 'new password',
-    title: 'Please enter title'
+    title: 'Please enter a title'
   },
   prompt: {
     prompt: 'Prompt',
@@ -93,7 +93,7 @@ export default {
     emailSent: 'An email has been sent. Please check and verify it.',
     loading: 'Loading...',
     noMore: 'No more',
-    emptyContent: 'Post content cannot be empty',
+    emptyContent: 'Posted content cannot be empty',
     emptyLink: 'Link cannot be empty',
     invalidLink: 'Invalid link',
     successCollect: 'Collect successfully',

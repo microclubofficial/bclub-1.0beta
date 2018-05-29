@@ -61,7 +61,8 @@ export default {
       this.$router.push('/')
     }
     get(`/api/u/email`).then(data => {
-      if (data.resultcode === 1) {
+      console.log(data)
+      if (data.resultcode === 1 && data.data) {
         this.successbind = true
         this.bindForm.email = data.data
       }
