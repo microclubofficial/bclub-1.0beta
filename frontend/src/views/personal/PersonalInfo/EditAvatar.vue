@@ -34,11 +34,11 @@
   margin: 0 50px;
   span {
     &:nth-child(1) {
-      width: 28px;
-      height: 28px;
+      width: 32px;
+      height: 32px;
       display: block;
       float: left;
-      margin-top: 4px;
+      margin-top: 6px;
       margin-right: 4px;
 
       > img {
