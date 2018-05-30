@@ -136,8 +136,11 @@ export default {
   personalCenter: {
     personal: 'Personal Center',
     topic: 'Topic',
+    myTopic:'My topics',
     comment: 'Comment',
+    myComment:'My comments',
     collection: 'Collection',
+    myCollection:'My collections',
     editProfile: 'Edit profile',
     editAvatar: 'Edit avatar',
     returnMyHomepage: 'Return my homepage'

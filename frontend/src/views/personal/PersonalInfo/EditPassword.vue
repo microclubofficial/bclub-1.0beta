@@ -46,7 +46,6 @@
   label {
     float: left;
   }
-  
 }
 
 .btn-confirm {
@@ -106,14 +105,26 @@
 .left-width {
   width: 60%;
 }
-.form-group label {
-  width: 20%; 
+.margin-top label {
+  width: 20%;
   padding-right: 10px;
   text-align: left;
 }
 .button-box {
   padding-left: 20%;
-  margin-left: 10px;
+}
+.margin-top {
+  margin-top: 30px;
+}
+.clearfix:after {
+  display: block;
+  clear: both;
+  content: "";
+  visibility: hidden;
+  height: 0;
+}
+.clearfix {
+  zoom: 1;
 }
 </style>
 <template>
@@ -129,28 +140,28 @@
         </span>
       </div>
       <form class="form-horizontal password-form">
-        <div class="form-group">
+        <div class="clearfix margin-top">
           <label class="left control-label">{{$t('editProfile.originalPassword')}}</label>
           <div class="left left-width">
             <input class="form-control" name="password" type="password" :placeholder="$t('placeholder.originalPassword')" @change='showFindPwdMsg(setPwd.OldPassword, 0)' v-model="setPwd.OldPassword">
           </div>
           <p class="prompt">{{oldpwdPrompt}}</p>
         </div>
-        <div class="form-group">
+        <div class="clearfix margin-top">
           <label class="left control-label">{{$t('editProfile.newPassword')}}</label>
           <div class="left left-width">
             <input class="form-control" name="password" type="password" :placeholder="$t('placeholder.newPassword')" @change='showFindPwdMsg(setPwd.NewPassword, 1)' v-model="setPwd.NewPassword">
           </div>
           <p class="prompt">{{newpwdPrompt}}</p>
         </div>
-        <div class="form-group">
+        <div class="clearfix margin-top">
           <label class="left control-label">{{$t('editProfile.confirmPassword')}}</label>
           <div class="left left-width">
             <input class="form-control" name="repassword" type="password" :placeholder="$t('placeholder.repassword')" @change='showFindPwdMsg(setPwd.confirm_password, 2)' v-model="setPwd.confirm_password">
           </div>
           <p class="prompt">{{confirm_upwdPrompt}}</p>
         </div>
-        <div class="form-group button-box">
+        <div class="clearfix button-box margin-top">
 
           <button class=" forphone btnm  btn-confirm" v-bind:disabled="!setPwd.OldPassword" @click='setPwdFun' data-target="#myModal" data-toggle="">{{$t('button.confirm')}}
           </button>

@@ -1,7 +1,7 @@
 <template>
   <div>
     <p class="title-box">
-      <span>我的动态</span>  
+      <span>{{$t('personalCenter.myTopic')}}</span>  
     </p>
   <div class="personal-topiclist">
     <div class="loading" v-if='showLoader'>

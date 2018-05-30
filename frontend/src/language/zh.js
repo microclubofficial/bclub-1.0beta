@@ -133,8 +133,11 @@ export default {
   personalCenter: {
     personal: '个人中心',
     topic: '主题',
+    myTopic:'我的主题',
     comment: '评论',
+    myComment:'我的评论',
     collection: '收藏',
+    myCollection:'我的收藏',
     editProfile: '编辑资料',
     editAvatar: '编辑头像',
     returnMyHomepage: '返回我的主页'

@@ -1,5 +1,8 @@
 <template>
   <div>
+     <p class="title-box">
+      <span>{{$t('personalCenter.myComment')}}</span>  
+    </p>
   <div class="personal-comment">
     <!-- {{[articles]}} -->
     <div class="loading" v-if='showLoader'>
@@ -712,7 +715,7 @@ export default{
 }
 </script>
 
-<style>
+<style  lang="scss" scoped >
 .replyBackConten>p:first-child{
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1111,5 +1114,19 @@ svg:not(:root) {
     left: 0;
     padding: 5px 10px;
     color: #d4d7dc;
+}
+.title-box {
+  font-size: 14px;
+  font-weight: bold;
+  border-bottom: solid 1px #dfdfdf;
+  margin: 0 35px;
+  padding: 35px 0 10px 0;
+
+  span {
+    color:#666;
+    border-bottom: solid 2px #1e8fff;
+    padding-bottom: 10px;
+  }
+  
 }
 </style>

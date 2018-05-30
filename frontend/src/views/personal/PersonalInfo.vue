@@ -106,6 +106,8 @@
 }
 
 .right-width {
+  min-height: 600px;
+  display: block;
   width: 70%;
   float: left;
 }
@@ -135,7 +137,7 @@
                 <ul class="nav  nav-tabs nav-width" :class="{'enul':language == 'en'}">
                     <li class="tx-box">
                         <div class="tx">
-                            <!--<img src="../../assets/img/tx.png" />-->
+                            <img  src="../../assets/img/tx.png"/>
                         </div>
                     </li>
                     <li class="name">楚人长侠</li>

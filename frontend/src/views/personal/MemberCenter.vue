@@ -1,5 +1,6 @@
 <style lang="scss" scoped>
 /*.member-center{margin-top: 40px;}*/
+
 .personal-info {
   height: 150px;
   position: relative;
@@ -30,20 +31,18 @@
     .nav-pills {
       margin-top: 20px;
       li {
+        border: solid 1px #dfdfdf;
+        border-radius: 4px;
         &.active {
           a {
             background: #1e8fff;
           }
         }
         &:nth-child(2) {
-          border: solid 1px #dfdfdf;
-          border-radius: 4px;
           margin-left: 10px;
         }
         &:nth-child(3) {
-          border: solid 1px #dfdfdf;
-          border-radius: 4px;
-          margin-left: 10px;
+         margin-left: 10px;
         }
       }
       a {
@@ -71,14 +70,14 @@
       border: none;
       &::after {
         content: '';
-        width: 28px;
-        height: 28px;
+        width: 32px;
+        height: 32px;
         display: block;
         position: absolute;
         background: url(../../assets/img/i00.png);
         background-size: cover;
         top: 8px;
-        right: 18px;
+        right: 16px;
       }
     }
   }
@@ -141,11 +140,11 @@
             <!-- <h3 style="margin:20px 0;">{{$t('personalCenter.personal')}}</h3> -->
             <div class="bg-box">
                 <div class="bgimg-box">
-                    <img  src="../../assets/img/pic-news.png"/>
+                    <img  src="../../assets/img/perbg.jpg"/>
                 </div>
-                <div class="upload-box">
+                <!-- <div class="upload-box">
                     <span>上传封面照片</span>
-                </div>
+                </div> -->
             </div>
             <div class="personal-info">
                 <div class="avatar">
@@ -154,7 +153,7 @@
                 <div class="right-main">
                     <h3>
                         <span>{{personalUser.username}}</span>
-                        <span>个人说明个人说明</span>
+                        <!-- <span>个人说明个人说明</span> -->
                      </h3>
                     <!--<p>
                         关注：<a href="">1652</a>&nbsp;&nbsp;&nbsp;&nbsp;

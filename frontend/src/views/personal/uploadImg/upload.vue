@@ -1823,6 +1823,7 @@ export default {
 /* 增加右侧头像区域样式 */
 .right-box {
     float: left;
+    padding-top: 70px;
 }
 .sqaure {
     width: 90px;
