@@ -67,11 +67,14 @@ msgstr "%(key)s不能为空"
 msgid "Username or Password Error"
 msgstr "用户名或密码错误"
 
-#: flask_auth/auth/views.py:96 flask_auth/auth/views.py:118
-#: flask_auth/auth/views.py:164 flask_auth/auth/views.py:265
-#: forums/api/forms.py:65 forums/api/setting/views.py:87
+#: flask_auth/auth/views.py:96 forums/api/setting/views.py:87
 msgid "Captcha error"
 msgstr "验证码错误"
+
+#: flask_auth/auth/views.py:118 flask_auth/auth/views.py:164
+#: flask_auth/auth/views.py:265 forums/api/setting/views.py:87
+msgid "Captcha error or expired"
+msgstr "验证码错误或失效"
 
 #: flask_auth/auth/views.py:101 flask_auth/auth/views.py:124
 msgid "You have logged in"

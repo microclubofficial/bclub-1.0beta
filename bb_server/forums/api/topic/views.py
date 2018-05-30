@@ -157,6 +157,7 @@ class TopicListView(MethodView):
             picture = picture)
         topic.author = user
         topic.save()
+        collect = collect_bool(topic.id)
         topic = object_as_dict(topic)
         Avatar(topic, user)
         json_loads(topic, ['content', 'title'])
@@ -165,6 +166,7 @@ class TopicListView(MethodView):
         topic['is_bad'] = 0
         topic['diff_time'] = 0
         topic['bool_delete'] = bool_delete(user)
+        topic['collect_bool'] = collect
         msg = _('success')
         return get_json(1, msg, topic)
 

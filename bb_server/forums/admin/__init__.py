@@ -13,13 +13,14 @@
 from forums.admin import bar, user, topic, message, permission 
 from flask_admin import expose, AdminIndexView, Admin
 from forums.api.user.models import User
-from flask import redirect, url_for, request, render_template, Blueprint, session, Response, make_response
+from flask import redirect, url_for, request, render_template, Blueprint, session, make_response
 from flask_login import current_user
 from forums.func import get_json
 from flask.views import MethodView
 
 from forums.extension import redis_data
 from uuid import uuid4
+from time import time
 
 class MyAdminIndexView(AdminIndexView):  
     @expose()
@@ -39,6 +40,10 @@ class MyAdminIndexView(AdminIndexView):
 
 class LoginView(MethodView):
     def get(self):
+        uuid = request.cookies.get('uuid', None)
+        username = redis_data.get(uuid)
+        if username:
+            return redirect('/admin')
         return render_template('admin/login.html')
 
     def post(self):
@@ -54,9 +59,11 @@ class LoginView(MethodView):
         uuid = str(uuid4())
         redis_data.set(uuid, username)
         resp = make_response(redirect('/admin'))
-        resp.set_cookie('uuid', uuid)
         if remember:
             redis_data.expire('uuid', 3600*24*7)
+            resp.set_cookie('uuid', uuid, expires=time()+3600*24*7)
+        else:
+            resp.set_cookie('uuid', uuid)
         #session['admin_username'] =  user.username
         #session.permanent = True
         return resp
