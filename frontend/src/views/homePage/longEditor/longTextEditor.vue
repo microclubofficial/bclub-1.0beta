@@ -39,7 +39,8 @@ export default{
       imgObj: {
         imgName: []
       },
-      editor: {}
+      editor: {},
+      isLink: false
     }
   },
   computed: {
@@ -83,6 +84,7 @@ export default{
         if (!reg.test(link)) {
           return this.$t('prompt.invalidLink')
         } else {
+          this.isLink = true
           return true
         }
       }
@@ -285,8 +287,9 @@ export default{
       // this.topicData.content = this.editorContent
       this.topicData.content = this.editor.$textElem.html()
       // 处理插入链接
-      if (this.topicData.content.indexOf('href') > -1) {
-        let href = this.topicData.content.match(/(?<=(href="))[^"]*?(?=")/ig)
+      if (this.topicData.content.indexOf('href') > -1 && this.isLink) {
+        let href = this.topicData.content.match(/(<=(href="))[^"]*?(?=")/ig)
+        // let href = this.topicData.content.match(/(?<=(href="))[^"]*?(?=")/ig)
         for (let i = 0; i < href.length; i++) {
           if (href[i].indexOf('http') === -1) {
             this.topicData.content = this.topicData.content.replace(href[i], 'http://' + href[i])
@@ -312,7 +315,8 @@ export default{
         return false
       }
       this.imgArr = []
-      let image = this.topicData.content.match(/<img[^>]*?(src="(?!\/static\/avatar)[^"]*?")(?![^<>]*?data-w-e[^<>]*?>)[^>]*?>/g)
+      let image = []
+      image = this.topicData.content.match(/<img[^>]*?(src="(?!\/static\/avatar)[^"]*?")(?![^<>]*?data-w-e[^<>]*?>)[^>]*?>/g)
       this.topicData.picture = ''
       if (this.longId.hideDilog) {
         this.topicData.token = this.longId.bId
@@ -322,11 +326,14 @@ export default{
       if (image !== null) {
         for (let i = 0; i < image.length; i++) {
           if (image[i].indexOf('alt="[') === -1) {
-            this.imgArr.push(image[i].match(/(?<=(src="))[^"]*?(?=")/ig)[0])
+            let reg = /<img[^>]*src[=\'\"\s]+([^\"\']*)[\"\']?[^>]*>/gi
+            while (reg.exec(image[i])) {
+              this.imgArr.push(RegExp.$1)
+            }
           }
-          // console.log(image[i])
         }
         this.imgObj.imgName = this.imgArr
+        console.log(this.imgArr)
         post('/api/photo', this.imgObj).then(data => {
           for (let key in data.data) {
             let reg = new RegExp(key, 'g')
@@ -335,14 +342,13 @@ export default{
           }
           // 请求
           this.topicData.picture = data.data[this.imgArr[0]]
-          // console.log(this.topicData.content)
-          // console.log(this)
           this.postEditor()
         })
       } else {
         // 首图
         if (/<img[^>]+>/g.test(this.topicData.content)) {
-          this.topicData.picture = this.topicData.content.match(/<img(?![^<>]*?data-w-e[^<>]*?>).*?>/g)[0].match(/(?<=(src="))[^"]*?(?=")/ig)[0]
+          this.topicData.picture = this.topicData.content.match(/<img(?![^<>]*?data-w-e[^<>]*?>).*?>/g)[0].match(/(src=")[^"]*?(?=")/ig)[0]
+          // match(/(?<=(src="))[^"]*?(?=")/ig)[0]
         }
         this.postEditor()
       }

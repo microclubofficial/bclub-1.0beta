@@ -40,7 +40,8 @@ export default {
       replies: [],
       editor: {},
       imgArr: [],
-      imgObj: {}
+      imgObj: {},
+      isLink: false
     }
   },
   watch: {
@@ -66,8 +67,9 @@ export default {
       // this.topicData.content = this.editorContent
       this.topicData.content = this.editor.$textElem.html()
       // 处理链接
-      if (this.topicData.content.indexOf('href') > 0) {
-        let href = this.topicData.content.match(/(?<=(href="))[^"]*?(?=")/ig)
+      if (this.topicData.content.indexOf('href') > 0 && this.isLink) {
+        let href = this.topicData.content.match(/(<=(href="))[^"]*?(?=")/ig)
+        // let href = this.topicData.content.match(/(?<=(href="))[^"]*?(?=")/ig)
         for (let i = 0; i < href.length; i++) {
           if (href[i].indexOf('http') === -1) {
             this.topicData.content = this.topicData.content.replace(href[i], 'http://' + href[i])
@@ -110,7 +112,8 @@ export default {
       // 处理评论内容
       if (this.toApi === 0) {
         if (this.topicData.content.indexOf('img') > 0) {
-          let commentImg = this.topicData.content.match(/<img.*?(?:>|\/>)/gi)[0].match(/(?<=(src="))[^"]*?(?=")/ig)[0]
+          let commentImg = this.topicData.content.match(/<img.*?(?:>|\/>)/gi)[0].match(/((src="))[^"]*?(?=")/ig)[0]
+          // match(/(?<=(src="))[^"]*?(?=")/ig)[0]
           this.topicData.picture = commentImg
         }
       }
@@ -121,14 +124,18 @@ export default {
         if (!/^<img.*>$/gi.test(this.topicData.replyContent)) {
           // 处理正常内容
           if (this.topicData.replyContent.indexOf('img') > 0) {
-            let replyImg = this.topicData.replyContent.match(/<img(?![^<>]*?data-w-e[^<>]*?>).*?>/g)[0].match(/(?<=(src="))[^"]*?(?=")/ig)[0]
-            let replyNewData = this.topicData.replyContent.replace(/<img src="\/static[^>]+>/g, `<a target="_blank" href='${replyImg}'  style='color:#0181FF'><i class='iconfont'>&#xe694;</i>查看图片</a>`)
-            this.topicData.replyContent = replyNewData
+            let replyImg = this.topicData.replyContent.match(/<img(?![^<>]*?data-w-e[^<>]*?>).*?>/g)
+            if (replyImg !== null) {
+              replyImg = replyImg[0].match(/(src=")[^"]*?(?=")/ig)[0]
+              // match(/(?<=(src="))[^"]*?(?=")/ig)[0]
+              let replyNewData = this.topicData.replyContent.replace(/<img src="\/static[^>]+>/g, `<a target="_blank" href='${replyImg}'  style='color:#0181FF'><i class='iconfont'>&#xe694;</i>查看图片</a>`)
+              this.topicData.replyContent = replyNewData
+            }
           }
-          // this.topicData.replyContent = replyNewData
         } else {
           if (this.topicData.replyContent.indexOf('data-w-e') === -1) {
-            let justReplyImg = this.topicData.replyContent.match(/(?<=(src="))[^"]*?(?=")/ig)[0]
+            let justReplyImg = this.topicData.replyContent.match(/(src=")[^"]*?(?=")/ig)[0]
+            // let justReplyImg = this.topicData.replyContent.match(/(?<=(src="))[^"]*?(?=")/ig)[0]
             if (this.language === 'zh') {
               this.topicData.replyContent = '图片评论' + `<a target="_blank" href='${justReplyImg}' style='color:#0181FF'><i class='iconfont'>&#xe694;</i>查看图片</a>`
             } else if (this.language === 'en') {
@@ -137,7 +144,8 @@ export default {
           } else {
             let replyImg = this.topicData.replyContent.match(/<img(?![^<>]*?data-w-e[^<>]*?>).*?>/g)
             if (replyImg !== null) {
-              replyImg = replyImg[0].match(/(?<=(src="))[^"]*?(?=")/ig)[0]
+              replyImg = replyImg[0].match(/(src=")[^"]*?(?=")/ig)[0]
+              // replyImg = replyImg[0].match(/(?<=(src="))[^"]*?(?=")/ig)[0]
               let replyNewData
               if (this.language === 'zh') {
                 replyNewData = this.topicData.replyContent.replace(/<img src="\/static[^>]+>/g, `<a target="_blank" href='${replyImg}' style='color:#0181FF'><i class='iconfont'>&#xe694;</i>查看图片</a>`)
@@ -155,7 +163,10 @@ export default {
       if (mainImg !== null) {
         for (let i = 0; i < mainImg.length; i++) {
           if (mainImg[i].indexOf('alt="[') === -1) {
-            this.imgArr.push(mainImg[i].match(/(?<=(src="))[^"]*?(?=")/ig)[0])
+            let reg = /<img[^>]*src[=\'\"\s]+([^\"\']*)[\"\']?[^>]*>/gi
+            while (reg.exec(mainImg[i])) {
+              this.imgArr.push(RegExp.$1)
+            }
           }
         }
         this.imgObj.imgName = this.imgArr
@@ -167,8 +178,6 @@ export default {
           }
           this.topicData.picture = data.data[this.imgArr[0]]
           // 请求
-          // console.log(this.topicData.content)
-          // console.log(this)
           this.reportPost()
         })
       } else {
@@ -248,6 +257,7 @@ export default {
             return 'Invalid link'
           }
         } else {
+          this.isLink = true
           return true
         }
       }

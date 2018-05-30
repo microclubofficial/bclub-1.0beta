@@ -43,7 +43,8 @@ export default {
       showDilog: false,
       editor: {},
       imgArr: [],
-      imgObj: {}
+      imgObj: {},
+      isLink: false
     }
   },
   computed: {
@@ -66,8 +67,9 @@ export default {
       // this.topicData.content = this.editorContent
       this.topicData.content = this.editor.$textElem.html()
       // 处理插入链接
-      if (this.topicData.content.indexOf('href') > -1) {
-        let href = this.topicData.content.match(/(?<=(href="))[^"]*?(?=")/ig)
+      if (this.topicData.content.indexOf('href') > -1 && this.isLink) {
+        let href = this.topicData.content.match(/(<=(href="))[^"]*?(?=")/ig)
+        // let href = this.topicData.content.match(/(?<=(href="))[^"]*?(?=")/ig)
         for (let i = 0; i < href.length; i++) {
           if (href[i].indexOf('http') === -1) {
             this.topicData.content = this.topicData.content.replace(href[i], 'http://' + href[i])
@@ -92,17 +94,18 @@ export default {
         $('.w-e-text').html('')
         return false
       }
-      // let image = this.topicData.content.match(/<img src="\/static[^>]+>/g)
-      // this.topicData.picture = ''
-      // if (image !== null) {
-      //   this.topicData.picture = image[0]
-      //   this.topicData.picture = this.topicData.picture.slice(this.topicData.picture.indexOf('/'), this.topicData.picture.lastIndexOf('=') - 7)
-      // }
+      let image = this.topicData.content.match(/<img src="\/static[^>]+>/g)
+      this.topicData.picture = ''
+      if (image !== null) {
+        this.topicData.picture = image[0]
+        this.topicData.picture = this.topicData.picture.slice(this.topicData.picture.indexOf('/'), this.topicData.picture.lastIndexOf('=') - 7)
+      }
       // 处理首图
       if (/<img.*?(?:>|\/>)/gi.test(this.topicData.content)) {
         let image = this.topicData.content.match(/<img(?![^<>]*?data-w-e[^<>]*?>).*?>/g)
         if (image !== null) {
-          image = image[0].match(/(?<=(src="))[^"]*?(?=")/ig)[0]
+          image = image[0].match(/(src=")[^"]*?(?=")/ig)[0]
+          //  image = image[0].match(/(?<=(src="))[^"]*?(?=")/ig)[0]
         }
         this.topicData.picture = image
       }
@@ -123,7 +126,10 @@ export default {
       if (contentImg !== null) {
         for (let i = 0; i < contentImg.length; i++) {
           if (contentImg[i].indexOf('alt="[') === -1) {
-            this.imgArr.push(contentImg[i].match(/(?<=(src="))[^"]*?(?=")/ig)[0])
+            let reg = /<img[^>]*src[=\'\"\s]+([^\"\']*)[\"\']?[^>]*>/gi
+            while (reg.exec(contentImg[i])) {
+              this.imgArr.push(RegExp.$1)
+            }
           }
         }
         this.imgObj.imgName = this.imgArr
@@ -135,18 +141,11 @@ export default {
           }
           this.topicData.picture = data.data[this.imgArr[0]]
           // 请求
-          // console.log(this.topicData.content)
-          // console.log(this)
           this.postContent()
         })
       } else {
         this.postContent()
       }
-      // this.$store.commit('LONG_ID', {
-      //   hideDilog: !this.showDilog,
-      //   bId: this.$route.params.currency,
-      //   bName: JSON.parse(this.$route.query.b).zh
-      // })
     },
     // post内容
     postContent () {
@@ -254,6 +253,7 @@ export default {
         if (!reg.test(link)) {
           return this.$t('prompt.invalidLink')
         } else {
+          this.isLink = true
           return true
         }
       }
@@ -502,7 +502,7 @@ export default {
     border-radius: 50%;
 }
 .editor{
-    width: 540px;
+    /*width: 540px;*/
     margin: auto;
     height: 116px;
     position: relative;

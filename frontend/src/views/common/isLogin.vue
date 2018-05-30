@@ -157,7 +157,7 @@ export default {
             'avatar': '',
             'isLogin': false
           })
-          removeToken()         
+          removeToken()
           this.$router.push('/')
           // this.outloginSty()
           // this.$emit('backLoadContent')
@@ -361,9 +361,9 @@ a.nav_btn_longtext {
   line-height: 28px;
 }
 /*模态框*/
-.modal-dialog>.modal-content>.modal-body>.wangeditor>.editor{
+/*.modal-dialog>.modal-content>.modal-body>.wangeditor>.editor{
   width: 525px;
-}
+}*/
  .modal-dialog>.modal-content>.modal-body>.wangeditor>.editor>.w-e-panel-container{
     width: 300px!important;
     z-index: 20000;
@@ -424,5 +424,5 @@ a.nav_btn_longtext {
     right: 307px;
     color:#999;
 }
-.modal-body>.wangeditor>.editor{width: 525px;}
+/*.modal-body>.wangeditor>.editor{width: 525px;}*/
 </style>

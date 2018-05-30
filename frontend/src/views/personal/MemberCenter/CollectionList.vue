@@ -580,29 +580,27 @@ export default{
         return
       }
       let reply = val.replace(/<p[^>]*>|<\/p>|<h-char[^>]*>|<\/h-char>|<h-inner[^>]*>|<\/h-inner>/g, '')
-      if (reply.substring(0, 40).indexOf('href') > 0) {
+      if (reply.substring(0, 80).indexOf('href') > 0 || reply.substring(0, 80).indexOf('img') > 0) {
         let imgLength = 0
-        if (reply.substring(0, 40).indexOf('img') > 0) {
-          let imgArr = []
-          imgArr = reply.match(/<img[^>]*>/gi)
-          if (imgArr === null) {
-            return
-          }
-          for (let i = 0; i < imgArr.length; i++) {
-            imgLength += imgArr[i].length
-          }
+        let imgArr = []
+        imgArr = reply.substring(0, 300).match(/<img[^>]*>/gi)
+        if (imgArr === null) {
+          return
+        }
+        for (let i = 0; i < imgArr.length; i++) {
+          imgLength += imgArr[i].length
         }
         let hrefLength = 0
-        let hrefArr = reply.match(/<a.*?>(.*?)<\/a>/ig)[0]
+        let hrefArr = reply.match(/<a.*?>(.*?)<\/a>/ig)
         if (hrefArr === null) {
           return
         }
         // for (let i = 0; i < hrefArr.length; i++) {
         //   hrefLength += hrefArr[i].length
         // }
-        hrefLength = hrefArr.length
+        hrefLength = hrefArr[0].length
         return reply.substring(0, 40 + hrefLength + imgLength) + '...'
-      } else if (reply.substring(0, 40).indexOf('img') > 0) {
+      } else if (reply.substring(0, 80).indexOf('img') > 0) {
         let imgLength = 0
         let imgArr = reply.match(/<img[^>]*>/gi)
         if (imgArr === null) {
