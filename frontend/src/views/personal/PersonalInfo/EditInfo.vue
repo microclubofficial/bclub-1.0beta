@@ -13,101 +13,105 @@
       </div>
       <form class="form-horizontal">
         <div class="form-group info-border">
-          <label class="col-md-3 col-sm-3 control-label personal-font">{{$t('register.username')}}</label>
-          <div class="col-md-7 col-sm-6" >
-            <p class="form-control-static personal-font">{{personalUserInfo.username}}</p>
-          </div>
-          <div class="col-md-2 col-sm-3 right">
-            <div class="btnm  btn-edit" @click="setFormBtn(0)">{{isShow ? $t('button.fold') : $t('button.unfold')}}</div>
-          </div>
-        </div>
-        <!-- 修改用户名 -->
-        <form class="form-horizontal form-space margin-top" v-if="isShow">
-          <div class="form-group">
-            <label for="inputEmail3" class="col-md-3 col-sm-3 control-label">{{$t('register.username')}}</label>
-            <div class="col-md-9 col-sm-9">
-              <input type="text" class="form-control" name="username" @change='showsetFormMsg(setForm.username, 0)' v-model="setForm.username" maxlength="16" id="inputEmail3" :placeholder="$t('placeholder.username')">
+          <div class="clearfix">
+            <label class="left control-label personal-font">{{$t('register.username')}}</label>
+            <div class="left" >
+              <p class="form-control-static personal-font">{{personalUserInfo.username}}</p>
+            </div>
+            <div class="right">
+              <div class="btnm  btn-edit" @click="setFormBtn(0)">{{isShow ? $t('button.fold') : $t('button.edit')}}</div>
             </div>
           </div>
-          <div class="form-group">
-            <label class="col-md-3 col-sm-3 control-label"></label>
-            <p class="form-control-static prompt" style="margin-top:0px !important;">{{unamePrompt}}</p>
-            <div class="col-md-offset-4 col-sm-offset-4 margin-top">
-              <button type="button" class="edit-user-btn" v-bind:disabled="!setForm.username" @click="setusername" data-target="#myModal" data-toggle="">{{$t('button.confirm')}}
-              </button>
-              <button class="cancel-user-btn">{{$t('button.cancel')}}</button>
+          <!-- 修改用户名 -->
+          <form class="form-horizontal form-space margin-top" v-if="isShow">
+            <div class="clearfix edit-infor">
+              <label for="inputEmail3" class="left control-label">{{$t('register.username')}}</label>
+              <div class="left left-width">
+                <input type="text" class="form-control" name="username" @change='showsetFormMsg(setForm.username, 0)' v-model="setForm.username" maxlength="16" id="inputEmail3" :placeholder="$t('placeholder.newUsername')">
+                <div class="buttons-box clearfix">
+                <!-- <label class="left control-label"></label>
+                <p class="form-control-static prompt" style="margin-top:0px !important;">{{unamePrompt}}</p> -->
+                  <div class="margin-top">
+                    <button type="button" class="edit-user-btn" v-bind:disabled="!setForm.username" @click="setusername" data-target="#myModal" data-toggle="">{{$t('button.confirm')}}
+                    </button>
+                    <button class="cancel-user-btn">{{$t('button.cancel')}}</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      
+        <div class="form-group info-border">
+          <div class="clearfix">
+            <label class="left control-label personal-font">{{$t('register.phone')}}</label>
+            <div class="left">
+              <p class="form-control-static personal-font">{{personalUserInfo.phone}}</p>
+            </div>
+            <div class="right">
+              <div class="btnm  btn-edit" @click="setFormBtn(1)">{{seShow ? $t('button.fold'): $t('button.edit')}}</div>
+            </div>
+          </div>
+          <!-- 修改手机号 -->
+          <form class="form-horizontal form-space margin-top" v-if="seShow">
+            <div class="edit-infor clearfix">
+              <label for="inputEmail3" class="left control-label">{{$t('register.phone')}}</label>
+              <div class="left left-width">
+                <input type="text" class="form-control" id="inputEmail3" @change='showsetFormMsg(setForm.phone, 1)' v-model="setForm.phone" :placeholder="$t('placeholder.newPhone')">
+              </div>
+            </div>
+            <p class="prompt left" style="margin-top:0px !important;">{{phonePrompt}}</p>
+            <div class="edit-infor clearfix yzm">
+              <label for="inputCaptcha3" class="left">{{$t('register.vcode')}}</label>
+              <div class="left left-width">
+                <div class="yzm-input">
+                <input type="text" class="form-control" v-model="setForm.captcha" @change='showsetFormMsg(setForm.captcha, 2)' id="inputCaptcha3" :placeholder="$t('placeholder.vcode')">
+                 </div>
+                <button type="button" class="btn btn-default get-captcha yzm-button" style="height:34px;line-height:34px;" @click="getPhoneControl" v-bind:disabled="hasphone" :class="{'btn-success':!hasphone}">
+                  <span v-show="hasControl">{{countdown}}</span>{{getcontroltxt}}
+                </button>
+
+                <div class="buttons-box clearfix">
+                  <p class="prompt left" style="margin-top:0px !important;">{{phoneControlPrompt}}</p>
+                  <div class="left margin-top">
+                    <button type="button" class=" edit-user-btn" v-bind:disabled="!setForm.phone" @click="setusername"  data-target="#myModal" data-toggle="">{{$t('button.confirm')}}
+                    </button>
+                    <button class="cancel-user-btn">{{$t('button.cancel')}}</button>
+                  </div>
+                </div>
+              </div>
+              
+
             </div>
             
-          </div>
-          
-        </form>
-        <div class="form-group info-border">
-          <label class="col-md-3 col-sm-3 control-label personal-font">{{$t('register.phone')}}</label>
-          <div class="col-md-7 col-sm-7">
-            <p class="form-control-static personal-font">{{personalUserInfo.phone}}</p>
-          </div>
-          <div class="col-md-2 col-sm-2">
-            <div class="btnm  btn-edit" @click="setFormBtn(1)">{{seShow ? $t('button.fold'): $t('button.unfold')}}</div>
-          </div>
+          </form>
         </div>
         
-       <!-- 修改手机号 -->
-      <form class="form-horizontal form-space margin-top" v-if="seShow">
-        <div class="form-group">
-          <label for="inputEmail3" class="col-md-3 col-sm-3 control-label">{{$t('register.phone')}}</label>
-          <div class="col-md-9 col-sm-9">
-            <input type="text" class="form-control" id="inputEmail3" @change='showsetFormMsg(setForm.phone, 1)' v-model="setForm.phone" :placeholder="$t('placeholder.phone')">
-          </div>
-        </div>
-        <p class="prompt col-md-offset-3 col-sm-offset-3 col-md-9 col-sm-9" style="margin-top:0px !important;">{{phonePrompt}}</p>
-        <div class="form-group" style="margin-top: 37px;">
-          <label for="inputCaptcha3" class="col-md-3 col-sm-3 control-label">{{$t('register.vcode')}}</label>
-          <div class="col-md-6 col-sm-6">
-            <input type="text" class="form-control" v-model="setForm.captcha" @change='showsetFormMsg(setForm.captcha, 2)' id="inputCaptcha3" :placeholder="$t('placeholder.vcode')">
-          </div>
-          <button type="button" class="btn btn-default get-captcha" style="height:34px;line-height:34px;" @click="getPhoneControl" v-bind:disabled="hasphone" :class="{'btn-success':!hasphone}">
-            <span v-show="hasControl">{{countdown}}</span>{{getcontroltxt}}</button>
-        </div>
-        <div class="form-group">
-          <p class="prompt col-md-offset-3 col-sm-offset-3  col-md-9 col-sm-9" style="margin-top:0px !important;">{{phoneControlPrompt}}</p>
-          <div class="col-md-offset-4 col-sm-offset-4 margin-top">
-            <button type="button" class=" edit-user-btn" v-bind:disabled="!setForm.phone" @click="setusername"  data-target="#myModal" data-toggle="">{{$t('button.confirm')}}
-            </button>
-            <button class="cancel-user-btn">{{$t('button.cancel')}}</button>
-
-          </div>
-        </div>
-        
-        
-      </form>
-
-
+      
 
         <div class="form-group info-border">
-          <label class="col-md-3 col-sm-3 control-label personal-font">{{$t('editProfile.registerTime')}}</label>
-          <div class="col-md-7 col-sm-7">
+          <label class="left control-label personal-font">{{$t('editProfile.registerTime')}}</label>
+          <div class="left">
             <p class="form-control-static personal-font">{{personalUserInfo.register_time}}</p>
           </div>
         </div>
         <div class="form-group info-border">
-          <label class="col-md-3 col-sm-3 control-label personal-font">{{$t('editProfile.lastLogin')}}</label>
-          <div class="col-md-7 col-sm-7">
+          <label class="left control-label personal-font">{{$t('editProfile.lastLogin')}}</label>
+          <div class="left">
             <p class="form-control-static personal-font">{{personalUserInfo.last_login}}</p>
           </div>
         </div>
       </form>
 
-
-
-      <!-- 模态框填新密码 -->
-      <div class="modal fade in setPhone" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
+<!-- 模态框填新密码 -->
+      <!-- <div class="modal fade in setPhone" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"> -->
+        <!-- <div class="modal-dialog"> -->
+          <!-- <div class="modal-content"> -->
+            <!-- <div class="modal-header">
               <button type="button" @click="closeModal" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
               <h4 class="modal-title diy-title" id="myModalLabel">{{showModel ? $t('editProfile.username') : $t('editProfile.phone')}}</h4>
-            </div>
-            <div class="modal-body">
+            </div> -->
+            <!-- <div class="modal-body"> -->
               <!-- 修改用户名 -->
               <!--<form class="form-horizontal form-space" v-if="showModel">
                 <div class="form-group">
@@ -142,10 +146,10 @@
                 <button type="button" class="btn btn-primary btn-block login-button" v-bind:disabled="!setForm.phone" @click="setusername" data-target="#myModal" data-toggle="">{{$t('button.confirm')}}
                 </button>
               </form> -->
-            </div>
-          </div>
-        </div>
-      </div>
+            <!-- </div> -->
+          <!-- </div> -->
+        <!-- </div> -->
+      <!-- </div> -->
     </div>
   </div>
 </template>
@@ -433,6 +437,7 @@ export default {
 }
 
 .title {
+  color: #666;
   border-bottom: solid 1px #dfdfdf;
   height: 80px;
   line-height: 80px;
@@ -473,7 +478,11 @@ export default {
 }
 
 .form-group {
+  color: #666;
   margin: 0 50px;
+}
+.form-group label {
+  padding-right: 10px;
 }
 
 .personal-font {
@@ -526,5 +535,43 @@ export default {
 
 .wrap-width {
   width: 90%;
+}
+.left {
+  float: left;
+  display: block;
+}
+.left-width {
+  width: 60%;
+}
+.buttons-box {
+  margin: 0 0 30px 0;
+}
+.edit-infor label {
+  font-size: 14px;
+}
+.yzm {
+  margin-top: 30px;
+  .yzm-input {
+    width: 72%;
+    float: left;
+    margin-right: 3%;
+  }
+  .yzm-button {
+    width: 25%;
+    float: left;
+  }
+}
+.control-label {
+  padding: 7px 0;
+}
+.clearfix:after {
+  display: block;
+  clear: both;
+  content: "";
+  visibility: hidden;
+  height: 0;
+}
+.clearfix {
+  zoom: 1;
 }
 </style>

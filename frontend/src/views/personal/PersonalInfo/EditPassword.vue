@@ -1,5 +1,6 @@
 <style lang="scss" scoped>
 .title {
+  color: #666;
   border-bottom: solid 1px #dfdfdf;
   height: 80px;
   line-height: 80px;
@@ -88,6 +89,8 @@
 .center-wrap {
   width: 100%;
   margin: 0 auto;
+  color: #666;
+  font-size: 14px;
 }
 .wrap {
   width: 100%;
@@ -96,6 +99,21 @@
 
 .wrap-width {
   width: 90%;
+}
+.left {
+  float: left;
+}
+.left-width {
+  width: 60%;
+}
+.form-group label {
+  width: 20%; 
+  padding-right: 10px;
+  text-align: left;
+}
+.button-box {
+  padding-left: 20%;
+  margin-left: 10px;
 }
 </style>
 <template>
@@ -112,29 +130,29 @@
       </div>
       <form class="form-horizontal password-form">
         <div class="form-group">
-          <label class="col-sm-3 control-label">{{$t('editProfile.originalPassword')}}</label>
-          <div class="col-sm-9">
+          <label class="left control-label">{{$t('editProfile.originalPassword')}}</label>
+          <div class="left left-width">
             <input class="form-control" name="password" type="password" :placeholder="$t('placeholder.originalPassword')" @change='showFindPwdMsg(setPwd.OldPassword, 0)' v-model="setPwd.OldPassword">
           </div>
           <p class="prompt">{{oldpwdPrompt}}</p>
         </div>
         <div class="form-group">
-          <label class="col-sm-3 control-label">{{$t('editProfile.newPassword')}}</label>
-          <div class="col-sm-9">
+          <label class="left control-label">{{$t('editProfile.newPassword')}}</label>
+          <div class="left left-width">
             <input class="form-control" name="password" type="password" :placeholder="$t('placeholder.newPassword')" @change='showFindPwdMsg(setPwd.NewPassword, 1)' v-model="setPwd.NewPassword">
           </div>
           <p class="prompt">{{newpwdPrompt}}</p>
         </div>
         <div class="form-group">
-          <label class="col-sm-3 control-label">{{$t('editProfile.confirmPassword')}}</label>
-          <div class="col-sm-9">
+          <label class="left control-label">{{$t('editProfile.confirmPassword')}}</label>
+          <div class="left left-width">
             <input class="form-control" name="repassword" type="password" :placeholder="$t('placeholder.repassword')" @change='showFindPwdMsg(setPwd.confirm_password, 2)' v-model="setPwd.confirm_password">
           </div>
           <p class="prompt">{{confirm_upwdPrompt}}</p>
         </div>
-        <div class="form-group  ">
+        <div class="form-group button-box">
 
-          <button class=" forphone btnm  btn-confirm col-sm-offset-4" v-bind:disabled="!setPwd.OldPassword" @click='setPwdFun' data-target="#myModal" data-toggle="">{{$t('button.confirm')}}
+          <button class=" forphone btnm  btn-confirm" v-bind:disabled="!setPwd.OldPassword" @click='setPwdFun' data-target="#myModal" data-toggle="">{{$t('button.confirm')}}
           </button>
 
           <button class="forphone btnm  btn-cacel">

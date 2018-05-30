@@ -59,10 +59,12 @@ export default {
   },
   placeholder: {
     username: '请输入用户名',
+    newUsername:'请输入新用户名',
     password: '请输入密码',
     repassword: '请确认密码',
     vcode: '请输入验证码',
     phone: '请输入手机号',
+    newPhone:'请输入新手机号',
     icode: '邀请码（选填）',
     email: '请输入邮箱',
     originalPassword: '请输入原密码',

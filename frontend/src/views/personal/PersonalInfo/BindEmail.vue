@@ -1,5 +1,6 @@
 <style lang="scss" scoped>
 .title {
+  color: #666;
   border-bottom: solid 1px #dfdfdf;
   height: 80px;
   line-height: 80px;
@@ -39,18 +40,7 @@
   }
 }
 
-.password-form {
-  width: 320px;
-  margin: 30px auto;
-  label {
-    width: 90px;
-    float: left;
-  }
-  input {
-    width: 220px;
-    float: left;
-  }
-}
+
 
 .btn-confirm {
   text-align: center;
@@ -79,18 +69,19 @@
   clear: both;
   overflow: hidden;
   display: block;
-  width: 50%;
+  width: 70%;
   margin: 0 auto;
   position: relative;
   padding: 30px 0;
   label {
-    width: 40%;
+    // width: 46%;
     line-height: 52px;
     display: block;
     float: left;
+    padding-right: 18px;
   }
   input {
-    width: 60%;
+    width: 50%;
     float: left;
   }
   button {
@@ -107,6 +98,8 @@
 .center-wrap {
   width: 100%;
   margin: 0 auto;
+  color: #666;
+  font-size: 14px;
 }
 .wrap {
   width: 100%;

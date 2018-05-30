@@ -59,10 +59,12 @@ export default {
   },
   placeholder: {
     username: 'username',
+    newUsername:'new username',
     password: 'password',
     repassword: 'confirm password',
     vcode: 'verification code',
     phone: 'phone number',
+    newPhone:'new phone number',
     icode: 'invitation code',
     email: 'email',
     originalPassword: 'original password',

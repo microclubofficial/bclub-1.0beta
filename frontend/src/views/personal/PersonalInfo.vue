@@ -45,10 +45,10 @@
   .name {
     font-size: 16px;
     font-weight: bold;
-    padding: 10px 0;
+    padding: 16px 0 16px 0;
   }
   .grade {
-    margin-bottom: 10px;
+    padding: 0 0 32px 0;
     span {
       font-size: 14px;
       color: #fff;
@@ -58,6 +58,13 @@
     }
   }
   li {
+    width: 100%;
+    display: block;
+    border: 0;
+    margin: 0;
+    text-align: center;
+  }
+  .nav-li {
     width: 100%;
     height: 48px;
     line-height: 48px;
@@ -69,12 +76,15 @@
         border: 0;
         height: 48px;
         line-height: 48px;
-        background: #f6f6f6;
+        background: #1e8fff;
+        color: #fff;
       }
     }
     &:hover {
       width: 100%;
-      border: none;
+      border: 0;
+      height: 48px;
+      line-height: 48px;
     }
 
     a {
@@ -82,11 +92,10 @@
       padding: 0;
       height: 48px;
       font-size: 14px;
-      border: none;
+      border: 0;
       line-height: 48px;
-
       &:hover {
-        border: none;
+        border: 0;
       }
     }
   }
@@ -101,11 +110,12 @@
   float: left;
 }
 .enul {
-    li {
-        text-align: left;
-        text-indent: 30%;
-    }
+  .nav-li {
+    text-align: left;
+    text-indent: 36%;
+  }
 }
+
 </style>
 
 <template>
@@ -132,7 +142,7 @@
                     <li class="grade">
                         <span>星级达人</span>
                     </li>
-                    <li v-for="(item,index) in infoList" :class="{active:item.name === $route.name}" @click="routerGo(index)" :key="index">
+                    <li class="nav-li" v-for="(item,index) in infoList" :class="{active:item.name === $route.name}" @click="routerGo(index)" :key="index">
                         <a href="javascript:void(0)">{{item.cnName}}</a>
                     </li>
                 </ul>
