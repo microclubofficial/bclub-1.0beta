@@ -73,7 +73,7 @@ export default {
     prompt: '提 示',
     acquireVcode: '获取验证码',
     reacquire: '重新获取',
-    usernameLength: '3-16位字符,可由中文、英文、数字或下划线组成',
+    usernameLength: '3-16位字符,可由中文、英文、数字或下划线.组成',
     usernameRequired: '用户名不能为空',
     passwordLength: '6-18位大小写英文字母、数字',
     passwordRequired: '密码不能为空',

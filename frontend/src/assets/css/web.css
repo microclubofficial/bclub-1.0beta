@@ -915,7 +915,7 @@ i.icon-BTC{font-size: 14px; font-weight: bold;}
 .bibar-sidebar{width: 150px;float: left;position: relative;margin-right: 20px;}
 /*首页新闻*/
 .bibar-boxindex2{padding:40px 60px;margin-top:40px;}
-.bibar-indexNewsList{}
+.bibar-indexNewsList{max-width: 1080px;}
 .bibar-indexNewsItem{padding: 15px 0px 10px; border-top: 1px solid #dcdcdc;}
 .bibar-indexNewsItem:first-child{border-top:0px}
 .bibar-indexNewsItem .speech{color: #999;}

@@ -66,7 +66,6 @@ export default {
       let that = this
       // this.topicData.content = this.editorContent
       this.topicData.content = this.editor.$textElem.html()
-      console.log(this.topicData.content)
       // 处理链接
       if (this.topicData.content.indexOf('href') > 0 && this.isLink) {
         let hrefReg = /href=\"(.+)\"/g

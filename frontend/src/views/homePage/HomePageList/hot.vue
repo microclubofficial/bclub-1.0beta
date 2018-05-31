@@ -166,14 +166,14 @@
               <ul class="mo-paging">
                 <!-- prev -->
                 <!-- first -->
-                <li :class="['paging-item', 'paging-item--first', {'paging-item--disabled' : cpno[tmp.id] === 1}]" @click="first(tmp.id)">{{$t('pages.first')}}</li>
-                <li class="paging-item paging-item--prev" :class="{'paging-item--disabled' : cpno[tmp.id] === 1}" @click="prev(tmp.id)">{{$t('pages.prev')}}</li>
+                <li :class="['paging-item', 'paging-item--first', {'paging-item--disabled' : cpno[tmp.id] === 1}]" @click="first(tmp.id,index)">{{$t('pages.first')}}</li>
+                <li class="paging-item paging-item--prev" :class="{'paging-item--disabled' : cpno[tmp.id] === 1}" @click="prev(tmp.id,index)">{{$t('pages.prev')}}</li>
                 <li :class="['paging-item', {'paging-item--current' : cpno[tmp.id] === page}]" :key="pageIndex" v-for="(page, pageIndex) in pageNumber[tmp.id]" @click="go(page,tmp.id,index)">{{page}}</li>
                 <!--<li :class="['paging-item', 'paging-item--more']" @click="next" v-if="showNextMore">...</li>-->
                 <!-- next -->
-                <li :class="['paging-item', 'paging-item--next', {'paging-item--disabled' : cpno[tmp.id] === cpageCountObj[tmp.id]}]" @click="next(tmp.id)">{{$t('pages.next')}}</li>
+                <li :class="['paging-item', 'paging-item--next', {'paging-item--disabled' : cpno[tmp.id] === cpageCountObj[tmp.id]}]" @click="next(tmp.id,index)">{{$t('pages.next')}}</li>
                 <!-- last -->
-                <li :class="['paging-item', 'paging-item--last', {'paging-item--disabled' : cpno[tmp.id] === cpageCountObj[tmp.id]}]" @click="last(tmp.id)">{{$t('pages.end')}}</li>
+                <li :class="['paging-item', 'paging-item--last', {'paging-item--disabled' : cpno[tmp.id] === cpageCountObj[tmp.id]}]" @click="last(tmp.id,index)">{{$t('pages.end')}}</li>
               </ul>
             </div>
             </div>
@@ -743,24 +743,24 @@ export default{
       this.delItem = item.id
     },
     // 分页
-    prev (id) {
+    prev (id, index) {
       if (this.cpno[id] > 1) {
-        this.go(this.cpno[id] - 1, id)
+        this.go(this.cpno[id] - 1, id, index)
       }
     },
-    next (id) {
+    next (id, index) {
       if (this.cpno[id] < this.cpageCount) {
-        this.go(this.cpno[id] + 1, id)
+        this.go(this.cpno[id] + 1, id, index)
       }
     },
-    first (id) {
+    first (id, index) {
       if (this.cpno[id] !== 1) {
         this.go(1, id)
       }
     },
-    last (id) {
+    last (id, index) {
       if (this.cpno[id] !== this.cpageCount) {
-        this.go(this.cpageCount, id)
+        this.go(this.cpageCount, id, index)
       }
     },
     go (page, id, index) {

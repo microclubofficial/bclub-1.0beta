@@ -52,7 +52,7 @@ export default {
       return this.$store.state.userInfo.userInfo
     },
     chartId () {
-      return this.$store.state.chartId.chartId
+      return this.$store.state.chartId
     },
     longId () {
       return this.$store.state.longId
@@ -109,8 +109,6 @@ export default {
       if (/<img.*?(?:>|\/>)/gi.test(this.topicData.content)) {
         let image = []
         image = this.topicData.content.match(/<img(?![^<>]*?data-w-e[^<>]*?>).*?>/g)
-        console.log(this.topicData.content)
-        console.log(image)
         if (image !== null) {
           let reg = /<img[^>]*src[=\'\"\s]+([^\"\']*)[\"\']?[^>]*>/gi
           image = reg.exec(image[0])[1]
@@ -123,8 +121,8 @@ export default {
         this.topicData.token = this.$route.params.currency
         if (this.tokenBibar) {
           this.topicData.tokenname = this.tokenBibar
-        } else if (JSON.stringify(this.$route.query) !== '{}') {
-          this.topicData.tokenname = JSON.parse(this.$route.query.b).zh
+        } else if (this.chartId.chartCh) {
+          this.topicData.tokenname = this.chartId.chartCh
         } else {
           this.topicData.tokenname = this.$t('list.bclub')
         }

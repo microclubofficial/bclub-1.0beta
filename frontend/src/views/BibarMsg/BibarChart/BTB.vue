@@ -138,7 +138,7 @@ export default {
   },
   computed: {
     chartId () {
-      return this.$store.state.chartId.chartId
+      return this.$store.state.chartId
     },
     userInfo () {
       return this.$store.state.userInfo.userInfo
@@ -159,9 +159,8 @@ export default {
       } else if (this.$route.params.currency) {
         this.nowId = this.$route.params.currency
       } else {
-        this.nowId = this.chartId
+        this.nowId = this.chartId.chartId
       }
-      console.log(this.nowId)
       this.showLoader = true
       $.getJSON(`/api/currency_news/${this.nowId}`, function (data) {
         this.showLoader = false
@@ -182,6 +181,11 @@ export default {
         that.cny_price = that.bibarData.price * that.CNY_RATE
         // 涨幅
         that.change1h = that.bibarData.change1h
+        // 设置全局
+        that.$store.commit('CHART_ID', {
+          chartId: that.nowId,
+          chartCh: that.bibarData.zhName
+        })
         var change1hStr = that.change1h.toString()
         if (change1hStr.indexOf('-') === -1) {
           that.isDown = false
