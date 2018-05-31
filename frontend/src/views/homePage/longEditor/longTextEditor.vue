@@ -87,9 +87,9 @@ export default{
         let reg = /[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+\.?/ig
         if (!reg.test(link)) {
           if (that.language === 'en') {
-            return '无效的链接'
-          } else {
             return 'Invalid link'
+          } else {
+            return '无效的链接'
           }
         } else {
           that.isLink = true

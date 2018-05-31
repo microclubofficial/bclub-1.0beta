@@ -66,6 +66,7 @@ export default {
       let that = this
       // this.topicData.content = this.editorContent
       this.topicData.content = this.editor.$textElem.html()
+      console.log(this.topicData.content)
       // 处理链接
       if (this.topicData.content.indexOf('href') > 0 && this.isLink) {
         let hrefReg = /href=\"(.+)\"/g
@@ -265,9 +266,9 @@ export default {
         let reg = /[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+\.?/ig
         if (!reg.test(link)) {
           if (that.language === 'en') {
-            return '无效的链接'
-          } else {
             return 'Invalid link'
+          } else {
+            return '无效的链接'
           }
         } else {
           that.isLink = true

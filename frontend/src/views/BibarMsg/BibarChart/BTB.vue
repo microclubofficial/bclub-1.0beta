@@ -161,6 +161,7 @@ export default {
       } else {
         this.nowId = this.chartId
       }
+      console.log(this.nowId)
       this.showLoader = true
       $.getJSON(`/api/currency_news/${this.nowId}`, function (data) {
         this.showLoader = false

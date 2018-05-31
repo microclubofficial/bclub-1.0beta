@@ -628,7 +628,7 @@ export default{
       //     this.imgCommentLength[id] += imgArr[i].length
       //   }
       // }
-      this.imgCommentLength[id] = val.lastIndexOf('data-w-e="1">')
+      this.imgCommentLength[id] = val.lastIndexOf('alt="[')
       if (val.length - this.imgCommentLength[id] > 200) {
         if (id !== this.moreId) {
           let imgVal = val.replace(/<img src="\/static[^>]+>/g, '')
