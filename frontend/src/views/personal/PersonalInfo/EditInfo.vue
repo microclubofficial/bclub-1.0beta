@@ -29,12 +29,11 @@
               <div class="left left-width">
                 <input type="text" class="form-control" name="username" @change='showsetFormMsg(setForm.username, 0)' v-model="setForm.username" maxlength="16" id="inputEmail3" :placeholder="$t('placeholder.newUsername')">
                 <div class="buttons-box clearfix">
-                <!-- <label class="left control-label"></label>
-                <p class="form-control-static prompt" style="margin-top:0px !important;">{{unamePrompt}}</p> -->
-                  <div class="margin-top">
-                    <button type="button" class="edit-user-btn" v-bind:disabled="!setForm.username" @click="setusername" data-target="#myModal" data-toggle="">{{$t('button.confirm')}}
+                <label class="left control-label"></label>
+                <p class="form-control-static prompt" style="margin-top:0px !important;">{{unamePrompt}}</p>
+                  <div class="clearfix">
+                    <button type="button" class="edit-user-btn" v-bind:disabled="!setForm.username" @click="setusername"  >{{$t('button.confirm')}}
                     </button>
-                    <button class="cancel-user-btn">{{$t('button.cancel')}}</button>
                   </div>
                 </div>
               </div>
@@ -58,11 +57,12 @@
               <label for="inputEmail3" class="left control-label">{{$t('register.phone')}}</label>
               <div class="left left-width">
                 <input type="text" class="form-control" id="inputEmail3" @change='showsetFormMsg(setForm.phone, 1)' v-model="setForm.phone" :placeholder="$t('placeholder.newPhone')">
+              <label class="left control-label"></label>
+            <p class="prompt form-control-static" style="margin-left:4% !important;margin-top:0px !important;">{{phonePrompt}}</p>
               </div>
-            </div>
-            <p class="prompt left" style="margin-top:0px !important;">{{phonePrompt}}</p>
+            </div> 
             <div class="edit-infor clearfix yzm">
-              <label for="inputCaptcha3" class="left">{{$t('register.vcode')}}</label>
+              <label for="inputCaptcha3" class="left control-label">{{$t('register.vcode')}}</label>
               <div class="left left-width">
                 <div class="yzm-input">
                 <input type="text" class="form-control" v-model="setForm.captcha" @change='showsetFormMsg(setForm.captcha, 2)' id="inputCaptcha3" :placeholder="$t('placeholder.vcode')">
@@ -70,25 +70,20 @@
                 <button type="button" class="btn btn-default get-captcha yzm-button" style="height:34px;line-height:34px;" @click="getPhoneControl" v-bind:disabled="hasphone" :class="{'btn-success':!hasphone}">
                   <span v-show="hasControl">{{countdown}}</span>{{getcontroltxt}}
                 </button>
-
                 <div class="buttons-box clearfix">
-                  <p class="prompt left" style="margin-top:0px !important;">{{phoneControlPrompt}}</p>
-                  <div class="left margin-top">
-                    <button type="button" class=" edit-user-btn" v-bind:disabled="!setForm.phone" @click="setusername"  data-target="#myModal" data-toggle="">{{$t('button.confirm')}}
+                  <div class="left left-width">
+                    <label class="left control-label"></label>
+                    <p class="form-control-static prompt " style="margin-top:0px !important;">{{phoneControlPrompt}}</p>
+                    <button type="button" class=" edit-user-btn" v-bind:disabled="!setForm.phone" @click="setusername"  >{{$t('button.confirm')}}
                     </button>
-                    <button class="cancel-user-btn">{{$t('button.cancel')}}</button>
                   </div>
                 </div>
               </div>
-              
 
             </div>
             
           </form>
         </div>
-        
-      
-
         <div class="form-group info-border">
           <label class="left control-label personal-font">{{$t('editProfile.registerTime')}}</label>
           <div class="left">
@@ -102,81 +97,249 @@
           </div>
         </div>
       </form>
-
-<!-- 模态框填新密码 -->
-      <!-- <div class="modal fade in setPhone" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"> -->
-        <!-- <div class="modal-dialog"> -->
-          <!-- <div class="modal-content"> -->
-            <!-- <div class="modal-header">
-              <button type="button" @click="closeModal" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-              <h4 class="modal-title diy-title" id="myModalLabel">{{showModel ? $t('editProfile.username') : $t('editProfile.phone')}}</h4>
-            </div> -->
-            <!-- <div class="modal-body"> -->
-              <!-- 修改用户名 -->
-              <!--<form class="form-horizontal form-space" v-if="showModel">
-                <div class="form-group">
-                  <label for="inputEmail3" class="col-md-3 control-label">{{$t('register.username')}}</label>
-                  <div class="col-md-9">
-                    <input type="text" class="form-control" name="username" @change='showsetFormMsg(setForm.username, 0)' v-model="setForm.username" maxlength="16" id="inputEmail3" :placeholder="$t('placeholder.username')">
-                  </div>
-                </div>
-                <label class="col-md-3 control-label"></label>
-                <p class="prompt col-md-9" style="margin-top:0px !important;">{{unamePrompt}}</p>
-                <button type="button" class="btn btn-primary btn-block login-button" v-bind:disabled="!setForm.username" @click="setusername" data-target="#myModal" data-toggle="">{{$t('button.confirm')}}
-                </button>
-              </form>-->
-              <!-- 修改手机号 -->
-              <!-- <form class="form-horizontal form-space" v-if="!showModel">
-                <div class="form-group">
-                  <label for="inputEmail3" class="col-md-3 control-label">{{$t('register.phone')}}</label>
-                  <div class="col-md-9">
-                    <input type="text" class="form-control" id="inputEmail3" @change='showsetFormMsg(setForm.phone, 1)' v-model="setForm.phone" :placeholder="$t('placeholder.phone')">
-                  </div>
-                </div>
-                <p class="prompt col-md-offset-3 col-md-9" style="margin-top:0px !important;">{{phonePrompt}}</p>
-                <div class="form-group" style="margin-top: 37px;">
-                  <label for="inputCaptcha3" class="col-md-3 control-label">{{$t('register.vcode')}}</label>
-                  <div class="col-md-6">
-                    <input type="text" class="form-control" v-model="setForm.captcha" @change='showsetFormMsg(setForm.captcha, 2)' id="inputCaptcha3" :placeholder="$t('placeholder.vcode')">
-                  </div>
-                  <button type="button" class="btn btn-default get-captcha" style="height:34px;line-height:34px;" @click="getPhoneControl" v-bind:disabled="hasphone" :class="{'btn-success':!hasphone}">
-                    <span v-show="hasControl">{{countdown}}</span>{{getcontroltxt}}</button>
-                </div>
-                <p class="prompt col-md-offset-3 col-md-9" style="margin-top:0px !important;">{{phoneControlPrompt}}</p>
-                <button type="button" class="btn btn-primary btn-block login-button" v-bind:disabled="!setForm.phone" @click="setusername" data-target="#myModal" data-toggle="">{{$t('button.confirm')}}
-                </button>
-              </form> -->
-            <!-- </div> -->
-          <!-- </div> -->
-        <!-- </div> -->
-      <!-- </div> -->
     </div>
   </div>
 </template>
+// <script>
+// import { get, post } from "../../../utils/http";
+// import { setToken, getToken, rememberToken } from "../../../utils/auth";
+// import { Toast } from "mint-ui";
+// export default {
+//   data() {
+//     return {
+//       isShow: false,
+//       seShow: false,
+//       personalUserInfo: [],
+//       setForm: {},
+//       unamePrompt: "",
+//       showModel: true,
+//       hasphone: true,
+//       countdown: 30,
+//       hasControl: false,
+//       timer: null,
+//       getcontroltxt: this.$t("prompt.acquireVcode"),
+//       phonePrompt: "",
+//       phoneControlPrompt: "",
+//       canSetU: false,
+//       cansetP: false,
+//       switchText: "修改"
+//     };
+//   },
+//   computed: {
+//     userInfo() {
+//       return this.$store.state.userInfo.userInfo;
+//     },
+//     language() {
+//       return this.$store.state.language.language;
+//     }
+//   },
+//   created: function() {
+//     // 个人资料
+//     this.personalUser(this.userInfo.username);
+//   },
+//   mounted() {},
+//   methods: {
+//     //   验证
+//     showsetFormMsg(input, id) {
+//       if (id === 0) {
+//         if (input !== undefined && input.indexOf(" ") >= 0) {
+//           this.unamePrompt = "不能输入空格";
+//           this.canSetU = false;
+//           return false;
+//         } else {
+//           var unamereg = /^[a-zA-Z0-9_.\-\u4e00-\u9fa5]{3,16}$/;
+//           if (
+//             !unamereg.test(input) &&
+//             input !== undefined &&
+//             input.length > 0
+//           ) {
+//             this.unamePrompt = "用户名格式不对";
+//             this.canSetU = false;
+//             return false;
+//           } else if (input === undefined || input.length === 0) {
+//             this.unamePrompt = "用户名不能为空";
+//             this.canSetU = false;
+//             return false;
+//           } else {
+//             this.unamePrompt = "";
+//             this.canSetU = true;
+//           }
+//         }
+//       } else if (id === 1) {
+//         var ponereg = /^([a-zA-Z])|(\d)|([~!@#$%^&*()_+`\-={}:";'<>?,./]).{6,18}$/;
+//         if (!ponereg.test(input) && input !== undefined && input.length > 0) {
+//           this.phonePrompt = "手机号码格式不正确";
+//           this.hasphone = true;
+//           return false;
+//         } else if (input === undefined || input.length === 0) {
+//           this.phonePrompt = "手机号码不能为空";
+//           this.hasphone = true;
+//           return false;
+//         } else {
+//           this.phonePrompt = "";
+//           this.hasphone = false;
+//           this.setForm.phone = input;
+//         }
+//       } else if (id === 2) {
+//         if (input.length > 0) {
+//           this.phoneControlPrompt = "";
+//         }
+//       }
+//     },
+//     // 修改用户名和手机号
+//     setusername() {
+//       let instance;
+//       if (this.showModel) {
+//         if (this.canSetU) {
+//           post(`/api/setting/username`, this.setForm).then(data => {
+//             this.setForm.username = "";
+//             if (data.resultcode === 0) {
+//               alert(data.message);
+//               return false;
+//             } else if (data.resultcode === 1) {
+//               instance = new Toast({
+//                 message: data.message,
+//                 iconClass: "glyphicon glyphicon-ok",
+//                 duration: 1000
+//               });
+//               setTimeout(() => {
+//                 instance.close();
+//               }, 1000);
+//               this.$store.commit("USER_INFO", {
+//                 username: data.data.username,
+//                 avatar: data.data.avatar,
+//                 isLogin: true
+//               });
+//               if (rememberToken("remember_token")) {
+//                 setToken("b-Token", data.data, { expires: 7 });
+//               } else {
+//                 setToken("b-Token", data.data);
+//               }
+//               this.personalUser(data.data.username);
+//               this.isShow = false
+//             }
+//           });
+//         }
+//       } else {
+//         if (
+//           this.setForm.captcha === undefined ||
+//           this.setForm.captcha.length === 0
+//         ) {
+//           this.phoneControlPrompt = "验证码不能为空";
+//           return false;
+//         }
+//         post(`/api/setting/phone`, this.setForm).then(data => {
+//           this.setForm.phone = "";
+//           this.setForm.captcha = "";
+//           if (data.resultcode === 0) {
+//             instance = new Toast({
+//               message: data.message,
+//               duration: 1000
+//             });
+//             return false;
+//           } else if (data.resultcode === 1) {
+//             instance = new Toast({
+//               message: data.message,
+//               iconClass: "glyphicon glyphicon-ok",
+//               duration: 1000
+//             });
+//             this.personalUser(this.userInfo.username);
+//             $(".form-control").val("");
+//             $(".setPhone").modal("hide");
+//           }
+//         });
+//       }
+//     },
+//     // 获取手机验证码
+//     getPhoneControl() {
+//       let phone = parseFloat(this.setForm.phone);
+//       this.hasphone = true;
+//       let that = this;
+//       post("/api/phoneCaptcha", { phone: phone })
+//         .then(data => {
+//           if (data.resultcode === 0) {
+//             if (data.message === "failed") {
+//               alert(this.$t("prompt.phoneRegistered"));
+//               this.hasphone = true;
+//               return false;
+//             }
+//           } else {
+//             this.timer = setInterval(function() {
+//               that.countdown--;
+//               that.hasControl = true;
+//               that.getcontroltxt = that.$t("prompt.reacquire");
+//               this.kaiguan = false;
+//               if (that.countdown < 1) {
+//                 that.getcontroltxt = that.$t("prompt.acquireVcode");
+//                 that.hasphone = false;
+//                 that.countdown = 30;
+//                 that.hasControl = false;
+//                 clearInterval(that.timer);
+//               }
+//             }, 1000);
+//           }
+//         })
+//         .catch(error => {
+//           console.log(error);
+//         });
+//     },
+//     setFormBtn(id) {
+//       if (id === 0) {
+//         this.isShow = !this.isShow;
+//         // $('.setPhone').modal('show')
+//         // document.body.removeChild(document.querySelector('.modal-backdrop'))
+//       } else if (id === 1) {
+//         this.seShow = !this.seShow;
+//         // this.showModel = false;
+//         // $(".setPhone").modal("show");
+//       }
+//     },
+//     closeModal() {
+//       $(".setPhone").hide("show");
+//     },
+//     // 个人资料
+//     personalUser(uname) {
+//       get(`/api/u/${uname}`).then(data => {
+//         if (data.message === "未登录") {
+//           alert(this.$t("prompt.loginFirst"));
+//           this.$router.push({ path: "/login" });
+//         } else {
+//           this.personalUserInfo = data.data;
+//         }
+//       });
+//     },
+
+//     //取消按钮关闭
+//     closeBox() {
+//       this.isshow = true;
+//     }
+//   }
+// };
+// </script>
 <script>
-import { get, post } from "../../../utils/http";
-import { setToken, getToken, rememberToken } from "../../../utils/auth";
-import { Toast } from "mint-ui";
+import { get, post } from '../../../utils/http'
+import { setToken, getToken, rememberToken } from '../../../utils/auth'
+import { Toast } from 'mint-ui'
 export default {
-  data() {
+  data () {
     return {
       isShow: false,
       seShow: false,
       personalUserInfo: [],
       setForm: {},
-      unamePrompt: "",
+      unamePrompt: '',
       showModel: true,
       hasphone: true,
       countdown: 30,
       hasControl: false,
       timer: null,
-      getcontroltxt: this.$t("prompt.acquireVcode"),
-      phonePrompt: "",
-      phoneControlPrompt: "",
+      getcontroltxt: this.$t('prompt.acquireVcode'),
+      phonePrompt: '',
+      phoneControlPrompt: '',
       canSetU: false,
       cansetP: false,
-      switchText: "修改"
-    };
+      user_token: ''
+    }
   },
   computed: {
     userInfo() {
@@ -186,189 +349,178 @@ export default {
       return this.$store.state.language.language;
     }
   },
-  created: function() {
+  created: function () {
+    if (getToken()) {
+      this.user_token = JSON.parse(getToken())
+    }
+    if (this.user_token === '') {
+      this.$router.push('/')
+    }
     // 个人资料
-    this.personalUser(this.userInfo.username);
+    this.personalUser(this.userInfo.username)
   },
-  mounted() {},
+  mounted () {
+  },
   methods: {
-    //   验证
-    showsetFormMsg(input, id) {
+    // 验证
+    showsetFormMsg (input, id) {
       if (id === 0) {
-        if (input !== undefined && input.indexOf(" ") >= 0) {
-          this.unamePrompt = "不能输入空格";
-          this.canSetU = false;
-          return false;
-        } else {
-          var unamereg = /^[a-zA-Z0-9_.\-\u4e00-\u9fa5]{3,16}$/;
-          if (
-            !unamereg.test(input) &&
-            input !== undefined &&
-            input.length > 0
-          ) {
-            this.unamePrompt = "用户名格式不对";
-            this.canSetU = false;
-            return false;
-          } else if (input === undefined || input.length === 0) {
-            this.unamePrompt = "用户名不能为空";
-            this.canSetU = false;
-            return false;
-          } else {
-            this.unamePrompt = "";
-            this.canSetU = true;
-          }
+        let unamereg = /^[a-zA-Z0-9_.\-\u4e00-\u9fa5]{3,16}$/
+        if (unamereg.test(input) && input.length > 0 && input !== undefined && input.indexOf(' ') === -1) {
+          this.unamePrompt = ''
         }
       } else if (id === 1) {
-        var ponereg = /^([a-zA-Z])|(\d)|([~!@#$%^&*()_+`\-={}:";'<>?,./]).{6,18}$/;
-        if (!ponereg.test(input) && input !== undefined && input.length > 0) {
-          this.phonePrompt = "手机号码格式不正确";
-          this.hasphone = true;
-          return false;
-        } else if (input === undefined || input.length === 0) {
-          this.phonePrompt = "手机号码不能为空";
-          this.hasphone = true;
-          return false;
-        } else {
-          this.phonePrompt = "";
-          this.hasphone = false;
-          this.setForm.phone = input;
+        let phonereg = /^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$/
+        if (phonereg.test(input) && input !== undefined && input.length > 0) {
+          this.phonePrompt = ''
+          this.hasphone = false
+          this.setForm.phone = input
         }
       } else if (id === 2) {
         if (input.length > 0) {
-          this.phoneControlPrompt = "";
+          this.phoneControlPrompt = ''
         }
       }
     },
     // 修改用户名和手机号
-    setusername() {
-      let instance;
-      if (this.showModel) {
-        if (this.canSetU) {
-          post(`/api/setting/username`, this.setForm).then(data => {
-            this.setForm.username = "";
-            if (data.resultcode === 0) {
-              alert(data.message);
-              return false;
-            } else if (data.resultcode === 1) {
-              instance = new Toast({
-                message: data.message,
-                iconClass: "glyphicon glyphicon-ok",
-                duration: 1000
-              });
-              setTimeout(() => {
-                instance.close();
-              }, 1000);
-              this.$store.commit("USER_INFO", {
-                username: data.data.username,
-                avatar: data.data.avatar,
-                isLogin: true
-              });
-              if (rememberToken("remember_token")) {
-                setToken("b-Token", data.data, { expires: 7 });
-              } else {
-                setToken("b-Token", data.data);
-              }
-              this.personalUser(data.data.username);
-              $(".form-control").val("");
-              $(".setPhone").modal("hide");
-            }
-          });
+    setusername () {
+      let instance
+      let unamereg = /^[a-zA-Z0-9_.\-\u4e00-\u9fa5]{3,16}$/
+      if (this.isShow) {
+        if (this.setForm.username === undefined || this.setForm.username.length === 0) {
+          this.unamePrompt = this.$t('prompt.usernameRequired')
+          return false
+        } else if (this.setForm.username !== undefined && this.setForm.username.indexOf(' ') >= 0) {
+          this.unamePrompt = this.$t('prompt.spaceForbidden')
+          return false
+        } else if (!unamereg.test(this.setForm.username) && this.setForm.username !== undefined && this.setForm.username.length > 0) {
+          this.unamePrompt = this.$t('prompt.usernameLength')
+          return false
         }
-      } else {
-        if (
-          this.setForm.captcha === undefined ||
-          this.setForm.captcha.length === 0
-        ) {
-          this.phoneControlPrompt = "验证码不能为空";
-          return false;
-        }
-        post(`/api/setting/phone`, this.setForm).then(data => {
-          this.setForm.phone = "";
-          this.setForm.captcha = "";
+        post(`/api/setting/username`, this.setForm).then(data => {
+          this.setForm.username = ''
           if (data.resultcode === 0) {
-            instance = new Toast({
-              message: data.message,
-              duration: 1000
-            });
-            return false;
+            alert(data.message)
+            return false
           } else if (data.resultcode === 1) {
             instance = new Toast({
               message: data.message,
-              iconClass: "glyphicon glyphicon-ok",
+              iconClass: 'glyphicon glyphicon-ok',
               duration: 1000
-            });
-            this.personalUser(this.userInfo.username);
-            $(".form-control").val("");
-            $(".setPhone").modal("hide");
+            })
+            setTimeout(() => {
+              instance.close()
+            }, 1000)
+            this.$store.commit('USER_INFO', {
+              'username': data.data.username,
+              'avatar': data.data.avatar,
+              'isLogin': true
+            })
+            if (rememberToken('remember_token')) {
+              setToken('b-Token', data.data, {expires: 7})
+            } else {
+              setToken('b-Token', data.data)
+            }
+            this.personalUser(data.data.username)
+            // $('.form-control').val('')
+            // $('.setPhone').modal('hide')
+              this.isShow = false
           }
-        });
+        })
+      } else if (this.seShow) {
+        let phonereg = /^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$/     
+        if (this.setForm.phone === undefined || this.setForm.phone.length === 0) {
+          this.phonePrompt = this.$t('prompt.phoneRequired')
+          this.hasphone = true
+          return false
+        } else if (!phonereg.test(this.setForm.phone) && this.setForm.phone !== undefined && this.setForm.phone.length > 0) {
+          this.phonePrompt = this.$t('prompt.phoneError')
+          this.hasphone = true
+          return false
+        } else if (this.setForm.captcha === undefined || this.setForm.captcha.length === 0) {
+          this.phoneControlPrompt = this.$t('prompt.captchaRequired')
+          return false
+        }
+        post(`/api/setting/phone`, this.setForm).then(data => {
+          this.setForm.phone = ''
+          this.setForm.captcha = ''
+          if (data.resultcode === 0) {
+            instance = new Toast({
+              message: data.message,
+              duration: 1000
+            })
+            return false
+          } else if (data.resultcode === 1) {
+            instance = new Toast({
+              message: data.message,
+              iconClass: 'glyphicon glyphicon-ok',
+              duration: 1000
+            })
+            this.personalUser(this.userInfo.username)
+            $('.form-control').val('')
+            $('.setPhone').modal('hide')
+          }
+        })
       }
     },
     // 获取手机验证码
-    getPhoneControl() {
-      let phone = parseFloat(this.setForm.phone);
-      this.hasphone = true;
-      let that = this;
-      post("/api/phoneCaptcha", { phone: phone })
-        .then(data => {
-          if (data.resultcode === 0) {
-            if (data.message === "failed") {
-              alert(this.$t("prompt.phoneRegistered"));
-              this.hasphone = true;
-              return false;
-            }
-          } else {
-            this.timer = setInterval(function() {
-              that.countdown--;
-              that.hasControl = true;
-              that.getcontroltxt = that.$t("prompt.reacquire");
-              this.kaiguan = false;
-              if (that.countdown < 1) {
-                that.getcontroltxt = that.$t("prompt.acquireVcode");
-                that.hasphone = false;
-                that.countdown = 30;
-                that.hasControl = false;
-                clearInterval(that.timer);
-              }
-            }, 1000);
+    getPhoneControl () {
+      let phone = parseFloat(this.setForm.phone)
+      this.hasphone = true
+      let that = this
+      post('/api/phoneCaptcha', { 'phone': phone }).then((data) => {
+        if (data.resultcode === 0) {
+          if (data.message === 'failed' || data.message === '失败') {
+            alert(this.$t('prompt.phoneRegistered'))
+            this.hasphone = true
+            return false
           }
-        })
-        .catch(error => {
-          console.log(error);
-        });
+        } else {
+          this.timer = setInterval(function () {
+            that.countdown--
+            that.hasControl = true
+            that.getcontroltxt = that.$t('prompt.reacquire')
+            this.kaiguan = false
+            if (that.countdown < 1) {
+              that.getcontroltxt = that.$t('prompt.acquireVcode')
+              that.hasphone = false
+              that.countdown = 30
+              that.hasControl = false
+              clearInterval(that.timer)
+            }
+          }, 1000)
+        }
+      }).catch(error => {
+        console.log(error)
+      })
     },
-    setFormBtn(id) {
+    setFormBtn (id) {
       if (id === 0) {
         this.isShow = !this.isShow;
         // $('.setPhone').modal('show')
         // document.body.removeChild(document.querySelector('.modal-backdrop'))
       } else if (id === 1) {
+        // this.showModel = false
+        // $('.setPhone').modal('show')
         this.seShow = !this.seShow;
-        // this.showModel = false;
-        // $(".setPhone").modal("show");
       }
     },
-    closeModal() {
-      $(".setPhone").hide("show");
+    closeModal () {
+      $('.setPhone').hide('show')
     },
     // 个人资料
-    personalUser(uname) {
+    personalUser (uname) {
       get(`/api/u/${uname}`).then(data => {
-        if (data.message === "未登录") {
-          alert(this.$t("prompt.loginFirst"));
-          this.$router.push({ path: "/login" });
+        if (data.resultcode === 0) {
+          alert(this.$t('prompt.loginFirst'))
+          this.$router.push({ path: '/login' })
         } else {
-          this.personalUserInfo = data.data;
+          this.personalUserInfo = data.data
         }
-      });
-    },
-
-    //取消按钮关闭
-    closeBox() {
-      this.isshow = true;
+      })
     }
   }
-};
+}
 </script>
 <style lang="scss" scoped>
 .prompt {
@@ -550,7 +702,7 @@ export default {
   font-size: 14px;
 }
 .yzm {
-  margin-top: 30px;
+  // margin-top: 30px;
   .yzm-input {
     width: 72%;
     float: left;
