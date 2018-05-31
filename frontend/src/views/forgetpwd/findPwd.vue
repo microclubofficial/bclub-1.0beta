@@ -48,12 +48,12 @@
       </div>
       <div class="panel-body">
         <div class="confirm-box" style="padding:0 150px 0 100px;">
-          <h4>{{$t('forgetPassword.newPassword')}}</h4>
+          <!--<h4>{{$t('forgetPassword.newPassword')}}</h4>-->
           <form class="form-horizontal">
             <div class="form-group">
               <label for="inputPassword3" class="col-md-3 control-label">{{$t('editProfile.newPassword')}}</label>
               <div class="col-md-9">
-                <input class="form-control" name="password" type="password" :placeholder="$t('placeholder.password')" @blur='showRegisterMsg(findForm.password, 0)' v-model="findForm.password">
+                <input class="form-control" name="password" type="password" :placeholder="$t('placeholder.password')" @change='showRegisterMsg(findForm.password, 0)' v-model="findForm.password">
               </div>
               <label class="col-md-3 control-label"></label>
               <p class="prompt col-md-9">{{upwdPrompt}}</p>
@@ -61,7 +61,7 @@
             <div class="form-group">
               <label for="inputRepassword3" class="col-md-3 control-label">{{$t('editProfile.confirmPassword')}}</label>
               <div class="col-md-9">
-                <input class="form-control" name="repassword" type="password" :placeholder="$t('placeholder.repassword')" @blur='showRegisterMsg(findForm.confirm_password, 1)' v-model="findForm.confirm_password">
+                <input class="form-control" name="repassword" type="password" :placeholder="$t('placeholder.repassword')" @change='showRegisterMsg(findForm.confirm_password, 1)' v-model="findForm.confirm_password">
               </div>
               <label class="col-md-3 control-label"></label>
               <p class="prompt col-md-9">{{confirm_upwdPrompt}}</p>
@@ -96,30 +96,33 @@ export default{
     //   失去焦点
     showRegisterMsg (input, id) {
       if (id === 0) {
-        var upwdreg = /^[a-zA-Z0-9~!@#$%^&*()_+`\-={}:";'<>?,./]{6,18}$/
-        if (!upwdreg.test(input) && input !== undefined && input.length > 0) {
-          this.upwdPrompt = this.$t('prompt.passwordLength')
-          return false
-        } else if (input === undefined || input.length === 0) {
-          this.upwdPrompt = this.$t('prompt.passwordRequired')
-          return false
-        } else {
+        let upwdreg = /^[a-zA-Z0-9~!@#$%^&*()_+`\-={}:";'<>?,./]{6,18}$/
+        if (upwdreg.test(input) && input !== undefined && input.length > 0) {
           this.upwdPrompt = ''
         }
       } else if (id === 1) {
-        if (input !== this.findForm.password && input !== undefined && input.length > 0) {
-          this.confirm_upwdPrompt = this.$t('prompt.passwordDifferent')
-          return false
-        } else if (input === undefined || input.length === 0) {
-          this.confirm_upwdPrompt = this.$t('prompt.passwordRequired')
-          return false
-        } else {
+        if (input === this.findForm.password && input !== undefined && input.length > 0) {
           this.confirm_upwdPrompt = ''
         }
       }
     },
     // 填新密码
     setnewpwd () {
+      let upwdreg = /^[a-zA-Z0-9~!@#$%^&*()_+`\-={}:";'<>?,./]{6,18}$/
+      if (this.findForm.password === undefined || this.findForm.password.length === 0) {
+        this.upwdPrompt = this.$t('prompt.passwordRequired')
+        return false
+      } else if (!upwdreg.test(this.findForm.password) && this.findForm.password !== undefined && this.findForm.password.length > 0) {
+        this.upwdPrompt = this.$t('prompt.passwordLength')
+        return false
+      }
+      if (this.findForm.confirm_password === undefined || this.findForm.confirm_password.length === 0) {
+        this.confirm_upwdPrompt = this.$t('prompt.passwordRequired')
+        return false
+      } else if (this.findForm.confirm_password !== this.findForm.password && this.findForm.confirm_password !== undefined && this.findForm.confirm_password.length > 0) {
+        this.confirm_upwdPrompt = this.$t('prompt.passwordDifferent')
+        return false
+      }
       let token = this.$route.params.token
       post(`/api/setpassword/${token}`, this.findForm).then(data => {
         if (data.message === '成功' || data.message === 'success') {

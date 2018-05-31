@@ -177,7 +177,7 @@
                     <i> | </i>{{getcontroltxt}}</button>
                 </div>
                 <!--<label class="col-md-3 control-label"></label>-->
-                <p class="prompt col-md-offset-3 col-md-6" style="margin-left:25%!important;">{{captchaPrompt}}</p>
+                <p class="prompt col-md-offset-3 col-md-6" style="margin-left:25%!important;">{{phoneControlPrompt}}</p>
               </div>
               <div class="form-group">
                 <div class="col-md-offset-3 col-md-9">
@@ -281,17 +281,15 @@ export default {
         return false
       }
       post(this.formUrl, this.userForm).then(data => {
-        this.controlPrompt = data.message
         if (data.resultcode === 0) {
           this.changeControl()
         }
         if (data.message === '验证码错误' || data.message === 'Captcha error') {
-          this.controlPrompt = data.message
           this.captchaPrompt = data.message
           this.changeControl()
           return
         } else {
-          this.controlPrompt = ''
+          this.captchaPrompt = ''
         }
         if (data.message === '用户名或密码错误' || data.message === 'Username or Password Error') {
           alert(data.message)
@@ -349,7 +347,7 @@ export default {
             alert(this.$t('prompt.phoneNotRegistered'))
             return
           } else {
-            this.controlPrompt = data.message
+            this.phoneControlPrompt = data.message
             this.changeControl()
             return
           }

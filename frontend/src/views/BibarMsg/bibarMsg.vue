@@ -307,9 +307,9 @@ export default {
     toBibarDetail (tmp) {
       // console.log(tmp)
       var crumbName = ''
-      if(this.language == 'zh'){
+      if (this.language === 'zh') {
         crumbName = tmp.name_ch
-      }else if(this.language == 'en'){
+      } else if (this.language === 'en') {
         crumbName = tmp.name_en
       }
       this.$router.push({

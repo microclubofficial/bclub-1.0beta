@@ -39,7 +39,8 @@ export default{
       imgObj: {
         imgName: []
       },
-      editor: {}
+      editor: {},
+      isLink: false
     }
   },
   computed: {
@@ -77,12 +78,21 @@ export default{
     // 校验链接
     this.editor.customConfig.linkCheck = function (text, link) {
       if (text === '' || link === '') {
-        return this.$t('prompt.emptyLink')
+        if (that.language === 'en') {
+          return 'Link cannot be empty'
+        } else if (that.language === 'zh') {
+          return '链接不能为空'
+        }
       } else {
         let reg = /[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+\.?/ig
         if (!reg.test(link)) {
-          return this.$t('prompt.invalidLink')
+          if (that.language === 'en') {
+            return 'Invalid link'
+          } else {
+            return '无效的链接'
+          }
         } else {
+          that.isLink = true
           return true
         }
       }
@@ -100,6 +110,7 @@ export default{
         '背景色': 'Background',
         '链接': 'Link',
         '链接文字': 'Link',
+        '插入': 'Insert',
         '设置列表': 'Set List',
         '有序列表': '&nbspOrdered list&nbsp&nbsp&nbsp',
         '无序列表': 'Disordered list',
@@ -283,14 +294,20 @@ export default{
       let that = this
       // this.topicData.content = this.editorContent
       this.topicData.content = this.editor.$textElem.html()
-      // 处理插入链接
-      if (this.topicData.content.indexOf('href') > -1) {
-        let href = this.topicData.content.match(/(?<=(href="))[^"]*?(?=")/ig)
+      // 处理链接
+      if (this.topicData.content.indexOf('href') > 0 && this.isLink) {
+        let hrefReg = /href=\"(.+)\"/g
+        let href = []
+        while (hrefReg.exec(this.topicData.content)) {
+          href.push(RegExp.$1)
+        }
+        // let href = this.topicData.content.match(/(?<=(href="))[^"]*?(?=")/ig)
         for (let i = 0; i < href.length; i++) {
           if (href[i].indexOf('http') === -1) {
             this.topicData.content = this.topicData.content.replace(href[i], 'http://' + href[i])
             let reg = /<a.*?>(.*?)<\/a>/ig
-            let result = reg.exec(this.topicData.content)
+            let result = []
+            result = reg.exec(this.topicData.content)
             this.topicData.content = this.topicData.content.replace(result[1], '<i class="iconfont">&#xe60e;</i>' + result[1] + '&nbsp;')
           }
         }
@@ -311,7 +328,8 @@ export default{
         return false
       }
       this.imgArr = []
-      let image = this.topicData.content.match(/<img[^>]*?(src="(?!\/static\/avatar)[^"]*?")(?![^<>]*?data-w-e[^<>]*?>)[^>]*?>/g)
+      let image = []
+      image = this.topicData.content.match(/<img[^>]*?(src="(?!\/static\/avatar)[^"]*?")(?![^<>]*?data-w-e[^<>]*?>)[^>]*?>/g)
       this.topicData.picture = ''
       if (this.longId.hideDilog) {
         this.topicData.token = this.longId.bId
@@ -321,11 +339,14 @@ export default{
       if (image !== null) {
         for (let i = 0; i < image.length; i++) {
           if (image[i].indexOf('alt="[') === -1) {
-            this.imgArr.push(image[i].match(/(?<=(src="))[^"]*?(?=")/ig)[0])
+            let reg = /<img[^>]*src[=\'\"\s]+([^\"\']*)[\"\']?[^>]*>/gi
+            while (reg.exec(image[i])) {
+              this.imgArr.push(RegExp.$1)
+            }
           }
-          // console.log(image[i])
         }
         this.imgObj.imgName = this.imgArr
+        console.log(this.imgArr)
         post('/api/photo', this.imgObj).then(data => {
           for (let key in data.data) {
             let reg = new RegExp(key, 'g')
@@ -334,14 +355,17 @@ export default{
           }
           // 请求
           this.topicData.picture = data.data[this.imgArr[0]]
-          // console.log(this.topicData.content)
-          // console.log(this)
           this.postEditor()
         })
       } else {
         // 首图
         if (/<img[^>]+>/g.test(this.topicData.content)) {
-          this.topicData.picture = this.topicData.content.match(/<img(?![^<>]*?data-w-e[^<>]*?>).*?>/g)[0].match(/(?<=(src="))[^"]*?(?=")/ig)[0]
+          this.topicData.picture = this.topicData.content.match(/<img(?![^<>]*?data-w-e[^<>]*?>).*?>/g)
+          if (this.topicData.picture !== null) {
+            let reg = /<img[^>]*src[=\'\"\s]+([^\"\']*)[\"\']?[^>]*>/gi
+            this.topicData.picture = reg.exec(this.topicData.picture[0])[1]
+          }
+          // match(/(?<=(src="))[^"]*?(?=")/ig)[0]
         }
         this.postEditor()
       }

@@ -43,7 +43,8 @@ export default {
       showDilog: false,
       editor: {},
       imgArr: [],
-      imgObj: {}
+      imgObj: {},
+      isLink: false
     }
   },
   computed: {
@@ -51,7 +52,7 @@ export default {
       return this.$store.state.userInfo.userInfo
     },
     chartId () {
-      return this.$store.state.chartId.chartId
+      return this.$store.state.chartId
     },
     longId () {
       return this.$store.state.longId
@@ -65,14 +66,20 @@ export default {
       let that = this
       // this.topicData.content = this.editorContent
       this.topicData.content = this.editor.$textElem.html()
-      // 处理插入链接
-      if (this.topicData.content.indexOf('href') > -1) {
-        let href = this.topicData.content.match(/(?<=(href="))[^"]*?(?=")/ig)
+      // 处理链接
+      if (this.topicData.content.indexOf('href') > 0 && this.isLink) {
+        let hrefReg = /href=\"(.+)\"/g
+        let href = []
+        while (hrefReg.exec(this.topicData.content)) {
+          href.push(RegExp.$1)
+        }
+        // let href = this.topicData.content.match(/(?<=(href="))[^"]*?(?=")/ig)
         for (let i = 0; i < href.length; i++) {
           if (href[i].indexOf('http') === -1) {
             this.topicData.content = this.topicData.content.replace(href[i], 'http://' + href[i])
             let reg = /<a.*?>(.*?)<\/a>/ig
-            let result = reg.exec(this.topicData.content)
+            let result = []
+            result = reg.exec(this.topicData.content)
             this.topicData.content = this.topicData.content.replace(result[1], '<i class="iconfont">&#xe60e;</i>' + result[1] + '&nbsp;')
           }
         }
@@ -92,17 +99,20 @@ export default {
         $('.w-e-text').html('')
         return false
       }
-      // let image = this.topicData.content.match(/<img src="\/static[^>]+>/g)
-      // this.topicData.picture = ''
-      // if (image !== null) {
-      //   this.topicData.picture = image[0]
-      //   this.topicData.picture = this.topicData.picture.slice(this.topicData.picture.indexOf('/'), this.topicData.picture.lastIndexOf('=') - 7)
-      // }
+      let image = this.topicData.content.match(/<img src="\/static[^>]+>/g)
+      this.topicData.picture = ''
+      if (image !== null) {
+        this.topicData.picture = image[0]
+        this.topicData.picture = this.topicData.picture.slice(this.topicData.picture.indexOf('/'), this.topicData.picture.lastIndexOf('=') - 7)
+      }
       // 处理首图
       if (/<img.*?(?:>|\/>)/gi.test(this.topicData.content)) {
-        let image = this.topicData.content.match(/<img(?![^<>]*?data-w-e[^<>]*?>).*?>/g)
+        let image = []
+        image = this.topicData.content.match(/<img(?![^<>]*?data-w-e[^<>]*?>).*?>/g)
         if (image !== null) {
-          image = image[0].match(/(?<=(src="))[^"]*?(?=")/ig)[0]
+          let reg = /<img[^>]*src[=\'\"\s]+([^\"\']*)[\"\']?[^>]*>/gi
+          image = reg.exec(image[0])[1]
+          //  image = image[0].match(/(?<=(src="))[^"]*?(?=")/ig)[0]
         }
         this.topicData.picture = image
       }
@@ -111,8 +121,8 @@ export default {
         this.topicData.token = this.$route.params.currency
         if (this.tokenBibar) {
           this.topicData.tokenname = this.tokenBibar
-        } else if (JSON.stringify(this.$route.query) !== '{}') {
-          this.topicData.tokenname = JSON.parse(this.$route.query.b).zh
+        } else if (this.chartId.chartCh) {
+          this.topicData.tokenname = this.chartId.chartCh
         } else {
           this.topicData.tokenname = this.$t('list.bclub')
         }
@@ -123,7 +133,10 @@ export default {
       if (contentImg !== null) {
         for (let i = 0; i < contentImg.length; i++) {
           if (contentImg[i].indexOf('alt="[') === -1) {
-            this.imgArr.push(contentImg[i].match(/(?<=(src="))[^"]*?(?=")/ig)[0])
+            let reg = /<img[^>]*src[=\'\"\s]+([^\"\']*)[\"\']?[^>]*>/gi
+            while (reg.exec(contentImg[i])) {
+              this.imgArr.push(RegExp.$1)
+            }
           }
         }
         this.imgObj.imgName = this.imgArr
@@ -135,18 +148,11 @@ export default {
           }
           this.topicData.picture = data.data[this.imgArr[0]]
           // 请求
-          // console.log(this.topicData.content)
-          // console.log(this)
           this.postContent()
         })
       } else {
         this.postContent()
       }
-      // this.$store.commit('LONG_ID', {
-      //   hideDilog: !this.showDilog,
-      //   bId: this.$route.params.currency,
-      //   bName: JSON.parse(this.$route.query.b).zh
-      // })
     },
     // post内容
     postContent () {
@@ -177,6 +183,7 @@ export default {
               backFt.reply_user = null
               backFt.replies_count = 0
               backFt.bool_delete = data.data.bool_delete
+              backFt.collect_bool = data.data.collect_bool
               if (this.showDilog) {
                 this.$emit('backFtNav', backFt)
                 this.showDilog = false
@@ -247,12 +254,21 @@ export default {
     // 校验链接
     this.editor.customConfig.linkCheck = function (text, link) {
       if (text === '' || link === '') {
-        return this.$t('prompt.emptyLink')
+        if (that.language === 'en') {
+          return 'Link cannot be empty'
+        } else if (that.language === 'zh') {
+          return '链接不能为空'
+        }
       } else {
         let reg = /[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+\.?/ig
         if (!reg.test(link)) {
-          return this.$t('prompt.invalidLink')
+          if (that.language === 'en') {
+            return 'Invalid link'
+          } else {
+            return '无效的链接'
+          }
         } else {
+          that.isLink = true
           return true
         }
       }
@@ -264,7 +280,8 @@ export default {
         '字号': 'Font size',
         '宋体': 'SimSun',
         '微软雅黑': 'Microsoft YaHei',
-
+        'Link文字': 'Link text',
+        '插入': 'Insert',
         '字体': 'Font family',
         '正文': 'Content',
         '文字颜色': 'Font color',
@@ -500,7 +517,7 @@ export default {
     border-radius: 50%;
 }
 .editor{
-    width: 540px;
+    /*width: 540px;*/
     margin: auto;
     height: 116px;
     position: relative;

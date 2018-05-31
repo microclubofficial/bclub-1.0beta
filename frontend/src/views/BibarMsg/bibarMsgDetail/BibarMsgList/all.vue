@@ -119,7 +119,7 @@
                       <!-- <p>{{item}}</p> -->
                       <p v-html="commentContent(item.content,item.id)"></p>
                       <!--展开-->
-              <a style="font-size:16px; white-space:nowrap;"  v-if='item.content !== undefined && item.content.length - imgCommentLength[item.id] > 200' href="#" class="bibar-indexintromore text-theme" @click="changeMore(item.id)">{{item.id === moreId ? $t('button.fold') : $t('button.unfold')}}<i style="font-size:16px;" class="iconfont" v-if="more === $t('button.unfold')">&#xe692;</i><i style="font-size:16px;" class="iconfont" v-if="more === $t('button.fold') ">&#xe693;</i></a>
+              <a style="font-size:16px; white-space:nowrap;"  v-if='item.content !== undefined && item.content.length - imgCommentLength[item.id] > 200' href="#" class="bibar-indexintromore text-theme" @click="changeMore(item.id)">{{item.id === moreId ? $t('button.fold') : $t('button.unfold')}}<i style="font-size:16px;" class="iconfont" v-if="item.id !== moreId">&#xe692;</i><i style="font-size:16px;" class="iconfont" v-if="item.id === moreId">&#xe693;</i></a>
                     </div>
                     <div class="set" style="margin-left:42px;">
                       <ul class="bibar-indexNewsItem-infro">
@@ -606,11 +606,11 @@ export default{
         return
       }
       let reply = val.replace(/<p[^>]*>|<\/p>|<h-char[^>]*>|<\/h-char>|<h-inner[^>]*>|<\/h-inner>/g, '')
-      if (reply.substring(0, 40).indexOf('href') > 0) {
+      if (reply.substring(0, 80).indexOf('href') > 0) {
         let imgLength = 0
-        if (reply.substring(0, 40).indexOf('img') > 0) {
-          let imgArr = []
-          imgArr = reply.match(/<img[^>]*>/gi)
+        let imgArr = []
+        if (reply.substring(0, 80).indexOf('img') > 0) {
+          imgArr = reply.substring(0, 300).match(/<img[^>]*>/gi)
           if (imgArr === null) {
             return
           }
@@ -619,16 +619,16 @@ export default{
           }
         }
         let hrefLength = 0
-        let hrefArr = reply.match(/<a.*?>(.*?)<\/a>/ig)[0]
+        let hrefArr = reply.match(/<a.*?>(.*?)<\/a>/ig)
         if (hrefArr === null) {
           return
         }
         // for (let i = 0; i < hrefArr.length; i++) {
         //   hrefLength += hrefArr[i].length
         // }
-        hrefLength = hrefArr.length
+        hrefLength = hrefArr[0].length
         return reply.substring(0, 40 + hrefLength + imgLength) + '...'
-      } else if (reply.substring(0, 40).indexOf('img') > 0) {
+      } else if (reply.substring(0, 80).indexOf('img') > 0) {
         let imgLength = 0
         let imgArr = reply.match(/<img[^>]*>/gi)
         if (imgArr === null) {
@@ -660,7 +660,7 @@ export default{
       //     this.imgCommentLength[id] += imgArr[i].length
       //   }
       // }
-      this.imgCommentLength[id] = val.lastIndexOf('data-w-e="1">')
+      this.imgCommentLength[id] = val.lastIndexOf('alt="[')
       if (val.length - this.imgCommentLength[id] > 200) {
         if (id !== this.moreId) {
           let imgVal = val.replace(/<img src="\/static[^>]+>/g, '')
@@ -785,6 +785,9 @@ export default{
       if (page === '...') {
         return
       }
+      let currentClickDom = $('.bibar-tabitem:eq(' + this.i + ')').find('.comment-wrap')
+      let scrollTop = $('#app').scrollTop() - (currentClickDom.height() - 80)
+      $('#app').animate({scrollTop: scrollTop}, 100)
       this.chartShow = 0
       this.summaryList = []
       if (this.cpno[id] !== page) {

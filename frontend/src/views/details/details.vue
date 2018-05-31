@@ -73,15 +73,6 @@
         <!--<li class="set-delList" @click="delTopic(tmp)"> <a href="javascript:void(0);"><i class="iconfont icon-del">&#xe78d;</i>{{$t('list.delete')}}</a> </li>-->
               <!-- <li> <a href="javascript:void(0);"><i class="iconfont icon-fenxiang"></i> 分享</a> </li> -->
               <!-- <li class="set-choseShang"> <a href="javascript:void(0);"><i class="iconfont icon-dashang"></i> 打赏<span>438</span></a> </li> -->
-              <li>
-                <!-- <div class="dropdown">
-                  <a href="javascript:void(0);" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="iconfont icon-genduo"></i> 更多</a>
-                  <ul class="dropdown-menu">
-                    <li><a href="javascript:void(0);">举报</a></li>
-                    <li><a href="javascript:void(0);">没有帮助</a></li>
-                  </ul>
-                </div> -->
-              </li>
             </ul>
           </div>
       </div>
@@ -137,7 +128,7 @@
                       <!-- <p>{{item}}</p> -->
                       <div class="detailContent" v-html="commentContent(item.content,item.id)"></div>
                       <!--展开-->
-              <a style="font-size:16px; white-space:nowrap;"  v-if='item.content !== undefined && item.content.length - imgCommentLength[item.id] > 200' href="#" class="bibar-indexintromore text-theme" @click="changeMore(item.id)">{{item.id === moreId ? $t('button.fold') : $t('button.unfold')}}<i style="font-size:16px;" class="iconfont" v-if="more === $t('button.unfold')">&#xe692;</i><i style="font-size:16px;" class="iconfont" v-if="more === $t('button.fold')">&#xe693;</i></a>
+              <a style="font-size:16px; white-space:nowrap;"  v-if='item.content !== undefined && item.content.length - imgCommentLength[item.id] > 200' href="#" class="bibar-indexintromore text-theme" @click="changeMore(item.id)">{{item.id === moreId ? $t('button.fold') : $t('button.unfold')}}<i style="font-size:16px;" class="iconfont" v-if="item.id !== moreId">&#xe692;</i><i style="font-size:16px;" class="iconfont" v-if="item.id === moreId">&#xe693;</i></a>
                     </div>
                     <div class="set clearfloat" style="margin-left: 57px;">
                       <ul class="bibar-indexNewsItem-infro">
@@ -192,10 +183,10 @@
           <p style="margin-top:20px;">{{$t('prompt.confirmDelete')}}</p>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">{{$t('button.cancel')}}
-          </button>
           <button @click='confirm' type="button" class="btn btn-primary">
             {{$t('button.confirm')}}
+          </button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">{{$t('button.cancel')}}
           </button>
         </div>
       </div>
@@ -360,7 +351,7 @@ export default {
         })
         var that = this
         if (this.pageCount === 1) {
-          this.bottomText = '没有啦'
+          this.bottomText = this.$t('prompt.noMore')
           this.listLoding = false
           this.noLoading = true
           // this.loadingImg = '../../assets/img/noLoading.png'
@@ -497,21 +488,18 @@ export default {
       if (val === undefined) {
         return
       }
-      if (/<img.*>/gi.test(val)) {
-        return val.replace(/(?<=(alt="))[^"]*?(?=")/ig, '')
-      }
+      // if (/<img.*>/gi.test(val)) {
+      //   return val.replace(/(?<=(alt="))[^"]*?(?=")/ig, '')
+      // }
       return val
     },
     // 收藏
     collectionTopic (articleDetail) {
       let instance
       post(`/api/collect/${articleDetail.id}`).then(data => {
-        if (data.data.collect_bool) {
-          articleDetail.collect_bool = data.data.collect_bool
-          instance = new Toast({
-            message: data.message,
-            duration: 1000
-          })
+        if (data.resultcode === 0) {
+          alert(data.message)
+          this.$router.push('/login')
         } else {
           articleDetail.collect_bool = data.data.collect_bool
           if (data.data.collect_bool) {
@@ -520,7 +508,7 @@ export default {
               iconClass: 'glyphicon glyphicon-ok',
               duration: 1000
             })
-          } else {  
+          } else {
             instance = new Toast({
               message: this.$t('prompt.cancelCollect'),
               duration: 1000
@@ -557,11 +545,11 @@ export default {
         return
       }
       let reply = val.replace(/<p[^>]*>|<\/p>|<h-char[^>]*>|<\/h-char>|<h-inner[^>]*>|<\/h-inner>/g, '')
-      if (reply.substring(0, 40).indexOf('href') > 0) {
+      if (reply.substring(0, 80).indexOf('href') > 0) {
         let imgLength = 0
-        if (reply.substring(0, 40).indexOf('img') > 0) {
-          let imgArr = []
-          imgArr = reply.match(/<img[^>]*>/gi)
+        let imgArr = []
+        if (reply.substring(0, 80).indexOf('img') > 0) {
+          imgArr = reply.substring(0, 300).match(/<img[^>]*>/gi)
           if (imgArr === null) {
             return
           }
@@ -570,16 +558,16 @@ export default {
           }
         }
         let hrefLength = 0
-        let hrefArr = reply.match(/<a.*?>(.*?)<\/a>/ig)[0]
+        let hrefArr = reply.match(/<a.*?>(.*?)<\/a>/ig)
         if (hrefArr === null) {
           return
         }
         // for (let i = 0; i < hrefArr.length; i++) {
         //   hrefLength += hrefArr[i].length
         // }
-        hrefLength = hrefArr.length
+        hrefLength = hrefArr[0].length
         return reply.substring(0, 40 + hrefLength + imgLength) + '...'
-      } else if (reply.substring(0, 40).indexOf('img') > 0) {
+      } else if (reply.substring(0, 80).indexOf('img') > 0) {
         let imgLength = 0
         let imgArr = reply.match(/<img[^>]*>/gi)
         if (imgArr === null) {
@@ -611,7 +599,7 @@ export default {
       //     this.imgCommentLength[id] += imgArr[i].length
       //   }
       // }
-      this.imgCommentLength[id] = val.lastIndexOf('data-w-e="1">')
+      this.imgCommentLength[id] = val.lastIndexOf('alt="[')
       if (val.length - this.imgCommentLength[id] > 200) {
         if (id !== this.moreId) {
           let imgVal = val.replace(/<img src="\/static[^>]+>/g, '')
@@ -832,8 +820,9 @@ export default {
     color: #222;
     font-family: "Microsoft Yahei";
     font-weight: bold;
-    text-align: center;
+    /*text-align: center;*/
     margin: 20px 0;
+    line-height: 1.4
   }
 .article_bd .article_bd_from {
     margin: 16px 0;

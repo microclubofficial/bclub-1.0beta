@@ -5,7 +5,7 @@
     <div class="loading" v-if='showLoader'>
       <img src="../../../assets/img/loading.png" alt="" class="icon-loading">
     </div>
-    <div class="bibar-tabitem fade in active" :key="index" id="bibar-newstab1" v-for="(tmp,index) in articles">
+    <div class="bibar-tabitem fade in active clearfloat" :key="index" v-for="(tmp,index) in articles">
       <div class="bibar-indexNewsList">
         <div class="bibar-indexNewsItem">
           <div class="speech" v-if="tmp.reply_user !== null"> <span><span class="time">{{tmp.reply_time}}</span>{{$t('list.ago')}} {{tmp.reply_user}} {{$t('list.commented')}}</span><i class="iconfont icon-dot"></i></div>
@@ -121,7 +121,7 @@
                       <!-- <p>{{item}}</p> -->
                       <!--评论文-->
                       <p class="commentContent" v-html="commentContent(item.content,item.id)"></p>
-                      <a style="font-size:16px; white-space:nowrap;" v-if='item.content !== undefined && item.content.length - imgCommentLength[item.id]  > 200' href="#" class="bibar-indexintromore text-theme" @click="changeMore(item.id)">{{item.id === moreId ? $t('button.fold') : $t('button.unfold')}}<i style="font-size:16px;" class="iconfont" v-if="more === $t('button.unfold')">&#xe692;</i><i style="font-size:16px;" class="iconfont" v-if="more === $t('button.fold')">&#xe693;</i></a>
+                      <a style="font-size:16px; white-space:nowrap;" v-if='item.content !== undefined && item.content.length - imgCommentLength[item.id]  > 200' href="#" class="bibar-indexintromore text-theme" @click="changeMore(item.id)">{{item.id === moreId ? $t('button.fold') : $t('button.unfold')}}<i style="font-size:16px;" class="iconfont" v-if="item.id !== moreId">&#xe692;</i><i style="font-size:16px;" class="iconfont" v-if="item.id === moreId">&#xe693;</i></a>
                     </div>
                     <div class="set" style="margin-left:42px">
                       <ul class="bibar-indexNewsItem-infro">
@@ -166,14 +166,14 @@
               <ul class="mo-paging">
                 <!-- prev -->
                 <!-- first -->
-                <li :class="['paging-item', 'paging-item--first', {'paging-item--disabled' : cpno[tmp.id] === 1}]" @click="first(tmp.id)">{{$t('pages.first')}}</li>
-                <li class="paging-item paging-item--prev" :class="{'paging-item--disabled' : cpno[tmp.id] === 1}" @click="prev(tmp.id)">{{$t('pages.prev')}}</li>
-                <li :class="['paging-item', {'paging-item--current' : cpno[tmp.id] === page}]" :key="index" v-for="(page, index) in pageNumber[tmp.id]" @click="go(page,tmp.id)">{{page}}</li>
+                <li :class="['paging-item', 'paging-item--first', {'paging-item--disabled' : cpno[tmp.id] === 1}]" @click="first(tmp.id,index)">{{$t('pages.first')}}</li>
+                <li class="paging-item paging-item--prev" :class="{'paging-item--disabled' : cpno[tmp.id] === 1}" @click="prev(tmp.id,index)">{{$t('pages.prev')}}</li>
+                <li :class="['paging-item', {'paging-item--current' : cpno[tmp.id] === page}]" :key="pageIndex" v-for="(page, pageIndex) in pageNumber[tmp.id]" @click="go(page,tmp.id,index)">{{page}}</li>
                 <!--<li :class="['paging-item', 'paging-item--more']" @click="next" v-if="showNextMore">...</li>-->
                 <!-- next -->
-                <li :class="['paging-item', 'paging-item--next', {'paging-item--disabled' : cpno[tmp.id] === cpageCountObj[tmp.id]}]" @click="next(tmp.id)">{{$t('pages.next')}}</li>
+                <li :class="['paging-item', 'paging-item--next', {'paging-item--disabled' : cpno[tmp.id] === cpageCountObj[tmp.id]}]" @click="next(tmp.id,index)">{{$t('pages.next')}}</li>
                 <!-- last -->
-                <li :class="['paging-item', 'paging-item--last', {'paging-item--disabled' : cpno[tmp.id] === cpageCountObj[tmp.id]}]" @click="last(tmp.id)">{{$t('pages.end')}}</li>
+                <li :class="['paging-item', 'paging-item--last', {'paging-item--disabled' : cpno[tmp.id] === cpageCountObj[tmp.id]}]" @click="last(tmp.id,index)">{{$t('pages.end')}}</li>
               </ul>
             </div>
             </div>
@@ -202,10 +202,10 @@
           <p style="margin-top:20px;">{{$t('prompt.confirmDelete')}}</p>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">{{$t('button.cancel')}}
-          </button>
           <button @click='confirm' type="button" class="btn btn-primary">
             {{$t('button.confirm')}}
+          </button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">{{$t('button.cancel')}}
           </button>
         </div>
       </div>
@@ -553,16 +553,6 @@ export default{
       this.showReport = false
       this.nowData[this.replyId].unshift(data)
       this.articles[this.i].replies_count = data.replies_count
-      // get(`/api/topic/${this.tpno}`).then(data => {
-      //   // this.showLoader = false
-      //   if (this.tpno === 1) {
-      //     this.articles = data.data.topics
-      //   } else {
-      //     if () {
-
-      //     }
-      //   }
-      // })
     },
     showFtContentFun (ftData) {
       this.articles = [ftData, ...this.articles]
@@ -611,7 +601,7 @@ export default{
               iconClass: 'glyphicon glyphicon-ok',
               duration: 1000
             })
-          } else {  
+          } else {
             instance = new Toast({
               message: this.$t('prompt.cancelCollect'),
               duration: 1000
@@ -628,7 +618,7 @@ export default{
       if (val === undefined) {
         return
       }
-      let now = val.replace(/<p[^>]*>|<\/p>|<span[^>]*>|<\/span>|<br>|<h[1-6][^>]*>|<\/h[1-6]>|<h-char[^>]*>|<img[^>]*>|<\/h-char>|<h-inner>|<\/h-inner>/g, '')
+      let now = val.replace(/<p[^>]*>|<\/p>|<br>|<span[^>]*>|<\/span>|<br>|<h[1-6][^>]*>|<\/h[1-6]>|<h-char[^>]*>|<img[^>]*>|<\/h-char>|<h-inner>|<\/h-inner>/g, '')
       now = now.replace(/&nbsp;*/g, '')
       // now = $(now).text()
       if (now.length > 300) {
@@ -644,9 +634,9 @@ export default{
       let reply = val.replace(/<p[^>]*>|<\/p>|<h-char[^>]*>|<\/h-char>|<h-inner[^>]*>|<\/h-inner>/g, '')
       if (reply.substring(0, 80).indexOf('href') > 0) {
         let imgLength = 0
+        let imgArr = []
         if (reply.substring(0, 80).indexOf('img') > 0) {
-          let imgArr = []
-          imgArr = reply.match(/<img[^>]*>/gi)
+          imgArr = reply.substring(0, 300).match(/<img[^>]*>/gi)
           if (imgArr === null) {
             return
           }
@@ -655,14 +645,14 @@ export default{
           }
         }
         let hrefLength = 0
-        let hrefArr = reply.match(/<a.*?>(.*?)<\/a>/ig)[0]
+        let hrefArr = reply.match(/<a.*?>(.*?)<\/a>/ig)
         if (hrefArr === null) {
           return
         }
         // for (let i = 0; i < hrefArr.length; i++) {
         //   hrefLength += hrefArr[i].length
         // }
-        hrefLength = hrefArr.length
+        hrefLength = hrefArr[0].length
         return reply.substring(0, 40 + hrefLength + imgLength) + '...'
       } else if (reply.substring(0, 80).indexOf('img') > 0) {
         let imgLength = 0
@@ -686,7 +676,7 @@ export default{
       if (val === undefined) {
         return
       }
-      val = val.replace(/<p[^>]*>|<\/p>|<h-char[^>]*>|<\/h-char>|<h-inner[^>]*>|<\/h-inner>|<br>/g, '')
+      val = val.replace(/<h-char[^>]*>|<\/h-char>|<h-inner[^>]*>|<\/h-inner>/g, '')
       // let imgArr = val.match(/<img[^>]*>/gi)
       if (!this.imgCommentLength[id]) {
         this.imgCommentLength[id] = 0
@@ -696,7 +686,7 @@ export default{
       //     this.imgCommentLength[id] += imgArr[i].length
       //   }
       // }
-      this.imgCommentLength[id] = val.lastIndexOf('data-w-e="1">')
+      this.imgCommentLength[id] = val.lastIndexOf('alt="[')
       if (val.length - this.imgCommentLength[id] > 200) {
         if (id !== this.moreId) {
           let imgVal = val.replace(/<img src="\/static[^>]+>/g, '')
@@ -753,30 +743,35 @@ export default{
       this.delItem = item.id
     },
     // 分页
-    prev (id) {
+    prev (id, index) {
       if (this.cpno[id] > 1) {
-        this.go(this.cpno[id] - 1, id)
+        this.go(this.cpno[id] - 1, id, index)
       }
     },
-    next (id) {
+    next (id, index) {
       if (this.cpno[id] < this.cpageCount) {
-        this.go(this.cpno[id] + 1, id)
+        this.go(this.cpno[id] + 1, id, index)
       }
     },
-    first (id) {
+    first (id, index) {
       if (this.cpno[id] !== 1) {
         this.go(1, id)
       }
     },
-    last (id) {
+    last (id, index) {
       if (this.cpno[id] !== this.cpageCount) {
-        this.go(this.cpageCount, id)
+        this.go(this.cpageCount, id, index)
       }
     },
-    go (page, id) {
+    go (page, id, index) {
       if (page === '···') {
         return
       }
+      let currentClickDom = $('.bibar-tabitem:eq(' + index + ')').find('.comment-wrap')
+      // let currentClickDom = $('#bibar-newstab' + index).find('.comment-wrap')
+      // let scrollTop = currentClickDom[0].offsetTop + 764
+      let scrollTop = $('#app').scrollTop()
+      $('#app').animate({scrollTop: scrollTop - currentClickDom.height()}, 100)
       this.chartShow = 0
       this.summaryList = []
       if (this.cpno[id] !== page) {
@@ -825,11 +820,6 @@ export default{
       return [1, '···', this.cpno[id] - 1, this.cpno[id], this.cpno[id] + 1, '···', tatal]
     }
   }
-  // watch: {
-  //   articles (va) {
-  //     console.log(va, 12)
-  //   }
-  // }
 }
 </script>
 

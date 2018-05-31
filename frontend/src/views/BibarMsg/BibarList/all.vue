@@ -519,6 +519,9 @@ export default{
       if (page === '···') {
         return
       }
+      let currentClickDom = $('.bibar-tabitem:eq(' + this.i + ')').find('.comment-wrap')
+      let scrollTop = $('#app').scrollTop() - (currentClickDom.height() - 80)
+      $('#app').animate({scrollTop: scrollTop}, 100)
       this.chartShow = 0
       this.summaryList = []
       if (this.cpno[id] !== page) {

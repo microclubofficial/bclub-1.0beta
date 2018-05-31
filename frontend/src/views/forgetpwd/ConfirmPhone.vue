@@ -152,7 +152,8 @@ export default {
         'password': '',
         'confirm_password': '',
         'phone': ''
-      }
+      },
+      phoneRegistered: false
     }
   },
   mounted: function () {
@@ -173,7 +174,7 @@ export default {
         }
       } else if (id === 2) {
         let upwdreg = /^[a-zA-Z0-9~!@#$%^&*()_+`\-={}:";'<>?,./]{6,18}$/
-        if (upwdreg.test(input) && input !== undefined && input.length > 0) {
+        if (upwdreg.test(input) && !this.phoneRegistered && input !== undefined && input.length > 0) {
           this.upwdPrompt = ''
         }
       } else if (id === 3) {
@@ -190,6 +191,8 @@ export default {
       let phone = parseFloat(this.phoneObj.phone)
       post('/api/phoneCaptcha/login', { 'phone': phone }).then((data) => {
         if (data.resultcode === 1) {
+          // 点过
+          this.phoneRegistered = true
           this.hasphone = true
           let that = this
           this.timer = setInterval(function () {
@@ -206,6 +209,7 @@ export default {
             }
           }, 1000)
         } else if (data.resultcode === 0) {
+          this.phoneRegistered = false
           this.phonePrompt = this.$t('prompt.phoneNotRegistered')
         }
       }).catch(error => {
@@ -254,6 +258,9 @@ export default {
       }
       if (this.phoneObj.captcha === undefined || this.phoneObj.captcha.length === 0) {
         this.phoneControlPrompt = this.$t('prompt.captchaRequired')
+        return false
+      } else if (!this.phoneRegistered) {
+        this.phoneControlPrompt = this.$t('prompt.captchaError')
         return false
       }
       post('/api/phoneForget', this.phoneObj).then(data => {

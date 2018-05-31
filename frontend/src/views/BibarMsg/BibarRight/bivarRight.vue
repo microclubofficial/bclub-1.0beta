@@ -4,8 +4,11 @@
             <article class="bibar-box bibar-boxindex3" v-if="$route.path !== '/'">
                 <div class="bibar-boxtitle" style="margin-bottom:10px;"> <span class="name">{{$t('sideBar.introduction')}}</span> </div>
                 <div class="bibar-boxbody">
+                  <div class="loading" v-if='showLoader' style="margin:0;">
+                    <img src="../../../assets/img/loading.png" alt="" class="icon-loading">
+                  </div>
                     <div class="bibar-indexintro">
-                        <p v-html= "briefC !== '' ? briefC : $t('message.noInformation') "></p>
+                        <p v-if='!showLoader' v-html= "briefC !== '' ? briefC : $t('message.noInformation') "></p>
                     </div>
                     <a href="#" v-if='briefC !== ""' class="bibar-indexintromore text-theme" @click="showText = !showText">{{this.showText === false ? $t('button.unfold') : $t('button.fold')}}<i class="iconfont" v-if='!showText'>&#xe692;</i><i class="iconfont" v-if='showText'>&#xe693;</i></a>
                     <div class="bibar-indexinftrList" v-if='briefC.length > 0'>
@@ -88,10 +91,12 @@
   <div class="indexrightscroll-top">
     <!--热门-->
     <div class="bibar-box bibar-boxindex3">
-
-      <div class="bibar-boxtitle"> <span class="name">{{$t('sideBar.hotCoins')}}</span><div style="display:inline-block;float:right;"><a href="javascript:void(0)" v-if='showNext' class="fr" @click="changeBtb(1)">{{$t('sideBar.nextTen')}}</a><a href="javascript:void(0)" class="fr" v-if='showPre' @click="changeBtb(0)">{{$t('sideBar.prevTen')}}</a></div></div>
+      <div class="bibar-boxtitle"> <span class="name">{{$t('sideBar.hotCoins')}}</span><div style="display:inline-block;float:right;"><a  href="javascript:void(0)" v-if='showNext && !showHotLoader' class="fr" @click="changeBtb(1)">{{$t('sideBar.nextTen')}}</a><a href="javascript:void(0)" class="fr" v-if='showPre && !showHotLoader' @click="changeBtb(0)">{{$t('sideBar.prevTen')}}</a></div></div>
       <div class="bibar-boxbody">
-        <ul class="bibar-indexRMlist">
+        <div class="loading" v-if='showHotLoader' style="margin:0;">
+          <img src="../../../assets/img/loading.png" alt="" class="icon-loading">
+        </div>
+        <ul class="bibar-indexRMlist" v-if='!showHotLoader'>
           <li class="bibar-indexRMitem row" v-for="(tmp,index) in hotList" :key="index" @click='toBibarDetail(tmp)'>
             <div class="col-sm-3"><a href="javascript:void(0)">{{tmp.symbol}}</a></div>
             <div class="col-sm-6"><span class="fr"><i class="iconfont">&#xe634;</i>{{tmp.price * CNY | formatNum(2)}}</span></div>
@@ -142,7 +147,10 @@ export default{
       showPre: false,
       showNext: true,
       showText: false,
-      buttonText: ''
+      buttonText: '',
+      // 加载
+      showLoader: false,
+      showHotLoader: false
     }
   },
   created: function () {
@@ -167,9 +175,9 @@ export default{
     briefC () {
       if (this.briefTxt !== '') {
         if (this.showText === false) {
-          if(this.language == 'zh'){
+          if (this.language === 'zh') {
             return this.briefTxt.substring(0, 166) + '...'
-          }else if (this.language == 'en'){
+          } else if (this.language === 'en') {
             return this.briefTxt.substring(0, 376) + '...'
           }
         } else {
@@ -215,10 +223,13 @@ export default{
     // },
     // 热门币
     bibarHot (pno) {
+      this.showHotLoader = true
       get(`/api/blist/${pno}/${this.hotCount}`).then(data => {
         this.hotList = data.data.summaryList
         this.CNY = data.data.exrateData.CNY
         this.hotPageCount = data.data.page_count
+        // loader
+        this.showHotLoader = false
       })
     },
     // 热门币翻页
@@ -255,9 +266,9 @@ export default{
       // 调简介
       this.briefFun(tmp.id)
       var crumbName = ''
-      if(this.language == 'zh'){
+      if (this.language === 'zh') {
         crumbName = tmp.name_ch
-      }else if(this.language == 'en'){
+      } else if (this.language === 'en') {
         crumbName = tmp.name_en
       }
       this.$router.push({
@@ -271,16 +282,18 @@ export default{
     briefFun (id) {
       this.showText = false
       this.briefTxt = ''
+      this.showLoader = true
       get(`/api/side/tokenintroduce/${id}`).then(data => {
         if (data.resultcode === 1) {
           this.brief = data.data
+          this.showLoader = false
           // console.log(this.brief)
           this.websites = this.brief.websites[0]
-          if (this.language == 'zh'){
+          if (this.language === 'zh') {
             for (let i = 0; i < this.brief.descriptions.zh.length; i++) {
               this.briefTxt += `<p style="text-indent:2rem;">${this.brief.descriptions.zh[i]}</p>`
             }
-          }else if (this.language == 'en'){
+          } else if (this.language === 'en') {
             for (let j = 0; j < this.brief.descriptions.en.length; j++) {
               this.briefTxt += `<p style="text-indent:1rem;text-align:justify;word-break: break-all;">${this.brief.descriptions.en[j]}</p>`
             }

@@ -99,10 +99,11 @@ export default {
       } else if (this.oldpwdPrompt !== '') {
         this.oldpwdPrompt = this.$t('prompt.orgpwdError')
         return false
-      } else if (this.setPwd.NewPassword === undefined || this.setPwd.setPwd.NewPassword === 0) {
+      }
+      if (this.setPwd.NewPassword === undefined || this.setPwd.NewPassword === 0) {
         this.newpwdPrompt = this.$t('prompt.passwordRequired')
         return false
-      } else if (!upwdreg.test(this.setPwd.NewPassword) && this.setPwd.NewPassword !== undefined && this.setPwd.NewPassword.length > 0) {
+      } if (!upwdreg.test(this.setPwd.NewPassword) && this.setPwd.NewPassword !== undefined && this.setPwd.NewPassword.length > 0) {
         this.newpwdPrompt = this.$t('prompt.passwordLength')
         return false
       } else if (this.setPwd.confirm_password === undefined || this.setPwd.confirm_password === 0) {

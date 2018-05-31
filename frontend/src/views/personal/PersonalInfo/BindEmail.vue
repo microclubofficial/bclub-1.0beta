@@ -61,17 +61,18 @@ export default {
       this.$router.push('/')
     }
     get(`/api/u/email`).then(data => {
-      console.log(data)
       if (data.resultcode === 1 && data.data) {
         this.successbind = true
         this.bindForm.email = data.data
+      } else {
+        this.successbind = false
       }
     })
   },
   methods: {
     // 验证
     showBindEmailMsg (input, id) {
-      let emailreg = /^[A-Za-z0-9.\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
+      let emailreg = /^[A-Za-z0-9\u4e00-\u9fa5.-_]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
       if (id === 0) {
         if (emailreg.test(input) && input !== undefined && input.length > 0) {
           this.emailPrompt = ''
@@ -81,12 +82,14 @@ export default {
     },
     // 绑定邮箱
     bindEmailFun () {
-      let emailreg = /^[A-Za-z0-9.\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
+      let emailreg = /^[A-Za-z0-9\u4e00-\u9fa5.-_]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
       if (this.bindForm.email === undefined || this.bindForm.email.length === 0) {
         this.emailPrompt = this.$t('prompt.emailRequired')
         this.canFind = false
+        return false
       } else if (!emailreg.test(this.bindForm.email) && this.bindForm.email !== undefined && this.bindForm.email.length > 0) {
         this.emailPrompt = this.$t('prompt.emailError')
+        $('.emaiModal').modal('hide')
         return false
       }
       post(`/api/setting/email`, this.bindForm).then(data => {
@@ -119,6 +122,7 @@ export default {
     // 完成后修改邮箱
     SbindEmail () {
       this.successbind = false
+      this.bindForm.email = ''
     }
   }
 }

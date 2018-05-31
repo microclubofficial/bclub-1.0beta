@@ -159,7 +159,9 @@ export default {
       hasControl: false,
       getcontroltxt: this.$t('prompt.acquireVcode'),
       timer: null,
-      kaiguan: true
+      kaiguan: true,
+      confirmPwd: false,
+      phoneRegistered: false
     }
   },
   methods: {
@@ -181,15 +183,25 @@ export default {
       } else if (id === 2) {
         if (input !== this.userForm.password) {
           this.confirm_upwdPrompt = this.$t('prompt.passwordDifferent')
+          this.confirmPwd = false
           return false
         } else if (input === this.userForm.password && input !== undefined && input.length > 0) {
           this.confirm_upwdPrompt = ''
+          this.confirmPwd = true
         }
       } else if (id === 3) {
         var phonereg = /^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$/
-        if (phonereg.test(input) && input !== undefined && input.length > 0) {
+        if (phonereg.test(input) && !this.phoneRegistered && input !== undefined && input.length > 0) {
           this.phonePrompt = ''
           this.hasphone = false
+        } else if (input === undefined || input.length === 0) {
+          this.phonePrompt = this.$t('prompt.phoneRequired')
+          this.hasphone = true
+          return false
+        } else if (!phonereg.test(input)) {
+          this.phonePrompt = this.$t('prompt.phoneError')
+          this.hasphone = true
+          return false
         }
       } else if (id === 4) {
         if (input !== undefined || input.length > 0) {
@@ -221,8 +233,12 @@ export default {
       } else if (this.userForm.confirm_password === undefined || this.userForm.confirm_password.length === 0) {
         this.confirm_upwdPrompt = this.$t('prompt.passwordRequired')
         return false
+      } else if (!this.confirmPwd) {
+        this.confirm_upwdPrompt = this.$t('prompt.passwordDifferent')
+        return false
         // 以下 -- 手机号
-      } else if (this.userForm.phone === undefined || this.userForm.phone.length === 0) {
+      }
+      if (this.userForm.phone === undefined || this.userForm.phone.length === 0) {
         this.phonePrompt = this.$t('prompt.phoneRequired')
         this.hasphone = true
         return false
@@ -234,14 +250,16 @@ export default {
       } else if (this.userForm.captcha === undefined || this.userForm.captcha.length === 0) {
         this.captchaPrompt = this.$t('prompt.captchaRequired')
         return false
+      } else if (!this.phoneRegistered) {
+        this.captchaPrompt = this.$t('prompt.captchaError')
+        return false
       }
       post(this.formUrl, this.userForm).then(data => {
         // console.log(data)
         if (data.resultcode === 0) {
-          this.unamePrompt = data.message
-          return
-        }
-        if (data.resultcode === 1) {
+          alert(data.message)
+          return false
+        } else if (data.resultcode === 1) {
           this.$store.commit('USER_INFO', {
             'username': data.data.username,
             'avatar': data.data.avatar,
@@ -263,6 +281,7 @@ export default {
       let phone = parseFloat(this.userForm.phone)
       post('/api/phoneCaptcha', {'phone': phone}).then((data) => {
         if (data.resultcode === 1) {
+          this.phoneRegistered = true
           this.hasphone = true
           let that = this
           this.timer = setInterval(function () {
@@ -279,7 +298,8 @@ export default {
             }
           }, 1000)
         } else if (data.resultcode === 0) {
-          this.phonePrompt = '手机号已注册'
+          this.phonePrompt = this.$t('prompt.phoneRegistered')
+          this.phoneRegistered = false
         }
       }).catch(error => {
         console.log(error)
