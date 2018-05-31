@@ -106,12 +106,12 @@
   width: 60%;
 }
 .margin-top label {
-  width: 20%;
+  width: 22%;
   padding-right: 10px;
   text-align: left;
 }
 .button-box {
-  padding-left: 20%;
+  padding-left: 22%;
 }
 .margin-top {
   margin-top: 30px;
@@ -144,22 +144,22 @@
           <label class="left control-label">{{$t('editProfile.originalPassword')}}</label>
           <div class="left left-width">
             <input class="form-control" name="password" type="password" :placeholder="$t('placeholder.originalPassword')" @change='showFindPwdMsg(setPwd.OldPassword, 0)' v-model="setPwd.OldPassword">
+            <p class="prompt">{{oldpwdPrompt}}</p>
           </div>
-          <p class="prompt">{{oldpwdPrompt}}</p>
         </div>
         <div class="clearfix margin-top">
           <label class="left control-label">{{$t('editProfile.newPassword')}}</label>
           <div class="left left-width">
             <input class="form-control" name="password" type="password" :placeholder="$t('placeholder.newPassword')" @change='showFindPwdMsg(setPwd.NewPassword, 1)' v-model="setPwd.NewPassword">
-          </div>
-          <p class="prompt">{{newpwdPrompt}}</p>
+            <p class="prompt">{{newpwdPrompt}}</p>
+          </div>        
         </div>
         <div class="clearfix margin-top">
           <label class="left control-label">{{$t('editProfile.confirmPassword')}}</label>
           <div class="left left-width">
             <input class="form-control" name="repassword" type="password" :placeholder="$t('placeholder.repassword')" @change='showFindPwdMsg(setPwd.confirm_password, 2)' v-model="setPwd.confirm_password">
+            <p class="prompt">{{confirm_upwdPrompt}}</p>
           </div>
-          <p class="prompt">{{confirm_upwdPrompt}}</p>
         </div>
         <div class="clearfix button-box margin-top">
 

@@ -132,9 +132,11 @@
         <div class="form-group email-box">
           <label for="exampleInputEmail1">{{$t('editProfile.bindEmail')}}</label>
           <input type="email" style="margin-top:10px" class="form-control" v-model="bindForm.email" id="exampleInputEmail1" :placeholder="$t('placeholder.email')" @change='showBindEmailMsg(bindForm.email, 0)'>
-          <span class="prompt" style="margin-left: 0 !important;height:34px;margin-top:20px; display:block;">{{emailPrompt}}</span>
+          <span class="prompt" style="margin-left: 10px !important;margin-top: 16px !important;height:34px; display:block;">{{emailPrompt}}</span>
         </div>
+       
         <div class="email-box email-btn">
+          
           <button type="button" v-bind:disabled="!bindForm.email" @click="bindEmailFun" class="findEmail btnm btn-confirm">{{$t('button.confirm')}}</button>
           <button class="findEmail btnm btn-cacel ">{{$t('button.cancel')}}</button>
         </div>
