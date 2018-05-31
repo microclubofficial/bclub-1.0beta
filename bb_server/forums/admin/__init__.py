@@ -13,6 +13,8 @@
 from forums.admin import bar, user, topic, message, permission 
 from flask_admin import expose, AdminIndexView, Admin
 from forums.api.user.models import User
+from forums.api.topic.models import Topic, Reply
+from forums.api.user.models import User
 from flask import redirect, url_for, request, render_template, Blueprint, session, make_response
 from flask_login import current_user
 from forums.func import get_json
@@ -34,8 +36,12 @@ class MyAdminIndexView(AdminIndexView):
         user = User.query.filter_by(username=username).first()
         #user = request.user
         if user.is_superuser:
-            #return render_template('admin/index.html')
-            return super(MyAdminIndexView, self).index()
+            user_count = User.query.filter_by().count()
+            topic_count = Topic.query.filter_by().count()
+            reply_count = Reply.query.filter_by().count()
+            data={'user_count':user_count,'topic_count':topic_count, 'reply_count':reply_count}
+            return self.render(self._template, data=data)
+            #return super(MyAdminIndexView, self).index()
         return redirect(url_for('login.login'))
 
 class LoginView(MethodView):

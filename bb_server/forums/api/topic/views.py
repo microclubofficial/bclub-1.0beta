@@ -159,6 +159,8 @@ class TopicListView(MethodView):
         topic.save()
         collect = collect_bool(topic.id)
         topic = object_as_dict(topic)
+        if topic['token']:
+            topic['en_token'] = topic['token'].capitalize()
         Avatar(topic, user)
         json_loads(topic, ['content', 'title'])
         topic['author'] = user.username
