@@ -40,8 +40,9 @@ class CollectView(BaseView):
 
 class ReplyView(BaseView):
     column_searchable_list = ['topic.title', 'content']
-    column_filters = ['author.username', 'created_at']
+    column_filters = ['author.username', 'created_at', 'topic.title']
     column_default_sort = ('created_at', True)
+    column_editable_list = ['topic']
     #form_excluded_columns = ['likers']
     form_widget_args = {'content': {'rows': 10}}
     form_excluded_columns = ('likers')

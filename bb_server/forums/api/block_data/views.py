@@ -11,12 +11,12 @@ import time
 class Currency_News(MethodView):
     def get(self, token):
         try:
-            details = json.loads(redis_data.get('details'))
-            total_market_cap_usd = json.loads(redis_data.get('total_market_cap_usd'))
+            details = json.loads(redis_data.get('%s_details'%(token)))
+            total_market_cap_usd = json.loads(redis_data.get('%s_total_market_cap_usd'%(token)))
             keys = ['id','name', 'symbol','price', 'volume_ex', "supple", "available_supply", 'marketCap', 'level',
             'change1h', 'change7d', 'zhName', 'volume_level', 'low1d', 'high1d', 'CNY_RATE', 'BTC_RATE', 'ETH_RATE']
             data = {}
-            for i in keys:
+            for i in keys:  
                 try:
                     data[i] = details[i]
                 except:
@@ -28,9 +28,9 @@ class Currency_News(MethodView):
                 data['Circulation_rate'] = ('%.2f%%' % (data['available_supply']/data['supple'] * 100))
             data['picture'] = 'https://blockchains.oss-cn-shanghai.aliyuncs.com/static/coinInfo/%s.png'%(token)
             msg = _('success')
-            return get_json(10, msg, data)
+            return get_json(1, msg, data)
         except:
-            print(1)
+            pass
         finally:    
             headers = {'Content-Type':'application/json; charset=utf-8'}
             details = requests.get('https://block.cc/api/v1/coin/get?coin=%s'%(token), headers = headers)
@@ -39,8 +39,8 @@ class Currency_News(MethodView):
             total_market_cap_usd = total_market_cap_usd['data']["total_market_cap_usd"]
             details = details.json()
             details = details['data']
-            redis_data.set('details', json.dumps(details))
-            redis_data.set('total_market_cap_usd', json.dumps(total_market_cap_usd))
+            redis_data.set('%s_details'%(token), json.dumps(details))
+            redis_data.set('%s_total_market_cap_usd'%(token), json.dumps(total_market_cap_usd))
         keys = ['id','name', 'symbol','price', 'volume_ex', "supple", "available_supply", 'marketCap', 'level',
          'change1h', 'change7d', 'zhName', 'volume_level', 'low1d', 'high1d', 'CNY_RATE', 'BTC_RATE', 'ETH_RATE']
         data = {}

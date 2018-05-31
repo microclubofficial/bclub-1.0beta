@@ -120,18 +120,20 @@ class PhotoView(MethodView):
             if Files:
                 n_filename = ''.join(sample(digits, 6))
                 fix = filename.rsplit('.')[-1]
+                fix = fix.rsplit('?')[0]
+                print(fix)
                 newfilename = "%s%s%s%s"%(str(int(time())), str(
                         randint(1000, 9999)), '.', fix)
                 file_path = current_app.config['PICTURE_FOLDER']
                 file = os.path.join(file_path, newfilename)
                 if not os.path.exists(file_path):
                     os.makedirs(file_path)
+                Files.save(file)
                 files = File(
                     front_file = filename,
                     file_path = '/' + file_path + '/' + newfilename)
                 files.save()
                 files.file_path = '/' + file_path + '/' + newfilename
-                Files.save(file)
                 data[filename] = '/' + file_path + '/' + newfilename
             else:
                 msg = _('Wrong Format')
