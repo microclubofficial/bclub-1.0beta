@@ -36,9 +36,11 @@ def time_diff(update_time):
         if int(diff.seconds//3600) == 1:
             return str(int(diff.seconds//3600))+_(' hour')
         return str(int(diff.seconds//3600))+_(' hours')
-    elif int(diff.days)<=7:
+    elif int(diff.days) <= 7:
         if int(diff.days) == 1:
             return str(int(diff.days))+_(' day')
+        elif int(diff.days) == -1:
+            return 0
         return str(int(diff.days))+_(' days')
     return str(update_time)
 
