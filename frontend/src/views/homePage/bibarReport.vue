@@ -68,13 +68,18 @@ export default {
       this.topicData.content = this.editor.$textElem.html()
       // 处理链接
       if (this.topicData.content.indexOf('href') > 0 && this.isLink) {
-        let href = this.topicData.content.match(/(<=(href="))[^"]*?(?=")/ig)
+        let hrefReg = /href=\"(.+)\"/g
+        let href = []
+        while (hrefReg.exec(this.topicData.content)) {
+          href.push(RegExp.$1)
+        }
         // let href = this.topicData.content.match(/(?<=(href="))[^"]*?(?=")/ig)
         for (let i = 0; i < href.length; i++) {
           if (href[i].indexOf('http') === -1) {
             this.topicData.content = this.topicData.content.replace(href[i], 'http://' + href[i])
             let reg = /<a.*?>(.*?)<\/a>/ig
-            let result = reg.exec(this.topicData.content)
+            let result = []
+            result = reg.exec(this.topicData.content)
             this.topicData.content = this.topicData.content.replace(result[1], '<i class="iconfont">&#xe60e;</i>' + result[1] + '&nbsp;')
           }
         }
@@ -126,7 +131,8 @@ export default {
           if (this.topicData.replyContent.indexOf('img') > 0) {
             let replyImg = this.topicData.replyContent.match(/<img(?![^<>]*?data-w-e[^<>]*?>).*?>/g)
             if (replyImg !== null) {
-              replyImg = replyImg[0].match(/(src=")[^"]*?(?=")/ig)[0]
+              let reg = /<img[^>]*src[=\'\"\s]+([^\"\']*)[\"\']?[^>]*>/gi
+              replyImg = reg.exec(replyImg[0])[1]
               // match(/(?<=(src="))[^"]*?(?=")/ig)[0]
               let replyNewData = this.topicData.replyContent.replace(/<img src="\/static[^>]+>/g, `<a target="_blank" href='${replyImg}'  style='color:#0181FF'><i class='iconfont'>&#xe694;</i>查看图片</a>`)
               this.topicData.replyContent = replyNewData
@@ -134,26 +140,33 @@ export default {
           }
         } else {
           if (this.topicData.replyContent.indexOf('data-w-e') === -1) {
-            let justReplyImg = this.topicData.replyContent.match(/(src=")[^"]*?(?=")/ig)[0]
-            // let justReplyImg = this.topicData.replyContent.match(/(?<=(src="))[^"]*?(?=")/ig)[0]
-            if (this.language === 'zh') {
-              this.topicData.replyContent = '图片评论' + `<a target="_blank" href='${justReplyImg}' style='color:#0181FF'><i class='iconfont'>&#xe694;</i>查看图片</a>`
-            } else if (this.language === 'en') {
-              this.topicData.replyContent = 'Image comment ' + `<a target="_blank" href='${justReplyImg}' style='color:#0181FF'><i class='iconfont'>&#xe694;</i> View image</a>`
+            let justReplyImg = this.topicData.replyContent.match(/<img(?![^<>]*?data-w-e[^<>]*?>).*?>/g)
+            if (justReplyImg !== null) {
+              let reg = /<img[^>]*src[=\'\"\s]+([^\"\']*)[\"\']?[^>]*>/gi
+              justReplyImg = reg.exec(justReplyImg[0])[1]
+              // let justReplyImg = this.topicData.replyContent.match(/(?<=(src="))[^"]*?(?=")/ig)[0]
+              if (this.language === 'zh') {
+                this.topicData.replyContent = '图片评论' + `<a target="_blank" href='${justReplyImg}' style='color:#0181FF'><i class='iconfont'>&#xe694;</i>查看图片</a>`
+              } else if (this.language === 'en') {
+                this.topicData.replyContent = 'Image comment ' + `<a target="_blank" href='${justReplyImg}' style='color:#0181FF'><i class='iconfont'>&#xe694;</i> View image</a>`
+              }
             }
           } else {
             let replyImg = this.topicData.replyContent.match(/<img(?![^<>]*?data-w-e[^<>]*?>).*?>/g)
+            let replyNewData
             if (replyImg !== null) {
-              replyImg = replyImg[0].match(/(src=")[^"]*?(?=")/ig)[0]
+              let reg = /<img[^>]*src[=\'\"\s]+([^\"\']*)[\"\']?[^>]*>/gi
+              replyImg = reg.exec(replyImg[0])[1]
               // replyImg = replyImg[0].match(/(?<=(src="))[^"]*?(?=")/ig)[0]
-              let replyNewData
               if (this.language === 'zh') {
                 replyNewData = this.topicData.replyContent.replace(/<img src="\/static[^>]+>/g, `<a target="_blank" href='${replyImg}' style='color:#0181FF'><i class='iconfont'>&#xe694;</i>查看图片</a>`)
               } else if (this.language === 'en') {
                 replyNewData = this.topicData.replyContent.replace(/<img src="\/static[^>]+>/g, `<a target="_blank" href='${replyImg}' style='color:#0181FF'><i class='iconfont'>&#xe694;</i> View image</a>`)
               }
-              this.topicData.replyContent = replyNewData
+            } else {
+              replyNewData = this.topicData.replyContent
             }
+            this.topicData.replyContent = replyNewData
           }
         }
       }
@@ -257,7 +270,7 @@ export default {
             return 'Invalid link'
           }
         } else {
-          this.isLink = true
+          that.isLink = true
           return true
         }
       }

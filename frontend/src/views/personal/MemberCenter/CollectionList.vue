@@ -580,15 +580,17 @@ export default{
         return
       }
       let reply = val.replace(/<p[^>]*>|<\/p>|<h-char[^>]*>|<\/h-char>|<h-inner[^>]*>|<\/h-inner>/g, '')
-      if (reply.substring(0, 80).indexOf('href') > 0 || reply.substring(0, 80).indexOf('img') > 0) {
+      if (reply.substring(0, 80).indexOf('href') > 0) {
         let imgLength = 0
         let imgArr = []
-        imgArr = reply.substring(0, 300).match(/<img[^>]*>/gi)
-        if (imgArr === null) {
-          return
-        }
-        for (let i = 0; i < imgArr.length; i++) {
-          imgLength += imgArr[i].length
+        if (reply.substring(0, 80).indexOf('img') > 0) {
+          imgArr = reply.substring(0, 300).match(/<img[^>]*>/gi)
+          if (imgArr === null) {
+            return
+          }
+          for (let i = 0; i < imgArr.length; i++) {
+            imgLength += imgArr[i].length
+          }
         }
         let hrefLength = 0
         let hrefArr = reply.match(/<a.*?>(.*?)<\/a>/ig)
@@ -769,6 +771,9 @@ export default{
       if (page === '···') {
         return
       }
+      let currentClickDom = $('.bibar-tabitem:eq(' + this.i + ')').find('.comment-wrap')
+      let scrollTop = $('#app').scrollTop() - (currentClickDom.height() - 80)
+      $('#app').animate({scrollTop: scrollTop}, 100)
       this.chartShow = 0
       this.summaryList = []
       if (this.cpno[id] !== page) {

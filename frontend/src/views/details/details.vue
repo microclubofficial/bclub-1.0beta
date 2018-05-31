@@ -351,7 +351,7 @@ export default {
         })
         var that = this
         if (this.pageCount === 1) {
-          this.bottomText = '没有啦'
+          this.bottomText = this.$t('prompt.noMore')
           this.listLoding = false
           this.noLoading = true
           // this.loadingImg = '../../assets/img/noLoading.png'
@@ -545,15 +545,17 @@ export default {
         return
       }
       let reply = val.replace(/<p[^>]*>|<\/p>|<h-char[^>]*>|<\/h-char>|<h-inner[^>]*>|<\/h-inner>/g, '')
-      if (reply.substring(0, 80).indexOf('href') > 0 || reply.substring(0, 80).indexOf('img') > 0) {
+      if (reply.substring(0, 80).indexOf('href') > 0) {
         let imgLength = 0
         let imgArr = []
-        imgArr = reply.substring(0, 300).match(/<img[^>]*>/gi)
-        if (imgArr === null) {
-          return
-        }
-        for (let i = 0; i < imgArr.length; i++) {
-          imgLength += imgArr[i].length
+        if (reply.substring(0, 80).indexOf('img') > 0) {
+          imgArr = reply.substring(0, 300).match(/<img[^>]*>/gi)
+          if (imgArr === null) {
+            return
+          }
+          for (let i = 0; i < imgArr.length; i++) {
+            imgLength += imgArr[i].length
+          }
         }
         let hrefLength = 0
         let hrefArr = reply.match(/<a.*?>(.*?)<\/a>/ig)
@@ -818,8 +820,9 @@ export default {
     color: #222;
     font-family: "Microsoft Yahei";
     font-weight: bold;
-    text-align: center;
+    /*text-align: center;*/
     margin: 20px 0;
+    line-height: 1.4
   }
 .article_bd .article_bd_from {
     margin: 16px 0;

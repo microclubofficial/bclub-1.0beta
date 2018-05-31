@@ -5,7 +5,7 @@
     <div class="loading" v-if='showLoader'>
       <img src="../../../assets/img/loading.png" alt="" class="icon-loading">
     </div>
-    <div class="bibar-tabitem fade in active" :key="index" id="bibar-newstab1" v-for="(tmp,index) in articles">
+    <div class="bibar-tabitem fade in active clearfloat" :key="index" v-for="(tmp,index) in articles">
       <div class="bibar-indexNewsList">
         <div class="bibar-indexNewsItem">
           <div class="speech" v-if="tmp.reply_user !== null"> <span><span class="time">{{tmp.reply_time}}</span>{{$t('list.ago')}} {{tmp.reply_user}} {{$t('list.commented')}}</span><i class="iconfont icon-dot"></i></div>
@@ -168,7 +168,7 @@
                 <!-- first -->
                 <li :class="['paging-item', 'paging-item--first', {'paging-item--disabled' : cpno[tmp.id] === 1}]" @click="first(tmp.id)">{{$t('pages.first')}}</li>
                 <li class="paging-item paging-item--prev" :class="{'paging-item--disabled' : cpno[tmp.id] === 1}" @click="prev(tmp.id)">{{$t('pages.prev')}}</li>
-                <li :class="['paging-item', {'paging-item--current' : cpno[tmp.id] === page}]" :key="index" v-for="(page, index) in pageNumber[tmp.id]" @click="go(page,tmp.id)">{{page}}</li>
+                <li :class="['paging-item', {'paging-item--current' : cpno[tmp.id] === page}]" :key="pageIndex" v-for="(page, pageIndex) in pageNumber[tmp.id]" @click="go(page,tmp.id,index)">{{page}}</li>
                 <!--<li :class="['paging-item', 'paging-item--more']" @click="next" v-if="showNextMore">...</li>-->
                 <!-- next -->
                 <li :class="['paging-item', 'paging-item--next', {'paging-item--disabled' : cpno[tmp.id] === cpageCountObj[tmp.id]}]" @click="next(tmp.id)">{{$t('pages.next')}}</li>
@@ -618,7 +618,7 @@ export default{
       if (val === undefined) {
         return
       }
-      let now = val.replace(/<br>|<span[^>]*>|<\/span>|<br>|<h[1-6][^>]*>|<\/h[1-6]>|<h-char[^>]*>|<img[^>]*>|<\/h-char>|<h-inner>|<\/h-inner>/g, '')
+      let now = val.replace(/<p[^>]*>|<\/p>|<br>|<span[^>]*>|<\/span>|<br>|<h[1-6][^>]*>|<\/h[1-6]>|<h-char[^>]*>|<img[^>]*>|<\/h-char>|<h-inner>|<\/h-inner>/g, '')
       now = now.replace(/&nbsp;*/g, '')
       // now = $(now).text()
       if (now.length > 300) {
@@ -632,15 +632,17 @@ export default{
         return
       }
       let reply = val.replace(/<p[^>]*>|<\/p>|<h-char[^>]*>|<\/h-char>|<h-inner[^>]*>|<\/h-inner>/g, '')
-      if (reply.substring(0, 80).indexOf('href') > 0 || reply.substring(0, 80).indexOf('img') > 0) {
+      if (reply.substring(0, 80).indexOf('href') > 0) {
         let imgLength = 0
         let imgArr = []
-        imgArr = reply.substring(0, 300).match(/<img[^>]*>/gi)
-        if (imgArr === null) {
-          return
-        }
-        for (let i = 0; i < imgArr.length; i++) {
-          imgLength += imgArr[i].length
+        if (reply.substring(0, 80).indexOf('img') > 0) {
+          imgArr = reply.substring(0, 300).match(/<img[^>]*>/gi)
+          if (imgArr === null) {
+            return
+          }
+          for (let i = 0; i < imgArr.length; i++) {
+            imgLength += imgArr[i].length
+          }
         }
         let hrefLength = 0
         let hrefArr = reply.match(/<a.*?>(.*?)<\/a>/ig)
@@ -761,10 +763,15 @@ export default{
         this.go(this.cpageCount, id)
       }
     },
-    go (page, id) {
+    go (page, id, index) {
       if (page === '···') {
         return
       }
+      let currentClickDom = $('.bibar-tabitem:eq(' + index + ')').find('.comment-wrap')
+      // let currentClickDom = $('#bibar-newstab' + index).find('.comment-wrap')
+      // let scrollTop = currentClickDom[0].offsetTop + 764
+      let scrollTop = $('#app').scrollTop()
+      $('#app').animate({scrollTop: scrollTop - currentClickDom.height()}, 100)
       this.chartShow = 0
       this.summaryList = []
       if (this.cpno[id] !== page) {
@@ -813,11 +820,6 @@ export default{
       return [1, '···', this.cpno[id] - 1, this.cpno[id], this.cpno[id] + 1, '···', tatal]
     }
   }
-  // watch: {
-  //   articles (va) {
-  //     console.log(va, 12)
-  //   }
-  // }
 }
 </script>
 

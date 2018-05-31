@@ -82,11 +82,11 @@ img[src*="sinajs.cn/t4"] {
 /*富文本表情title*/
 /*.w-e-panel-tab-title{display: none !important;}*/
 .w-e-text-container .w-e-panel-container{
-  top: 20px;
-  position: relative !important;
+  top: 128px !important;
+  /*position: relative !important;*/
   box-shadow: 0 2px 4px 0 rgba(0,0,0,.4);
   border: none;
-  width: 260px !important;
+  width: 308px !important;
   left: 0 !important;
   margin-left: 0 !important;
 }

@@ -250,7 +250,7 @@ export default {
       } else if (this.userForm.captcha === undefined || this.userForm.captcha.length === 0) {
         this.captchaPrompt = this.$t('prompt.captchaRequired')
         return false
-      } else if (!this.countdown < 30) {
+      } else if (!this.phoneRegistered) {
         this.captchaPrompt = this.$t('prompt.captchaError')
         return false
       }

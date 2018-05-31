@@ -66,15 +66,20 @@ export default {
       let that = this
       // this.topicData.content = this.editorContent
       this.topicData.content = this.editor.$textElem.html()
-      // 处理插入链接
-      if (this.topicData.content.indexOf('href') > -1 && this.isLink) {
-        let href = this.topicData.content.match(/(<=(href="))[^"]*?(?=")/ig)
+      // 处理链接
+      if (this.topicData.content.indexOf('href') > 0 && this.isLink) {
+        let hrefReg = /href=\"(.+)\"/g
+        let href = []
+        while (hrefReg.exec(this.topicData.content)) {
+          href.push(RegExp.$1)
+        }
         // let href = this.topicData.content.match(/(?<=(href="))[^"]*?(?=")/ig)
         for (let i = 0; i < href.length; i++) {
           if (href[i].indexOf('http') === -1) {
             this.topicData.content = this.topicData.content.replace(href[i], 'http://' + href[i])
             let reg = /<a.*?>(.*?)<\/a>/ig
-            let result = reg.exec(this.topicData.content)
+            let result = []
+            result = reg.exec(this.topicData.content)
             this.topicData.content = this.topicData.content.replace(result[1], '<i class="iconfont">&#xe60e;</i>' + result[1] + '&nbsp;')
           }
         }
@@ -102,9 +107,13 @@ export default {
       }
       // 处理首图
       if (/<img.*?(?:>|\/>)/gi.test(this.topicData.content)) {
-        let image = this.topicData.content.match(/<img(?![^<>]*?data-w-e[^<>]*?>).*?>/g)
+        let image = []
+        image = this.topicData.content.match(/<img(?![^<>]*?data-w-e[^<>]*?>).*?>/g)
+        console.log(this.topicData.content)
+        console.log(image)
         if (image !== null) {
-          image = image[0].match(/(src=")[^"]*?(?=")/ig)[0]
+          let reg = /<img[^>]*src[=\'\"\s]+([^\"\']*)[\"\']?[^>]*>/gi
+          image = reg.exec(image[0])[1]
           //  image = image[0].match(/(?<=(src="))[^"]*?(?=")/ig)[0]
         }
         this.topicData.picture = image
@@ -247,13 +256,21 @@ export default {
     // 校验链接
     this.editor.customConfig.linkCheck = function (text, link) {
       if (text === '' || link === '') {
-        return this.$t('prompt.emptyLink')
+        if (that.language === 'en') {
+          return 'Link cannot be empty'
+        } else if (that.language === 'zh') {
+          return '链接不能为空'
+        }
       } else {
         let reg = /[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+\.?/ig
         if (!reg.test(link)) {
-          return this.$t('prompt.invalidLink')
+          if (that.language === 'en') {
+            return '无效的链接'
+          } else {
+            return 'Invalid link'
+          }
         } else {
-          this.isLink = true
+          that.isLink = true
           return true
         }
       }
