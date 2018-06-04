@@ -768,8 +768,6 @@ export default{
         return
       }
       let currentClickDom = $('.bibar-tabitem:eq(' + index + ')').find('.comment-wrap')
-      // let currentClickDom = $('#bibar-newstab' + index).find('.comment-wrap')
-      // let scrollTop = currentClickDom[0].offsetTop + 764
       let scrollTop = $('#app').scrollTop()
       $('#app').animate({scrollTop: scrollTop - currentClickDom.height()}, 100)
       this.chartShow = 0

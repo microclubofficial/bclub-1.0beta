@@ -46,8 +46,8 @@ export default {
   },
   watch: {
     editorContent (val) {
-      // let editorHeight = this.editor.$textElem[0].offsetHeight
-      // $('.w-e-text-container').css('height', '500px !important')
+      let editorHeight = this.editor.$textElem[0].offsetHeight
+      $('.w-e-text-container').height(editorHeight)
     }
   },
   computed: {

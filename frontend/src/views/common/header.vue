@@ -2,38 +2,29 @@
   <div class="header" style="height:60px;">
     <!--头部-->
     <header class="bibar-header">
-      <section class="bibar-w1100">
-        <!--Logo-->
-        <h1 class="bibar-headerlogo">
-          <router-link :to="{path:'/'}"><img src="../../assets/img/logo-BCLUB.png"></router-link>
-        </h1>
-        <!--菜单-->
-        <nav class="bibar-headernav">
-          <ul class="bibar-headernavlist">
+      <section class="bibar-w1100 container">
+        <!-- Fixed navbar -->
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <i class="iconfont" style="font-size:16px;">&#xe629;</i>
+          </button>
+          <router-link class="nav-logo" :to="{path:'/'}"><img src="../../assets/img/logo-BCLUB.png"></router-link>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse bibar-headernav">
+          <ul class="nav navbar-nav bibar-headernavlist">
             <li class="bibar-headernavitem">
-              <a href="javascript:void(0)">
-                <router-link :class="{headerActive: routerSelect('')}" :to="{path:'/'}">{{$t('nav.index')}}</router-link>
-              </a>
+              <router-link :class="{headerActive: routerSelect('')}" :to="{path:'/'}">{{$t('nav.index')}}</router-link>
             </li>
             <li class="bibar-headernavitem">
-              <a href="javascript:void(0)">
-                <router-link :class="{headerActive: routerSelect('bibarLayout')}" :to="{path:'/bibarLayout'}">{{$t('nav.coinNews')}}</router-link>
-              </a>
+              <router-link :class="{headerActive: routerSelect('bibarLayout')}" :to="{path:'/bibarLayout'}">{{$t('nav.coinNews')}}</router-link>
             </li>
             <!--<li class="bibar-headernavitem"> <a href="javascript:void(0)"><router-link :class="{headerActive: routerSelect('community')}" :to="{path:'/community'}">社区</router-link></a> </li>-->
             <!--<li class="bibar-headernavitem"> <a href="javascript:void(0)"><router-link :class="{headerActive: routerSelect('maintalk')}" :to="{path:'/maintalk'}">讨论</router-link></a> </li>-->
             <!--<li class="bibar-headernavitem"> <a href="javascript:void(0)"><router-link :class="{headerActive: routerSelect('cream')}" :to="{path:'/cream'}">精华</router-link></a> </li>-->
           </ul>
-        </nav>
-        <!--搜索框-->
-        <div class="bibar-headerSearch">
-          <ul class="bibar-headerSearchlist">
-            <!--搜索框-->
-            <!--<li class="bibar-headerSearchitem">
-                      <div class="input-icon left dib">
-                          <input type="text" class="form-control btn-circle w180 bg-greyLight" placeholder="搜索">
-                          <i class="iconfont">&#xe613;</i> </div>
-                  </li>-->
+          <ul class="nav navbar-nav navbar-right bibar-headerSearchlist">
             <li class="bibar-headerSearchitem">
               <!-- 未登录 -->
               <NavLogin v-if="!user_token || !userInfo.isLogin"></NavLogin>
@@ -44,7 +35,9 @@
               <a href="#" @click.stop.prevent="switchLang('en')" :class="{'active-language':language==='en'}">English</a> | <a href="#" :class="{'active-language':language==='zh'}" @click.stop.prevent="switchLang('zh')">中文</a>
             </li>
           </ul>
-        </div>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
       </section>
     </header>
   </div>
@@ -111,6 +104,13 @@ export default {
 </script>
 
 <style>
+  .navbar-header .nav-logo{
+    height: 60px;
+    line-height: 60px;
+  }
+  .bibar-headernavlist .col-md-2 ,.bibar-headernavlist .col-xs-2{
+    padding: 0;
+  }
 /*头*/
 .language-switch{
   margin-right:20px;
@@ -150,24 +150,30 @@ export default {
 
 .bibar-headerlogo {
   float: left;
-  width: 104px;
+  /*width: 104px;*/
   height: 60px;
   line-height: 50px;
 }
-
+/*
 .bibar-headernav ul li {
   float: left;
-}
-
+}*/  
+/*.bibar-headernav{
+    -webkit-box-shadow: 0 20px 40px #E6E6E5;
+    box-shadow: 0 20px 40px #E6E6E5;
+    border-bottom: 1px solid rgb(245, 247, 251);
+}*/
 .bibar-headernav ul li a {
-  padding:0 10px;
+  padding:10px 15px;
   height: 60px;
-  line-height: 56px;
-  font-size: 18px;
+  line-height: 60px;
+  font-size: 16px;
   text-align: center;
-  display: block;
+  display: inline;
 }
-
+/*.bibar-w1100 .nav > li > a{
+  display: inline;
+}*/
 .bibar-headerSearch {
   float: right;
   /* margin-top: 15px; */

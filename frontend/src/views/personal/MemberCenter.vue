@@ -1,54 +1,159 @@
 <style lang="scss" scoped>
 /*.member-center{margin-top: 40px;}*/
+
 .personal-info {
-    background-color: #fefefe;
-    border: 1px solid #eee;
-    box-shadow: 1px 1px 1px #ccc;
-    padding: 20px;
-    display: flex;
-    display: -webkit-flex;
-    align-items: center;
-    .avatar {
-        width: 100px;
-        height: 100px;
-        border-radius: 50%;
-        overflow: hidden;
-        margin-right: 20px;
-        img {
-            width: 100%;
+  height: 150px;
+  position: relative;
+  background-color: #fefefe;
+  border: 1px solid #eee;
+  box-shadow: 1px 1px 1px #ccc;
+  padding: 0 20px;
+  display: flex;
+  display: -webkit-flex;
+  .avatar {
+    left: 15px;
+    top: -70px;
+    position: absolute;
+    border: solid 2px #fff;
+    width: 170px;
+    height: 170px;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-right: 20px;
+    img {
+      width: 100%;
+      border-radius: 0;
+    }
+  }
+  .right-main {
+    float: left;
+    margin-left: 200px;
+    flex: 9;
+    .nav-pills {
+      margin-top: 20px;
+      li {
+        border: solid 1px #dfdfdf;
+        border-radius: 4px;
+        &.active {
+          a {
+            background: #1e8fff;
+          }
         }
-    }
-    .right-main {
-        flex: 9;
-        .nav-pills {
-            margin-top: 20px;
+        &:nth-child(2) {
+          margin-left: 10px;
         }
+        &:nth-child(3) {
+         margin-left: 10px;
+        }
+      }
+      a {
+        padding: 4px 12px;
+      }
     }
-    .right-btn {
-        flex: 1;
+    h3 {
+      padding-top: 18px;
+      span {
+        &:nth-child(2) {
+          font-size: 14px;
+          color: #666;
+          padding-left: 20px;
+        }
+      }
     }
+  }
+  .right-btn {
+    flex: 1;
+    margin-top: 18px;
+    .edit-btn {
+      background: #fff;
+      color: #666;
+      border: none;
+      &::after {
+        content: '';
+        width: 32px;
+        height: 32px;
+        display: block;
+        position: absolute;
+        background: url(../../assets/img/i00.png);
+        background-size: cover;
+        top: 8px;
+        right: 16px;
+      }
+    }
+  }
 }
 
 .main-list {
-    background-color: #fafafa;
-    box-shadow: 1px 1px 1px #ccc;
-    margin-top: 10px;
-    min-height: 300px;
+  background-color: #fafafa;
+  box-shadow: 1px 1px 1px #ccc;
+  margin-top: 10px;
+  min-height: 300px;
+}
+.bg-box {
+  width: 100%;
+  height: 140px;
+  position: relative;
+  background: #ccc;
+  margin-top: 20px;
+  .bgimg-box {
+    width: 100%;
+    height: 140px;
+    background: #ccc;
+    > img {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+  }
+  .upload-box {
+    width: 120px;
+    height: 36px;
+    line-height: 36px;
+    border-radius: 5px;
+    border: solid 1px #dfdfdf;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #fff;
+    display: block;
+    > span {
+      float: right;
+      padding-right: 10px;
+      &::before {
+        content: "";
+        width: 22px;
+        height: 18px;
+        background: url(../../assets/img/msg.png) no-repeat;
+        display: inline-block;
+        margin: 0 6px;
+      }
+    }
+  }
 }
 </style>
-
 <template>
 <div>
  <MainHeader></MainHeader>
     <div class="member-center">
         <div class="container">
-            <h3 style="margin:20px 0;">{{$t('personalCenter.personal')}}</h3>
+            <!-- <h3 style="margin:20px 0;">{{$t('personalCenter.personal')}}</h3> -->
+            <div class="bg-box">
+                <div class="bgimg-box">
+                    <img  src="../../assets/img/perbg.jpg"/>
+                </div>
+                <!-- <div class="upload-box">
+                    <span>上传封面照片</span>
+                </div> -->
+            </div>
             <div class="personal-info">
                 <div class="avatar">
                     <img :src="personalUser.avatar" alt="">
                 </div>
                 <div class="right-main">
-                    <h3>{{personalUser.username}}</h3>
+                    <h3>
+                        <span>{{personalUser.username}}</span>
+                        <!-- <span>个人说明个人说明</span> -->
+                     </h3>
                     <!--<p>
                         关注：<a href="">1652</a>&nbsp;&nbsp;&nbsp;&nbsp;
                         主题：<a href="">152</a>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -61,8 +166,8 @@
                     </ul>
                 </div>
                 <div class="right-btn">
-                    <button class="btn btn-primary" @click="personalInfo">{{$t('personalCenter.editProfile')}}</button>
-                </div>
+                    <button class="edit-btn" @click="personalInfo">{{$t('personalCenter.editProfile')}}</button>
+               </div>
             </div>
             <section>
                 <div class="main-list">
@@ -100,7 +205,7 @@ export default {
   mounted () {
     get(`/api/u/${this.userInfo.username}`).then(data => {
       if (data.resultcode === 0) {
-          alert(data.message)
+        alert(data.message)
         this.$router.push({ path: '/login' })
       } else {
         this.personalUser = data.data

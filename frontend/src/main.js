@@ -34,6 +34,7 @@ import VueAwesomeSwiper from 'vue-awesome-swiper'
 // css  js
 import './assets/css/bootstrap.css'
 import './assets/css/bootstrap.min.css'
+import './assets/css/ie10-viewport-bug-workaround.css'
 import './assets/iconfont/iconfont.css'
 import './assets/fonts/iconfont.css'
 import './assets/css/reset.pack.css'
@@ -46,6 +47,8 @@ import './assets/js/jquery.min.js'
 import './assets/js/bootstrap.min.js'
 import './assets/plus/scrollfix/js/scrollfix.min.js'
 import './assets/js/highcharts.js'
+import './assets/js/ie-emulation-modes-warning.js'
+import './assets/js/ie10-viewport-bug-workaround.js'
 
 import 'mint-ui/lib/style.css'
 

@@ -59,10 +59,12 @@ export default {
   },
   placeholder: {
     username: '请输入用户名',
+    newUsername: '请输入新用户名',
     password: '请输入密码',
     repassword: '请确认密码',
     vcode: '请输入验证码',
     phone: '请输入手机号',
+    newPhone: '请输入新手机号',
     icode: '邀请码（选填）',
     email: '请输入邮箱',
     originalPassword: '请输入原密码',
@@ -73,7 +75,7 @@ export default {
     prompt: '提 示',
     acquireVcode: '获取验证码',
     reacquire: '重新获取',
-    usernameLength: '3-16位字符,可由中文、英文、数字或下划线.组成',
+    usernameLength: '3-16个字符，可由中文、字母、数字、特殊符号_.组成',
     usernameRequired: '用户名不能为空',
     passwordLength: '6-18位大小写英文字母、数字',
     passwordRequired: '密码不能为空',
@@ -142,9 +144,14 @@ export default {
   personalCenter: {
     personal: '个人中心',
     topic: '主题',
+    myTopic: '我的主题',
     comment: '评论',
+    myComment: '我的评论',
     collection: '收藏',
-    editProfile: '编辑资料'
+    myCollection: '我的收藏',
+    editProfile: '编辑资料',
+    editAvatar: '编辑头像',
+    returnMyHomepage: '返回我的主页'
   },
   editProfile: {
     index: '首页',
@@ -200,6 +207,7 @@ export default {
     btnBack: '上一步',
     btnSave: '保存',
     preview: '图片预览',
-    loading: '正在上传'
+    loading: '正在上传',
+    errorMsg: '图片上传失败'
   }
 }

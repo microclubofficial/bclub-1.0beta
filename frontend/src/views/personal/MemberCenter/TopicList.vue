@@ -1,5 +1,8 @@
 <template>
   <div>
+    <p class="title-box">
+      <span>{{$t('personalCenter.myTopic')}}</span>
+    </p>
   <div class="personal-topiclist">
     <div class="loading" v-if='showLoader'>
       <img src='../../../assets/img/loading.png' alt='' class="icon-loading">
@@ -10,7 +13,7 @@
         <div class="bibar-indexNewsItem">
           <div class="speech" v-if="tmp.reply_user !== null"> <span><span class="time">{{tmp.reply_time}}</span>{{$t('list.ago')}} {{tmp.reply_user}} {{$t('list.commented')}}</span><i class="iconfont icon-dot"></i></div>
           <div class="user">
-            <div class="bibar-author"> <a href="javascript:void(0)"> <span class="photo"><img :src="tmp.avatar"></span> <span class="name">{{tmp.author}}</span> <span class="time" @click='toBibar(tmp)'>{{tmp.diff_time !== 0 ? tmp.diff_time + $t('list.ago') : $t('list.justNow')}} - {{$t('list.from')}}{{tmp.token !== null ? (language === 'zh' ? tmp.zh_token : tmp.en_token) : $t('list.bclub')}}</span> </a> </div>
+            <div class="bibar-author"> <a href="javascript:void(0)"> <span class="photo"><img :src="tmp.avatar"></span> <span class="name">{{tmp.author}}</span> <span class="time" @click='toBibar(tmp)'>{{tmp.diff_time !== 0 ? tmp.diff_time + '前' : '刚刚发布'}} - {{$t('list.from')}}{{tmp.token !== null ? tmp.zh_token : '币吧'}}</span> </a> </div>
             <div class="bibar-list">
               <div class="tit"><a href="javascript:void(0)" @click="goDetail(tmp.id)">{{tmp.title}}</a></div>
           <div class="txt indexNewslimitHeight" @click="goDetail(tmp.id)">
@@ -33,7 +36,7 @@
                 </a>
               </li>
               <li class="set-choseStar" @click="collectionTopic(tmp)"> <a :class='{collectionActive:tmp.collect_bool}' href="javascript:void(0);"><i class="iconfont icon-star">&#xe6a7;</i>{{$t('list.collect')}}</a> </li>
-              <li v-if='tmp.bool_delete' class="set-delList" @click="delTopic(tmp,index)"> <a href="javascript:void(0);"><i class="iconfont icon-del">&#xe78d;</i>{{$t('list.delete')}}</a> </li>
+              <li class="set-delList" @click="delTopic(tmp)"> <a href="javascript:void(0);"><i class="iconfont icon-del">&#xe78d;</i>{{$t('list.delete')}}</a> </li>
               <!-- <li> <a href="javascript:void(0);"><i class="iconfont icon-fenxiang"></i> 分享</a> </li> -->
               <!-- <li class="set-choseShang"> <a href="javascript:void(0);"><i class="iconfont icon-dashang"></i> 打赏<span>438</span></a> </li> -->
               <li>
@@ -80,9 +83,9 @@
             <div class="comment-all">
               <h3>{{$t('list.allComments')}}({{tmp.replies_count}})</h3>
               <div class="comment-sort">
-                <a href="javascript:void(0)" @click='sortList(tmp.id,0)' :class="{active:sortNow === 0}">{{$t('list.newest')}}</a>
-                <a href="javascript:void(0)" @click='sortList(tmp.id,1)' :class="{active:sortNow === 1}">{{$t('list.earliest')}}</a>
-                <a href="javascript:void(0)" @click='sortList(tmp.id,2)' :class="{active:sortNow === 2}">{{$t('list.likeMost')}}</a>
+                <a href="javascript:void(0)" @click='sortList(0, tmp.id)' :class="{active:sortNow === 0}">最近</a>
+                <a href="javascript:void(0)" @click='sortList(1, tmp.id)' :class="{active:sortNow === 1}">最早</a>
+                <a href="javascript:void(0)" @click='sortList(2, tmp.id)' :class="{active:sortNow === 2}">赞</a>
               </div>
               <!-- 回复内容 -->
                   <!-- <div class="comment-item" data-index='' data-id='' v-for="(tmp,rIndex) in replyContent" :key='rIndex'>
@@ -113,14 +116,14 @@
                     </a>
                     <div class="comment-item-main">
                       <div class="comment-item-hd">
-                        <p href="#" class="user-name">{{item.author}}<span class="time">{{item.diff_time !== 0 ? item.diff_time + $t('list.ago') : $t('list.justNow')}}</span></p>
+                        <p href="#" class="user-name">{{item.author}}<span class="time">{{item.diff_time !== 0 ? item.diff_time + '前' : '刚刚'}}发布</span></p>
                       </div>
                       <!-- @ 样式 -->
-                      <div class="replyAuthor" v-if="item.at_user !== ''">@{{item.at_user}}:&nbsp;<span class="replyBackConten" style="display:inline-block;font-weight: normal;" v-html="replyFun(item.reference)"></span></div>
+                      <p class="replyAuthor" v-if="item.at_user !== ''">@{{item.at_user}}:&nbsp;<span class="replyBackConten" style="display:inline-block;font-weight: normal;" v-html="replyFun(item.reference)"></span></p>
                       <!-- <p>{{item}}</p> -->
-                      <p v-html="commentContent(item.content,item.id)"></p>
+                      <p v-html="commentContent(item.content)"></p>
                       <!--展开-->
-              <a style="font-size:16px; white-space:nowrap;"  v-if='item.content !== undefined && item.content.length - imgCommentLength[item.id] > 200' href="#" class="bibar-indexintromore text-theme" @click="changeMore(item.id)">{{item.id === moreId ? $t('button.fold') : $t('button.unfold')}}<i style="font-size:16px;" class="iconfont" v-if="item.id !== moreId">&#xe692;</i><i style="font-size:16px;" class="iconfont" v-if="item.id === moreId">&#xe693;</i></a>
+              <a style="font-size:16px; float:right; display: block;"  v-if='item.content !== undefined && item.content.length > 300' href="#" class="bibar-indexintromore text-theme" @click="changeMore(item.id)">{{item.id === moreId ? '收起' : '展开'}}<i style="font-size:16px;" class="iconfont" v-if='more === "展开"'>&#xe692;</i><i style="font-size:16px;" class="iconfont" v-if='more === "收起"'>&#xe693;</i></a>
                     </div>
                     <div class="set" style="margin-left:42px;" >
                       <ul class="bibar-indexNewsItem-infro">
@@ -128,10 +131,10 @@
                         <!-- <li class="set-choseShang"> <a href="javascript:void(0);"><i class="iconfont icon-dashang"></i> 打赏<span>438</span></a> </li> -->
                         <li class="set-discuss" @click="replyComment(item.id,now)">
                           <a href="javascript:void(0);">
-                            <i class="iconfont icon-pinglun"></i> {{$t('list.reply')}}
+                            <i class="iconfont icon-pinglun"></i> 回复
                           </a>
                         </li>
-                        <li v-if='item.bool_delete' class="set-delList" @click="delComment(item,now,tmp)"> <a href="javascript:void(0);"><i class="iconfont icon-del">&#xe78d;</i>{{$t('list.delete')}}</a> </li>
+                        <li class="set-delList" @click="delTopic(tmp)"> <a href="javascript:void(0);"><i class="iconfont icon-del">&#xe78d;</i>{{$t('list.delete')}}</a> </li>
                       </ul>
                     </div>
                      <!-- 回复 -->
@@ -146,7 +149,7 @@
          <div class="editor-bd clearfloat">
            <span class="comment-img-delete"></span>
            <div class="editor-textarea"  v-show="talkReplyTxt" @click="talkReplyEditor">
-             <div class="editor-placeholder">{{$t('list.reply')}}...</div>
+             <div class="editor-placeholder">回复...</div>
            </div>
            <div class="editor-toolbar">
               <BibarReport ref='childShowApi' :toApi='toRId' :replyAuthor='item.author' :replyContent='item.content' :mainReplay='tmp.id' v-show="showReportReplay" @backhotReplies = 'showReplyContent'></BibarReport>
@@ -161,19 +164,18 @@
                 </div>
               </div>
               <!-- 分页条 -->
-            <!-- 分页条 -->
-            <div class="pages" v-if='cpageCountObj[tmp.id] > 1'>
+            <div class="pages" v-if='showPage && index === i'>
               <ul class="mo-paging">
                 <!-- prev -->
                 <!-- first -->
-                <li :class="['paging-item', 'paging-item--first', {'paging-item--disabled' : cpno[tmp.id] === 1}]" @click="first(tmp.id)">{{$t('pages.first')}}</li>
-                <li class="paging-item paging-item--prev" :class="{'paging-item--disabled' : cpno[tmp.id] === 1}" @click="prev(tmp.id)">{{$t('pages.prev')}}</li>
-                <li :class="['paging-item', {'paging-item--current' : cpno[tmp.id] === page}]" :key="index" v-for="(page, index) in pageNumber[tmp.id]" @click="go(page,tmp.id)">{{page}}</li>
+                <li :class="['paging-item', 'paging-item--first', {'paging-item--disabled' : cpno === 1}]" @click="first">{{$t('pages.first')}}</li>
+                <li class="paging-item paging-item--prev" :class="{'paging-item--disabled' : cpno === 1}" @click="prev">{{$t('pages.prev')}}</li>
+                <li :class="['paging-item', {'paging-item--current' : cpno === tmp}]" :key="index" v-for="(tmp, index) in showPageBtn" @click="go(tmp)">{{tmp}}</li>
                 <!--<li :class="['paging-item', 'paging-item--more']" @click="next" v-if="showNextMore">...</li>-->
                 <!-- next -->
-                <li :class="['paging-item', 'paging-item--next', {'paging-item--disabled' : cpno[tmp.id] === cpageCountObj[tmp.id]}]" @click="next(tmp.id)">{{$t('pages.next')}}</li>
+                <li :class="['paging-item', 'paging-item--next', {'paging-item--disabled' : cpno === cpageCount}]" @click="next">{{$t('pages.next')}}</li>
                 <!-- last -->
-                <li :class="['paging-item', 'paging-item--last', {'paging-item--disabled' : cpno[tmp.id] === cpageCountObj[tmp.id]}]" @click="last(tmp.id)">{{$t('pages.end')}}</li>
+                <li :class="['paging-item', 'paging-item--last', {'paging-item--disabled' : cpno === cpageCount}]" @click="last">{{$t('pages.end')}}</li>
               </ul>
             </div>
             </div>
@@ -186,31 +188,6 @@
         </div>
       </div>
     </div>
-    <!--确认框-->
-    <div class="modal fade DleConfirm" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-            &times;
-          </button>
-          <h4 class="text-center" id="myModalLabel">
-            {{$t('prompt.prompt')}}
-          </h4>
-        </div>
-        <div class="modal-body">
-          <p style="margin-top:20px;">{{$t('prompt.confirmDelete')}}</p>
-        </div>
-        <div class="modal-footer">
-          <button @click='confirm' type="button" class="btn btn-primary">
-            {{$t('button.confirm')}}
-          </button>
-          <button type="button" class="btn btn-default" data-dismiss="modal">{{$t('button.cancel')}}
-          </button>
-        </div>
-      </div>
-    </div>
-</div>
     <div class="loading-bar" v-if='loadingShow'>
                   <!-- <svg class="icon icon-loading" aria-hidden="true">
                       <use xlink:href="#icon-loading"  style="fill:blue" ></use>
@@ -538,7 +515,7 @@ export default{
               iconClass: 'glyphicon glyphicon-ok',
               duration: 1000
             })
-          } else {  
+          } else {
             instance = new Toast({
               message: this.$t('prompt.cancelCollect'),
               duration: 1000
@@ -793,419 +770,445 @@ export default{
 }
 </script>
 
-<style>
-  .editor-topic-comment-default{
-    left:48px;
-    top: 26px;
-  }
-  .replyBackConten>p:first-child{
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    width: 500px;
-    float: right;
+<style lang="scss" scoped>
+.editor-topic-comment-default {
+  left: 48px;
+  top: 26px;
+}
+.replyBackConten > p:first-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 500px;
+  float: right;
 }
 /*回复样式*/
-.replyAuthor{
-    height: 50px;
-    background: #F2F2F2;
-    line-height: 50px !important;
-    padding-left: 20px !important;
-    font-weight: 700;
-    margin: 15px 2px 15px 0;
-    font-size: 15px;
+.replyAuthor {
+  height: 50px;
+  background: #f2f2f2;
+  line-height: 50px !important;
+  padding-left: 20px !important;
+  font-weight: 700;
+  margin-right: 2px;
 }
-.glyphicon{
+.glyphicon {
   font-size: 20px;
 }
-.collectionActive{
+.collectionActive {
   color: #ffa727 !important;
 }
-.personal-topiclist{
+.personal-topiclist {
   position: relative;
-  padding: 20px;
+  padding: 20px 35px;
 }
-.indexNewslimitHeight{
+.indexNewslimitHeight {
   cursor: pointer;
 }
 /*.bibar-tabitem{overflow: hidden;}*/
-.bibar-comment{
-    position: relative;
-    margin-left: 58px;
+.bibar-comment {
+  position: relative;
+  margin-left: 58px;
 }
-.editor-comment{
-    /*margin-top: 5px;*/
-    background-color: #f8f8f8;
-     padding: 15px;
-    padding-left: 10px;
+.editor-comment {
+  /*margin-top: 5px;*/
+  background-color: #f8f8f8;
+  padding: 15px;
+  padding-left: 10px;
 }
-.editor-comment>.avatar{
-    width: 32px;
-    height: 32px;
-    float: left;
+.editor-comment > .avatar {
+  width: 32px;
+  height: 32px;
+  float: left;
 }
-img.avatar{
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    vertical-align: middle;
+img.avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  vertical-align: middle;
 }
 svg:not(:root) {
-    overflow: hidden;
+  overflow: hidden;
 }
-.editor-triangle{
-    position: absolute;
-    width: 5px;
-    height: 10px;
-    z-index: 11;
+.editor-triangle {
+  position: absolute;
+  width: 5px;
+  height: 10px;
+  z-index: 11;
 }
-.editor-triangle>.arrow{
-    stroke: #edf0f5;
-    fill: #f9fcfe;
+.editor-triangle > .arrow {
+  stroke: #edf0f5;
+  fill: #f9fcfe;
 }
-.editor-textarea{
-    position: relative;
-    z-index: 10;
-    min-height: 32px;
-    border: 1px solid #edf0f5;
-    font-size: 13px;
-    line-height: 1.6;
-    background-color: #fff;
+.editor-textarea {
+  position: relative;
+  z-index: 10;
+  min-height: 32px;
+  border: 1px solid #edf0f5;
+  font-size: 13px;
+  line-height: 1.6;
+  background-color: #fff;
 }
 .editor-textarea .comment-placeholder {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    padding: 5px 10px;
-    color: #d4d7dc;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  padding: 5px 10px;
+  color: #d4d7dc;
 }
-.img-upload-delete{
-    display: none;
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 24px;
-    height: 24px;
-    text-align: center;
-    color: #fff;
-    line-height: 24px;
-    /* background-color: rgba(0,0,0,.7); */
-    cursor: pointer;
-    z-index: 10;
+.img-upload-delete {
+  display: none;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 24px;
+  height: 24px;
+  text-align: center;
+  color: #fff;
+  line-height: 24px;
+  /* background-color: rgba(0,0,0,.7); */
+  cursor: pointer;
+  z-index: 10;
 }
-.img-upload-delete>img{
-    width: 24px;
-    height: 24px;
+.img-upload-delete > img {
+  width: 24px;
+  height: 24px;
 }
-.comment-wrap{
-    margin-bottom: 5px;
+.comment-wrap {
+  margin-bottom: 5px;
 }
-.comment-container{
-    padding: 0 8px;
+.comment-container {
+  padding: 0 8px;
 }
-.comment-all{
+.comment-all {
   position: relative;
 }
-.comment-all>h3 {
-    margin-top: 15px;
-    font-size: 15px;
+.comment-all > h3 {
+  margin-top: 15px;
+  font-size: 15px;
 }
 .comment-sort {
-    position: absolute;
-    top: 0;
-    right: 0;
-    text-align: right;
-    /* margin-right: 5px; */
+  position: absolute;
+  top: 0;
+  right: 0;
+  text-align: right;
+  /* margin-right: 5px; */
 }
 .comment-sort a.active {
-    color: #06c;
+  color: #06c;
 }
 .comment-sort a {
-    position: relative;
-    display: inline-block;
-    margin-right: 26px;
-    color: #909499;
-    line-height: 1;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    font-size: 13px;
+  position: relative;
+  display: inline-block;
+  margin-right: 26px;
+  color: #909499;
+  line-height: 1;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  font-size: 13px;
 }
 .comment-sort a:after {
-    content: '';
-    position: absolute;
-    right: -13px;
-    top: 2px;
-    width: 1px;
-    height: 14px;
-    background-color: #edf0f5;
+  content: "";
+  position: absolute;
+  right: -13px;
+  top: 2px;
+  width: 1px;
+  height: 14px;
+  background-color: #edf0f5;
 }
-.comment-list{
-    border-bottom: 0;
+.comment-list {
+  border-bottom: 0;
 }
-.comment-item{
-    padding: 15px 0 10px;
-    border-top: 1px solid #edf0f5;
-    margin: 15px 0;
+.comment-item {
+  padding: 15px 0 10px;
+  border-top: 1px solid #edf0f5;
+  margin: 15px 0;
 }
 .comment-item .avatar {
-    float: left;
-    width: 32px;
-    height: 32px;
+  float: left;
+  width: 32px;
+  height: 32px;
 }
 a.avatar {
-    display: inline-block;
-    overflow: hidden;
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    line-height: 1;
+  display: inline-block;
+  overflow: hidden;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  line-height: 1;
 }
 a.avatar img {
-    width: 100%;
-    height: 100%;
-    vertical-align: middle;
+  width: 100%;
+  height: 100%;
+  vertical-align: middle;
 }
-.comment-item-main{
-    margin-left: 42px;
+.comment-item-main {
+  margin-left: 42px;
 }
-.comment-item-hd{
-    margin-bottom: 4px;
+.comment-item-hd {
+  margin-bottom: 4px;
 }
 .comment-item-hd .user-name {
-    font-size: 15px;
-    font-weight: 700;
-    margin-right: 0;
+  font-size: 15px;
+  font-weight: 700;
+  margin-right: 0;
 }
 .comment-item-hd .time {
-    float: right;
-    font-size: 12px;
-    color: #909499;
+  float: right;
+  font-size: 12px;
+  color: #909499;
 }
-.comment-item-main>p {
-    font-size: 15px;
-    line-height: 1.6;
-    word-break: break-all;
-    overflow: hidden;
-    margin: 10px 0;
-    display: inline;
+.comment-item-main > p {
+  font-size: 15px;
+  line-height: 1.6;
+  word-break: break-all;
+  overflow: hidden;
+  margin: 10px 0;
 }
-.comment-item-main img{
-    display: block;
-    cursor: zoom-in;
-    max-width: 200px;
-    width: 200px;
+.comment-item-main img {
+  display: block;
+  cursor: zoom-in;
+  max-width: 200px;
 }
-.bibar-indexNewsItem-infro>li{
-    float: left;
-    /*margin-right: 25px;*/
+.bibar-indexNewsItem-infro > li {
+  float: left;
+  /*margin-right: 25px;*/
 }
-.bibar-indexNewsItem-infro>li i {
-    margin-right: 3px;
+.bibar-indexNewsItem-infro > li i {
+  margin-right: 3px;
 }
-.loading-bar{text-align: center;}
+.loading-bar {
+  text-align: center;
+}
 .icon-loading {
+  transform: rotate(0deg);
+  animation-name: loading;
+  animation-duration: 3s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  width: 28px;
+  height: 28px;
+  margin-right: 20px;
+}
+@keyframes loading {
+  from {
     transform: rotate(0deg);
-    animation-name: loading;
-    animation-duration: 3s;
-    animation-iteration-count: infinite;
-    animation-direction: alternate;
-    width: 28px;
-    height: 28px;
-    margin-right: 20px;
   }
-  @keyframes loading
-  {
-    from {transform: rotate(0deg);}
-    to {transform: rotate(360deg);}
+  to {
+    transform: rotate(360deg);
   }
-  /*回复*/
-.comment-reply{
+}
+/*回复*/
+.comment-reply {
   border-top: 1px solid #edf0f5;
   margin-top: 20px;
 }
-.comment-reply>.comment-item{
+.comment-reply > .comment-item {
   margin: 15px 0;
 }
-.comment-reply>.editor-comment{
+.comment-reply > .editor-comment {
   padding: 15px;
 }
-.talkCommentEditor>.wangeditor>.editor{
+.talkCommentEditor > .wangeditor > .editor {
   padding-bottom: 30px;
 }
-.talkCommentEditor .report{
+.talkCommentEditor .report {
   right: 317px !important;
 }
-.talkCommentEditor .cancel{
+.talkCommentEditor .cancel {
   right: 375px !important;
 }
-.talkBibar{
+.talkBibar {
   width: 100%;
   position: relative;
 }
-.talkBibar-main{
+.talkBibar-main {
   width: 1100px;
   margin: 80px auto 20px auto;
   position: relative;
 }
-.talkBibar-article{
+.talkBibar-article {
   background: #fff;
   padding: 20px 25px;
 }
-.bibar-indexNewsItem .set>ul>.set-question{
-   padding: 6px 10px;
-   text-align: center;
-   background: #1E8FFF;
-   border-radius: 3px;
-}
-.bibar-indexNewsItem .set>ul>.set-question>a{color: #fff;}
-.bibar-indexNewsItem .set>ul>.set-answer{
-  padding: 5px 10px;
-  border: 1px solid #1E8FFF;
+.bibar-indexNewsItem .set > ul > .set-question {
+  padding: 6px 10px;
+  text-align: center;
+  background: #1e8fff;
   border-radius: 3px;
 }
-.bibar-indexNewsItem .set>ul>.set-answer>a{color: #1E8FFF;}
+.bibar-indexNewsItem .set > ul > .set-question > a {
+  color: #fff;
+}
+.bibar-indexNewsItem .set > ul > .set-answer {
+  padding: 5px 10px;
+  border: 1px solid #1e8fff;
+  border-radius: 3px;
+}
+.bibar-indexNewsItem .set > ul > .set-answer > a {
+  color: #1e8fff;
+}
 /*.bibar-tabitem{
   overflow: hidden;
 }*/
-.bibar-indexNewsList{
-    float: left;
-    /* width: 860px; */
+.bibar-indexNewsList {
+  float: left;
+  /* width: 860px; */
 }
-.talkBibar-flow{
-    float: right;
-    padding: 15px 0px 10px;
-    margin: 10px 0;
+.talkBibar-flow {
+  float: right;
+  padding: 15px 0px 10px;
+  margin: 10px 0;
 }
-.talkBibar-flow>.visitors{
+.talkBibar-flow > .visitors {
   padding-left: 20px;
-  border-left: 1px solid #D8D8D8;
+  border-left: 1px solid #d8d8d8;
 }
-.talkBibar-flow>.visitors>p:first-child{margin-bottom: 15px;}
-.talkBibar-flow>.visitors>p{
-  color: #80A2C6;
+.talkBibar-flow > .visitors > p:first-child {
+  margin-bottom: 15px;
+}
+.talkBibar-flow > .visitors > p {
+  color: #80a2c6;
   font-size: 14px;
 }
-.talkBibar-flow>.visitors>p>span{
+.talkBibar-flow > .visitors > p > span {
   color: #000;
   font-weight: bold;
   margin-left: 15px;
 }
-.talkSection{
+.talkSection {
   margin-top: 30px;
 }
-.talkSection>span{
-  border:1px solid #1E8FFF;
-  color: #1E8FFF;
+.talkSection > span {
+  border: 1px solid #1e8fff;
+  color: #1e8fff;
   border-radius: 33%;
   padding: 5px 15px;
   margin: 10px 15px;
 }
-
-.talkBibar-editor{
+.talkBibar-editor {
   padding: 30px;
   background: #fff;
   position: relative;
 }
 /*.avatar{margin-bottom: 15px;}*/
-.avatar>span{
+.avatar > span {
   font-size: 16px;
   margin-left: 15px;
 }
-.avatar>.anonymous-users{
+.avatar > .anonymous-users {
   float: right;
   font-size: 14px;
-  color: #87A7C9;
+  color: #87a7c9;
 }
-.talkBibar-editor>button{
+.talkBibar-editor > button {
   position: absolute;
   z-index: 1;
 }
-.talkBibar-editor>.editor>.w-e-toolbar{
-    background: snow !important;
-    border-top: 1px solid rgb(216, 216, 216) !important;
-    border-right: none !important;
-    border-bottom: 1px solid rgb(216, 216, 216) !important;
-    border-left: none !important;
-    position: inherit !important;
+.talkBibar-editor > .editor > .w-e-toolbar {
+  background: snow !important;
+  border-top: 1px solid rgb(216, 216, 216) !important;
+  border-right: none !important;
+  border-bottom: 1px solid rgb(216, 216, 216) !important;
+  border-left: none !important;
+  position: inherit !important;
 }
-.talkBibar-editor>.editor>.w-e-toolbar .w-e-menu{padding: 7px 10px;}
-.talkBibar-editor>.set{right: 135px;}
-.talkBibar-editor>.report{right: 50px; bottom: 10px;}
-.w-e-text::-webkit-scrollbar{
-  background:snow;
+.talkBibar-editor > .editor > .w-e-toolbar .w-e-menu {
+  padding: 7px 10px;
 }
-.w-e-text-container .w-e-panel-container{
+.talkBibar-editor > .set {
+  right: 135px;
+}
+.talkBibar-editor > .report {
+  right: 50px;
+  bottom: 10px;
+}
+.w-e-text::-webkit-scrollbar {
+  background: snow;
+}
+.w-e-text-container .w-e-panel-container {
   margin-left: 0 !important;
 }
-.talkBibar-editor .w-e-text-container{
+.talkBibar-editor .w-e-text-container {
   min-height: 150px !important;
-  border:none !important;
+  border: none !important;
 }
-.talkLeft{
-    margin-top: 20px;
-    width: 860px;
-    position: relative;
-    overflow: hidden;
-    float: left;
+.talkLeft {
+  margin-top: 20px;
+  width: 860px;
+  position: relative;
+  overflow: hidden;
+  float: left;
 }
-.bibar-comment{
-    width: 100%;
-    overflow: hidden;
-    float: left;
-    margin-left: 0 !important;
+.bibar-comment {
+  width: 100%;
+  overflow: hidden;
+  float: left;
+  margin-left: 0 !important;
 }
-.editor-comment{
-    background-color: #f8f8f8;
+.editor-comment {
+  background-color: #f8f8f8;
 }
-.editor-comment>.avatar{
-    width: 32px;
-    height: 32px;
-    float: left;
+.editor-comment > .avatar {
+  width: 32px;
+  height: 32px;
+  float: left;
 }
-img.avatar{
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    vertical-align: middle;
+img.avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  vertical-align: middle;
 }
-.editor-bd{
-    margin-left: 42px;
-    position: relative;
-    z-index: 1;
+.editor-bd {
+  margin-left: 42px;
+  position: relative;
+  z-index: 1;
 }
 svg:not(:root) {
-    overflow: hidden;
+  overflow: hidden;
 }
-.editor-triangle{
-    position: absolute;
-    width: 5px;
-    height: 10px;
-    z-index: 11;
+.editor-triangle {
+  position: absolute;
+  width: 5px;
+  height: 10px;
+  z-index: 11;
 }
-.editor-triangle>.arrow{
-    stroke: #edf0f5;
-    fill: #f9fcfe;
+.editor-triangle > .arrow {
+  stroke: #edf0f5;
+  fill: #f9fcfe;
 }
-.editor-textarea{
-    position: relative;
-    z-index: 10;
-    min-height: 32px;
-    border: 1px solid #edf0f5;
-    font-size: 13px;
-    line-height: 1.6;
-    background-color: #fff;
+.editor-textarea {
+  position: relative;
+  z-index: 10;
+  min-height: 32px;
+  border: 1px solid #edf0f5;
+  font-size: 13px;
+  line-height: 1.6;
+  background-color: #fff;
 }
 .editor-textarea .comment-placeholder {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    padding: 5px 10px;
-    color: #d4d7dc;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  padding: 5px 10px;
+  color: #d4d7dc;
 }
+.title-box {
+  font-size: 14px;
+  font-weight: bold;
+  border-bottom: solid 1px #dfdfdf;
+  margin: 0 35px;
+  padding: 35px 0 10px 0;
+}
+.title-box span {
+    color:#666;
+    border-bottom: solid 2px #1e8fff;
+    padding-bottom: 10px;
+  }
 </style>

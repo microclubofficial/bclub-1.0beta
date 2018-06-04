@@ -1,35 +1,170 @@
+<style lang="scss" scoped>
+.title {
+  color: #666;
+  border-bottom: solid 1px #dfdfdf;
+  height: 80px;
+  line-height: 80px;
+  margin: 0 50px;
+  span {
+    &:nth-child(1) {
+      width: 32px;
+      height: 32px;
+      display: block;
+      float: left;
+      margin-top: 6px;
+      margin-right: 4px;
+      > img {
+        width: 100%;
+        height: 100%;
+        display: inline;
+        vertical-align: text-bottom;
+      }
+    }
+    &:nth-child(2) {
+      font-size: 16px;
+      font-weight: bold;
+      padding-top: 4px;
+    }
+    &:nth-child(3) {
+      font-size: 14px;
+      float: right;
+      color: #666;
+      i {
+        font-family: simsun;
+        color: #666;
+        padding: 0 10px;
+      }
+    }
+  }
+}
+.password-form {
+  width: 60%;
+  margin: 30px auto;
+  label {
+    float: left;
+  }
+}
+.btn-confirm {
+  text-align: center;
+  width: 60px;
+  height: 32px;
+  padding: 0;
+  line-height: 32px;
+  background: #1e8fff;
+  color: #fff;
+  margin-right: 20px;
+  border-radius: 5px;
+}
+.btn-cacel {
+  text-align: center;
+  width: 60px;
+  height: 32px;
+  padding: 0;
+  line-height: 32px;
+  background: #f0f0f0;
+  color: #666;
+  border-radius: 5px;
+  border: solid 1px #dfdfdf;
+}
+.mark {
+  background: #f7f8fd;
+  font-size: 14px;
+  color: #666;
+  padding: 4px 20px;
+  margin: 20px 50px;
+  span {
+    float: right;
+    color: #1e8fff;
+  }
+}
+.center-wrap {
+  width: 100%;
+  margin: 0 auto;
+  color: #666;
+  font-size: 14px;
+}
+.wrap {
+  width: 100%;
+  position: relative;
+}
+.wrap-width {
+  width: 90%;
+}
+.left {
+  float: left;
+}
+.left-width {
+  width: 60%;
+}
+.margin-top label {
+  width: 22%;
+  padding-right: 10px;
+  text-align: left;
+}
+.button-box {
+  padding-left: 22%;
+}
+.margin-top {
+  margin-top: 30px;
+}
+.clearfix:after {
+  display: block;
+  clear: both;
+  content: "";
+  visibility: hidden;
+  height: 0;
+}
+.clearfix {
+  zoom: 1;
+}
+</style>
 <template>
-    <div>
-        <div class="container">
-            <form class="form-horizontal">
-                <div class="form-group">
-            <label class="col-sm-2 control-label">{{$t('editProfile.originalPassword')}}</label>
-            <div class="col-sm-3">
-              <input class="form-control" name="password" type="password" :placeholder="$t('placeholder.originalPassword')" @change='showFindPwdMsg(setPwd.OldPassword, 0)' v-model="setPwd.OldPassword">
-            </div>
+  <div class="wrap">
+    <div class="center-wrap">
+      <div class="title">
+        <span>
+          <img src="../../../assets/img/i03.png" />
+        </span>
+        <span>{{$t('editProfile.password')}}</span>
+        <span>
+          <router-link class="hover" :to="{path:'/memberCenter'}">{{$t('personalCenter.returnMyHomepage')}} <i>></i></router-link>
+        </span>
+      </div>
+      <form class="form-horizontal password-form">
+        <div class="clearfix margin-top">
+          <label class="left control-label">{{$t('editProfile.originalPassword')}}</label>
+          <div class="left left-width">
+            <input class="form-control" name="password" type="password" :placeholder="$t('placeholder.originalPassword')" @change='showFindPwdMsg(setPwd.OldPassword, 0)' v-model="setPwd.OldPassword">
             <p class="prompt">{{oldpwdPrompt}}</p>
           </div>
-                <div class="form-group">
-            <label class="col-sm-2 control-label">{{$t('editProfile.newPassword')}}</label>
-            <div class="col-sm-3">
-              <input class="form-control" name="password" type="password" :placeholder="$t('placeholder.newPassword')" @change='showFindPwdMsg(setPwd.NewPassword, 1)' v-model="setPwd.NewPassword">
-            </div>
+        </div>
+        <div class="clearfix margin-top">
+          <label class="left control-label">{{$t('editProfile.newPassword')}}</label>
+          <div class="left left-width">
+            <input class="form-control" name="password" type="password" :placeholder="$t('placeholder.newPassword')" @change='showFindPwdMsg(setPwd.NewPassword, 1)' v-model="setPwd.NewPassword">
             <p class="prompt">{{newpwdPrompt}}</p>
-          </div>
-          <div class="form-group">
-            <label class="col-sm-2 control-label">{{$t('editProfile.confirmPassword')}}</label>
-            <div class="col-sm-3">
-              <input class="form-control" name="repassword" type="password" :placeholder="$t('placeholder.repassword')" @change='showFindPwdMsg(setPwd.confirm_password, 2)' v-model="setPwd.confirm_password">
-            </div>
+          </div>        
+        </div>
+        <div class="clearfix margin-top">
+          <label class="left control-label">{{$t('editProfile.confirmPassword')}}</label>
+          <div class="left left-width">
+            <input class="form-control" name="repassword" type="password" :placeholder="$t('placeholder.repassword')" @change='showFindPwdMsg(setPwd.confirm_password, 2)' v-model="setPwd.confirm_password">
             <p class="prompt">{{confirm_upwdPrompt}}</p>
           </div>
-          <div class="form-group">
-                    <button type="button" class="col-md-offset-3 col-md-1 forphone btnm confirm" @click='setPwdFun' data-target="#myModal" data-toggle="">{{$t('button.confirm')}}
-                    </button>
-                </div>
-            </form>
         </div>
+        <div class="clearfix button-box margin-top">
+
+          <button class=" forphone btnm  btn-confirm" v-bind:disabled="!setPwd.OldPassword" @click='setPwdFun' data-target="#myModal" data-toggle="">{{$t('button.confirm')}}
+          </button>
+
+          <button class="forphone btnm  btn-cacel">
+            {{$t('button.cancel')}}
+          </button>
+
+        </div>
+      </form>
     </div>
+  </div>
 </template>
 <script>
 import {post} from '../../../utils/http'
@@ -121,15 +256,15 @@ export default {
 </script>
 
 <style>
-.confirm{
-    color: #fff !important;
-    background-color: #337ab7 !important;
-    border-color: #2e6da4 !important;
+.confirm {
+  color: #fff !important;
+  background-color: #337ab7 !important;
+  border-color: #2e6da4 !important;
 }
- .prompt{
-    float: left;
-    /*margin-left: 4%;*/
-    margin-top: 10px;
-    color: red;
-  }
+.prompt {
+  float: left;
+  margin-left: 4%;
+  margin-top: 10px;
+  color: red;
+}
 </style>

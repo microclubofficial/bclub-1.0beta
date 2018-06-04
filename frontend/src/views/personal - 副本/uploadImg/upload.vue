@@ -17,20 +17,10 @@
                 <input type="file" v-show="false" v-if="step == 1" @change="handleChange" ref='fileInput'>
             </div>
             <div class="vicp-error" v-show="hasError">
-                <i class="vicp-icon2"></i> {{ $t('lang.errorMsg') }}
+                <i class="vicp-icon2"></i> {{ errorMsg }}
             </div>
             <div class="vicp-operate">
                 <!-- <a @click="off" @mousedown="ripple">{{ lang.btn.off }}</a> -->
-            </div>
-             <!-- 增加原头像位置区域 -->
-            <div class="right-box clearfix right">
-              <div class="sqaure left">
-                <img src="../../../assets/img/tp.jpg" alt="">
-              </div>
-              <div class="circle left">
-                <img src="../../../assets/img/tp.jpg" alt="">
-              </div>
-
             </div>
         </div>
 
@@ -961,27 +951,26 @@ export default {
   /* background-color: rgba(0, 0, 0, 0.65); */
   -webkit-tap-highlight-color: transparent;
   -moz-tap-highlight-color: transparent; }
- .vue-image-crop-upload .vicp-wrap {
-  /* -webkit-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.23);
+  .vue-image-crop-upload .vicp-wrap {
+    /* -webkit-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.23);
             box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.23); */
-  position: relative;
-  display: block;
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-  z-index: 10000;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  margin: 0 50px;
-  /* width: 600px; */
-  height: 330px;
-  padding: 25px 0 0 0;
-  background-color: #fff;
-  border-radius: 2px;
-  -webkit-animation: vicp 0.12s ease-in;
-  animation: vicp 0.12s ease-in;
-}
+    position: relative;
+    display: block;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+    z-index: 10000;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: 600px;
+    height: 330px;
+    padding: 25px;
+    background-color: #fff;
+    border-radius: 2px;
+    -webkit-animation: vicp 0.12s ease-in;
+            animation: vicp 0.12s ease-in; }
     .vue-image-crop-upload .vicp-wrap .vicp-close {
       position: absolute;
       display: none;
@@ -1021,19 +1010,16 @@ export default {
           -webkit-transform: rotate(90deg);
               -ms-transform: rotate(90deg);
                   transform: rotate(90deg); }
-  .vue-image-crop-upload .vicp-wrap .vicp-step1 .vicp-drop-area {
-  position: relative;
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-  padding: 70px 35px;
-  height: 270px;
-  width: 340px;
-  background-color: rgba(0, 0, 0, 0.03);
-  text-align: center;
-  border: 1px dashed rgba(0, 0, 0, 0.08);
-  overflow: hidden;
-  float: left;
-}
+    .vue-image-crop-upload .vicp-wrap .vicp-step1 .vicp-drop-area {
+      position: relative;
+      -webkit-box-sizing: border-box;
+              box-sizing: border-box;
+      padding: 35px;
+      height: 170px;
+      background-color: rgba(0, 0, 0, 0.03);
+      text-align: center;
+      border: 1px dashed rgba(0, 0, 0, 0.08);
+      overflow: hidden; }
       .vue-image-crop-upload .vicp-wrap .vicp-step1 .vicp-drop-area .vicp-icon1 {
         display: block;
         margin: 0 auto 6px;
@@ -1484,45 +1470,5 @@ export default {
     transition: opacity 1.2s ease-out, -webkit-transform 0.6s ease-out;
     transition: opacity 1.2s ease-out, transform 0.6s ease-out;
     transition: opacity 1.2s ease-out, transform 0.6s ease-out, -webkit-transform 0.6s ease-out; }
-/* 增加右侧头像区域样式 */
-.right-box {
-    float: left;
-    padding-top: 70px;
-}
-.sqaure {
-    width: 90px;
-    height: 90px;
-    border-radius: 4px;
-    margin-right: 20px;
-    overflow: hidden;
-}
-.sqaure img, .circle img{
-      width: 100%;
-      height: 100%;
-      display: block;
-    }
-.circle {
-    width: 90px;
-    height: 90px;
-    border-radius: 50%;
-    overflow: hidden;
-    
-}
-.clearfix:after {
-  display: block;
-  clear: both;
-  content: "";
-  visibility: hidden;
-  height: 0;
-}
-.clearfix {
-  zoom: 1;
-}
-.left {
-    float: left;
-}
-.right {
-    float: right;
-}
 
 </style>
