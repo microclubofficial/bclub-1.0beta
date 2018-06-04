@@ -928,7 +928,7 @@ i.icon-BTC{font-size: 14px; font-weight: bold;}
 .w-e-text p{line-height: 1 !important;}
 /*toast*/
 .mint-toast{z-index: 10003 !important;}
-.bibar-indexNewsItem .user .bibar-author{width: 250px;}
+/*.bibar-indexNewsItem .user .bibar-author{width: 250px;}*/
 .bibar-author{overflow: hidden;}
 .bibar-author .photo{margin-right: 15px; float: left; margin-top: 3px;}
 .bibar-author .photo img{width: 40px; height: 40px; border-radius: 50%;}
