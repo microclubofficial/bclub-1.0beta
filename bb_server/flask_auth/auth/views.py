@@ -15,7 +15,7 @@ from flask_auth.response import HTTPResponse
 from forums.func import get_json, object_as_dict, Avatar
 from functools import wraps
 from random import sample, randint
-from string import ascii_letters, digits
+from string import digits
 from flask.views import MethodView
 from flask_login import current_user, login_required
 from flask_auth.serializer import Serializer
@@ -23,6 +23,7 @@ from flask_babel import gettext as _
 from flask_auth.models import db
 from forums.extension import redis_data
 import requests
+import re
 
 User = db.Model._decl_class_registry['User']
 
@@ -316,6 +317,9 @@ class ConfirmTokenView(MethodView):
 class ConfirmPhoneView(MethodView):
     def post(self):
         phone = request.json['phone']
+        if not re.match(r"^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$", phone):
+            msg = _('Wrong format of phone number')
+            return get_json(0, msg, {})
         if (request.path.endswith('login') and check_phone(phone)) or (request.path.endswith('phoneCaptcha') and not check_phone(phone)):
             captcha = ''.join(sample(digits, 6))
             url = "http://www.kanyanbao.com/websocket/aip/send_sms.json"

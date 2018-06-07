@@ -188,8 +188,6 @@ class Reply(db.Model, ModelMixin):
             return self.at_user
         if self.reference:
             return self.reference
-        if self.topic:
-            return self.topic
         return ''
 
     def __repr__(self):
