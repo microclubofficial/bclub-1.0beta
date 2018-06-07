@@ -59,10 +59,12 @@ export default {
   },
   placeholder: {
     username: 'username',
+    newUsername: 'new username',
     password: 'password',
     repassword: 'confirm password',
     vcode: 'verification code',
     phone: 'phone number',
+    newPhone: 'new phone number',
     icode: 'invitation code',
     email: 'email',
     originalPassword: 'original password',
@@ -73,7 +75,7 @@ export default {
     prompt: 'Prompt',
     acquireVcode: 'Acquire',
     reacquire: 'Reacquire',
-    usernameLength: 'The 3-16 character can be composed of Chinese, English, digits or underlines',
+    usernameLength: 'The 3-16 character can be composed of Chinese, letters, numbers and special symbols',
     usernameRequired: 'Username is required',
     passwordLength: '6-18 bits and sizes of English letters or numbers',
     passwordRequired: 'Password is required',
@@ -141,9 +143,14 @@ export default {
   personalCenter: {
     personal: 'Personal Center',
     topic: 'Topic',
+    myTopic: 'My topics',
     comment: 'Comment',
+    myComment: 'My comments',
     collection: 'Collection',
-    editProfile: 'Edit profile'
+    myCollection: 'My collections',
+    editProfile: 'Edit profile',
+    editAvatar: 'Edit avatar',
+    returnMyHomepage: 'Return my homepage'
   },
   editProfile: {
     index: 'Home',
@@ -207,6 +214,7 @@ export default {
     btnBack: 'Previous step',
     btnSave: 'Save',
     preview: 'Preview',
-    loading: 'Uploading'
+    loading: 'Uploading',
+    errorMsg: 'Image upload failed'
   }
 }

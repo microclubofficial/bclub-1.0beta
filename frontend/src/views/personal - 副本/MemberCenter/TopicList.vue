@@ -1,19 +1,16 @@
 <template>
   <div>
-    <p class="title-box">
-      <span>{{$t('personalCenter.myCollection')}}</span>  
-    </p>
-  <div class="personal-collection">
+  <div class="personal-topiclist">
     <div class="loading" v-if='showLoader'>
       <img src='../../../assets/img/loading.png' alt='' class="icon-loading">
     </div>
     <!-- {{[articles]}} -->
-    <div class="bibar-tabitem fade in active clearfloat" :key="index" id="bibar-newstab1" v-for="(tmp,index) in articles">
+    <div class="bibar-tabitem fade in active" :key="index" id="bibar-newstab1" v-for="(tmp,index) in articles">
       <div class="bibar-indexNewsList">
         <div class="bibar-indexNewsItem">
           <div class="speech" v-if="tmp.reply_user !== null"> <span><span class="time">{{tmp.reply_time}}</span>{{$t('list.ago')}} {{tmp.reply_user}} {{$t('list.commented')}}</span><i class="iconfont icon-dot"></i></div>
           <div class="user">
-            <div class="bibar-author"> <a href="javascript:void(0)"> <span class="photo"><img :src="tmp.avatar"></span> <span class="name">{{tmp.author}}</span> <span class="time" @click='toBibar(tmp)'>{{tmp.diff_time !== '0秒' ? tmp.diff_time + '前' : '刚刚发布'}} - {{$t('list.from')}}{{tmp.token !== null ? tmp.zh_token : '币吧'}}</span> </a> </div>
+            <div class="bibar-author"> <a href="javascript:void(0)"> <span class="photo"><img :src="tmp.avatar"></span> <span class="name">{{tmp.author}}</span> <span class="time" @click='toBibar(tmp)'>{{tmp.diff_time !== 0 ? tmp.diff_time + $t('list.ago') : $t('list.justNow')}} - {{$t('list.from')}}{{tmp.token !== null ? (language === 'zh' ? tmp.zh_token : tmp.en_token) : $t('list.bclub')}}</span> </a> </div>
             <div class="bibar-list">
               <div class="tit"><a href="javascript:void(0)" @click="goDetail(tmp.id)">{{tmp.title}}</a></div>
           <div class="txt indexNewslimitHeight" @click="goDetail(tmp.id)">
@@ -36,7 +33,7 @@
                 </a>
               </li>
               <li class="set-choseStar" @click="collectionTopic(tmp)"> <a :class='{collectionActive:tmp.collect_bool}' href="javascript:void(0);"><i class="iconfont icon-star">&#xe6a7;</i>{{$t('list.collect')}}</a> </li>
-              <li v-if='tmp.bool_delete' class="set-delList" @click="delTopic(tmp)"> <a href="javascript:void(0);"><i class="iconfont icon-del">&#xe78d;</i>{{$t('list.delete')}}</a> </li>
+              <li v-if='tmp.bool_delete' class="set-delList" @click="delTopic(tmp,index)"> <a href="javascript:void(0);"><i class="iconfont icon-del">&#xe78d;</i>{{$t('list.delete')}}</a> </li>
               <!-- <li> <a href="javascript:void(0);"><i class="iconfont icon-fenxiang"></i> 分享</a> </li> -->
               <!-- <li class="set-choseShang"> <a href="javascript:void(0);"><i class="iconfont icon-dashang"></i> 打赏<span>438</span></a> </li> -->
               <li>
@@ -56,11 +53,11 @@
          <img :src="userInfo.avatar" alt="" class="avatar" v-show="commentShow">
          <div class="avatar" v-show="showReport"><img :src="userInfo.avatar" alt=""></div>
          <!--默认-->
-           <!--<svg v-show="commentShow" style="left:56px; top:34px;" version='1.1' xmlns='http://www.w3.org/2000/svg' class="editor-triangle">
+           <!--<svg v-show="commentShow" version='1.1' xmlns='http://www.w3.org/2000/svg' class="editor-triangle editor-topic-comment-default">
             <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
            </svg>-->
            <!--富文本-->
-           <!--<svg style="left:56px; top:52px;" version='1.1' xmlns='http://www.w3.org/2000/svg' v-show="showReport" class="editor-svg">
+           <!--<svg style="left:48px; top:52px;" version='1.1' xmlns='http://www.w3.org/2000/svg' v-show="showReport" class="editor-svg">
             <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
           </svg>-->
          <div class="editor-bd clearfloat">
@@ -83,9 +80,9 @@
             <div class="comment-all">
               <h3>{{$t('list.allComments')}}({{tmp.replies_count}})</h3>
               <div class="comment-sort">
-                <a href="javascript:void(0)" @click='sortList(0, tmp.id)' :class="{active:sortNow === 0}">最近</a>
-                <a href="javascript:void(0)" @click='sortList(1, tmp.id)' :class="{active:sortNow === 1}">最早</a>
-                <a href="javascript:void(0)" @click='sortList(2, tmp.id)' :class="{active:sortNow === 2}">赞</a>
+                <a href="javascript:void(0)" @click='sortList(tmp.id,0)' :class="{active:sortNow === 0}">{{$t('list.newest')}}</a>
+                <a href="javascript:void(0)" @click='sortList(tmp.id,1)' :class="{active:sortNow === 1}">{{$t('list.earliest')}}</a>
+                <a href="javascript:void(0)" @click='sortList(tmp.id,2)' :class="{active:sortNow === 2}">{{$t('list.likeMost')}}</a>
               </div>
               <!-- 回复内容 -->
                   <!-- <div class="comment-item" data-index='' data-id='' v-for="(tmp,rIndex) in replyContent" :key='rIndex'>
@@ -116,16 +113,16 @@
                     </a>
                     <div class="comment-item-main">
                       <div class="comment-item-hd">
-                        <p href="#" class="user-name">{{item.author}}<span class="time">{{item.diff_time !== '0秒' ? item.diff_time + '前' : '刚刚'}}发布</span></p>
+                        <p href="#" class="user-name">{{item.author}}<span class="time">{{item.diff_time !== 0 ? item.diff_time + $t('list.ago') : $t('list.justNow')}}</span></p>
                       </div>
                       <!-- @ 样式 -->
-                      <p class="replyAuthor" v-if="item.at_user !== ''">@{{item.at_user}}:&nbsp;<span class="replyBackConten" style="display:inline-block;font-weight: normal;" v-html="replyFun(item.reference)"></span></p>
+                      <div class="replyAuthor" v-if="item.at_user !== ''">@{{item.at_user}}:&nbsp;<span class="replyBackConten" style="display:inline-block;font-weight: normal;" v-html="replyFun(item.reference)"></span></div>
                       <!-- <p>{{item}}</p> -->
-                      <p v-html="commentContent(item.content)"></p>
+                      <p v-html="commentContent(item.content,item.id)"></p>
                       <!--展开-->
-              <a style="font-size:16px; float:right; display: block;"  v-if='item.content !== undefined && item.content.length > 300' href="#" class="bibar-indexintromore text-theme" @click="changeMore(item.id)">{{item.id === moreId ? '收起' : '展开'}}<i style="font-size:16px;" class="iconfont" v-if='more === "展开"'>&#xe692;</i><i style="font-size:16px;" class="iconfont" v-if='more === "收起"'>&#xe693;</i></a>
+              <a style="font-size:16px; white-space:nowrap;"  v-if='item.content !== undefined && item.content.length - imgCommentLength[item.id] > 200' href="#" class="bibar-indexintromore text-theme" @click="changeMore(item.id)">{{item.id === moreId ? $t('button.fold') : $t('button.unfold')}}<i style="font-size:16px;" class="iconfont" v-if="item.id !== moreId">&#xe692;</i><i style="font-size:16px;" class="iconfont" v-if="item.id === moreId">&#xe693;</i></a>
                     </div>
-                    <div class="set" style="margin-left:42px;">
+                    <div class="set" style="margin-left:42px;" >
                       <ul class="bibar-indexNewsItem-infro">
                         <li class="set-choseTwo"> <a href="javascript:void(0);" class="icon-quan mr15"  @click="changeNum(0,now,item.id,1,item)" :class='{active:item.is_good_bool}'><i class="iconfont">&#xe603;</i><span class="is-good-t">{{item.is_good}}</span></a><a href="javascript:void(0);"  :class='{active:item.is_bad_bool}' class="icon-quan set-choseTwo" @click="changeNum(1,now,item.id,1,item)"><i class="iconfont">&#xe731;</i><span class="is-bad-t">{{item.is_bad}}</span></a></li>
                         <!-- <li class="set-choseShang"> <a href="javascript:void(0);"><i class="iconfont icon-dashang"></i> 打赏<span>438</span></a> </li> -->
@@ -134,23 +131,20 @@
                             <i class="iconfont icon-pinglun"></i> {{$t('list.reply')}}
                           </a>
                         </li>
-                        <li v-if='tmp.bool_delete' class="set-delList" @click="delTopic(tmp)"> <a href="javascript:void(0);"><i class="iconfont icon-del">&#xe78d;</i>{{$t('list.delete')}}</a> </li>
+                        <li v-if='item.bool_delete' class="set-delList" @click="delComment(item,now,tmp)"> <a href="javascript:void(0);"><i class="iconfont icon-del">&#xe78d;</i>{{$t('list.delete')}}</a> </li>
                       </ul>
                     </div>
                      <!-- 回复 -->
-        <div class="comment-reply"  v-show="now === replayId">
+        <div class="comment-reply" style="margin-left:42px;" v-show="now === replayId">
                 <!-- 回复文本框 -->
         <div class="editor-comment">
          <img :src="userInfo.avatar" alt="" class="avatar" v-show="talkReplyTxt">
-         <div class="avatar" v-show="showReportReplay"><img :src="userInfo.avatar" alt=""></div>
-         <!--<svg version='1.1' style="left:56px; top:52px;" xmlns='http://www.w3.org/2000/svg' v-show="showReportReplay" class="editor-triangle">
+          <div class="avatar" v-show="showReportReplay"><img :src="userInfo.avatar" alt=""></div>
+         <!--<svg version='1.1' style="left:53px; top:52px;" xmlns='http://www.w3.org/2000/svg' v-show="showReportReplay" class="editor-triangle">
             <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
            </svg>-->
          <div class="editor-bd clearfloat">
            <span class="comment-img-delete"></span>
-           <!--<svg version='1.1' xmlns='http://www.w3.org/2000/svg' v-show="talkReplyTxt" class="editor-triangle">
-            <path d='M5 0 L 0 5 L 5 10' class="arrow"></path>
-           </svg>-->
            <div class="editor-textarea"  v-show="talkReplyTxt" @click="talkReplyEditor">
              <div class="editor-placeholder">{{$t('list.reply')}}...</div>
            </div>
@@ -167,18 +161,19 @@
                 </div>
               </div>
               <!-- 分页条 -->
-            <div class="pages" v-if='showPage && index === i'>
+            <!-- 分页条 -->
+            <div class="pages" v-if='cpageCountObj[tmp.id] > 1'>
               <ul class="mo-paging">
                 <!-- prev -->
                 <!-- first -->
-                <li :class="['paging-item', 'paging-item--first', {'paging-item--disabled' : cpno === 1}]" @click="first">{{$t('pages.first')}}</li>
-                <li class="paging-item paging-item--prev" :class="{'paging-item--disabled' : cpno === 1}" @click="prev">{{$t('pages.prev')}}</li>
-                <li :class="['paging-item', {'paging-item--current' : cpno === tmp}]" :key="index" v-for="(tmp, index) in showPageBtn" @click="go(tmp)">{{tmp}}</li>
+                <li :class="['paging-item', 'paging-item--first', {'paging-item--disabled' : cpno[tmp.id] === 1}]" @click="first(tmp.id)">{{$t('pages.first')}}</li>
+                <li class="paging-item paging-item--prev" :class="{'paging-item--disabled' : cpno[tmp.id] === 1}" @click="prev(tmp.id)">{{$t('pages.prev')}}</li>
+                <li :class="['paging-item', {'paging-item--current' : cpno[tmp.id] === page}]" :key="index" v-for="(page, index) in pageNumber[tmp.id]" @click="go(page,tmp.id)">{{page}}</li>
                 <!--<li :class="['paging-item', 'paging-item--more']" @click="next" v-if="showNextMore">...</li>-->
                 <!-- next -->
-                <li :class="['paging-item', 'paging-item--next', {'paging-item--disabled' : cpno === cpageCount}]" @click="next">{{$t('pages.next')}}</li>
+                <li :class="['paging-item', 'paging-item--next', {'paging-item--disabled' : cpno[tmp.id] === cpageCountObj[tmp.id]}]" @click="next(tmp.id)">{{$t('pages.next')}}</li>
                 <!-- last -->
-                <li :class="['paging-item', 'paging-item--last', {'paging-item--disabled' : cpno === cpageCount}]" @click="last">{{$t('pages.end')}}</li>
+                <li :class="['paging-item', 'paging-item--last', {'paging-item--disabled' : cpno[tmp.id] === cpageCountObj[tmp.id]}]" @click="last(tmp.id)">{{$t('pages.end')}}</li>
               </ul>
             </div>
             </div>
@@ -191,6 +186,31 @@
         </div>
       </div>
     </div>
+    <!--确认框-->
+    <div class="modal fade DleConfirm" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+            &times;
+          </button>
+          <h4 class="text-center" id="myModalLabel">
+            {{$t('prompt.prompt')}}
+          </h4>
+        </div>
+        <div class="modal-body">
+          <p style="margin-top:20px;">{{$t('prompt.confirmDelete')}}</p>
+        </div>
+        <div class="modal-footer">
+          <button @click='confirm' type="button" class="btn btn-primary">
+            {{$t('button.confirm')}}
+          </button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">{{$t('button.cancel')}}
+          </button>
+        </div>
+      </div>
+    </div>
+</div>
     <div class="loading-bar" v-if='loadingShow'>
                   <!-- <svg class="icon icon-loading" aria-hidden="true">
                       <use xlink:href="#icon-loading"  style="fill:blue" ></use>
@@ -206,7 +226,7 @@
 import {get, post} from '../../../utils/http'
 import BibarReport from '../../homePage/bibarReport.vue'
 import { Toast } from 'mint-ui'
-import {getToken} from '../../../utils/auth.js'
+import { getToken } from '../../../utils/auth.js'
 export default{
   data: function () {
     return {
@@ -245,7 +265,7 @@ export default{
       talkReplyTxt: false,
       replayId: '',
       showReportReplay: false,
-      collection: null,
+      collection: 0,
       hasImg: false,
       hotreplyContent: [],
       isGood: 0,
@@ -279,17 +299,6 @@ export default{
   components: {
     BibarReport
   },
-  computed: {
-    getNavaVal () {
-      return this.$store.state.homePageList.backForNav
-    },
-    userInfo () {
-      return this.$store.state.userInfo.userInfo
-    },
-    language () {
-      return this.$store.state.language.language
-    }
-  },
   created: function () {
     if (getToken()) {
       this.user_token = JSON.parse(getToken())
@@ -300,12 +309,11 @@ export default{
     // 文章分页
     this.$store.dispatch('clear_backForNav')
     this.showLoader = true
-    get(`/api/collectlist/${this.tpno}`).then(data => {
+    get(`/api/u/topic/${this.userInfo.username}/${this.tpno}`).then(data => {
       this.articles = data.data.topics
-      console.log(this.articles)
       this.showLoader = false
       this.pageCount = data.data.page_count
-      if (this.articles !== undefined && this.articles.length > 0) {
+      if (this.articles.length > 0) {
         this.bottomText = this.$t('prompt.loading')
         this.loadingShow = true
       }
@@ -327,11 +335,14 @@ export default{
   },
   mounted () {
   },
-  // watch: {
-  //   getNavaVal (val) {
-  //     console.log(val)
-  //   }
-  // },
+  computed: {
+    userInfo () {
+      return this.$store.state.userInfo.userInfo
+    },
+    language () {
+      return this.$store.state.language.language
+    }
+  },
   methods: {
     // 分页
     loadTopicPage () {
@@ -339,7 +350,7 @@ export default{
         setTimeout(() => {
           this.showLoader = true
           this.tpno++
-          get(`/api/collect/${this.tpno}`).then(data => {
+          get(`/api/u/topic/${this.userInfo.username}/${this.tpno}`).then(data => {
             this.articles = this.articles.concat(data.data.topics)
             this.showLoader = false
             this.bottomText = this.$t('prompt.loading')
@@ -370,7 +381,7 @@ export default{
               item.is_bad = data.data.is_bad
               item.is_bad_bool = data.data.is_bad_bool
               item.is_good_bool = data.data.is_good_bool
-            } else if (data.resultcode === 0) {
+            } else {
               alert(data.message)
               this.$router.push('/login')
             }
@@ -382,10 +393,9 @@ export default{
               // $('.bibar-tabitem:eq(' + index + ')').find('.set-choseOne>a:eq(' + isNum + ')').addClass('active')
               item.is_good = data.data.is_good
               item.is_bad = data.data.is_bad
-              console.log(data.data.is_good_bool)
               item.is_bad_bool = data.data.is_bad_bool
               item.is_good_bool = data.data.is_good_bool
-            } else if (data.resultcode === 0) {
+            } else {
               alert(data.message)
               this.$router.push('/login')
             }
@@ -403,7 +413,7 @@ export default{
               item.is_bad = data.data.is_bad
               item.is_bad_bool = data.data.is_bad_bool
               item.is_good_bool = data.data.is_good_bool
-            } else if (data.resultcode === 0) {
+            } else {
               alert(data.message)
               this.$router.push('/login')
             }
@@ -418,7 +428,7 @@ export default{
               item.is_bad = data.data.is_bad
               item.is_bad_bool = data.data.is_bad_bool
               item.is_good_bool = data.data.is_good_bool
-            } else if (data.resultcode === 0) {
+            } else {
               alert(data.message)
               this.$router.push('/login')
             }
@@ -458,6 +468,7 @@ export default{
       this.replayId = ''
       this.toId = 0
       this.lid = id
+      // this.showComment = !this.showComment
       this.commentShow = true
       if (this.commentShow) {
         this.showReport = false
@@ -496,6 +507,8 @@ export default{
         this.talkReplayBox = true
         this.showReportReplay = true
       }
+      // this.talkReplayBox = !this.talkReplayBox
+      // this.talkReplyTxt = !this.talkReplyTxt
       this.toRId = 4
     },
     // 显示回复富文本框
@@ -506,6 +519,7 @@ export default{
     // 回复返回数据
     showReplyContent (data) {
       this.nowData[this.replyId].unshift(data)
+      // this.showLoaderComment = true
       this.articles[this.i].replies_count = data.replies_count
       this.replayId = ''
     },
@@ -779,7 +793,11 @@ export default{
 }
 </script>
 
-<style lang="scss" >
+<style>
+  .editor-topic-comment-default{
+    left:48px;
+    top: 26px;
+  }
   .replyBackConten>p:first-child{
     overflow: hidden;
     text-overflow: ellipsis;
@@ -787,15 +805,25 @@ export default{
     width: 500px;
     float: right;
 }
+/*回复样式*/
+.replyAuthor{
+    height: 50px;
+    background: #F2F2F2;
+    line-height: 50px !important;
+    padding-left: 20px !important;
+    font-weight: 700;
+    margin: 15px 2px 15px 0;
+    font-size: 15px;
+}
 .glyphicon{
   font-size: 20px;
 }
 .collectionActive{
   color: #ffa727 !important;
 }
-.personal-collection{
+.personal-topiclist{
   position: relative;
-  padding: 20px 35px;
+  padding: 20px;
 }
 .indexNewslimitHeight{
   cursor: pointer;
@@ -808,8 +836,8 @@ export default{
 .editor-comment{
     /*margin-top: 5px;*/
     background-color: #f8f8f8;
-    /* padding: 20px; */
-    padding: 15px;
+     padding: 15px;
+    padding-left: 10px;
 }
 .editor-comment>.avatar{
     width: 32px;
@@ -821,11 +849,6 @@ img.avatar{
     height: 48px;
     border-radius: 50%;
     vertical-align: middle;
-}
-.editor-bd{
-    margin-left: 42px;
-    position: relative;
-    z-index: 1;
 }
 svg:not(:root) {
     overflow: hidden;
@@ -968,11 +991,13 @@ a.avatar img {
     word-break: break-all;
     overflow: hidden;
     margin: 10px 0;
+    display: inline;
 }
 .comment-item-main img{
     display: block;
     cursor: zoom-in;
     max-width: 200px;
+    width: 200px;
 }
 .bibar-indexNewsItem-infro>li{
     float: left;
@@ -1000,10 +1025,13 @@ a.avatar img {
   /*回复*/
 .comment-reply{
   border-top: 1px solid #edf0f5;
-  margin-top: 50px;
+  margin-top: 20px;
 }
 .comment-reply>.comment-item{
   margin: 15px 0;
+}
+.comment-reply>.editor-comment{
+  padding: 15px;
 }
 .talkCommentEditor>.wangeditor>.editor{
   padding-bottom: 30px;
@@ -1076,11 +1104,13 @@ a.avatar img {
   padding: 5px 15px;
   margin: 10px 15px;
 }
+
 .talkBibar-editor{
   padding: 30px;
   background: #fff;
   position: relative;
 }
+/*.avatar{margin-bottom: 15px;}*/
 .avatar>span{
   font-size: 16px;
   margin-left: 15px;
@@ -1129,9 +1159,7 @@ a.avatar img {
     margin-left: 0 !important;
 }
 .editor-comment{
-    /*margin-top: 5px;*/
     background-color: #f8f8f8;
-    /* padding: 20px; */
 }
 .editor-comment>.avatar{
     width: 32px;
@@ -1180,16 +1208,4 @@ svg:not(:root) {
     padding: 5px 10px;
     color: #d4d7dc;
 }
-.title-box {
-  font-size: 14px;
-  font-weight: bold;
-  border-bottom: solid 1px #dfdfdf;
-  margin: 0 35px;
-  padding: 35px 0 10px 0;
-}
-.title-box span {
-    color:#666;
-    border-bottom: solid 2px #1e8fff;
-    padding-bottom: 10px;
-  }
 </style>

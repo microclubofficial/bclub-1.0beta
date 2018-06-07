@@ -2,7 +2,7 @@
   <div class="header" style="height:60px;">
     <!--头部-->
     <header class="bibar-header">
-      <section class="bibar-w1100">
+      <section class="bibar-w1100 container">
         <!--Logo-->
         <h1 class="bibar-headerlogo">
           <router-link :to="{path:'/'}"><img src="../../assets/img/logo-BCLUB.png"></router-link>

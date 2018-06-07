@@ -365,7 +365,6 @@ a.nav_btn_longtext {
   width: 525px;
 }*/
  .modal-dialog>.modal-content>.modal-body>.wangeditor>.editor>.w-e-panel-container{
-    width: 300px!important;
     z-index: 20000;
     border-top: 1px solid #ccc!important;
     position: fixed!important;
@@ -414,10 +413,10 @@ a.nav_btn_longtext {
 }
 .modal-body>.wangeditor>.editor>.w-e-text-container{border: 1px solid #edf0f5 !important; z-index: 9999;height: 87px !important;}
 .modal-body>.wangeditor>.editor>.w-e-text-container>.w-e-panel-container{
-    /* margin-left: -285px !important; */
     z-index: 20000;
     position: fixed !important;
     top: 195px !important;
+    margin-top: 0 !important;
 }
 .modal-body>.wangeditor .toLongText{
     bottom: 0;

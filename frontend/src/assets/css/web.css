@@ -82,7 +82,8 @@ img[src*="sinajs.cn/t4"] {
 /*富文本表情title*/
 /*.w-e-panel-tab-title{display: none !important;}*/
 .w-e-text-container .w-e-panel-container{
-  top: 128px !important;
+  margin-top: 50px !important;
+  top: auto !important;
   /*position: relative !important;*/
   box-shadow: 0 2px 4px 0 rgba(0,0,0,.4);
   border: none;
@@ -111,9 +112,9 @@ img[src*="sinajs.cn/t4"] {
     padding: 0 10px;
     position: relative;
  }
- .container{
+ /*.container{
     width: 1060px !important;
- }
+ }*/
  /*面包屑*/
  .crumb .row .span6 .breadcrumb .crumbActive{color: #999;}
  /*放大缩小图片*/

@@ -43,6 +43,12 @@ export default{
       isLink: false
     }
   },
+  watch: {
+    editorContent (val) {
+      let editorHeight = this.editor.$textElem[0].offsetHeight
+      $('.w-e-text-container').height(editorHeight)
+    }
+  },
   computed: {
     longId () {
       return this.$store.state.longId
@@ -456,6 +462,7 @@ export default{
 .long-text-editor>div>.editor> .w-e-text-container > .w-e-panel-container{
   top: 0 !important;
   left: 315px !important;
+  margin-top:0 !important;
 }
 .w-e-text-container{z-index: 9999 !important;}
 .w-e-toolbar{z-index: 9998 !important;}

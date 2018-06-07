@@ -47,6 +47,12 @@ export default {
       isLink: false
     }
   },
+  watch: {
+    editorContent (val) {
+      let editorHeight = this.editor.$textElem[0].offsetHeight
+      $('.w-e-text-container').height(editorHeight)
+    }
+  },
   computed: {
     userInfo () {
       return this.$store.state.userInfo.userInfo
@@ -217,14 +223,14 @@ export default {
       if (this.showDilog) {
         document.body.removeChild(document.querySelector('.modal-backdrop'))
       }
-      if (this.showDilog) {
+      if (this.showDilog && this.$route.params.currency === undefined) {
         this.$store.commit('LONG_ID', {
-          hideDilog: !this.showDilog,
+          hideDilog: false,
           bId: ''
         })
       } else {
         this.$store.commit('LONG_ID', {
-          hideDilog: !this.showDilog,
+          hideDilog: true,
           bId: this.$route.params.currency,
           bName: JSON.parse(this.$route.query.b).zh
         })
