@@ -31,8 +31,8 @@ msgid "You have no permission!"
 msgstr ""
 
 #: flask_auth/auth/views.py:37 forums/permission.py:73
-msgid "You have logged in, no need to login again"
-msgstr "你已登录，不能重复登录"
+msgid "You have logged in ,needn't login again"
+msgstr ""
 
 #: flask_auth/auth/views.py:52
 msgid "Username"
@@ -67,14 +67,11 @@ msgstr "%(key)s不能为空"
 msgid "Username or Password Error"
 msgstr "用户名或密码错误"
 
-#: flask_auth/auth/views.py:96 forums/api/setting/views.py:87
+#: flask_auth/auth/views.py:96 flask_auth/auth/views.py:118
+#: flask_auth/auth/views.py:164 flask_auth/auth/views.py:265
+#: forums/api/forms.py:65 forums/api/setting/views.py:87
 msgid "Captcha error"
 msgstr "验证码错误"
-
-#: flask_auth/auth/views.py:118 flask_auth/auth/views.py:164
-#: flask_auth/auth/views.py:265 forums/api/setting/views.py:87
-msgid "Captcha error or expired"
-msgstr "验证码错误或失效"
 
 #: flask_auth/auth/views.py:101 flask_auth/auth/views.py:124
 msgid "You have logged in"
@@ -98,7 +95,7 @@ msgstr "手机号已被注册"
 
 #: flask_auth/auth/views.py:158 forums/api/setting/views.py:101
 msgid "The username has been registered"
-msgstr 用户名已注册""
+msgstr "户名已注册\""
 
 #: flask_auth/auth/views.py:161 flask_auth/auth/views.py:241
 #: forums/api/setting/views.py:68
@@ -533,8 +530,8 @@ msgid "The username has been registered!"
 msgstr "用户名已注册"
 
 #: forums/common/response.py:37
-msgid "Email error"
-msgstr "邮箱错误"
+msgid "The email is error"
+msgstr ""
 
 #: forums/common/response.py:39
 msgid "Token is out of time,please get token again!"
@@ -1014,4 +1011,22 @@ msgstr ""
 #, python-format
 msgid "the last reply published by %(author)s"
 msgstr ""
+
+#: flask_auth/auth/views.py:38
+msgid "You have logged in, no need to login again"
+msgstr "你已登录，不能重复登录"
+
+#: flask_auth/auth/views.py:119
+#: flask_auth/auth/views.py:165
+#: flask_auth/auth/views.py:266
+#: forums/api/setting/views.py:87
+msgid "Captcha error or expired"
+msgstr "验证码错误或失效"
+
+#: flask_auth/auth/views.py:321
+msgid "Wrong format of phone number"
+msgstr "手机号码格式错误"
+
+#~ msgid "Email error"
+#~ msgstr "邮箱错误"
 

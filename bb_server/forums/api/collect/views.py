@@ -160,6 +160,8 @@ class CollectView(MethodView):
                 diff_time = time_diff(topic.updated_at)
                 collects = collect_bool(i)
                 topics_data = object_as_dict(topic)
+                if topics_data['token']:
+                    topics_data['en_token'] = topics_data['token'].capitalize()
                 json_loads(topics_data, ['title', 'content'])
                 topics_data['created_at'] = str(topics_data['created_at'])
                 topics_data['updated_at'] = str(topics_data['created_at'])

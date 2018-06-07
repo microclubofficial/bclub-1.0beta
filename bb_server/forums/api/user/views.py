@@ -77,6 +77,8 @@ class UserTopicView(MethodView):
             i.created_at = str(i.created_at)
             i.updated_at = str(i.updated_at)
             topics_data = object_as_dict(i)
+            if topics_data['token']:
+                topics_data['en_token'] = topics_data['token'].capitalize()
             json_loads(topics_data, ['title', 'content'])
             topics_data['reply_time'] = reply_time
             topics_data['reply_user'] = reply_user
@@ -134,6 +136,8 @@ class UserReplyListView(MethodView):
             diff_time = time_diff(topic.updated_at)
             collects = collect_bool(topic.id)
             topics_data = object_as_dict(topic)
+            if topics_data['token']:
+                topics_data['en_token'] = topics_data['token'].capitalize()
             json_loads(topics_data, ['content', 'title'])
             topics_data['created_at'] = str(topics_data['created_at'])
             topics_data['updated_at'] = str(topics_data['created_at'])
