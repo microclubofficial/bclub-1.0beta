@@ -126,7 +126,8 @@ export default{
         '靠右': '&nbsp&nbspRight',
         '上传图片': 'Upload image',
         '上传': 'Upload',
-        '创建': 'Init'
+        '创建': 'Init',
+        '文字': 'text'
       }
     }
     // 表情配置
