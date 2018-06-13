@@ -317,6 +317,7 @@ class ConfirmTokenView(MethodView):
 class ConfirmPhoneView(MethodView):
     def post(self):
         phone = request.json['phone']
+        phone = str(phone)
         if not re.match(r"^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$", phone):
             msg = _('Wrong format of phone number')
             return get_json(0, msg, {})
