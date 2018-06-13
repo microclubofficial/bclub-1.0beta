@@ -103,7 +103,7 @@
             </span>
          </div>
             <!--<a class="btn" @click="toggleShow">{{$t('editProfile.setAvatar')}}</a>-->
-            <my-upload field="img" @cropSuccess="cropSuccessFun" @cropUploadSuccess="cropUploadSuccessFun" @cropUploadFail="cropUploadFailFun" :width="50" :height="50" url="/api/avatar" :params="params" :headers="headers" img-format="png"></my-upload>
+            <my-upload field="img" @cropSuccess="cropSuccessFun" @cropUploadSuccess="cropUploadSuccessFun" @cropUploadFail="cropUploadFailFun" :width="200" :height="200" url="/api/avatar" :params="params" :headers="headers" img-format="png"></my-upload>
             <img :src="imgDataUrl">
             <!-- <div class="right-box">
               <div class="sqaure">

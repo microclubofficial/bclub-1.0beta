@@ -8,10 +8,9 @@
     <div class="bibar-tabitem fade in active clearfloat" :key="index" v-for="(tmp,index) in articles">
       <div class="bibar-indexNewsList">
         <div class="bibar-indexNewsItem">
-          <div class="speech" v-if="tmp.reply_user !== null"> <span><span class="time">{{tmp.reply_time}}</span>{{$t('list.ago')}} {{tmp.reply_user}} {{$t('list.commented')}}</span><i class="iconfont icon-dot"></i></div>
+          <div class="speech" v-if="tmp.reply_user !== null"> <span><span class="time">{{tmp.reply_time}}</span>{{tmp.reply_time.indexOf('-') > 0 ? '' : $t('list.ago')}}{{tmp.reply_user}} {{$t('list.commented')}}</span><i class="iconfont icon-dot"></i></div>
           <div class="user">
-            <!--<img :src="tmp.avatar">-->
-            <div class="bibar-author"> <a href="javascript:void(0)"> <span class="photo"><img :src="tmp.avatar"></span> <span class="name">{{tmp.author}}</span> <span class="time" @click='toBibar(tmp)'>{{tmp.diff_time !== 0 ? tmp.diff_time + $t('list.ago') : $t('list.justNow')}} - {{$t('list.from')}}{{tmp.token !== null ? (language === 'zh' ? tmp.zh_token : tmp.en_token) : $t('list.bclub')}}</span> </a> </div>
+            <div class="bibar-author"> <a href="javascript:void(0)"> <span class="photo"><img :src="tmp.avatar"></span> <span class="name">{{tmp.author}}</span> <span class="time" @click='toBibar(tmp)'>{{tmp.diff_time !== 0 ? (tmp.diff_time.indexOf('-') > 0 ? tmp.diff_time : tmp.diff_time + $t('list.ago')) : $t('list.justNow')}} - {{$t('list.from')}}{{tmp.token !== null ? (language === 'zh' ? tmp.zh_token : tmp.en_token) : $t('list.bclub')}}</span> </a> </div>
             <div class="bibar-list">
               <div class="tit"><a href="javascript:void(0)" @click="goDetail(tmp.id)">{{tmp.title}}</a></div>
           <div class="txt indexNewslimitHeight" @click="goDetail(tmp.id)">
@@ -553,6 +552,40 @@ export default{
       this.showReport = false
       this.nowData[this.replyId].unshift(data)
       this.articles[this.i].replies_count = data.replies_count
+      let articlesNum = parseInt(this.articles[this.i].replies_count) / 5 - parseInt(parseInt(this.articles[this.i].replies_count) / 5)
+      let id = this.articles[this.i].id
+      if (parseFloat(articlesNum.toFixed(1)) === 0.2) {
+        get(`/api/topic/replies/${id}/${this.cpno[id]}`).then(data => {
+          if (!this.nowData[id]) this.$set(this.nowData, id, data.data.replies)
+          else this.nowData[id] = data.data.replies
+          if (!this.pageNumber[id]) this.$set(this.pageNumber, id, this.showPageBtn(id, data.data.page_count))
+          else this.pageNumber[id] = this.showPageBtn(id, data.data.page_count)
+          this.showLoaderComment = false
+          this.cpageCount = data.data.page_count
+          this.cpageCountObj[id] = this.cpageCount
+          if (this.cpageCount > 1) {
+            this.showPage = true
+          }
+          this.$nextTick(() => {
+            $('.comment-item-main').find('img').addClass('zoom-in')
+            $('[data-w-e]').removeClass('zoom-in')
+            $('.comment-item-main').on('click', 'img', function () {
+              if (!$(this)[0].hasAttribute('data-w-e')) {
+              // if (!$(this)[0].indexOf('alt="[') === -1) {
+                if (!$(this).hasClass('zoom-out')) {
+                  if ($(this).hasClass('zoom-in')) {
+                    $(this).removeClass('zoom-in')
+                  }
+                  $(this).addClass('zoom-out')
+                } else if ($(this).hasClass('zoom-out')) {
+                  $(this).removeClass('zoom-out')
+                  $(this).addClass('zoom-in')
+                }
+              }
+            })
+          })
+        })
+      }
     },
     showFtContentFun (ftData) {
       this.articles = [ftData, ...this.articles]
@@ -722,6 +755,43 @@ export default{
           if (data.resultcode === 1) {
             this.nowData[this.delId].splice(this.delIndex, 1)
             this.articles[this.i].replies_count = this.articles[this.i].replies_count - 1
+            let id = this.articles[this.i].id
+            if (parseInt(this.articles[this.i].replies_count) % 5 === 0) {
+              if (this.cpno[id] > 1) {
+                this.cpno[id] = this.cpno[id] - 1
+              }
+              get(`/api/topic/replies/${this.delId}/${this.cpno[id]}`).then(data => {
+                let id = this.delId
+                if (!this.nowData[id]) this.$set(this.nowData, id, data.data.replies)
+                else this.nowData[id] = data.data.replies
+                if (!this.pageNumber[id]) this.$set(this.pageNumber, id, this.showPageBtn(id, data.data.page_count))
+                else this.pageNumber[id] = this.showPageBtn(id, data.data.page_count)
+                this.showLoaderComment = false
+                this.cpageCount = data.data.page_count
+                this.cpageCountObj[id] = this.cpageCount
+                if (this.cpageCount > 1) {
+                  this.showPage = true
+                }
+                this.$nextTick(() => {
+                  $('.comment-item-main').find('img').addClass('zoom-in')
+                  $('[data-w-e]').removeClass('zoom-in')
+                  $('.comment-item-main').on('click', 'img', function () {
+                    if (!$(this)[0].hasAttribute('data-w-e')) {
+                    // if (!$(this)[0].indexOf('alt="[') === -1) {
+                      if (!$(this).hasClass('zoom-out')) {
+                        if ($(this).hasClass('zoom-in')) {
+                          $(this).removeClass('zoom-in')
+                        }
+                        $(this).addClass('zoom-out')
+                      } else if ($(this).hasClass('zoom-out')) {
+                        $(this).removeClass('zoom-out')
+                        $(this).addClass('zoom-in')
+                      }
+                    }
+                  })
+                })
+              })
+            }
             $('.DleConfirm').modal('hide')
           }
         })

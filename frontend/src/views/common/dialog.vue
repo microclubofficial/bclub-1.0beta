@@ -98,7 +98,7 @@ export default{
 /* .w-e-toolbar .w-e-menu{z-index: 10000 !important;} */
 .modal-body>.wangeditor>.editor>.w-e-text-container{border: 1px solid #edf0f5 !important; z-index: 9999;}
 .modal-body>.wangeditor>.editor>.w-e-text-container>.w-e-panel-container{
-    width: 300px !important;
+    width: 308px !important;
     /* margin-left: -285px !important; */
     z-index: 20000;
     border-top: 1px solid #ccc !important;
