@@ -10,19 +10,13 @@ import time
 
 class Currency_News(MethodView):
     def get(self, token):
-        if redis_data.exists('%s_details'%(token)):
-            details = json.loads(redis_data.get('%s_details'%(token)))
-            total_market_cap_usd = json.loads(redis_data.get('%s_total_market_cap_usd'%(token)))
-        else: 
-            headers = {'Content-Type':'application/json; charset=utf-8'}
-            details = requests.get('https://block.cc/api/v1/coin/get?coin=%s'%(token), headers = headers)
-            total_market_cap_usd = requests.get('https://block.cc/api/v1/getBaseTotalInfo', headers = headers)
-            total_market_cap_usd = total_market_cap_usd.json()
-            total_market_cap_usd = total_market_cap_usd['data']["total_market_cap_usd"]
-            details = details.json()
-            details = details['data']
-            redis_data.set('%s_details'%(token), json.dumps(details))
-            redis_data.set('%s_total_market_cap_usd'%(token), json.dumps(total_market_cap_usd))
+        headers = {'Content-Type':'application/json; charset=utf-8'}
+        details = requests.get('https://block.cc/api/v1/coin/get?coin=%s'%(token), headers = headers)
+        total_market_cap_usd = requests.get('https://block.cc/api/v1/getBaseTotalInfo', headers = headers)
+        total_market_cap_usd = total_market_cap_usd.json()
+        total_market_cap_usd = total_market_cap_usd['data']["total_market_cap_usd"]
+        details = details.json()
+        details = details['data']
         keys = ['id','name', 'symbol','price', 'volume_ex', "supple", "available_supply", 'marketCap', 'level',
              'change1h', 'change7d', 'zhName', 'volume_level', 'low1d', 'high1d', 'CNY_RATE', 'BTC_RATE', 'ETH_RATE']
         data = {}
