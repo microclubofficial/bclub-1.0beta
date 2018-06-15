@@ -30,7 +30,11 @@ class Currency_News(MethodView):
             data['Circulation_rate'] = 0
         else:
             data['Circulation_rate'] = ('%.2f%%' % (data['available_supply']/data['supple'] * 100))
-        data['picture'] = 'https://blockchains.oss-cn-shanghai.aliyuncs.com/static/coinInfo/%s.png'%(token)
+        picture_url = 'https://blockchains.oss-cn-shanghai.aliyuncs.com/static/coinInfo/%s.png'%(token)
+        if 'Error' in requests.get(picture_url).text:
+            data['picture'] = None
+        else:
+            data['picture'] = picture_url
         msg = _('success')
         return get_json(1, msg, data)
 
@@ -63,7 +67,11 @@ class B_List(MethodView):
             return get_json(0, msg, {})
         blist['page_count'] = int(math.ceil(int(blist['count'])/int(limit)))
         for i in blist['summaryList']:
-            i['picture'] = 'https://blockchains.oss-cn-shanghai.aliyuncs.com/static/coinInfo/%s.png'%(i['id'])
+            picture_url = 'https://blockchains.oss-cn-shanghai.aliyuncs.com/static/coinInfo/%s.png'%(i['id'])
+            if 'Error' in requests.get(picture_url).text:
+                i['picture'] = None
+            else:
+                i['picture'] = picture_url
         msg = _('success')
         return get_json(1, msg, blist) 
 
@@ -82,7 +90,11 @@ class Picture(MethodView):
             Blist['symbol'] = j['symbol']
             Blist['name_ch'] = j['name_ch']
             Blist['name_en'] = j['name_en']
-            Blist['b_picture'] = 'https://blockchains.oss-cn-shanghai.aliyuncs.com/static/coinInfo/%s.png'%(j['id'])
+            picture_url = 'https://blockchains.oss-cn-shanghai.aliyuncs.com/static/coinInfo/%s.png'%(j['id'])
+            if 'Error' in requests.get(picture_url).text:
+                Blist['picture'] = None
+            else:
+                Blist['picture'] = picture_url
             data.append(Blist)
         for p in range(3):
             data[p]['picture'] = picturelist[p]
@@ -98,7 +110,7 @@ class SideBar(MethodView):
         # websites:官网  message:论坛  explorers：区块浏览器
         data = {}
         for i in keys:
-            if i == 'publicTime':
+            if i == 'publicTime' and details[i]:
                 data[i] = time.strftime('%Y-%m-%d',time.localtime(details[i]/1000))
             else:
                 data[i] = details[i]
