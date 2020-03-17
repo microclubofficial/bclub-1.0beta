@@ -7,10 +7,11 @@ import requests
 import math
 import json
 import time
+                
+headers = {'Content-Type':'application/json; charset=utf-8','User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36'}
 
 class Currency_News(MethodView):
     def get(self, token):
-        headers = {'Content-Type':'application/json; charset=utf-8'}
         details = requests.get('https://block.cc/api/v1/coin/get?coin=%s'%(token), headers = headers)
         total_market_cap_usd = requests.get('https://block.cc/api/v1/getBaseTotalInfo', headers = headers)
         total_market_cap_usd = total_market_cap_usd.json()
@@ -44,7 +45,6 @@ class K_Line(MethodView):
             data = json.loads(redis_data.get(token))
             msg = _('success')
             return get_json(1, msg, data)
-        headers = {'Content-Type':'application/json'}
         kline = requests.get('https://block.cc/api/v1/marketKline/%s'%(token), headers = headers)
         try:
             kline.json()['data']['name']
@@ -59,7 +59,7 @@ class K_Line(MethodView):
 class B_List(MethodView):
     def get(self, page, limit):
         offset = (int(page)-1)*int(limit)
-        blist = requests.get('https://api.tokenclub.com/v2/ticker/summary?type=0&offset=%s&limit=%s'%(offset, limit))
+        blist = requests.get('https://api.g84q2.cn/v2/ticker/summary?type=0&offset=%s&limit=%s'%(offset, limit))
         try:
             blist = blist.json()['data']
         except:
@@ -78,7 +78,7 @@ class B_List(MethodView):
 class Picture(MethodView):
     def get(self):
         pictures = B_Picture.query.order_by('id').all()
-        blist = requests.get('https://api.tokenclub.com/v2/ticker/summary?type=0&offset=%s&limit=%s'%(0, 3))
+        blist = requests.get('https://api.g84q2.cn/v2/ticker/summary?type=0&offset=%s&limit=%s'%(0, 3))
         blist = blist.json()['data']['summaryList']
         picturelist = []
         data = []
@@ -103,7 +103,6 @@ class Picture(MethodView):
 
 class SideBar(MethodView):
     def get(self, token):
-        headers = {'Content-Type':'application/json'}
         details = requests.get('https://block.cc/api/v1/coin/get?coin=%s'%(token), headers = headers)
         details = details.json()['data']
         keys = ['descriptions', "publicTime", 'whitepaper', "websites", "message", "Explorers"]
